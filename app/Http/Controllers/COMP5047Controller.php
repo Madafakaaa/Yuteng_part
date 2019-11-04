@@ -26,7 +26,7 @@ class COMP5047Controller extends Controller
         catch(Exception $e){
 
         }
-        return 1;
+        return $data;
     }
 
 
@@ -46,7 +46,7 @@ class COMP5047Controller extends Controller
         catch(Exception $e){
 
         }
-        return 1;
+        return $data;
     }
 
 }
