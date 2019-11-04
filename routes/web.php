@@ -44,8 +44,8 @@ Route::prefix('admin')->group(function(){
 */
 
 //COMP5047
-Route::POST('/COMP5047', 'COMP5047@index');
-Route::GET('/COMP5047', 'COMP5047@show');
+Route::POST('/COMP5047', 'COMP5047Controller@index');
+Route::GET('/COMP5047', 'COMP5047Controller@show');
 
 // 登陆控制器
 Route::get('/', 'LoginController@index');

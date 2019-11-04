@@ -13,25 +13,40 @@ class COMP5047Controller extends Controller
     /**
      * URL: POST /COMP5047
      */
-    public function index(){
+    public function index(Request $request){
+        $data = $request->json()->all();
         // 插入数据库
         try{
-            DB::table('COMP5047')->insertGetId(
+            DB::table('COMP5047')->insert(
                 ['COMP5047_status' => '1',
                  'COMP5047_posture' => '1',]
             );
         }
         // 捕获异常
         catch(Exception $e){
-            
+
         }
+        return 1;
     }
 
 
     /**
      * URL: GET /COMP5047
      */
-    public function show()
-    {
+    public function show(Request $request){
+        $data = $request->json()->all();
+        // 插入数据库
+        try{
+            DB::table('COMP5047')->insert(
+                ['COMP5047_status' => '1',
+                 'COMP5047_posture' => '1',]
+            );
+        }
+        // 捕获异常
+        catch(Exception $e){
 
+        }
+        return 1;
     }
+
+}

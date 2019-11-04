@@ -71,7 +71,8 @@ class UserController extends Controller
 
         }
         $departments = DB::table('department')->get();
-        return view('user/create', ['departments' => $departments]);
+        $positions = DB::table('position')->get();
+        return view('user/create', ['departments' => $departments, 'positions' => $positions]);
     }
 
     /**

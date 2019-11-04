@@ -18,6 +18,7 @@
 <script src="{{ asset(_ASSETS_.'/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset(_ASSETS_.'/vendor/datatables.net-select/js/dataTables.select.min.js') }}"></script>
 <script src="{{ asset(_ASSETS_.'/vendor/select2/dist/js/select2.min.js') }}"></script>
+<script src="{{ asset(_ASSETS_.'/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
 <!-- Argon JS -->
 <script src="{{ asset(_ASSETS_.'/js/argon.js?v=1.1.0') }}"></script>
 <!-- Original scripts -->

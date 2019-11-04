@@ -46,7 +46,28 @@
                 @endforeach
               </select>
             </div>
-            <input type="submit" class="btn btn-primary" value="添加用户">
+            <div class="form-group">
+              <label class="form-control-label">用户岗位</label>
+              <select class="form-control" name="input4" data-toggle="select">
+                <option value=''>请选择岗位...</option>
+                @foreach ($positions as $position)
+                  <option value="{{ $position->position_id }}">{{ $position->position_name }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-control-label">入职日期</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                </div>
+                <input class="form-control datepicker" placeholder="Select date" type="text" value="06/20/2019">
+              </div>
+              <input class="form-control datepicker" placeholder="Select date" type="text" value="{{ date('Y-m-d') }}">
+            </div>
+            <div class="form-group">
+              <input type="submit" class="btn btn-primary" value="添加用户">
+            </div>
           </div>
         <form>
       </div>
