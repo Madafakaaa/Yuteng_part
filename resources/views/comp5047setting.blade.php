@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
-  <meta name="author" content="Creative Tim">
-  <title>Argon Dashboard PRO - Premium Bootstrap 4 Admin Template</title>
+  <meta name="description" content="Smart cushion">
+  <meta name="author" content="COMP5047">
+  <title>Smart Cushion Dashboard</title>
   <!-- Favicon -->
   <link rel="icon" href="{{ asset(_ASSETS_.'/img/brand/favicon.png') }}" type="image/png">
   <!-- Fonts -->
@@ -70,7 +70,7 @@
         <div class="header-body">
           <div class="row align-items-center py-4">
             <div class="col-lg-6 col-7">
-              <h6 class="h2 text-white d-inline-block mb-0">Smart Chair</h6>
+              <h6 class="h2 text-white d-inline-block mb-0">Smart Cushion</h6>
               <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                 <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                   <li class="breadcrumb-item active" aria-current="page">COMP5047</li>
