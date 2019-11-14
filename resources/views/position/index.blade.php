@@ -10,8 +10,8 @@
 @section('content')
 <div class="container-fluid mt--6">
   <div class="row justify-content-center">
-    <div class="col-lg-12 card-wrapper ct-example">
-      <div class="card" id="main_card" style="display:none">
+    <div class="col-12 card-wrapper ct-example">
+      <div class="card main_card" style="display:none">
         <!-- Card header -->
         <div class="card-header border-0">
           <div class="row">
@@ -19,7 +19,7 @@
               <h2 class="mb-0">岗位列表</h2>
             </div>
             <div class="col-6 text-right">
-              <a href="position/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加岗位">
+              <a href="/position/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加岗位">
                 <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
                 <span class="btn-inner--text">添加岗位</span>
               </a>
@@ -36,16 +36,19 @@
               </tr>
             </thead>
             <tbody>
-              @foreach ($positions as $position)
+              @if(count($rows)==0)
+              <tr><td colspan="10">当前没有记录</td></tr>
+              @endif
+              @foreach ($rows as $row)
               <tr>
                 <td class="p-2">{{ $startIndex+$loop->iteration }}</td>
-                <td class="p-2">{{ $position->position_name }}</td>
+                <td class="p-2">{{ $row->position_name }}</td>
                 <td class="p-2">
-                  <form action="position/{{$position->position_id}}" method="POST">
+                  <form action="position/{{$row->position_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='position/{{$position->position_id}}'><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
-                    {{ deleteConfirm($position->position_id, ["岗位名称：".$position->position_name]) }}
+                    <a href='/position/{{$row->position_id}}'><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                    {{ deleteConfirm($row->position_id, ["岗位名称：".$row->position_name]) }}
                   </form>
                 </td>
               </tr>

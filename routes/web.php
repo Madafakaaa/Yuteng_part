@@ -43,13 +43,6 @@ Route::prefix('admin')->group(function(){
 });
 */
 
-//COMP5047
-Route::POST('/comp5047', 'COMP5047Controller@getJson');
-Route::GET('/comp5047/dashboard', 'COMP5047Controller@index');
-Route::GET('/comp5047/getData', 'COMP5047Controller@getData');
-Route::GET('/comp5047/setting', 'COMP5047Controller@setting');
-Route::POST('/comp5047/update', 'COMP5047Controller@update');
-
 // 登陆控制器
 Route::get('/', 'LoginController@index');
 Route::post('/login', 'LoginController@login');
@@ -62,3 +55,5 @@ Route::resource('/department', 'DepartmentController');
 Route::resource('/position', 'PositionController');
 // 用户管理
 Route::resource('/user', 'UserController');
+// 档案管理
+Route::resource('/archive', 'ArchiveController');

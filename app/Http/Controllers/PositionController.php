@@ -51,8 +51,8 @@ class PositionController extends Controller
         }
         // 获取数据
         $offset = ($currentPage-1)*$rowPerPage;
-        $positions = DB::table('position')->offset($offset)->limit($rowPerPage)->get();
-        return view('position/index', ['positions' => $positions, 'currentPage' => $currentPage, 'totalPage' => $totalPage, 'startIndex' => ($currentPage-1)*$rowPerPage]);
+        $rows = DB::table('position')->orderBy('position_createtime', 'asc')->offset($offset)->limit($rowPerPage)->get();
+        return view('position/index', ['rows' => $rows, 'currentPage' => $currentPage, 'totalPage' => $totalPage, 'startIndex' => ($currentPage-1)*$rowPerPage]);
     }
 
     /**
@@ -92,26 +92,29 @@ class PositionController extends Controller
         }
         // 获取表单输入
         $position_name = $request->input('input1');
+        // 获取当前用户ID
+        $position_createuser = Session::get('user_id');
         // 插入数据库
         try{
-            $position_id = DB::table('position')->insertGetId(
-                ['position_name' => $position_name]
+            DB::table('position')->insert(
+                ['position_name' => $position_name,
+                 'position_createuser' => $position_createuser]
             );
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect()->action('positionController@index')
+            return redirect()->action('PositionController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
                                      'title' => '岗位添加失败',
                                      'message' => '岗位添加失败，请重新输入信息']);
         }
         // 返回岗位列表
-        return redirect()->action('positionController@index')
+        return redirect()->action('PositionController@index')
                          ->with(['notify' => true,
                                  'type' => 'success',
                                  'title' => '岗位添加成功',
-                                 'message' => '岗位序号: '.$position_id.', 岗位名称: '.$position_name]);
+                                 'message' => '岗位名称: '.$position_name]);
     }
 
     /**
@@ -134,7 +137,7 @@ class PositionController extends Controller
         $position = DB::table('position')->where('position_id', $position_id)->get();
         if($position->count()!==1){
             // 未获取到数据
-            return redirect()->action('positionController@index')
+            return redirect()->action('PositionController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
                                      'title' => '岗位显示失败',
@@ -164,7 +167,7 @@ class PositionController extends Controller
         $position = DB::table('position')->where('position_id', $position_id)->get();
         if($position->count()!==1){
             // 未获取到数据
-            return redirect()->action('positionController@index')
+            return redirect()->action('PositionController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
                                      'title' => '岗位显示失败',
@@ -199,8 +202,8 @@ class PositionController extends Controller
         // 更新数据库
         try{
             DB::table('position')
-                        ->where('position_id', $position_id)
-                        ->update(['position_name' => $position_name]);
+                    ->where('position_id', $position_id)
+                    ->update(['position_name' => $position_name]);
         }
         // 捕获异常
         catch(Exception $e){
@@ -210,9 +213,9 @@ class PositionController extends Controller
                                                                    'message' => '岗位修改失败，请重新输入信息']);
         }
         return redirect("/position/{$position_id}")->with(['notify' => true,
-                                                               'type' => 'success',
-                                                               'title' => '岗位修改成功',
-                                                               'message' => '岗位修改成功，岗位序号: '.$position_id.', 岗位名称: '.$position_name]);
+                                                           'type' => 'success',
+                                                           'title' => '岗位修改成功',
+                                                           'message' => '岗位修改成功，岗位名称: '.$position_name]);
     }
 
     /**
@@ -239,17 +242,17 @@ class PositionController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect()->action('positionController@index')
+            return redirect()->action('PositionController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
                                      'title' => '岗位删除失败',
                                      'message' => '岗位删除失败，请联系系统管理员']);
         }
         // 返回岗位列表
-        return redirect()->action('positionController@index')
+        return redirect()->action('PositionController@index')
                          ->with(['notify' => true,
                                  'type' => 'success',
                                  'title' => '岗位删除成功',
-                                 'message' => '岗位序号: '.$position_id.', 岗位名称: '.$position_name]);
+                                 'message' => '岗位名称: '.$position_name]);
     }
 }

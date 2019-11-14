@@ -44,6 +44,9 @@
               <li class="nav-item">
                 <a href="/user" class="nav-link" id="user">用户管理</a>
               </li>
+              <li class="nav-item">
+                <a href="/archive" class="nav-link" id="archive">档案管理</a>
+              </li>
             </ul>
           </div>
         </li>

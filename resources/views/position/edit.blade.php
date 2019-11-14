@@ -11,9 +11,9 @@
 @section('content')
 <div class="container-fluid mt--4">
   <div class="row justify-content-center">
-    <div class="col-lg-6 card-wrapper ct-example">
-      <div class="card" id="main_card" style="display:none">
-        <form action="/position/{{ $position->position_id }}" method="post">
+    <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
+      <div class="card main_card" style="display:none">
+        <form action="/position/{{ $position->position_id }}" method="post" id="form1" name="form1">
           @method('PUT')
           @csrf
           <div class="card-header">
@@ -26,8 +26,8 @@
               <input class="form-control" type="text" name="input1" value="{{ $position->position_id }}" readonly>
             </div>
             <div class="form-group">
-              <label class="form-control-label">岗位名称</label>
-              <input class="form-control" type="text" name="input2" value="{{ $position->position_name }}" autocomplete='off' required>
+              <label class="form-control-label">岗位名称*</label>
+              <input class="form-control" type="text" name="input2" value="{{ $position->position_name }}" autocomplete='off' required maxlength="10">
             </div>
             <div class="form-group">
               <label class="form-control-label">添加时间</label>

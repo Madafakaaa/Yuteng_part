@@ -11,27 +11,41 @@
 @section('content')
 <div class="container-fluid mt--4">
   <div class="row">
-    <div class="col-lg-4 card-wrapper ct-example">
-      <div class="card" id="main_card" style="display:none">
-          <div class="card-header">
-            <h3 class="mb-0">岗位详情</h3>
+    <div class="col-lg-4 col-md-8 col-sm-12 card-wrapper ct-example">
+      <div class="card main_card" style="display:none">
+        <div class="card-header">
+          <h3 class="mb-0">岗位详情</h3>
+        </div>
+        <!-- Card body -->
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="form-control-label">岗位序号</label>
+                <input class="form-control" type="text" value="{{ $position->position_id }}" readonly>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label class="form-control-label">岗位名称</label>
+                <input class="form-control" type="text" value="{{ $position->position_name }}" readonly>
+              </div>
+            </div>
           </div>
-          <!-- Card body -->
-          <div class="card-body">
-            <div class="form-group">
-              <label class="form-control-label">岗位序号</label>
-              <input class="form-control" type="text" value="{{ $position->position_id }}" readonly>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="form-control-label">添加时间</label>
+                <input class="form-control" type="text" value="{{ $position->position_createtime }}" readonly>
+              </div>
             </div>
-            <div class="form-group">
-              <label class="form-control-label">岗位名称</label>
-              <input class="form-control" type="text" value="{{ $position->position_name }}" readonly>
-            </div>
-            <div class="form-group">
-              <label class="form-control-label">添加时间</label>
-              <input class="form-control" type="text" value="{{ $position->position_createtime }}" readonly>
-            </div>
-            <a href="/position/{{ $position->position_id }}/edit"><button class="btn btn-warning">修改</button></a>
           </div>
+          <div class="row">
+            <div class="col-4">
+              <a href="/position/{{ $position->position_id }}/edit"><button class="btn btn-block btn-warning">修改</button></a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

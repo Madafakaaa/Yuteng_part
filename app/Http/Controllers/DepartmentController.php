@@ -51,8 +51,8 @@ class DepartmentController extends Controller
         }
         // 获取数据
         $offset = ($currentPage-1)*$rowPerPage;
-        $departments = DB::table('department')->offset($offset)->limit($rowPerPage)->get();
-        return view('department/index', ['departments' => $departments, 'currentPage' => $currentPage, 'totalPage' => $totalPage, 'startIndex' => ($currentPage-1)*$rowPerPage]);
+        $rows = DB::table('department')->orderBy('department_createtime', 'asc')->offset($offset)->limit($rowPerPage)->get();
+        return view('department/index', ['rows' => $rows, 'currentPage' => $currentPage, 'totalPage' => $totalPage, 'startIndex' => ($currentPage-1)*$rowPerPage]);
     }
 
     /**
@@ -92,10 +92,13 @@ class DepartmentController extends Controller
         }
         // 获取表单输入
         $department_name = $request->input('input1');
+        // 获取当前用户ID
+        $department_createuser = Session::get('user_id');
         // 插入数据库
         try{
-            $department_id = DB::table('department')->insertGetId(
-                ['department_name' => $department_name]
+           DB::table('department')->insert(
+                ['department_name' => $department_name,
+                 'department_createuser' => $department_createuser]
             );
         }
         // 捕获异常
@@ -111,7 +114,7 @@ class DepartmentController extends Controller
                          ->with(['notify' => true,
                                  'type' => 'success',
                                  'title' => '校区添加成功',
-                                 'message' => '校区序号: '.$department_id.', 校区名称: '.$department_name]);
+                                 'message' => '校区名称: '.$department_name]);
     }
 
     /**
@@ -199,8 +202,8 @@ class DepartmentController extends Controller
         // 更新数据库
         try{
             DB::table('department')
-                        ->where('department_id', $department_id)
-                        ->update(['department_name' => $department_name]);
+                    ->where('department_id', $department_id)
+                    ->update(['department_name' => $department_name]);
         }
         // 捕获异常
         catch(Exception $e){
@@ -212,7 +215,7 @@ class DepartmentController extends Controller
         return redirect("/department/{$department_id}")->with(['notify' => true,
                                                                'type' => 'success',
                                                                'title' => '校区修改成功',
-                                                               'message' => '校区修改成功，校区序号: '.$department_id.', 校区名称: '.$department_name]);
+                                                               'message' => '校区修改成功，校区名称: '.$department_name]);
     }
 
     /**
@@ -250,6 +253,6 @@ class DepartmentController extends Controller
                          ->with(['notify' => true,
                                  'type' => 'success',
                                  'title' => '校区删除成功',
-                                 'message' => '校区序号: '.$department_id.', 校区名称: '.$department_name]);
+                                 'message' => '校区名称: '.$department_name]);
     }
 }

@@ -51,8 +51,14 @@ class UserController extends Controller
         }
         // 获取数据
         $offset = ($currentPage-1)*$rowPerPage;
-        $users = DB::table('user')->offset($offset)->limit($rowPerPage)->get();;
-        return view('user/index', ['users' => $users, 'currentPage' => $currentPage, 'totalPage' => $totalPage, 'startIndex' => ($currentPage-1)*$rowPerPage]);
+        $rows = DB::table('user')
+                    ->join('department', 'user.user_department', '=', 'department.department_id')
+                    ->join('position', 'user.user_position', '=', 'position.position_id')
+                    ->orderBy('user_createtime', 'asc')
+                    ->offset($offset)
+                    ->limit($rowPerPage)
+                    ->get();;
+        return view('user/index', ['rows' => $rows, 'currentPage' => $currentPage, 'totalPage' => $totalPage, 'startIndex' => ($currentPage-1)*$rowPerPage]);
     }
 
     /**
@@ -70,8 +76,9 @@ class UserController extends Controller
                                      'message' => '请输入用户名及密码登陆系统']);
 
         }
-        $departments = DB::table('department')->get();
-        $positions = DB::table('position')->get();
+        // 获取校区、岗位信息
+        $departments = DB::table('department')->orderBy('department_createtime', 'asc')->get();
+        $positions = DB::table('position')->orderBy('position_createtime', 'asc')->get();
         return view('user/create', ['departments' => $departments, 'positions' => $positions]);
     }
 
@@ -90,26 +97,52 @@ class UserController extends Controller
                                      'type' => 'danger',
                                      'title' => '您尚未登录',
                                      'message' => '请输入用户名及密码登陆系统']);
-
         }
+        // 随机生成新用户ID
+        $user_id=chr(rand(97,122)).chr(rand(97,122)).chr(rand(97,122)).chr(rand(97,122)).substr(date('Ym'),2);
         // 获取表单输入
         $user_name = $request->input('input1');
+        $user_gender = $request->input('input2');
+        $user_department = $request->input('input3');
+        $user_position = $request->input('input4');
+        $user_level = $request->input('input5');
+        $user_dateOfEntry = $request->input('input6');
+        $user_phone = $request->input('input7');
+        $user_wechat = $request->input('input8');
+        // 判断是否为空，为空设为NULL
+        if($user_phone == ""){
+            $user_phone = "NULL";
+        }
+        if($user_wechat == ""){
+            $user_wechat = "NULL";
+        }
+        // 获取当前用户ID
+        $user_createuser = Session::get('user_id');
         // 插入数据库
         try{
-            $user_id = DB::table('user')->insertGetId(
-                ['user_name' => $user_name]
+            DB::table('user')->insert(
+                ['user_id' => $user_id,
+                 'user_name' => $user_name,
+                 'user_gender' => $user_gender,
+                 'user_department' => $user_department,
+                 'user_position' => $user_position,
+                 'user_level' => $user_level,
+                 'user_dateOfEntry' => $user_dateOfEntry,
+                 'user_phone' => $user_phone,
+                 'user_wechat' => $user_wechat,
+                 'user_createuser' => $user_createuser]
             );
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect()->action('userController@index')
+            return redirect()->action('UserController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
                                      'title' => '用户添加失败',
                                      'message' => '用户添加失败，请重新输入信息']);
         }
         // 返回用户列表
-        return redirect()->action('userController@index')
+        return redirect()->action('UserController@index')
                          ->with(['notify' => true,
                                  'type' => 'success',
                                  'title' => '用户添加成功',
@@ -132,18 +165,26 @@ class UserController extends Controller
                                      'message' => '请输入用户名及密码登陆系统']);
 
         }
-        // 获取数据信息
-        $user = DB::table('user')->where('user_id', $user_id)->get();
+        // 获取用户数据信息
+        $user = DB::table('user')
+                    ->join('department', 'user.user_department', '=', 'department.department_id')
+                    ->join('position', 'user.user_position', '=', 'position.position_id')
+                    ->where('user_id', $user_id)
+                    ->get();
         if($user->count()!==1){
             // 未获取到数据
-            return redirect()->action('userController@index')
+            return redirect()->action('UserController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
                                      'title' => '用户显示失败',
                                      'message' => '用户显示失败，请联系系统管理员']);
         }
         $user = $user[0];
-        return view('user/show', ['user' => $user]);
+        // 获取档案数据
+        $rows = DB::table('archive')
+                        ->where('archive_user', $user_id)
+                        ->get();
+        return view('user/show', ['user' => $user, 'rows' => $rows]);
     }
 
     /**
@@ -166,14 +207,17 @@ class UserController extends Controller
         $user = DB::table('user')->where('user_id', $user_id)->get();
         if($user->count()!==1){
             // 未获取到数据
-            return redirect()->action('userController@index')
+            return redirect()->action('UserController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
                                      'title' => '用户显示失败',
                                      'message' => '用户显示失败，请联系系统管理员']);
         }
         $user = $user[0];
-        return view('user/edit', ['user' => $user]);
+        // 获取校区、岗位信息
+        $departments = DB::table('department')->get();
+        $positions = DB::table('position')->get();
+        return view('user/edit', ['user' => $user, 'departments' => $departments, 'positions' => $positions]);
     }
 
     /**
@@ -195,26 +239,47 @@ class UserController extends Controller
                                      'message' => '请输入用户名及密码登陆系统']);
 
         }
-         // 获取表单输入
+        // 获取表单输入
         $user_id = $request->input('input1');
         $user_name = $request->input('input2');
+        $user_gender = $request->input('input3');
+        $user_department = $request->input('input4');
+        $user_position = $request->input('input5');
+        $user_level = $request->input('input6');
+        $user_dateOfEntry = $request->input('input7');
+        $user_phone = $request->input('input8');
+        $user_wechat = $request->input('input9');
+        // 判断是否为空，为空设为NULL
+        if($user_phone == ""){
+            $user_phone = "NULL";
+        }
+        if($user_wechat == ""){
+            $user_wechat = "NULL";
+        }
         // 更新数据库
         try{
             DB::table('user')
                         ->where('user_id', $user_id)
-                        ->update(['user_name' => $user_name]);
+                        ->update(['user_name' => $user_name,
+                                  'user_gender' => $user_gender,
+                                  'user_department' => $user_department,
+                                  'user_position' => $user_position,
+                                  'user_level' => $user_level,
+                                  'user_dateOfEntry' => $user_dateOfEntry,
+                                  'user_phone' => $user_phone,
+                                  'user_wechat' => $user_wechat]);
         }
         // 捕获异常
         catch(Exception $e){
             return redirect("/user/{$user_id}/edit")->with(['notify' => true,
-                                                                   'type' => 'danger',
-                                                                   'title' => '用户修改失败',
-                                                                   'message' => '用户修改失败，请重新输入信息']);
+                                                            'type' => 'danger',
+                                                            'title' => '用户修改失败',
+                                                            'message' => '用户修改失败，请重新输入信息']);
         }
         return redirect("/user/{$user_id}")->with(['notify' => true,
-                                                               'type' => 'success',
-                                                               'title' => '用户修改成功',
-                                                               'message' => '用户修改成功，用户序号: '.$user_id.', 用户名称: '.$user_name]);
+                                                   'type' => 'success',
+                                                   'title' => '用户修改成功',
+                                                   'message' => '用户修改成功，用户序号: '.$user_id.', 用户名称: '.$user_name]);
     }
 
     /**
@@ -241,14 +306,14 @@ class UserController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect()->action('userController@index')
+            return redirect()->action('UserController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
                                      'title' => '用户删除失败',
                                      'message' => '用户删除失败，请联系系统管理员']);
         }
         // 返回用户列表
-        return redirect()->action('userController@index')
+        return redirect()->action('UserController@index')
                          ->with(['notify' => true,
                                  'type' => 'success',
                                  'title' => '用户删除成功',

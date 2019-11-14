@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $("#main_card").show("800");
+    $(".main_card").show("800");
     //$("#main_card").fadeIn("3000");
 });
 
