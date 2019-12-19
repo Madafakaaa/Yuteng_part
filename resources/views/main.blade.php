@@ -22,6 +22,6 @@
 <!-- Sidebar active status -->
 @section('sidebar_status')
 <script>
-  sidebarActive('home');
+  linkActive('home');
 </script>
 @show

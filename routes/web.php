@@ -43,17 +43,48 @@ Route::prefix('admin')->group(function(){
 });
 */
 
-// 登陆控制器
+// 0.    登陆控制器
 Route::get('/', 'LoginController@index');
 Route::post('/login', 'LoginController@login');
 Route::get('/exit', 'LoginController@exit');
-// 主页控制器
+// 1.    主页
 Route::get('/home', 'HomeController@home');
-// 部门管理
-Route::resource('/department', 'DepartmentController');
-// 岗位管理
-Route::resource('/position', 'PositionController');
-// 用户管理
-Route::resource('/user', 'UserController');
-// 档案管理
-Route::resource('/archive', 'ArchiveController');
+// 2.    学校管理
+// 2.1.1 校区设置
+Route::resource('/department', 'School\DepartmentController');
+// 2.1.1 学校设置
+Route::resource('/school', 'School\SchoolController');
+// 2.2.1 用户管理
+Route::resource('/user', 'School\UserController');
+// 2.2.2 岗位管理
+Route::resource('/position', 'School\PositionController');
+// 2.2.3 等级管理
+Route::resource('/level', 'School\LevelController');
+// 2.2.4 档案管理
+Route::resource('/archive', 'School\ArchiveController');
+// 2.3.1 课程管理
+Route::resource('/course', 'School\CourseController');
+// 2.3.2 年级管理
+Route::resource('/grade', 'School\GradeController');
+// 2.3.3 课程管理
+Route::resource('/subject', 'School\SubjectController');
+
+// 3.    招生管理
+// 3.1.1 客户管理
+Route::resource('/customer', 'Market\CustomerController');
+Route::post('/customer/{id}/record', 'Market\CustomerController@record');
+// 3.1.2 来源设置
+Route::resource('/source', 'Market\SourceController');
+
+// 4.    教务中心
+// 4.1   学生管理
+Route::resource('/student', 'Teaching\StudentController');
+// 4.2   班级管理
+Route::resource('/class', 'Teaching\ClassController');
+// 4.2   班级成员管理
+Route::post('/member/{class_id}', 'Teaching\MemberController@add');
+Route::delete('/member/{class_id}', 'Teaching\MemberController@delete');
+
+// 5.    财务中心
+// 5.1   学生购课
+Route::resource('/payment', 'Finance\PaymentController');

@@ -29,75 +29,104 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#navbar-dashboards" data-toggle="collapse" role="button" aria-controls="navbar-dashboards" id="section1">
+          <a class="nav-link" href="#navbar-1" data-toggle="collapse" aria-expanded="false" role="button" aria-controls="navbar-1" id="link-1">
             <i class="ni ni-archive-2 text-green"></i>
             <span class="nav-link-text">学校管理</span>
           </a>
-          <div class="collapse show" id="navbar-dashboards">
+          <div class="collapse" id="navbar-1">
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
-                <a href="/department" class="nav-link" id="department">校区管理</a>
+                <a href="#navbar-1-1" class="nav-link" data-toggle="collapse" role="button" aria-controls="navbar-1-1" id="link-1-1">校区管理</a>
+                <div class="collapse" id="navbar-1-1">
+                  <ul class="nav nav-sm flex-column">
+                    <li class="nav-item">
+                      <a href="/department" class="nav-link" id="department">校区设置</a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/school" class="nav-link" id="school">学校设置</a>
+                    </li>
+                  </ul>
+                </div>
               </li>
               <li class="nav-item">
-                <a href="/position" class="nav-link" id="position">岗位管理</a>
+                <a href="#navbar-1-2" class="nav-link" data-toggle="collapse" role="button" aria-controls="navbar-1-2" id="link-1-2">用户管理</a>
+                <div class="collapse" id="navbar-1-2">
+                  <ul class="nav nav-sm flex-column">
+                    <li class="nav-item">
+                      <a href="/user" class="nav-link" id="user">用户列表</a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/position" class="nav-link" id="position">岗位设置</a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/level" class="nav-link" id="level">等级设置</a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/archive" class="nav-link" id="archive">档案管理</a>
+                    </li>
+                  </ul>
+                </div>
               </li>
               <li class="nav-item">
-                <a href="/user" class="nav-link" id="user">用户管理</a>
-              </li>
-              <li class="nav-item">
-                <a href="/archive" class="nav-link" id="archive">档案管理</a>
+                <a href="#navbar-1-3" class="nav-link" data-toggle="collapse" role="button" aria-controls="navbar-1-3" id="link-1-3">课程管理</a>
+                <div class="collapse" id="navbar-1-3">
+                  <ul class="nav nav-sm flex-column">
+                    <li class="nav-item">
+                      <a href="/course" class="nav-link" id="course">课程设置</a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/grade" class="nav-link" id="grade">年级设置</a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/subject" class="nav-link" id="subject">科目设置</a>
+                    </li>
+                  </ul>
+                </div>
               </li>
             </ul>
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#navbar-examples" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-examples">
+          <a class="nav-link" href="#navbar-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-2" id="link-2">
             <i class="ni ni-ungroup text-orange"></i>
             <span class="nav-link-text">招生管理</span>
           </a>
-          <div class="collapse" id="navbar-examples">
+          <div class="collapse" id="navbar-2">
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
-                <a href="../../pages/examples/pricing.html" class="nav-link">Pricing</a>
+                <a href="/customer" class="nav-link" id="customer">客户管理</a>
+              </li>
+              <li class="nav-item">
+                <a href="/source" class="nav-link" id="source">来源设置</a>
               </li>
             </ul>
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#navbar-components" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-components">
-            <i class="ni ni-ui-04 text-info"></i>
-            <span class="nav-link-text">学生管理</span>
-          </a>
-          <div class="collapse" id="navbar-components">
-            <ul class="nav nav-sm flex-column">
-              <li class="nav-item">
-                <a href="../../pages/components/buttons.html" class="nav-link">Buttons</a>
-              </li>
-            </ul>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#navbar-forms" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-forms">
+          <a class="nav-link" href="#navbar-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-3" id="link-3">
             <i class="ni ni-single-copy-04 text-pink"></i>
             <span class="nav-link-text">教务中心</span>
           </a>
-          <div class="collapse" id="navbar-forms">
+          <div class="collapse" id="navbar-3">
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
-                <a href="../../pages/forms/elements.html" class="nav-link">Elements</a>
+                <a href="/student" class="nav-link" id="student">学生管理</a>
+              </li>
+              <li class="nav-item">
+                <a href="/class" class="nav-link" id="class">班级管理</a>
               </li>
             </ul>
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#navbar-tables" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
+          <a class="nav-link" href="#navbar-4" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-4" id="link-4">
             <i class="ni ni-align-left-2 text-default"></i>
             <span class="nav-link-text">财务中心</span>
           </a>
-          <div class="collapse" id="navbar-tables">
+          <div class="collapse" id="navbar-4">
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
-                <a href="../../pages/tables/tables.html" class="nav-link">Tables</a>
+                <a href="/payment" class="nav-link" id="payment">学生购课</a>
               </li>
             </ul>
           </div>

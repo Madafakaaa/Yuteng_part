@@ -27,8 +27,12 @@ function notify(title, message, type){
     });
 }
 
-//Sidebar Active function
-function sidebarActive(id){
+//Sidebar Status
+function linkActive(id){
     document.getElementById(id).setAttribute("class", "nav-link active");
     document.getElementById(id).setAttribute("aria-expanded", "true");
+}
+
+function navbarActive(id){
+    document.getElementById(id).setAttribute("class", "collapse show");
 }
