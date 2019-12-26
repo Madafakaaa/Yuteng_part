@@ -24,57 +24,11 @@ class StudentController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+
         // 获取用户信息
-        $user_student = Session::get('user_student');
-        // 获取数据库信息
-        // 获取总数据数
-        $totalRecord = DB::table('student')->where('student_status', 1);
-        // 添加筛选条件
-        // 学生名称
-        if ($request->has('filter1')) {
-            if($request->input('filter1')!=''){
-                $totalRecord = $totalRecord->where('student_name', 'like', '%'.$request->input('filter1').'%');
-            }
-        }
-        // 学生校区
-        if ($request->has('filter2')) {
-            if($request->input('filter2')!=''){
-                $totalRecord = $totalRecord->where('student_department', '=', $request->input('filter2'));
-            }
-        }
-        // 学生年级
-        if ($request->has('filter3')) {
-            if($request->input('filter3')!=''){
-                $totalRecord = $totalRecord->where('student_grade', '=', $request->input('filter3'));
-            }
-        }
-        // 学生学校
-        if ($request->has('filter4')) {
-            if($request->input('filter4')!=''){
-                $totalRecord = $totalRecord->where('student_school', '=', $request->input('filter4'));
-            }
-        }
-        $totalRecord = $totalRecord->count();
-        // 设置每页数据(20数据/页)
-        $rowPerPage = 20;
-        // 获取总页数
-        if($totalRecord==0){
-            $totalPage = 1;
-        }else{
-            $totalPage = ceil($totalRecord/$rowPerPage);
-        }
-        // 获取当前页数
-        if ($request->has('page')) {
-            $currentPage = $request->input('page');
-            if($currentPage<1)
-                $currentPage = 1;
-            if($currentPage>$totalPage)
-                $currentPage = $totalPage;
-        }else{
-            $currentPage = 1;
-        }
+        $user_level = Session::get('user_level');
+
         // 获取数据
-        $offset = ($currentPage-1)*$rowPerPage;
         $rows = DB::table('student')
                   ->join('department', 'student.student_department', '=', 'department.department_id')
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
@@ -82,41 +36,42 @@ class StudentController extends Controller
                   ->where('student_status', 1);
         // 添加筛选条件
         // 学生名称
-        if ($request->has('filter1')) {
-            if($request->input('filter1')!=''){
-                $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
-            }
+        if ($request->filled('filter1')) {
+            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
         }
         // 学生校区
-        if ($request->has('filter2')) {
-            if($request->input('filter2')!=''){
-                $rows = $rows->where('student_department', '=', $request->input('filter2'));
-            }
+        if ($request->filled('filter2')) {
+            $rows = $rows->where('student_department', '=', $request->input('filter2'));
         }
         // 学生年级
-        if ($request->has('filter3')) {
-            if($request->input('filter3')!=''){
-                $rows = $rows->where('student_grade', '=', $request->input('filter3'));
-            }
+        if ($request->filled('filter3')) {
+            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
         }
         // 学生学校
-        if ($request->has('filter4')) {
-            if($request->input('filter4')!=''){
-                $rows = $rows->where('student_school', '=', $request->input('filter4'));
-            }
+        if ($request->filled('filter4')) {
+            $rows = $rows->where('student_school', '=', $request->input('filter4'));
         }
+
+        // 计算分页信息
+        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($rows->count(), $request, 1);
+
+        // 排序并获取数据对象
         $rows = $rows->orderBy('student_createtime', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
+
         // 获取校区、年级、学校信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         $filter_schools = DB::table('school')->where('school_status', 1)->orderBy('school_createtime', 'asc')->get();
+
+        // 返回列表视图
         return view('teaching/student/index', ['rows' => $rows,
                                                'currentPage' => $currentPage,
                                                'totalPage' => $totalPage,
-                                               'startIndex' => ($currentPage-1)*$rowPerPage,
+                                               'startIndex' => $offset,
+                                               'request' => $request,
                                                'filter_departments' => $filter_departments,
                                                'filter_grades' => $filter_grades,
                                                'filter_schools' => $filter_schools]);

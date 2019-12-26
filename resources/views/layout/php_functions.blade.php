@@ -1,72 +1,80 @@
 <?php
 
 // Generate page links for tables
-function pageLink($currentPage, $totalPage)
+function pageLink($currentPage, $totalPage, $request)
 {
-  $prevPage=$currentPage-1;
-  $nextPage=$currentPage+1;
-
-  echo '<div class="card-footer">';
-  echo '<nav>';
-  echo '<ul class="pagination justify-content-center">';
+  // 获取上一页、下一页页码
+  $prevPage = $currentPage-1;
+  $nextPage = $currentPage+1;
+  // 生成请求URL参数
+  $request_str = "";
+  $requests = $request->all();
+  foreach($requests as $key => $value){
+      if($key!="page"){
+          $request_str .= "&".$key."=".$value;
+      }
+  }
+  // 输出HTML
+  echo "<div class='card-footer'>";
+  echo "<nav>";
+  echo "<ul class='pagination justify-content-center'>";
   // 上一页按钮
   if($currentPage==1){
-      echo '<li class="page-item disabled">';
+      echo "<li class='page-item disabled'>";
   }else{
-      echo '<li class="page-item">';
+      echo "<li class='page-item'>";
   }
-  echo "<a class='page-link' href='?page={$prevPage}'>";
-  echo '<i class="fas fa-angle-left"></i>';
-  echo '<span class="sr-only">Previous</span>';
-  echo '</a>';
-  echo '</li>';
+  echo "<a class='page-link' href='?page={$prevPage}{$request_str}'>";
+  echo "<i class='fas fa-angle-left'></i>";
+  echo "<span class='sr-only'>Previous</span>";
+  echo "</a>";
+  echo "</li>";
   // 第一页链接
   if($currentPage==1){
-      echo '<li class="page-item active"><a class="page-link" href="?page=1">1</a></li>';
+      echo "<li class='page-item active'><a class='page-link' href='#'>1</a></li>";
   }else{
-      echo '<li class="page-item"><a class="page-link" href="?page=1">1</a></li>';
+      echo "<li class='page-item'><a class='page-link' href='?page=1{$request_str}'>1</a></li>";
   }
   // 省略图标
   if($currentPage>=5){
-      echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+      echo "<li class='page-item disabled'><a class='page-link'>...</a></li>";
   }
   // 页数导航
-  for($i=$currentPage-2;$i<=$currentPage+2;$i++){
+  for($i = $currentPage-2; $i <= $currentPage+2; $i++){
       if($i>1&$i<$totalPage){
-          if($i==$currentPage){
-              echo "<li class='page-item active'><a class='page-link' href='?page={$i}'>{$i}</a></li>";
+          if($i == $currentPage){
+              echo "<li class='page-item active'><a class='page-link' href='#'>{$i}</a></li>";
           }else{
-              echo "<li class='page-item'><a class='page-link' href='?page={$i}'>{$i}</a></li>";
+              echo "<li class='page-item'><a class='page-link' href='?page={$i}{$request_str}'>{$i}</a></li>";
           }
       }
   }
   // 省略图标
   if($currentPage<=($totalPage-4)){
-      echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+      echo "<li class='page-item disabled'><a class='page-link'>...</a></li>";
   }
   // 最后一页链接
   if($totalPage!=1){
       if($currentPage==$totalPage){
-          echo "<li class='page-item active'><a class='page-link' href='?page={$totalPage}'>{$totalPage}</a></li>";
+          echo "<li class='page-item active'><a class='page-link' href='#'>{$totalPage}</a></li>";
       }else{
-          echo "<li class='page-item'><a class='page-link' href='?page={$totalPage}'>{$totalPage}</a></li>";
+          echo "<li class='page-item'><a class='page-link' href='?page={$totalPage}{$request_str}'>{$totalPage}</a></li>";
       }
   }
   // 下一页按钮
   if($currentPage==$totalPage){
-      echo '<li class="page-item disabled">';
+      echo "<li class='page-item disabled'>";
   }else{
-      echo '<li class="page-item">';
+      echo "<li class='page-item'>";
   }
-  echo "<a class='page-link' href='?page={$nextPage}'>";
-  echo '<i class="fas fa-angle-right"></i>';
-  echo '<span class="sr-only">Next</span>';
-  echo '</a>';
-  echo '</li>';
-
-  echo '</ul>';
-  echo '</nav>';
-  echo '</div>';
+  echo "<a class='page-link' href='?page={$nextPage}{$request_str}'>";
+  echo "<i class='fas fa-angle-right'></i>";
+  echo "<span class='sr-only'>Next</span>";
+  echo "</a>";
+  echo "</li>";
+  echo "</ul>";
+  echo "</nav>";
+  echo "</div>";
 }
 
 function deleteConfirm($id,$messages){

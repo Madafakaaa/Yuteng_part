@@ -21,64 +21,58 @@
         <!-- Card body -->
         <div class="card-body">
           <div class="row">
-            <div class="col-12">
+            <div class="col-6">
               <div class="form-group">
                 <label class="form-control-label">课程名称</label>
                 <input class="form-control" type="text" value="{{ $course->course_name }}" readonly>
               </div>
             </div>
-          </div>
-          <div class="row">
             <div class="col-6">
               <div class="form-group">
                 <label class="form-control-label">开课校区</label>
                 <input class="form-control" type="text" value="@if($course->course_department==0) 全校区 @else{{ $course->department_name }}@endif" readonly>
               </div>
             </div>
+          </div>
+          <div class="row">
             <div class="col-6">
               <div class="form-group">
                 <label class="form-control-label">课程季度</label>
                 <input class="form-control" type="text" value="{{ $course->course_quarter }}" readonly>
               </div>
             </div>
-          </div>
-          <div class="row">
             <div class="col-6">
               <div class="form-group">
                 <label class="form-control-label">课程年级</label>
                 <input class="form-control" type="text" value="@if($course->course_grade==0) 全年级 @else{{ $course->grade_name }}@endif" readonly>
               </div>
             </div>
+          </div>
+          <div class="row">
             <div class="col-6">
               <div class="form-group">
                 <label class="form-control-label">课程科目</label>
                 <input class="form-control" type="text" value="@if($course->course_subject==0) 全科目 @else{{ $course->subject_name }}@endif" readonly>
               </div>
             </div>
-          </div>
-          <div class="row">
             <div class="col-6">
               <div class="form-group">
                 <label class="form-control-label">课时单价</label>
                 <input class="form-control" type="text" value="{{ $course->course_unit_price }}元" readonly>
               </div>
             </div>
-            <div class="col-6">
-              <div class="form-group">
-                <label class="form-control-label">课时时长</label>
-                <input class="form-control" type="text" value="{{ $course->course_time }}分钟" readonly>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="form-group">
-                <label class="form-control-label">起始日期</label>
-                <input class="form-control" type="text" value="{{ $course->course_start }}" readonly>
-              </div>
-            </div>
+          </div>
+          <div class="row">
             <div class="col-6">
               <div class="form-group">
                 <label class="form-control-label">截止日期</label>
                 <input class="form-control" type="text" value="{{ $course->course_end }}" readonly>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label class="form-control-label">课程时长</label>
+                <input class="form-control" type="text" value="{{ $course->course_time }}分钟" readonly>
               </div>
             </div>
           </div>

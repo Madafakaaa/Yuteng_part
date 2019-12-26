@@ -23,14 +23,22 @@
           <!-- Card body -->
           <div class="card-body">
             <div class="row">
-              <div class="col-12">
+              <div class="col-2"></div>
+              <div class="col-8">
                 <div class="form-group">
                   <label class="form-control-label">校区名称<span style="color:red">*</span></label>
                   <input class="form-control" type="text" name="input1" placeholder="请输入校区名称..." autocomplete='off' required maxlength="10">
                 </div>
               </div>
             </div>
-            <input type="submit" class="btn btn-primary" value="添加校区">
+            <div class="row">
+              <div class="col-2"></div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="submit" class="btn btn-primary btn-block" value="提交">
+                </div>
+              </div>
+            </div>
           </div>
         <form>
       </div>

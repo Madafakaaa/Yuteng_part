@@ -11,3 +11,25 @@ function loginExpired(){
                              'title' => '您尚未登录',
                              'message' => '请输入用户名及密码登陆系统']);
 }
+
+function pagination($totalRecord, $request, $rowPerPage=20){
+    // 获取总页数
+    if($totalRecord==0){
+        $totalPage = 1;
+    }else{
+        $totalPage = ceil($totalRecord/$rowPerPage);
+    }
+    // 获取当前页数
+    if ($request->has('page')) {
+        $currentPage = $request->input('page');
+        if($currentPage<1)
+            $currentPage = 1;
+        if($currentPage>$totalPage)
+            $currentPage = $totalPage;
+    }else{
+        $currentPage = 1;
+    }
+    // 计算offset偏移
+    $offset = ($currentPage-1)*$rowPerPage;
+    return array($offset, $rowPerPage, $currentPage, $totalPage);
+}

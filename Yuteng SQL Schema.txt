@@ -1,0 +1,385 @@
+/* Mysql Schema */
+/* Ziyi Zhang */
+/*************************************************************************************************************************************************************************************************/
+/* Delete database Yuteng */
+DROP DATABASE Yuteng;
+/* Create database Yuteng */
+CREATE DATABASE Yuteng;
+USE Yuteng;
+/*************************************************************************************************************************************************************************************************/
+/* Department 校区 */
+CREATE TABLE Yuteng.Department(
+	department_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '校区id*',
+    department_name VARCHAR(10) NOT NULL UNIQUE COMMENT '校区名称*',
+	department_status TINYINT NOT NULL DEFAULT 1 COMMENT '校区可用状态(0：删除，1：可用)(0：删除，1：可用)*',
+	department_createuser CHAR(8) NOT NULL COMMENT '校区创建用户*',
+	department_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '校区创建时间*',
+	PRIMARY KEY (department_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* School 学校 */
+CREATE TABLE Yuteng.School(
+	school_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '学校id*',
+    school_name VARCHAR(10) NOT NULL UNIQUE COMMENT '学校名称*',
+    school_department INTEGER UNSIGNED NOT NULL COMMENT '学校校区*',
+	school_status TINYINT NOT NULL DEFAULT 1 COMMENT '学校可用状态(0：删除，1：可用)*',
+	school_createuser CHAR(8) NOT NULL COMMENT '学校创建用户*',
+	school_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '学校创建时间*',
+	PRIMARY KEY (school_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Classroom 教室 */
+CREATE TABLE Yuteng.Classroom(
+	classroom_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '教室id*',
+    classroom_name VARCHAR(10) NOT NULL UNIQUE COMMENT '教室名称*',
+    classroom_department INTEGER UNSIGNED NOT NULL COMMENT '教室校区*',
+    classroom_student_num INTEGER UNSIGNED NOT NULL COMMENT '教室容纳人数*',
+    classroom_type VARCHAR(5) NOT NULL COMMENT '教室类型*',
+	classroom_status TINYINT NOT NULL DEFAULT 1 COMMENT '教室可用状态(0：删除，1：可用)*',
+	classroom_createuser CHAR(8) NOT NULL COMMENT '教室创建用户*',
+	classroom_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '教室创建时间*',
+	PRIMARY KEY (classroom_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Position 岗位 */
+CREATE TABLE Yuteng.Position(
+	position_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '岗位id*',
+    position_name VARCHAR(10) NOT NULL UNIQUE COMMENT '岗位名称*',
+	position_status TINYINT NOT NULL DEFAULT 1 COMMENT '岗位可用状态(0：删除，1：可用)*',
+	position_createuser CHAR(8) NOT NULL COMMENT '岗位创建用户*',
+	position_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '岗位创建时间*',
+	PRIMARY KEY (position_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Level 等级 */
+CREATE TABLE Yuteng.Level(
+	level_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '等级id*',
+    level_name VARCHAR(10) NOT NULL UNIQUE COMMENT '等级名称*',
+	level_status TINYINT NOT NULL DEFAULT 1 COMMENT '等级可用状态(0：删除，1：可用)*',
+	level_createuser CHAR(8) NOT NULL COMMENT '等级创建用户*',
+	level_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '等级创建时间*',
+	PRIMARY KEY (level_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* User 用户 */
+CREATE TABLE Yuteng.User(
+	user_id CHAR(8) NOT NULL COMMENT '用户id*',
+    user_password VARCHAR(15) NOT NULL DEFAULT '000000' COMMENT '用户密码*',
+    user_name VARCHAR(10) NOT NULL UNIQUE COMMENT '用户姓名*',
+	user_gender CHAR(1) NOT NULL DEFAULT '男' COMMENT '用户性别*',
+	user_department INTEGER UNSIGNED NOT NULL COMMENT '用户校区*',
+	user_position INTEGER UNSIGNED NOT NULL COMMENT '用户岗位*',
+	user_level INTEGER UNSIGNED NOT NULL COMMENT '用户级别*',
+	user_dateOfEntry DATE NOT NULL COMMENT '用户入职日期*',
+    user_phone VARCHAR(11) DEFAULT '无' COMMENT '用户手机',
+    user_wechat VARCHAR(20) DEFAULT '无' COMMENT '用户微信',
+	user_status TINYINT NOT NULL DEFAULT 1 COMMENT '用户可用状态(0：删除，1：可用)*',
+	user_createuser CHAR(8) NOT NULL COMMENT '用户创建用户*',
+	user_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '用户创建时间*',
+	PRIMARY KEY (user_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Archive 档案 */
+CREATE TABLE Yuteng.Archive(
+	archive_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '档案id*',
+	archive_user CHAR(8) NOT NULL COMMENT '档案用户*',
+	archive_name VARCHAR(255) NOT NULL COMMENT '档案名称*',
+	archive_file_name VARCHAR(255) NOT NULL COMMENT '档案文件名*',
+	archive_file_size DECIMAL(4,2) NOT NULL COMMENT '档案文件大小*',
+	archive_path VARCHAR(40) NOT NULL COMMENT '档案路径*',
+	archive_createuser CHAR(8) NOT NULL COMMENT '档案创建用户*',
+	archive_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '档案创建时间*',
+	PRIMARY KEY (archive_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Grade 年级 */
+CREATE TABLE Yuteng.Grade(
+	grade_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '年级id*',
+	grade_name VARCHAR(255) NOT NULL COMMENT '年级名称*',
+	grade_status TINYINT NOT NULL DEFAULT 1 COMMENT '年级可用状态(0：删除，1：可用)*',
+	grade_createuser CHAR(8) NOT NULL COMMENT '年级创建用户*',
+	grade_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '年级创建时间*',
+	PRIMARY KEY (grade_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Subject 科目 */
+CREATE TABLE Yuteng.Subject(
+	subject_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '科目id*',
+	subject_name VARCHAR(255) NOT NULL COMMENT '科目名称*',
+	subject_status TINYINT NOT NULL DEFAULT 1 COMMENT '科目可用状态(0：删除，1：可用)*',
+	subject_createuser CHAR(8) NOT NULL COMMENT '科目创建用户*',
+	subject_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '科目创建时间*',
+	PRIMARY KEY (subject_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Course 课程 */
+CREATE TABLE Yuteng.Course(
+	course_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '课程id*',
+	course_name VARCHAR(255) NOT NULL COMMENT '课程名称*',
+	course_department INTEGER UNSIGNED NOT NULL COMMENT '课程校区*',
+	course_quarter CHAR(2) NOT NULL COMMENT '课程季度*',
+	course_grade INTEGER UNSIGNED NOT NULL COMMENT '课程年级*',
+	course_subject INTEGER UNSIGNED NOT NULL COMMENT '课程科目*',
+	course_unit_price DECIMAL(10,2) NOT NULL COMMENT '课程单价*',
+	course_time INTEGER UNSIGNED NOT NULL COMMENT '课程时间*',
+	course_end DATE NOT NULL COMMENT '课程截止有效日期*',
+	course_remark VARCHAR(255) DEFAULT '无' COMMENT '课程备注',
+	course_status TINYINT NOT NULL DEFAULT 1 COMMENT '课程可用状态(0：删除，1：可用)*',
+	course_createuser CHAR(8) NOT NULL COMMENT '课程创建用户*',
+	course_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '课程创建时间*',
+	PRIMARY KEY (course_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Customer 客户 */
+CREATE TABLE Yuteng.Customer(
+	customer_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '客户id*',
+	customer_name VARCHAR(255) NOT NULL COMMENT '客户姓名*',
+	customer_phone char(11) NOT NULL COMMENT '客户电话*',
+	customer_department INTEGER UNSIGNED NOT NULL COMMENT '客户校区*',
+	customer_source VARCHAR(10) NOT NULL COMMENT '客户来源*',
+	customer_wechat VARCHAR(255) COMMENT '客户微信',
+	customer_relationship CHAR(2) COMMENT '客户关系',
+	customer_course INTEGER UNSIGNED COMMENT '客户意向课程',
+	customer_follower CHAR(8) COMMENT '客户负责人',
+	customer_student_name VARCHAR(255) DEFAULT '无' COMMENT '客户学生姓名',
+	customer_student_grade INTEGER UNSIGNED COMMENT '客户学生年级',
+	customer_remark VARCHAR(255) COMMENT '客户备注',
+	customer_follow_time INTEGER UNSIGNED NOT NULL DEFAULT 0 COMMENT '客户跟进次数*',
+	customer_conversed TINYINT NOT NULL DEFAULT 0 COMMENT '客户签约状态*',
+	customer_status TINYINT NOT NULL DEFAULT 1 COMMENT '客户可用状态(0：删除，1：可用)*',
+	customer_createuser CHAR(8) NOT NULL COMMENT '客户创建用户*',
+	customer_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '客户创建时间*',
+	PRIMARY KEY (customer_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Customer 客户跟进记录 */
+CREATE TABLE Yuteng.Customer_follow_record(
+	customer_follow_record_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '客户跟进记录id*',
+	customer_follow_record_customer INTEGER UNSIGNED NOT NULL COMMENT '客户id*',
+	customer_follow_record_follower CHAR(8) NOT NULL COMMENT '客户跟进用户*',
+	customer_follow_record_conversed TINYINT NOT NULL COMMENT '客户跟进状态*',
+	customer_follow_record_remark VARCHAR(255) NOT NULL COMMENT '客户跟进动态*',
+	customer_follow_record_createuser CHAR(8) NOT NULL COMMENT '跟进记录创建用户*',
+	customer_follow_record_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '跟进记录创建时间*',
+	PRIMARY KEY (customer_follow_record_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Source 来源 */
+CREATE TABLE Yuteng.Source(
+	source_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '来源id*',
+    source_name VARCHAR(10) NOT NULL UNIQUE COMMENT '来源名称*',
+	source_status TINYINT NOT NULL DEFAULT 1 COMMENT '来源可用状态(0：删除，1：可用)*',
+	source_createuser CHAR(8) NOT NULL COMMENT '来源创建用户*',
+	source_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '来源创建时间*',
+	PRIMARY KEY (source_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Student 学生 */
+CREATE TABLE Yuteng.Student(
+	student_id CHAR(10) NOT NULL COMMENT '学生id*',
+    student_name VARCHAR(10) NOT NULL COMMENT '学生姓名*',
+	student_department INTEGER UNSIGNED NOT NULL COMMENT '学生校区*',
+	student_grade INTEGER UNSIGNED NOT NULL COMMENT '学生年级*',
+	student_gender CHAR(1) NOT NULL DEFAULT '男' COMMENT '学生性别*',
+	student_birthday DATE COMMENT '学生生日*',
+    student_school INTEGER UNSIGNED COMMENT '学生学校*',
+	student_phone CHAR(11) COMMENT '学生电话*',
+	student_status TINYINT NOT NULL DEFAULT 1 COMMENT '学生可用状态(0：删除，1：可用)*',
+	student_createuser CHAR(8) NOT NULL COMMENT '学生创建用户*',
+	student_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '学生创建时间*',
+	PRIMARY KEY (student_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Class 班级 */
+CREATE TABLE Yuteng.Class(
+	class_id CHAR(10) NOT NULL COMMENT '班级id*',
+    class_name VARCHAR(20) NOT NULL COMMENT '班级名称*',
+	class_department INTEGER UNSIGNED NOT NULL COMMENT '班级校区*',
+	class_grade INTEGER UNSIGNED NOT NULL COMMENT '班级年级*',
+	class_subject INTEGER UNSIGNED NOT NULL COMMENT '班级科目*',
+	class_teacher CHAR(8) NOT NULL COMMENT '负责教师*',
+	class_max_num INTEGER UNSIGNED NOT NULL DEFAULT 1 COMMENT '班级最大人数*',
+	class_current_num INTEGER UNSIGNED NOT NULL DEFAULT 0 COMMENT '班级当前人数*',
+	class_status TINYINT NOT NULL DEFAULT 1 COMMENT '班级可用状态(0：删除，1：可用)*',
+	class_createuser CHAR(8) NOT NULL COMMENT '班级创建用户*',
+	class_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '班级创建时间*',
+	PRIMARY KEY (class_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Member 班级成员 */
+CREATE TABLE Yuteng.Member(
+	member_class CHAR(10) NOT NULL COMMENT '班级id*',
+	member_student CHAR(10) NOT NULL COMMENT '学生id*',
+	member_createuser CHAR(8) NOT NULL COMMENT '添加用户*',
+	member_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间*',
+	PRIMARY KEY (member_class, member_student)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Payment 购买课时（中） */
+CREATE TABLE Yuteng.Payment(
+	payment_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '购课id*',
+	payment_student CHAR(10) NOT NULL COMMENT '学生id*',
+	payment_course INTEGER UNSIGNED NOT NULL COMMENT '课程id*',
+	payment_unit_price DECIMAL(10,2) NOT NULL COMMENT '课程单价*',
+	payment_amount INTEGER UNSIGNED NOT NULL COMMENT '购课数量*',
+	payment_price DECIMAL(10,2) NOT NULL COMMENT '购课金额*',
+	payment_date DATE NOT NULL COMMENT '购课时间*',
+	payment_status TINYINT NOT NULL DEFAULT 1 COMMENT '购课记录可用状态(0：删除，1：可用)*',
+	payment_createuser CHAR(8) NOT NULL COMMENT '添加用户*',
+	payment_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间*',
+	PRIMARY KEY (payment_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Hour 剩余课时 */
+CREATE TABLE Yuteng.Hour(
+	hour_student CHAR(10) NOT NULL COMMENT '学生id*',
+	hour_course INTEGER UNSIGNED NOT NULL COMMENT '课程id*',
+	hour_remain INTEGER UNSIGNED NOT NULL COMMENT '剩余课时*',
+	hour_used INTEGER UNSIGNED NOT NULL DEFAULT 0 COMMENT '已用课时*',
+	hour_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间*',
+	PRIMARY KEY (hour_student, hour_course)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Schedule 课程安排 */
+CREATE TABLE Yuteng.Schedule(
+	schedule_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '课程安排id*',
+	schedule_department INTEGER UNSIGNED NOT NULL COMMENT '课程安排校区*',
+	schedule_participant CHAR(10) NOT NULL COMMENT '学生或班级id*',
+	schedule_teacher CHAR(8) NOT NULL COMMENT '教师id*',
+	/* schedule_course INTEGER UNSIGNED COMMENT '课程id', */
+	schedule_subject INTEGER UNSIGNED NOT NULL COMMENT '课程科目*',
+	schedule_grade INTEGER UNSIGNED NOT NULL COMMENT '课程年级*',
+	schedule_classroom INTEGER UNSIGNED NOT NULL COMMENT '课程教室*',
+	schedule_date DATE NOT NULL COMMENT '课程安排日期*',
+	schedule_start TIME NOT NULL COMMENT '课程安排上课时间*',
+	schedule_end TIME NOT NULL COMMENT '课程安排下课时间*',
+	schedule_time INTEGER UNSIGNED NOT NULL COMMENT '课程时长*',
+	schedule_checked INTEGER UNSIGNED NOT NULL DEFAULT 0 COMMENT '课程安排考勤状态(0：待考勤，1：已上课，2：未上课)*',
+	schedule_checkuser CHAR(8) COMMENT '课程安排考勤用户*',
+	schedule_status INTEGER UNSIGNED NOT NULL DEFAULT 1 COMMENT '课程安排可用状态(0：删除，1：可用)*',
+	schedule_createuser CHAR(8) NOT NULL COMMENT '课程安排添加用户*',
+	schedule_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '课程安排添加时间*',
+	PRIMARY KEY (schedule_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*************************************************************************************************************************************************************************************************/
+/* Attendance 上课记录  */
+CREATE TABLE Yuteng.Attendance(
+	attendance_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '上课记录id*',
+	attendance_schedule INTEGER UNSIGNED COMMENT '上课记录课程安排id*',
+	attendance_student CHAR(10) NOT NULL COMMENT '学生id*',
+	attendance_class CHAR(10) COMMENT '班级id*',
+	attendance_teacher CHAR(8) NOT NULL COMMENT '教师id*',
+	attendance_course INTEGER UNSIGNED COMMENT '课程id',
+	attendance_date DATE NOT NULL COMMENT '上课日期*',
+	attendance_start TIME NOT NULL COMMENT '上课时间*',
+	attendance_end TIME NOT NULL COMMENT '下课时间*',
+	attendance_time INTEGER UNSIGNED NOT NULL COMMENT '课程时长*',
+	attendance_checked TINYINT NOT NULL DEFAULT 1 COMMENT '上课记录复核状态(0：待复核，1：已复核)*',
+	attendance_checkuser CHAR(8) COMMENT '上课记录复核用户*',
+	attendance_createuser CHAR(8) NOT NULL COMMENT '上课记录添加用户*',
+	attendance_createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '上课记录添加时间*',
+	PRIMARY KEY (attendance_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO Department (department_name, department_createuser) VALUES ('校区1', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('校区2', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('校区3', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('校区4', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('校区5', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('校区6', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('校区7', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('校区8', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('校区9', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('校区0', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('测试1', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('测试2', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('测试3', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('测试4', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('测试5', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('测试6', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('测试7', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('测试8', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('测试9', 'qqqq1111');
+INSERT INTO Department (department_name, department_createuser) VALUES ('测试0', 'qqqq1111');
+
+INSERT INTO Position (position_name, position_createuser) VALUES ('岗位1', 'qqqq1111');
+INSERT INTO Position (position_name, position_createuser) VALUES ('岗位2', 'qqqq1111');
+INSERT INTO Position (position_name, position_createuser) VALUES ('岗位3', 'qqqq1111');
+INSERT INTO Position (position_name, position_createuser) VALUES ('岗位4', 'qqqq1111');
+INSERT INTO Position (position_name, position_createuser) VALUES ('岗位5', 'qqqq1111');
+
+INSERT INTO Level (level_name, level_createuser) VALUES ('等级一', 'qqqq1111');
+INSERT INTO Level (level_name, level_createuser) VALUES ('等级二', 'qqqq1111');
+INSERT INTO Level (level_name, level_createuser) VALUES ('等级三', 'qqqq1111');
+INSERT INTO Level (level_name, level_createuser) VALUES ('等级四', 'qqqq1111');
+INSERT INTO Level (level_name, level_createuser) VALUES ('等级五', 'qqqq1111');
+
+INSERT INTO User(user_id, user_name, user_gender, user_department, user_position, user_level, user_dateOfEntry, user_createuser) VALUES ('qqqq1111', '用户一', '男', 1, 1, 1, '2018-09-05', 'qqqq1111');
+INSERT INTO User(user_id, user_name, user_gender, user_department, user_position, user_level, user_dateOfEntry, user_createuser) VALUES ('qqqq2222', '用户二', '女', 2, 2, 1, '2019-02-17', 'qqqq1111');
+INSERT INTO User(user_id, user_name, user_gender, user_department, user_position, user_level, user_dateOfEntry, user_createuser) VALUES ('qqqq3333', '用户三', '男', 3, 3, 2, '2019-04-21', 'qqqq1111');
+INSERT INTO User(user_id, user_name, user_gender, user_department, user_position, user_level, user_dateOfEntry, user_createuser) VALUES ('qqqq4444', '用户四', '女', 4, 4, 2, '2019-05-17', 'qqqq1111');
+INSERT INTO User(user_id, user_name, user_gender, user_department, user_position, user_level, user_dateOfEntry, user_createuser) VALUES ('wwww1111', '用户五', '男', 5, 5, 3, '2019-05-28', 'qqqq1111');
+
+INSERT INTO Grade (grade_name, grade_createuser) VALUES ('小一', 'qqqq1111');
+INSERT INTO Grade (grade_name, grade_createuser) VALUES ('小二', 'qqqq1111');
+INSERT INTO Grade (grade_name, grade_createuser) VALUES ('小三', 'qqqq1111');
+INSERT INTO Grade (grade_name, grade_createuser) VALUES ('小四', 'qqqq1111');
+INSERT INTO Grade (grade_name, grade_createuser) VALUES ('小五', 'qqqq1111');
+INSERT INTO Grade (grade_name, grade_createuser) VALUES ('预备', 'qqqq1111');
+INSERT INTO Grade (grade_name, grade_createuser) VALUES ('初一', 'qqqq1111');
+INSERT INTO Grade (grade_name, grade_createuser) VALUES ('初二', 'qqqq1111');
+INSERT INTO Grade (grade_name, grade_createuser) VALUES ('初三', 'qqqq1111');
+INSERT INTO Grade (grade_name, grade_createuser) VALUES ('高一', 'qqqq1111');
+INSERT INTO Grade (grade_name, grade_createuser) VALUES ('高二', 'qqqq1111');
+INSERT INTO Grade (grade_name, grade_createuser) VALUES ('高三', 'qqqq1111');
+
+INSERT INTO Subject (subject_name, subject_createuser) VALUES ('语文', 'qqqq1111');
+INSERT INTO Subject (subject_name, subject_createuser) VALUES ('数学', 'qqqq1111');
+INSERT INTO Subject (subject_name, subject_createuser) VALUES ('英语', 'qqqq1111');
+INSERT INTO Subject (subject_name, subject_createuser) VALUES ('物理', 'qqqq1111');
+INSERT INTO Subject (subject_name, subject_createuser) VALUES ('化学', 'qqqq1111');
+INSERT INTO Subject (subject_name, subject_createuser) VALUES ('生物', 'qqqq1111');
+INSERT INTO Subject (subject_name, subject_createuser) VALUES ('政治', 'qqqq1111');
+INSERT INTO Subject (subject_name, subject_createuser) VALUES ('地理', 'qqqq1111');
+INSERT INTO Subject (subject_name, subject_createuser) VALUES ('历史', 'qqqq1111');
+
+INSERT INTO Source (source_name, source_createuser) VALUES ('学生转介绍', 'qqqq1111');
+INSERT INTO Source (source_name, source_createuser) VALUES ('客户转介绍', 'qqqq1111');
+INSERT INTO Source (source_name, source_createuser) VALUES ('员工转介绍', 'qqqq1111');
+INSERT INTO Source (source_name, source_createuser) VALUES ('短信', 'qqqq1111');
+INSERT INTO Source (source_name, source_createuser) VALUES ('广告', 'qqqq1111');
+INSERT INTO Source (source_name, source_createuser) VALUES ('传单', 'qqqq1111');
+INSERT INTO Source (source_name, source_createuser) VALUES ('网络', 'qqqq1111');
+INSERT INTO Source (source_name, source_createuser) VALUES ('地推', 'qqqq1111');
+INSERT INTO Source (source_name, source_createuser) VALUES ('其它', 'qqqq1111');
+
+INSERT INTO `student` VALUES ('S191201001', '测试学生一', '1', '1', '男', '2001-12-20', null, null, '1', 'qqqq1111', '2019-12-20 09:14:34');
+INSERT INTO `student` VALUES ('S191201002', '测试学生二', '1', '2', '男', '2001-12-20', null, null, '1', 'qqqq1111', '2019-12-20 09:14:34');
+INSERT INTO `student` VALUES ('S191201003', '测试学生三', '1', '3', '男', '2001-12-20', null, null, '1', 'qqqq1111', '2019-12-20 09:14:34');
+INSERT INTO `student` VALUES ('S191201004', '测试学生四', '1', '4', '男', '2001-12-20', null, null, '1', 'qqqq1111', '2019-12-20 09:14:34');
+INSERT INTO `student` VALUES ('S191201005', '测试学生五', '1', '5', '男', '2001-12-20', null, null, '1', 'qqqq1111', '2019-12-20 09:14:34');
+
+INSERT INTO `class` VALUES ('C191201001', '班级校区1小一1', '1', '1', '0', 'qqqq1111', '2', '1', '1', 'qqqq1111', '2019-12-26 10:16:05');
+INSERT INTO `class` VALUES ('C191201002', '班级校区1小一2', '1', '1', '3', 'qqqq4444', '2', '1', '1', 'qqqq1111', '2019-12-26 10:16:24');
+INSERT INTO `class` VALUES ('C191201003', '班级校区1小二1', '1', '2', '8', 'qqqq1111', '5', '1', '1', 'qqqq1111', '2019-12-26 10:16:41');
+INSERT INTO `class` VALUES ('C191201004', '班级校区1小二2', '1', '2', '7', 'qqqq1111', '5', '1', '1', 'qqqq1111', '2019-12-26 10:16:56');
+
+INSERT INTO `classroom` VALUES ('1', '教室X1', '1', '2', '小班教室', '1', 'qqqq1111', '2019-12-26 10:18:47');
+INSERT INTO `classroom` VALUES ('2', '教室X2', '1', '2', '小班教室', '1', 'qqqq1111', '2019-12-26 10:19:02');
+INSERT INTO `classroom` VALUES ('3', '教室D1', '1', '5', '大教室', '1', 'qqqq1111', '2019-12-26 10:19:26');
+INSERT INTO `classroom` VALUES ('4', '教室D2', '1', '5', '大教室', '1', 'qqqq1111', '2019-12-26 10:19:38');
+
+INSERT INTO `member` VALUES ('C191201001', 'S191201001', 'qqqq1111', '2019-12-26 10:17:09');
+INSERT INTO `member` VALUES ('C191201002', 'S191201001', 'qqqq1111', '2019-12-26 10:17:17');
+INSERT INTO `member` VALUES ('C191201003', 'S191201002', 'qqqq1111', '2019-12-26 10:17:23');
+INSERT INTO `member` VALUES ('C191201004', 'S191201002', 'qqqq1111', '2019-12-26 10:17:30');
+
+INSERT INTO `course` VALUES ('1', '课程一', '1', '全年', '0', '1', '100.00', 60, '2019-12-20', null, '1', 'qqqq1111', '2019-12-20 09:15:10');
+INSERT INTO `course` VALUES ('2', '课程二', '1', '全年', '1', '2', '200.00', 60, '2019-12-20', null, '1', 'qqqq1111', '2019-12-20 09:15:10');
+INSERT INTO `course` VALUES ('3', '课程三', '1', '全年', '1', '3', '300.00', 60, '2019-12-20', null, '1', 'qqqq1111', '2019-12-20 09:15:10');
+INSERT INTO `course` VALUES ('4', '课程四', '1', '全年', '2', '4', '400.00', 60, '2019-12-20', null, '1', 'qqqq1111', '2019-12-20 09:15:10');
+INSERT INTO `course` VALUES ('5', '课程五', '1', '全年', '3', '5', '500.00', 60, '2019-12-20', null, '1', 'qqqq1111', '2019-12-20 09:15:10');
+
+INSERT INTO `school` VALUES ('1', '学校一', '1', '1', 'qqqq1111', '2019-12-26 11:20:54');
+INSERT INTO `school` VALUES ('2', '学校二', '2', '1', 'qqqq1111', '2019-12-26 11:21:00');
+INSERT INTO `school` VALUES ('3', '学校三', '3', '1', 'qqqq1111', '2019-12-26 11:21:07');

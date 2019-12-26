@@ -93,24 +93,22 @@
             <div class="row">
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">课时时长(分钟)<span style="color:red">*</span></label>
-                  <input class="form-control" type="number" name="input7" value="{{ $course->course_time }}" autocomplete='off' required>
+                  <label class="form-control-label">截止日期<span style="color:red">*</span></label>
+                  <input class="form-control datepicker" name="input7" type="text" value="{{ $course->course_end }}" required>
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">有效日期<span style="color:red">*</span></label>
-                  <div class="row">
-                    <div class="col-5">
-                      <input class="form-control datepicker" name="input8" type="text" value="{{ $course->course_start }}" required>
-                    </div>
-                    <div class="col-2 p-0 m-0">
-                      <h1 class="text-center">-</h1>
-                    </div>
-                    <div class="col-5">
-                      <input class="form-control datepicker" name="input9" type="text" value="{{ $course->course_end }}" required>
-                    </div>
-                  </div>
+                  <label class="form-control-label">课程时长(分钟)<span style="color:red">*</span></label>
+                  <select class="form-control" name="input8" data-toggle="select" required>
+                    <option value=''>请选择课程时长...</option>
+                    <option value='30' @if($course->course_time==30) selected @endif>30分钟</option>
+                    <option value='60' @if($course->course_time==60) selected @endif>60分钟</option>
+                    <option value='90' @if($course->course_time==90) selected @endif>90分钟</option>
+                    <option value='120' @if($course->course_time==120) selected @endif>120分钟</option>
+                    <option value='150' @if($course->course_time==150) selected @endif>150分钟</option>
+                    <option value='180' @if($course->course_time==180) selected @endif>180分钟</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -118,12 +116,12 @@
               <div class="col-12">
                 <div class="form-group">
                   <label class="form-control-label">课程备注</label>
-                  <textarea class="form-control" name="input10" autocomplete='off'  maxlength="255">{{ $course->course_remark }}</textarea>
+                  <textarea class="form-control" name="input9" autocomplete='off'  maxlength="255">{{ $course->course_remark }}</textarea>
                 </div>
               </div>
             </div>
             <div class="form-group">
-              <input type="submit" class="btn btn-primary" value="添加课程">
+              <input type="submit" class="btn btn-primary" value="修改">
             </div>
           </div>
         </form>

@@ -23,19 +23,39 @@
           </div>
           <!-- Card body -->
           <div class="card-body">
-            <div class="form-group">
-              <label class="form-control-label">学校序号</label>
-              <input class="form-control" type="text" value="{{ $school->school_id }}" readonly>
+            <div class="row">
+              <div class="col-2"></div>
+              <div class="col-8">
+                <div class="form-group">
+                  <label class="form-control-label">学校序号</label>
+                  <input class="form-control" type="text" value="{{ $school->school_id }}" readonly>
+                </div>
+              </div>
             </div>
-            <div class="form-group">
-              <label class="form-control-label">学校名称<span style="color:red">*</span></label>
-              <input class="form-control" type="text" name="input1" value="{{ $school->school_name }}" autocomplete='off' required maxlength="10">
+            <div class="row">
+              <div class="col-2"></div>
+              <div class="col-8">
+                <div class="form-group">
+                  <label class="form-control-label">学校名称<span style="color:red">*</span></label>
+                  <input class="form-control" type="text" name="input1" value="{{ $school->school_name }}" autocomplete='off' required maxlength="10">
+                </div>
+              </div>
             </div>
-            <div class="form-group">
-              <label class="form-control-label">添加时间</label>
-              <input class="form-control" type="text" value="{{ $school->school_createtime }}" readonly>
+            <div class="row">
+              <div class="col-2"></div>
+              <div class="col-8">
+                <div class="form-group">
+                  <label class="form-control-label">添加时间</label>
+                  <input class="form-control" type="text" value="{{ $school->school_createtime }}" readonly>
+                </div>
+              </div>
             </div>
-            <input type="submit" class="btn btn-warning" value="修改">
+            <div class="row">
+              <div class="col-2"></div>
+              <div class="col-8">
+                <input type="submit" class="btn btn-warning btn-block" value="修改">
+              </div>
+            </div>
           </div>
         </form>
       </div>

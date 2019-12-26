@@ -20,52 +20,33 @@ class SourceController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+
         // 获取用户信息
-        $user_source = Session::get('user_source');
-        // 获取数据库信息
-        // 获取总数据数
-        $totalRecord = DB::table('source')->where('source_status', 1);
-        // 添加筛选条件
-        // 来源名称
-        if ($request->has('filter1')) {
-            if($request->input('filter1')!=''){
-                $totalRecord = $totalRecord->where('source_name', 'like', '%'.$request->input('filter1').'%');
-            }
-        }
-        $totalRecord = $totalRecord->count();
-        // 设置每页数据(20数据/页)
-        $rowPerPage = 20;
-        // 获取总页数
-        if($totalRecord==0){
-            $totalPage = 1;
-        }else{
-            $totalPage = ceil($totalRecord/$rowPerPage);
-        }
-        // 获取当前页数
-        if ($request->has('page')) {
-            $currentPage = $request->input('page');
-            if($currentPage<1)
-                $currentPage = 1;
-            if($currentPage>$totalPage)
-                $currentPage = $totalPage;
-        }else{
-            $currentPage = 1;
-        }
+        $user_level = Session::get('user_level');
+
         // 获取数据
-        $offset = ($currentPage-1)*$rowPerPage;
         $rows = DB::table('source')->where('source_status', 1);
         // 添加筛选条件
         // 来源名称
-        if ($request->has('filter1')) {
-            if($request->input('filter1')!=''){
-                $rows = $rows->where('source_name', 'like', '%'.$request->input('filter1').'%');
-            }
+        if ($request->filled('filter1')) {
+            $rows = $rows->where('source_name', 'like', '%'.$request->input('filter1').'%');
         }
+
+        // 计算分页信息
+        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($rows->count(), $request, 20);
+
+        // 排序并获取数据对象
         $rows = $rows->orderBy('source_createtime', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
-        return view('market/source/index', ['rows' => $rows, 'currentPage' => $currentPage, 'totalPage' => $totalPage, 'startIndex' => ($currentPage-1)*$rowPerPage]);
+
+        // 返回列表视图
+        return view('market/source/index', ['rows' => $rows,
+                                            'currentPage' => $currentPage,
+                                            'totalPage' => $totalPage,
+                                            'startIndex' => $offset,
+                                            'request' => $request]);
     }
 
     /**

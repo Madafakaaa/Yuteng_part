@@ -118,12 +118,12 @@
       <div class="card main_card" style="display:none">
         <div class="card-header">
           <div class="row">
-            <div class="col-10">
+            <div class="col-9">
               <h3 class="mb-0">客户跟进动态</h3>
             </div>
             @if($customer->customer_conversed==0)
-              <div class="col-2">
-                <a class="btn btn-sm btn-neutral btn-round btn-icon btn-block" data-toggle="collapse" href="#collapse1" aria-expanded="false" aria-controls="collapse1">
+              <div class="col-3">
+                <a class="btn btn-sm btn-warning btn-round btn-icon btn-block" data-toggle="collapse" href="#collapse1" aria-expanded="false" aria-controls="collapse1">
                   <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
                   <span class="btn-inner--text">添加动态</span>
                 </a>

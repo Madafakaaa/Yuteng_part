@@ -20,100 +20,56 @@ class ClassController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+
         // 获取用户信息
-        $user_class = Session::get('user_class');
-        // 获取数据库信息
-        // 获取总数据数
-        $totalRecord = DB::table('class')->where('class_status', 1);
-        // 添加筛选条件
-        // 班级名称
-        if ($request->has('filter1')) {
-            if($request->input('filter1')!=''){
-                $totalRecord = $totalRecord->where('class_name', 'like', '%'.$request->input('filter1').'%');
-            }
-        }
-        // 班级校区
-        if ($request->has('filter2')) {
-            if($request->input('filter2')!=''){
-                $totalRecord = $totalRecord->where('class_department', '=', $request->input('filter2'));
-            }
-        }
-        // 班级年级
-        if ($request->has('filter3')) {
-            if($request->input('filter3')!=''){
-                $totalRecord = $totalRecord->where('class_grade', '=', $request->input('filter3'));
-            }
-        }
-        // 班级科目
-        if ($request->has('filter4')) {
-            if($request->input('filter4')!=''){
-                $totalRecord = $totalRecord->where('class_subject', '=', $request->input('filter4'));
-            }
-        }
-        $totalRecord = $totalRecord->count();
-        // 设置每页数据(20数据/页)
-        $rowPerPage = 20;
-        // 获取总页数
-        if($totalRecord==0){
-            $totalPage = 1;
-        }else{
-            $totalPage = ceil($totalRecord/$rowPerPage);
-        }
-        // 获取当前页数
-        if ($request->has('page')) {
-            $currentPage = $request->input('page');
-            if($currentPage<1)
-                $currentPage = 1;
-            if($currentPage>$totalPage)
-                $currentPage = $totalPage;
-        }else{
-            $currentPage = 1;
-        }
+        $user_level = Session::get('user_level');
+
         // 获取数据
-        $offset = ($currentPage-1)*$rowPerPage;
         $rows = DB::table('class')
                   ->join('department', 'class.class_department', '=', 'department.department_id')
                   ->join('grade', 'class.class_grade', '=', 'grade.grade_id')
                   ->leftJoin('subject', 'class.class_subject', '=', 'subject.subject_id')
                   ->join('user', 'class.class_teacher', '=', 'user.user_id')
                   ->where('class_status', 1);
+
         // 添加筛选条件
         // 班级名称
-        if ($request->has('filter1')) {
-            if($request->input('filter1')!=''){
-                $rows = $rows->where('class_name', 'like', '%'.$request->input('filter1').'%');
-            }
+        if ($request->filled('filter1')) {
+            $rows = $rows->where('class_name', 'like', '%'.$request->input('filter1').'%');
         }
         // 班级校区
-        if ($request->has('filter2')) {
-            if($request->input('filter2')!=''){
-                $rows = $rows->where('class_department', '=', $request->input('filter2'));
-            }
+        if ($request->filled('filter2')) {
+            $rows = $rows->where('class_department', '=', $request->input('filter2'));
         }
         // 班级年级
-        if ($request->has('filter3')) {
-            if($request->input('filter3')!=''){
-                $rows = $rows->where('class_grade', '=', $request->input('filter3'));
-            }
+        if ($request->filled('filter3')) {
+            $rows = $rows->where('class_grade', '=', $request->input('filter3'));
         }
         // 班级科目
-        if ($request->has('filter4')) {
-            if($request->input('filter4')!=''){
-                $rows = $rows->where('class_subject', '=', $request->input('filter4'));
-            }
+        if ($request->filled('filter4')) {
+            $rows = $rows->where('class_subject', '=', $request->input('filter4'));
         }
+
+        // 计算分页信息
+        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($rows->count(), $request, 20);
+
+        // 排序并获取数据对象
         $rows = $rows->orderBy('class_createtime', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
+
         // 获取校区、年级、科目信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
+
+        // 返回列表视图
         return view('teaching/class/index', ['rows' => $rows,
                                              'currentPage' => $currentPage,
                                              'totalPage' => $totalPage,
-                                             'startIndex' => ($currentPage-1)*$rowPerPage,
+                                             'startIndex' => $offset,
+                                             'request' => $request,
                                              'filter_departments' => $filter_departments,
                                              'filter_grades' => $filter_grades,
                                              'filter_subjects' => $filter_subjects]);

@@ -14,7 +14,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/payment" method="post" id="form1" name="form1">
+        <form action="/payment/create_second" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
             <h3 class="mb-0">添加购课</h3>
@@ -22,75 +22,19 @@
           <!-- Card body -->
           <div class="card-body">
             <div class="row">
-              <div class="col-6">
+              <div class="col-2"></div>
+              <div class="col-8">
                 <div class="form-group">
-                  <label class="form-control-label">购课名称<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" name="input1" placeholder="请输入购课名称..." autocomplete='off' required maxlength="10">
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">购课校区<span style="color:red">*</span></label>
-                  <select class="form-control" name="input2" data-toggle="select" required>
-                    <option value=''>请选择校区...</option>
-                    @foreach ($departments as $department)
-                      <option value="{{ $department->department_id }}">{{ $department->department_name }}</option>
+                  <label class="form-control-label">购课学生<span style="color:red">*</span></label>
+                  <select class="form-control" name="input1" data-toggle="select" onChange="form_submit('form1')" required>
+                    <option value=''>请选择学生...</option>
+                    @foreach ($students as $student)
+                      <option value="{{ $student->student_id }}">{{ $student->student_name }}</option>
                     @endforeach
                   </select>
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">购课年级<span style="color:red">*</span></label>
-                  <select class="form-control" name="input3" data-toggle="select" required>
-                    <option value=''>请选择年级...</option>
-                    @foreach ($grades as $grade)
-                      <option value="{{ $grade->grade_id }}">{{ $grade->grade_name }}</option>
-                    @endforeach
-                  </select>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">购课性别<span style="color:red">*</span></label>
-                  <select class="form-control" name="input4" data-toggle="select" required>
-                    <option value=''>请选择性别...</option>
-                    <option value='男'>男</option>
-                    <option value='女'>女</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">购课生日<span style="color:red">*</span></label>
-                  <input class="form-control datepicker" name="input5" type="text" value="{{ date('Y-m-d') }}" required>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">购课学校</label>
-                  <select class="form-control" name="input6" data-toggle="select">
-                    <option value=''>请选择学校...</option>
-                    @foreach ($schools as $school)
-                      <option value="{{ $school->school_id }}">{{ $school->school_name }}</option>
-                    @endforeach
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">联系电话</label>
-                  <input class="form-control" type="text" name="input7" placeholder="请输入联系电话... " autocomplete='off' maxlength="11">
-                </div>
-              </div>
-            </div>
-            <input type="submit" class="btn btn-primary" value="添加购课">
           </div>
         <form>
       </div>

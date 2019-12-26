@@ -18,34 +18,41 @@
           <form action="" method="get" id="filter" name="filter">
             <div class="row m-2">
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                <input class="form-control" type="text" name="filter1" placeholder="用户姓名..." autocomplete="off">
+                <input class="form-control" type="text" name="filter1" placeholder="用户姓名..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <select class="form-control" name="filter2" data-toggle="select">
-                  <option value=''>请选择校区...</option>
+                  <option value=''>全部校区</option>
                   @foreach ($filter_departments as $filter_department)
-                    <option value="{{ $filter_department->department_id }}">{{ $filter_department->department_name }}</option>
+                    <option value="{{ $filter_department->department_id }}" @if($request->input('filter2')==$filter_department->department_id) selected @endif>{{ $filter_department->department_name }}</option>
                   @endforeach
                 </select>
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <select class="form-control" name="filter3" data-toggle="select">
-                  <option value=''>请选择岗位...</option>
+                  <option value=''>全部岗位</option>
                   @foreach ($filter_positions as $filter_position)
-                    <option value="{{ $filter_position->position_id }}">{{ $filter_position->position_name }}</option>
+                    <option value="{{ $filter_position->position_id }}" @if($request->input('filter3')==$filter_position->position_id) selected @endif>{{ $filter_position->position_name }}</option>
                   @endforeach
                 </select>
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <select class="form-control" name="filter4" data-toggle="select">
-                  <option value=''>请选择级别...</option>
+                  <option value=''>全部级别</option>
                   @foreach ($filter_levels as $filter_level)
-                    <option value="{{ $filter_level->level_id }}">{{ $filter_level->level_name }}</option>
+                    <option value="{{ $filter_level->level_id }}" @if($request->input('filter4')==$filter_level->level_id) selected @endif>{{ $filter_level->level_name }}</option>
                   @endforeach
                 </select>
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                <input type="submit" class="btn btn-primary btn-block" value="查询">
+                <div class="row">
+                  <div class="col-6">
+                    <input type="submit" class="btn btn-primary btn-block" value="查询">
+                  </div>
+                  <div class="col-6">
+                    <a href="?"><button type="button" class="btn btn-outline-primary btn-block">重置</button></a>
+                  </div>
+                </div>
               </div>
             </div>
           </form>
@@ -104,7 +111,7 @@
             </tbody>
           </table>
         </div>
-        {{ pageLink($currentPage, $totalPage) }}
+        {{ pageLink($currentPage, $totalPage, $request) }}
       </div>
     </div>
   </div>

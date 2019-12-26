@@ -45,6 +45,9 @@
                     <li class="nav-item">
                       <a href="/school" class="nav-link" id="school">学校设置</a>
                     </li>
+                    <li class="nav-item">
+                      <a href="/classroom" class="nav-link" id="classroom">教室设置</a>
+                    </li>
                   </ul>
                 </div>
               </li>
@@ -114,6 +117,9 @@
               </li>
               <li class="nav-item">
                 <a href="/class" class="nav-link" id="class">班级管理</a>
+              </li>
+              <li class="nav-item">
+                <a href="/schedule" class="nav-link" id="schedule">课程安排</a>
               </li>
             </ul>
           </div>

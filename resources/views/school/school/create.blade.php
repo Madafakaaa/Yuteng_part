@@ -22,20 +22,35 @@
           </div>
           <!-- Card body -->
           <div class="card-body">
-            <div class="form-group">
-              <label class="form-control-label">学校名称<span style="color:red">*</span></label>
-              <input class="form-control" type="text" name="input1" placeholder="请输入学校名称..." autocomplete='off' required maxlength="10">
+            <div class="row">
+              <div class="col-2"></div>
+              <div class="col-8">
+                <div class="form-group">
+                  <label class="form-control-label">学校名称<span style="color:red">*</span></label>
+                  <input class="form-control" type="text" name="input1" placeholder="请输入学校名称..." autocomplete='off' required maxlength="10">
+                </div>
+              </div>
             </div>
-            <div class="form-group">
-              <label class="form-control-label">所属校区<span style="color:red">*</span></label>
-              <select class="form-control" name="input2" data-toggle="select" required>
-                <option value=''>请选择校区...</option>
-                @foreach ($departments as $department)
-                  <option value="{{ $department->department_id }}">{{ $department->department_name }}</option>
-                @endforeach
-              </select>
+            <div class="row">
+              <div class="col-2"></div>
+              <div class="col-8">
+                <div class="form-group">
+                  <label class="form-control-label">所属校区<span style="color:red">*</span></label>
+                  <select class="form-control" name="input2" data-toggle="select" required>
+                    <option value=''>请选择校区...</option>
+                    @foreach ($departments as $department)
+                      <option value="{{ $department->department_id }}">{{ $department->department_name }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
             </div>
-            <input type="submit" class="btn btn-primary" value="添加学校">
+            <div class="row">
+              <div class="col-2"></div>
+              <div class="col-8">
+                <input type="submit" class="btn btn-primary btn-block" value="提交">
+              </div>
+            </div>
           </div>
         <form>
       </div>

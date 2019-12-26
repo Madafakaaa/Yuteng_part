@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">学校管理</li>
-    <li class="breadcrumb-item active">用户管理</li>
+    <li class="breadcrumb-item active">课程管理</li>
     <li class="breadcrumb-item"><a href="/subject">科目设置</a></li>
     <li class="breadcrumb-item active">修改科目</li>
 @endsection

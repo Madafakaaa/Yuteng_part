@@ -1741,6 +1741,28 @@ var Datepicker = (function() {
 	}
 })();
 
+var Multidatepicker = (function() {
+    // Variables
+    var $multidatepicker = $('.multidatepicker');
+    // Methods
+    function init($this) {
+        var options = {
+            disableTouchKeyboard: true,
+            autoclose: false,
+            format: "yyyy-mm-dd",
+            multidate: true,
+            multidateSeparator: ","
+        };
+        $this.datepicker(options);
+    }
+    // Events
+    if ($multidatepicker.length) {
+        $multidatepicker.each(function() {
+            init($(this));
+        });
+    }
+})();
+
 //
 // Form control
 //

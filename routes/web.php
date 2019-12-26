@@ -52,8 +52,10 @@ Route::get('/home', 'HomeController@home');
 // 2.    学校管理
 // 2.1.1 校区设置
 Route::resource('/department', 'School\DepartmentController');
-// 2.1.1 学校设置
+// 2.1.2 学校设置
 Route::resource('/school', 'School\SchoolController');
+// 2.1.3 教室设置
+Route::resource('/classroom', 'School\ClassroomController');
 // 2.2.1 用户管理
 Route::resource('/user', 'School\UserController');
 // 2.2.2 岗位管理
@@ -68,6 +70,8 @@ Route::resource('/course', 'School\CourseController');
 Route::resource('/grade', 'School\GradeController');
 // 2.3.3 课程管理
 Route::resource('/subject', 'School\SubjectController');
+// 2.3.4 上课时间
+// Route::resource('/timeset', 'School\TimesetController');
 
 // 3.    招生管理
 // 3.1.1 客户管理
@@ -84,7 +88,14 @@ Route::resource('/class', 'Teaching\ClassController');
 // 4.2   班级成员管理
 Route::post('/member/{class_id}', 'Teaching\MemberController@add');
 Route::delete('/member/{class_id}', 'Teaching\MemberController@delete');
+// 4.3   课程安排
+Route::resource('/schedule', 'Teaching\ScheduleController');
+Route::post('/schedule/create/step2', 'Teaching\ScheduleController@createStep2');
+Route::post('/schedule/create/step3', 'Teaching\ScheduleController@createStep3');
+// test calendar
+Route::get('/calendar', 'Teaching\ScheduleController@calendar');
 
 // 5.    财务中心
 // 5.1   学生购课
 Route::resource('/payment', 'Finance\PaymentController');
+Route::post('/payment/create_second', 'Finance\PaymentController@create_second');

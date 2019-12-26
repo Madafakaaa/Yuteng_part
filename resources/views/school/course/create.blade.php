@@ -92,24 +92,22 @@
             <div class="row">
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">课时时长(分钟)<span style="color:red">*</span></label>
-                  <input class="form-control" type="number" name="input7" placeholder="请输入课时时长..." autocomplete='off' required>
+                  <label class="form-control-label">结课日期<span style="color:red">*</span></label>
+                  <input class="form-control datepicker" name="input7" type="text" value="{{ date('Y-m-d') }}" required>
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">有效日期<span style="color:red">*</span></label>
-                  <div class="row">
-                    <div class="col-5">
-                      <input class="form-control datepicker" name="input8" type="text" value="{{ date('Y-m-d') }}" required>
-                    </div>
-                    <div class="col-2 p-0 m-0">
-                      <h1 class="text-center">-</h1>
-                    </div>
-                    <div class="col-5">
-                      <input class="form-control datepicker" name="input9" type="text" value="{{ date('Y-m-d') }}" required>
-                    </div>
-                  </div>
+                  <label class="form-control-label">课程时长<span style="color:red">*</span></label>
+                  <select class="form-control" name="input8" data-toggle="select" required>
+                    <option value=''>请选择课程时长...</option>
+                    <option value='30'>30分钟</option>
+                    <option value='60'>60分钟</option>
+                    <option value='90'>90分钟</option>
+                    <option value='120'>120分钟</option>
+                    <option value='150'>150分钟</option>
+                    <option value='180'>180分钟</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -117,7 +115,7 @@
               <div class="col-12">
                 <div class="form-group">
                   <label class="form-control-label">课程备注</label>
-                  <textarea class="form-control" name="input10" placeholder="请输入课程备注... " autocomplete='off'  maxlength="255"></textarea>
+                  <textarea class="form-control" name="input9" placeholder="请输入课程备注... " autocomplete='off'  maxlength="255"></textarea>
                 </div>
               </div>
             </div>

@@ -39,7 +39,9 @@ class LoginController extends Controller
         $request_user_id = $request->input('input1');
         $request_user_password = $request->input('input2');
         // 获取数据库对应用户信息
-        $db_user = DB::table('user')->where('user_id', $request_user_id)->get();
+        $db_user = DB::table('user')
+                     ->join('department', 'user.user_department', '=', 'department.department_id')
+                     ->where('user_id', $request_user_id)->get();
         // 未在数据库中获得对应用户数据，返回到主页
         if($db_user->count()!==1){
             return redirect()->action('LoginController@index')
@@ -59,25 +61,20 @@ class LoginController extends Controller
                                      'title' => '登录系统失败',
                                      'message' => '您的用户名或密码有误，请重新输入']);
         }
-        // 获取用户剩余信息
-        $db_user_id = $db_user->user_id;
-        $db_user_name = $db_user->user_name;
-        $db_user_level = $db_user->user_level;
-        $db_user_gender = $db_user->user_gender;
-        $db_user_department = $db_user->user_department;
         // 注册信息到Session中
         Session::put('login', true);
-        Session::put('user_id', $db_user_id);
-        Session::put('user_name', $db_user_name);
-        Session::put('user_level', $db_user_level);
-        Session::put('user_gender', $db_user_gender);
-        Session::put('user_department', $db_user_department);
+        Session::put('user_id', $db_user->user_id);
+        Session::put('user_name', $db_user->user_name);
+        Session::put('user_level', $db_user->user_level);
+        Session::put('user_gender', $db_user->user_gender);
+        Session::put('user_department', $db_user->user_department);
+        Session::put('user_department_name', $db_user->department_name);
         // 返回主界面视图
         return redirect()->action('HomeController@home')
                          ->with(['notify' => true,
                                  'type' => 'success',
                                  'title' => '登陆系统成功',
-                                 'message' => '欢迎，'.$db_user_name]);
+                                 'message' => '欢迎，'.$db_user->user_name]);
     }
 
     /**

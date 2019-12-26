@@ -20,51 +20,11 @@ class CustomerController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+
         // 获取用户信息
-        $user_customer = Session::get('user_customer');
-        // 获取数据库信息
-        // 获取总数据数
-        $totalRecord = DB::table('customer')->where('customer_status', 1);
-        // 添加筛选条件
-        // 客户名称
-        if ($request->has('filter1')) {
-            if($request->input('filter1')!=''){
-                $totalRecord = $totalRecord->where('customer_name', 'like', '%'.$request->input('filter1').'%');
-            }
-        }
-        // 客户校区
-        if ($request->has('filter2')) {
-            if($request->input('filter2')!=''){
-                $totalRecord = $totalRecord->where('customer_department', '=', $request->input('filter2'));
-            }
-        }
-        // 客户年级
-        if ($request->has('filter3')) {
-            if($request->input('filter3')!=''){
-                $totalRecord = $totalRecord->where('customer_student_grade', '=', $request->input('filter3'));
-            }
-        }
-        $totalRecord = $totalRecord->count();
-        // 设置每页数据(20数据/页)
-        $rowPerPage = 20;
-        // 获取总页数
-        if($totalRecord==0){
-            $totalPage = 1;
-        }else{
-            $totalPage = ceil($totalRecord/$rowPerPage);
-        }
-        // 获取当前页数
-        if ($request->has('page')) {
-            $currentPage = $request->input('page');
-            if($currentPage<1)
-                $currentPage = 1;
-            if($currentPage>$totalPage)
-                $currentPage = $totalPage;
-        }else{
-            $currentPage = 1;
-        }
+        $user_level = Session::get('user_level');
+
         // 获取数据
-        $offset = ($currentPage-1)*$rowPerPage;
         $rows = DB::table('customer')
                   ->leftJoin('department', 'customer.customer_department', '=', 'department.department_id')
                   ->leftJoin('source', 'customer.customer_source', '=', 'source.source_id')
@@ -72,37 +32,41 @@ class CustomerController extends Controller
                   ->leftJoin('user', 'customer.customer_follower', '=', 'user.user_id')
                   ->leftJoin('grade', 'customer.customer_student_grade', '=', 'grade.grade_id')
                   ->where('customer_status', 1);
+
         // 添加筛选条件
         // 客户名称
-        if ($request->has('filter1')) {
-            if($request->input('filter1')!=''){
-                $rows = $rows->where('customer_name', 'like', '%'.$request->input('filter1').'%');
-            }
+        if ($request->filled('filter1')) {
+            $rows = $rows->where('customer_name', 'like', '%'.$request->input('filter1').'%');
         }
         // 客户校区
-        if ($request->has('filter2')) {
-            if($request->input('filter2')!=''){
-                $rows = $rows->where('customer_department', '=', $request->input('filter2'));
-            }
+        if ($request->filled('filter2')) {
+            $rows = $rows->where('customer_department', '=', $request->input('filter2'));
         }
         // 客户年级
-        if ($request->has('filter3')) {
-            if($request->input('filter3')!=''){
-                $rows = $rows->where('customer_student_grade', '=', $request->input('filter3'));
-            }
+        if ($request->filled('filter3')) {
+            $rows = $rows->where('customer_student_grade', '=', $request->input('filter3'));
         }
+
+        // 计算分页信息
+        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($rows->count(), $request, 20);
+
+        // 排序并获取数据对象
         $rows = $rows->orderBy('customer_conversed', 'asc')
                      ->orderBy('customer_createtime', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
+
         // 获取校区、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
+
+        // 返回列表视图
         return view('market/customer/index', ['rows' => $rows,
                                               'currentPage' => $currentPage,
                                               'totalPage' => $totalPage,
-                                              'startIndex' => ($currentPage-1)*$rowPerPage,
+                                              'startIndex' => $offset,
+                                              'request' => $request,
                                               'filter_departments' => $filter_departments,
                                               'filter_grades' => $filter_grades]);
     }
@@ -331,6 +295,7 @@ class CustomerController extends Controller
         // 更新数据
         try{
             DB::table('customer')->where('customer_id', $customer_id)->update(['customer_conversed' => $customer_follow_record_conversed]);
+            DB::table('customer')->where('customer_id', $customer_id)->increment('customer_follow_time');
             DB::table('customer_follow_record')->insert(
                 ['customer_follow_record_customer' => $customer_follow_record_customer,
                  'customer_follow_record_follower' => $customer_follow_record_follower,

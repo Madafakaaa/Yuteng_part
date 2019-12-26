@@ -24,57 +24,11 @@ class UserController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+
         // 获取用户信息
         $user_level = Session::get('user_level');
-        // 获取数据库信息
-        // 获取总数据数
-        $totalRecord = DB::table('user')->where('user_status', 1);
-        // 添加筛选条件
-        // 用户姓名
-        if ($request->has('filter1')) {
-            if($request->input('filter1')!=''){
-                $totalRecord = $totalRecord->where('user_name', 'like', '%'.$request->input('filter1').'%');
-            }
-        }
-        // 用户校区
-        if ($request->has('filter2')) {
-            if($request->input('filter2')!=''){
-                $totalRecord = $totalRecord->where('user_department', $request->input('filter2'));
-            }
-        }
-        // 用户岗位
-        if ($request->has('filter3')) {
-            if($request->input('filter3')!=''){
-                $totalRecord = $totalRecord->where('user_position', $request->input('filter3'));
-            }
-        }
-        // 用户等级
-        if ($request->has('filter4')) {
-            if($request->input('filter4')!=''){
-                $totalRecord = $totalRecord->where('user_level', $request->input('filter4'));
-            }
-        }
-        $totalRecord = $totalRecord->count();
-        // 设置每页数据(20数据/页)
-        $rowPerPage = 20;
-        // 获取总页数
-        if($totalRecord==0){
-            $totalPage = 1;
-        }else{
-            $totalPage = ceil($totalRecord/$rowPerPage);
-        }
-        // 获取当前页数
-        if ($request->has('page')) {
-            $currentPage = $request->input('page');
-            if($currentPage<1)
-                $currentPage = 1;
-            if($currentPage>$totalPage)
-                $currentPage = $totalPage;
-        }else{
-            $currentPage = 1;
-        }
+
         // 获取数据
-        $offset = ($currentPage-1)*$rowPerPage;
         $rows = DB::table('user')
                   ->join('department', 'user.user_department', '=', 'department.department_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
@@ -82,41 +36,42 @@ class UserController extends Controller
                   ->where('user_status', 1);
         // 添加筛选条件
         // 用户姓名
-        if ($request->has('filter1')) {
-            if($request->input('filter1')!=''){
-                $rows = $rows->where('user_name', 'like', '%'.$request->input('filter1').'%');
-            }
+        if ($request->filled('filter1')) {
+            $rows = $rows->where('user_name', 'like', '%'.$request->input('filter1').'%');
         }
         // 用户校区
-        if ($request->has('filter2')) {
-            if($request->input('filter2')!=''){
-                $rows = $rows->where('user_department', $request->input('filter2'));
-            }
+        if ($request->filled('filter2')) {
+            $rows = $rows->where('user_department', $request->input('filter2'));
         }
         // 用户岗位
-        if ($request->has('filter3')) {
-            if($request->input('filter3')!=''){
-                $rows = $rows->where('user_position', $request->input('filter3'));
-            }
+        if ($request->filled('filter3')) {
+            $rows = $rows->where('user_position', $request->input('filter3'));
         }
         // 用户等级
-        if ($request->has('filter4')) {
-            if($request->input('filter4')!=''){
-                $rows = $rows->where('user_level', $request->input('filter4'));
-            }
+        if ($request->filled('filter4')) {
+            $rows = $rows->where('user_level', $request->input('filter4'));
         }
+
+        // 计算分页信息
+        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($rows->count(), $request, 20);
+
+        // 排序并获取数据对象
         $rows = $rows->orderBy('user_createtime', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
+
         // 获取校区、岗位、等级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
         $filter_positions = DB::table('position')->where('position_status', 1)->orderBy('position_createtime', 'asc')->get();
         $filter_levels = DB::table('level')->where('level_status', 1)->orderBy('level_createtime', 'asc')->get();
+
+        // 返回列表视图
         return view('school/user/index', ['rows' => $rows,
                                           'currentPage' => $currentPage,
                                           'totalPage' => $totalPage,
-                                          'startIndex' => ($currentPage-1)*$rowPerPage,
+                                          'startIndex' => $offset,
+                                          'request' => $request,
                                           'filter_departments' => $filter_departments,
                                           'filter_positions' => $filter_positions,
                                           'filter_levels' => $filter_levels]);

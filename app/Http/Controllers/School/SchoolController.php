@@ -27,67 +27,41 @@ class SchoolController extends Controller
         // 获取数据库信息
         // 获取总数据数
         $totalRecord = DB::table('school')->where('school_status', 1);
-        // 添加筛选条件
-        // 学校名称
-        if ($request->has('filter1')) {
-            if($request->input('filter1')!=''){
-                $totalRecord = $totalRecord->where('school_name', 'like', '%'.$request->input('filter1').'%');
-            }
-        }
-        // 所属校区
-        if ($request->has('filter2')) {
-            if($request->input('filter2')!=''){
-                $totalRecord = $totalRecord->where('school_department', '=', $request->input('filter2'));
-            }
-        }
-        $totalRecord = $totalRecord->count();
-        // 设置每页数据(20数据/页)
-        $rowPerPage = 20;
-        // 获取总页数
-        if($totalRecord==0){
-            $totalPage = 1;
-        }else{
-            $totalPage = ceil($totalRecord/$rowPerPage);
-        }
-        // 获取当前页数
-        if ($request->has('page')) {
-            $currentPage = $request->input('page');
-            if($currentPage<1)
-                $currentPage = 1;
-            if($currentPage>$totalPage)
-                $currentPage = $totalPage;
-        }else{
-            $currentPage = 1;
-        }
-        $offset = ($currentPage-1)*$rowPerPage;
+
         // 获取数据
         $rows = DB::table('school')
                   ->join('department', 'school.school_department', '=', 'department.department_id')
                   ->where('school_status', 1);
+
         // 添加筛选条件
         // 学校名称
-        if ($request->has('filter1')) {
-            if($request->input('filter1')!=''){
-                $rows = $rows->where('school_name', 'like', '%'.$request->input('filter1').'%');
-            }
+        if ($request->filled('filter1')) {
+            $rows = $rows->where('school_name', 'like', '%'.$request->input('filter1').'%');
         }
         // 所属校区
-        if ($request->has('filter2')) {
-            if($request->input('filter2')!=''){
-                $rows = $rows->where('school_department', '=', $request->input('filter2'));
-            }
+        if($request->filled('filter2')){
+            $rows = $rows->where('school_department', '=', $request->input('filter2'));
         }
+
+        // 计算分页信息
+        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($rows->count(), $request, 20);
+
+        // 排序并获取数据对象
         $rows = $rows->orderBy('school_department', 'asc')
                      ->orderBy('school_createtime', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
+
         // 获取校区信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+
+        // 返回列表视图
         return view('school/school/index', ['rows' => $rows,
                                             'currentPage' => $currentPage,
                                             'totalPage' => $totalPage,
-                                            'startIndex' => ($currentPage-1)*$rowPerPage,
+                                            'startIndex' => $offset,
+                                            'request' => $request,
                                             'filter_departments' => $filter_departments]);
     }
 

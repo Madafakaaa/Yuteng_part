@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">学校管理</li>
-    <li class="breadcrumb-item active">用户管理</li>
+    <li class="breadcrumb-item active">课程管理</li>
     <li class="breadcrumb-item active">科目设置</li>
 @endsection
 
@@ -18,10 +18,17 @@
           <form action="" method="get" id="filter" name="filter">
             <div class="row m-2">
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                <input class="form-control" type="text" name="filter1" placeholder=" 科目名称..." autocomplete="off">
+                <input class="form-control" type="text" name="filter1" placeholder=" 科目名称..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                <input type="submit" class="btn btn-primary btn-block" value="查询">
+                <div class="row">
+                  <div class="col-6">
+                    <input type="submit" class="btn btn-primary btn-block" value="查询">
+                  </div>
+                  <div class="col-6">
+                    <a href="?"><button type="button" class="btn btn-outline-primary btn-block">重置</button></a>
+                  </div>
+                </div>
               </div>
             </div>
           </form>
@@ -72,7 +79,7 @@
             </tbody>
           </table>
         </div>
-        {{ pageLink($currentPage, $totalPage) }}
+        {{ pageLink($currentPage, $totalPage, $request) }}
       </div>
     </div>
   </div>
