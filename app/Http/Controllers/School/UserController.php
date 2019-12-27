@@ -52,8 +52,10 @@ class UserController extends Controller
             $rows = $rows->where('user_level', $request->input('filter4'));
         }
 
+        // 保存数据总数
+        $totalNum = $rows->count();
         // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($rows->count(), $request, 20);
+        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
         $rows = $rows->orderBy('user_createtime', 'asc')
@@ -72,6 +74,7 @@ class UserController extends Controller
                                           'totalPage' => $totalPage,
                                           'startIndex' => $offset,
                                           'request' => $request,
+                                          'totalNum' => $totalNum,
                                           'filter_departments' => $filter_departments,
                                           'filter_positions' => $filter_positions,
                                           'filter_levels' => $filter_levels]);

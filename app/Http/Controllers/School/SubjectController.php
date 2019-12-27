@@ -32,8 +32,10 @@ class SubjectController extends Controller
             $rows = $rows->where('subject_name', 'like', '%'.$request->input('filter1').'%');
         }
 
+        // 保存数据总数
+        $totalNum = $rows->count();
         // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($rows->count(), $request, 20);
+        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
         $rows = $rows->orderBy('subject_createtime', 'asc')
@@ -45,7 +47,8 @@ class SubjectController extends Controller
                                              'currentPage' => $currentPage,
                                              'totalPage' => $totalPage,
                                              'startIndex' => $offset,
-                                             'request' => $request]);
+                                             'request' => $request,
+                                             'totalNum' => $totalNum]);
     }
 
     /**

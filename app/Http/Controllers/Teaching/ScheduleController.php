@@ -62,8 +62,10 @@ class ScheduleController extends Controller
             $rows = $rows->where('schedule_date', '=', $request->input('filter5'));
         }
 
+        // 保存数据总数
+        $totalNum = $rows->count();
         // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($rows->count(), $request, 20);
+        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
         $rows = $rows->orderBy('schedule_date', 'asc')
@@ -86,6 +88,7 @@ class ScheduleController extends Controller
                                                 'totalPage' => $totalPage,
                                                 'startIndex' => $offset,
                                                 'request' => $request,
+                                                'totalNum' => $totalNum,
                                                 'filter_departments' => $filter_departments,
                                                 'filter_students' => $filter_students,
                                                 'filter_classes' => $filter_classes,
@@ -552,15 +555,17 @@ class ScheduleController extends Controller
         }
         // 获取数据信息
         $schedule = DB::table('schedule')
-                     ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
-                     ->leftJoin('student', 'schedule.schedule_participant', '=', 'student.student_id')
-                     ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
-                     ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
-                     ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
-                     ->where('schedule_id', $schedule_id)
-                     ->get();
+                      ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
+                      ->leftJoin('student', 'schedule.schedule_participant', '=', 'student.student_id')
+                      ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                      ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                      ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
+                      ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
+                      ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                      ->where('schedule_id', $schedule_id)
+                      ->get();
         if($schedule->count()!==1){
-            // 未获取到数据
+            // 数据数量不为1
             return redirect()->action('Teaching\ScheduleController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
@@ -568,23 +573,106 @@ class ScheduleController extends Controller
                                      'message' => '课程安排显示失败，请联系系统管理员']);
         }
         $schedule = $schedule[0];
-        return view('teaching/schedule/show', ['schedule' => $schedule]);
+        // 获取上课日期、时间
+        $schedule_date = $schedule->schedule_date;
+        $schedule_start = $schedule->schedule_start;
+        $schedule_end = $schedule->schedule_end;
+        // 计算可用教师和教师
+        // 获取所有教师名单
+        $db_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
+        $user_num = count($db_users);
+        $users = array();
+        for($i=0; $i<$user_num; $i++){
+            $users[$db_users[$i]->user_id] = array($db_users[$i]->user_id, $db_users[$i]->user_name, 0);
+        }
+        // 获取所有教室名单
+        $db_classrooms = DB::table('classroom')->where('classroom_status', 1)->orderBy('classroom_createtime', 'asc')->get();
+        $classroom_num = count($db_classrooms);
+        $classrooms = array();
+        for($i=0; $i<$classroom_num; $i++){
+            $classrooms[$db_classrooms[$i]->classroom_id] = array($db_classrooms[$i]->classroom_id, $db_classrooms[$i]->classroom_name, 0);
+        }
+        // 获取所选时间已有上课安排的学生、班级、教师、教室
+        // 获取所选时间已有一对一上课安排的学生及其班级、教师、教室
+        $rows = DB::table('schedule')
+                  ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                  ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                  ->select('user.user_id', 'classroom.classroom_id')
+                  ->where([
+                              ['schedule_date', '=', $schedule_date],
+                              ['schedule_start', '<', $schedule_start],
+                              ['schedule_end', '>', $schedule_start],
+                              ['schedule_status', '=', 1],
+                              ['user_status', '=', 1],
+                              ['classroom_status', '=', 1]
+                          ])
+                  ->orWhere([
+                              ['schedule_date', '=', $schedule_date],
+                              ['schedule_start', '<', $schedule_end],
+                              ['schedule_end', '>', $schedule_end],
+                              ['schedule_status', '=', 1],
+                              ['user_status', '=', 1],
+                              ['classroom_status', '=', 1]
+                            ])
+                  ->orWhere([
+                              ['schedule_date', '=', $schedule_date],
+                              ['schedule_start', '>', $schedule_start],
+                              ['schedule_end', '<', $schedule_end],
+                              ['schedule_status', '=', 1],
+                              ['user_status', '=', 1],
+                              ['classroom_status', '=', 1]
+                            ])
+                  ->orWhere([
+                              ['schedule_date', '=', $schedule_date],
+                              ['schedule_start', '=', $schedule_start],
+                              ['schedule_status', '=', 1],
+                              ['user_status', '=', 1],
+                              ['classroom_status', '=', 1]
+                            ])
+                  ->orWhere([
+                              ['schedule_date', '=', $schedule_date],
+                              ['schedule_end', '=', $schedule_end],
+                              ['schedule_status', '=', 1],
+                              ['user_status', '=', 1],
+                              ['classroom_status', '=', 1]
+                            ])
+                  ->distinct()
+                  ->get();
+        $row_num = count($rows);
+        for($j=0; $j<$row_num; $j++){
+            // 教师列表次数加一
+            $users[$rows[$j]->user_id][2]=$users[$rows[$j]->user_id][2]+1;
+            // 教室列表次数加一
+            $classrooms[$rows[$j]->classroom_id][2]=$classrooms[$rows[$j]->classroom_id][2]+1;
+        }
+        return view('teaching/schedule/show', ['schedule' => $schedule,
+                                               'users' => $users,
+                                               'classrooms' => $classrooms]);
     }
 
     /**
-     * 修改单个课程安排
-     * URL: GET /schedule/{id}/edit
+     * 填写上课成员详细信息页面
+     * URL: POST /schedule/{schedule_id}/attend
      * @param  int  $schedule_id
      */
-    public function edit($schedule_id){
+    public function attend($schedule_id){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取数据信息
-        $schedule = DB::table('schedule')->where('schedule_id', $schedule_id)->get();
+        $schedule = DB::table('schedule')
+                      ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
+                      ->leftJoin('student', 'schedule.schedule_participant', '=', 'student.student_id')
+                      ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                      ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                      ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
+                      ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
+                      ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                      ->where('schedule_id', $schedule_id)
+                      ->get();
         if($schedule->count()!==1){
-            // 未获取到数据
+            // 数据数量不为1
             return redirect()->action('Teaching\ScheduleController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
@@ -592,14 +680,8 @@ class ScheduleController extends Controller
                                      'message' => '课程安排显示失败，请联系系统管理员']);
         }
         $schedule = $schedule[0];
-        // 获取校区、年级信息
-        $departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $schools = DB::table('school')->where('school_status', 1)->orderBy('school_createtime', 'asc')->get();
         return view('teaching/schedule/edit', ['schedule' => $schedule,
-                                              'departments' => $departments,
-                                              'grades' => $grades,
-                                              'schools' => $schools]);
+                                               'users' => $users]);
     }
 
     /**

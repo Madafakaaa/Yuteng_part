@@ -1960,7 +1960,7 @@ pre code
 .table th,
 .table td
 {
-    padding: 1rem;
+    padding: 0.4rem;
 
     vertical-align: top;
 
@@ -24063,8 +24063,8 @@ textarea[resize='horizontal']
 .card .table td,
 .card .table th
 {
-    padding-right: 1.5rem;
-    padding-left: 1.5rem;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
 }
 
 .table .custom-toggle

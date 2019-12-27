@@ -2638,13 +2638,16 @@ var Select2 = (function() {
 	//
 
 	function init($this) {
-		var options = {
+		// var options = {
+            // tag: true,
 			// dropdownParent: $this.closest('.modal').length ? $this.closest('.modal') : $(document.body),
 			// minimumResultsForSearch: $this.data('minimum-results-for-search'),
 			// templateResult: formatAvatar
-		};
+		// };
 
-		$this.select2(options);
+		$this.select2({
+            tags: true
+        });
 	}
 
 

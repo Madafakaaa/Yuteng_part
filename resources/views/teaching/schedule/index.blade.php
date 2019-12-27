@@ -52,7 +52,7 @@
                 </select>
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                <input class="form-control datepicker" name="filter5" type="text" value="{{ date('Y-m-d') }}" required>
+                <input class="form-control datepicker" name="filter5" type="text" autocomplete="off" placeholder="全部日期">
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <div class="row">
@@ -60,7 +60,7 @@
                     <input type="submit" class="btn btn-primary btn-block" value="查询">
                   </div>
                   <div class="col-6">
-                    <a href="?"><button type="button" class="btn btn-outline-primary btn-block">重置</button></a>
+                    <a href="?"><button type="button" class="form-control btn btn-outline-primary btn-block" style="white-space:nowrap; overflow:hidden;">重置</button></a>
                   </div>
                 </div>
               </div>
@@ -84,17 +84,17 @@
           </div>
         </div>
         <div class="table-responsive pl-4 pr-4">
-          <table class="table align-items-center table-flush table-hover text-center">
+          <table class="table align-items-center table-flush table-hover text-left">
             <thead class="thead-light">
               <tr>
-                <th style='width:6%;'>序号</th>
-                <th style='width:8%;'>校区</th>
-                <th style='width:14%;' class="p-2 text-left">学生/班级</th>
+                <th style='width:70px;'>序号</th>
+                <th style='width:70px;'>校区</th>
+                <th style='width:14%;'>学生/班级</th>
                 <th style='width:6%;'>教师</th>
                 <th style='width:6%;'>科目</th>
                 <th style='width:6%;'>年级</th>
                 <th style='width:8%;'>日期</th>
-                <th style='width:8%;'>时间</th>
+                <th style='width:110px;'>时间</th>
                 <th style='width:6%;'>时长</th>
                 <th style='width:8%;'>地点</th>
                 <th>操作管理</th>
@@ -106,17 +106,17 @@
               @endif
               @foreach ($rows as $row)
               <tr title="创建时间：{{ $row->schedule_createtime }}。">
-                <td class="p-2">{{ $startIndex+$loop->iteration }}</td>
-                <td class="p-2">{{ $row->department_name }}</td>
-                <td class="p-2 text-left">{{ $row->student_name }}{{ $row->class_name }}</td>
-                <td class="p-2">{{ $row->user_name }}</td>
-                <td class="p-2">{{ $row->subject_name }}</td>
-                <td class="p-2">{{ $row->grade_name }}</td>
-                <td class="p-2">{{ $row->schedule_date }}</td>
-                <td class="p-2">{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
-                <td class="p-2">{{ $row->schedule_time }}分钟</td>
-                <td class="p-2">{{ $row->classroom_name }}</td>
-                <td class="p-2">
+                <td>{{ $startIndex+$loop->iteration }}</td>
+                <td>{{ $row->department_name }}</td>
+                <td>{{ $row->student_name }}{{ $row->class_name }}</td>
+                <td>{{ $row->user_name }}</td>
+                <td>{{ $row->subject_name }}</td>
+                <td>{{ $row->grade_name }}</td>
+                <td>{{ $row->schedule_date }}</td>
+                <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
+                <td>{{ $row->schedule_time }}分钟</td>
+                <td>{{ $row->classroom_name }}</td>
+                <td>
                   <form action="schedule/{{$row->schedule_id}}" method="POST">
                     @method('DELETE')
                     @csrf
@@ -129,7 +129,7 @@
             </tbody>
           </table>
         </div>
-        {{ pageLink($currentPage, $totalPage, $request) }}
+        {{ pageLink($currentPage, $totalPage, $request, $totalNum) }}
       </div>
     </div>
   </div>

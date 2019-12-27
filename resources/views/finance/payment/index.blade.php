@@ -54,7 +54,7 @@
                     <input type="submit" class="btn btn-primary btn-block" value="查询">
                   </div>
                   <div class="col-6">
-                    <a href="?"><button type="button" class="btn btn-outline-primary btn-block">重置</button></a>
+                    <a href="?"><button type="button" class="form-control btn btn-outline-primary btn-block" style="white-space:nowrap; overflow:hidden;">重置</button></a>
                   </div>
                 </div>
               </div>
@@ -123,7 +123,7 @@
             </tbody>
           </table>
         </div>
-        {{ pageLink($currentPage, $totalPage, $request) }}
+        {{ pageLink($currentPage, $totalPage, $request, $totalNum) }}
       </div>
     </div>
   </div>

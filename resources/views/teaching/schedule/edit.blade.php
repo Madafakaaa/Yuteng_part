@@ -5,99 +5,129 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">教务中心</li>
-    <li class="breadcrumb-item"><a href="/schedule">课程管理</a></li>
-    <li class="breadcrumb-item active">修改课程</li>
+    <li class="breadcrumb-item"><a href="/schedule">课程安排</a></li>
+    <li class="breadcrumb-item active">课程考勤</li>
 @endsection
 
 @section('content')
 <div class="container-fluid mt--4">
   <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
+    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/schedule/{{ $schedule->schedule_id }}" method="post" id="form1" name="form1">
-          @method('PUT')
+        <form action="/schedule" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
-            <h3 class="mb-0">修改课程</h3>
+            <h3 class="mb-0">课程考勤</h3>
           </div>
           <!-- Card body -->
-          <div class="card-body">
+          <div class="card-body pt-2">
             <div class="row">
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">课程学号<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" value="{{ $schedule->schedule_id }}" readonly>
-                </div>
+              <div class="col-2">
+                <label class="form-control-label">上课校区</label>
               </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">课程名称<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" name="input1" value="{{ $schedule->schedule_name }}" autocomplete='off' required maxlength="10">
+              <div class="col-10">
+                <div class="form-group mb-1">
+                  <div class="row">
+                    <div class="col-6 pl-2 pr-2 mb-2">
+                      <input class="form-control form-control-sm" value="{{ $schedule->department_name }}" readonly>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">课程校区<span style="color:red">*</span></label>
-                  <select class="form-control" name="input2" data-toggle="select" required>
-                    <option value=''>请选择校区...</option>
-                    @foreach ($departments as $department)
-                      <option value="{{ $department->department_id }}" @if($schedule->schedule_department==$department->department_id) selected @endif>{{ $department->department_name }}</option>
-                    @endforeach
-                  </select>
-                </div>
+              <div class="col-2">
+                <label class="form-control-label">上课日期</label>
               </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">课程年级<span style="color:red">*</span></label>
-                  <select class="form-control" name="input3" data-toggle="select" required>
-                    <option value=''>请选择年级...</option>
-                    @foreach ($grades as $grade)
-                      <option value="{{ $grade->grade_id }}" @if($schedule->schedule_grade==$grade->grade_id) selected @endif>{{ $grade->grade_name }}</option>
-                    @endforeach
-                  </select>
+              <div class="col-10">
+                <div class="form-group mb-1">
+                  <div class="row">
+                    <div class="col-6 pl-2 pr-2 mb-2">
+                      <input class="form-control form-control-sm" value="{{ $schedule->schedule_date }}" readonly>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">课程性别<span style="color:red">*</span></label>
-                  <select class="form-control" name="input4" data-toggle="select" required>
-                    <option value=''>请选择性别...</option>
-                    <option value='男' @if($schedule->schedule_gender=='男') selected @endif>男</option>
-                    <option value='女' @if($schedule->schedule_gender=='女') selected @endif>女</option>
-                  </select>
-                </div>
+              <div class="col-2">
+                <label class="form-control-label">上课时间</label>
               </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">课程生日<span style="color:red">*</span></label>
-                  <input class="form-control datepicker" name="input5" type="text" value="{{ $schedule->schedule_birthday }}" required>
+              <div class="col-10">
+                <div class="form-group mb-1">
+                  <div class="row">
+                    <div class="col-6 pl-2 pr-2 mb-2">
+                      <input class="form-control form-control-sm" value="{{ $schedule->schedule_start }} - {{ $schedule->schedule_end }}" readonly>
+                    </div>
+                    <div class="col-6 pl-2 pr-2 mb-2">
+                      <input class="form-control form-control-sm" value="{{ $schedule->schedule_time }}分钟" readonly>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">课程学校</label>
-                  <select class="form-control" name="input6" data-toggle="select">
-                    <option value=''>请选择学校...</option>
-                    @foreach ($schools as $school)
-                      <option value="{{ $school->school_id }}" @if($schedule->schedule_school==$school->school_id) selected @endif>{{ $school->school_name }}</option>
-                    @endforeach
-                  </select>
-                </div>
+              <div class="col-2">
+                <label class="form-control-label">学生/班级</label>
               </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">联系电话</label>
-                  <input class="form-control" type="text" name="input7" value="{{ $schedule->schedule_phone }}" autocomplete='off' maxlength="11">
+              <div class="col-10">
+                <div class="form-group mb-1">
+                  <div class="row">
+                    <div class="col-6 pl-2 pr-2 mb-2">
+                      <input class="form-control form-control-sm" type="text" readonly value="{{ $schedule->student_name }}{{ $schedule->class_name }}">
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <input type="submit" class="btn btn-primary" value="修改">
+            <div class="row">
+              <div class="col-2">
+                <label class="form-control-label">任课教师</label>
+              </div>
+              <div class="col-10">
+                <div class="form-group mb-1">
+                  <div class="row">
+                    <div class="col-6 pl-2 pr-2 mb-2">
+                      <input class="form-control form-control-sm" type="text" readonly value="{{ $schedule->user_name }}">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <label class="form-control-label">科目</label>
+              </div>
+              <div class="col-10">
+                <div class="form-group mb-1">
+                  <div class="row">
+                    <div class="col-6 pl-2 pr-2 mb-2">
+                      <input class="form-control form-control-sm" type="text" readonly value="{{ $schedule->subject_name }}">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <label class="form-control-label">教室</label>
+              </div>
+              <div class="col-10">
+                <div class="form-group mb-1">
+                  <div class="row">
+                    <div class="col-6 pl-2 pr-2 mb-2">
+                      <input class="form-control form-control-sm" type="text" readonly value="{{ $schedule->classroom_name }}">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-9"></div>
+              <div class="col-3">
+                <input type="submit" class="btn btn-warning btn-block" value="确认">
+              </div>
+            </div>
           </div>
         <form>
       </div>

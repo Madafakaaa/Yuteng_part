@@ -14,7 +14,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/payment/create_second" method="post" id="form1" name="form1">
+        <form action="/payment/create/step2" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
             <h3 class="mb-0">添加购课</h3>

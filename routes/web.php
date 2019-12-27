@@ -92,10 +92,15 @@ Route::delete('/member/{class_id}', 'Teaching\MemberController@delete');
 Route::resource('/schedule', 'Teaching\ScheduleController');
 Route::post('/schedule/create/step2', 'Teaching\ScheduleController@createStep2');
 Route::post('/schedule/create/step3', 'Teaching\ScheduleController@createStep3');
-// test calendar
-Route::get('/calendar', 'Teaching\ScheduleController@calendar');
+Route::post('/schedule/{schedule_id}/attend', 'Teaching\ScheduleController@attend');
 
 // 5.    财务中心
 // 5.1   学生购课
 Route::resource('/payment', 'Finance\PaymentController');
-Route::post('/payment/create_second', 'Finance\PaymentController@create_second');
+Route::post('/payment/create/step2', 'Finance\PaymentController@createStep2');
+
+// test calendar
+Route::get('/calendar', 'Teaching\ScheduleController@calendar');
+// test page
+Route::get('/buttons', function () { return view('button_template'); });
+

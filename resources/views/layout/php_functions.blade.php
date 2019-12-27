@@ -1,7 +1,7 @@
 <?php
 
 // Generate page links for tables
-function pageLink($currentPage, $totalPage, $request)
+function pageLink($currentPage, $totalPage, $request, $totalNum)
 {
   // 获取上一页、下一页页码
   $prevPage = $currentPage-1;
@@ -16,6 +16,9 @@ function pageLink($currentPage, $totalPage, $request)
   }
   // 输出HTML
   echo "<div class='card-footer'>";
+  // 第一行：页码
+  echo "<div class='row'>";
+  echo "<div class='col-12'>";
   echo "<nav>";
   echo "<ul class='pagination justify-content-center'>";
   // 上一页按钮
@@ -74,6 +77,14 @@ function pageLink($currentPage, $totalPage, $request)
   echo "</li>";
   echo "</ul>";
   echo "</nav>";
+  echo "</div>";
+  echo "</div>";
+  // 第二行： 记录数量
+  echo "<div class='row justify-content-center'>";
+  echo "<div class='col-4 text-center'>";
+  echo "<h5 class='m-0 p-0'>共 {$totalNum} 条记录</h5>";
+  echo "</div>";
+  echo "</div>";
   echo "</div>";
 }
 

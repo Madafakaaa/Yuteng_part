@@ -52,8 +52,10 @@ class StudentController extends Controller
             $rows = $rows->where('student_school', '=', $request->input('filter4'));
         }
 
+        // 保存数据总数
+        $totalNum = $rows->count();
         // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($rows->count(), $request, 1);
+        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
         $rows = $rows->orderBy('student_createtime', 'asc')
@@ -72,6 +74,7 @@ class StudentController extends Controller
                                                'totalPage' => $totalPage,
                                                'startIndex' => $offset,
                                                'request' => $request,
+                                               'totalNum' => $totalNum,
                                                'filter_departments' => $filter_departments,
                                                'filter_grades' => $filter_grades,
                                                'filter_schools' => $filter_schools]);

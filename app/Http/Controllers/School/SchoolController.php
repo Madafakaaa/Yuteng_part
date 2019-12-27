@@ -43,8 +43,10 @@ class SchoolController extends Controller
             $rows = $rows->where('school_department', '=', $request->input('filter2'));
         }
 
+        // 保存数据总数
+        $totalNum = $rows->count();
         // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($rows->count(), $request, 20);
+        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
         $rows = $rows->orderBy('school_department', 'asc')
@@ -62,6 +64,7 @@ class SchoolController extends Controller
                                             'totalPage' => $totalPage,
                                             'startIndex' => $offset,
                                             'request' => $request,
+                                            'totalNum' => $totalNum,
                                             'filter_departments' => $filter_departments]);
     }
 

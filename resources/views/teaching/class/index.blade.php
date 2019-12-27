@@ -49,7 +49,7 @@
                     <input type="submit" class="btn btn-primary btn-block" value="查询">
                   </div>
                   <div class="col-6">
-                    <a href="?"><button type="button" class="btn btn-outline-primary btn-block">重置</button></a>
+                    <a href="?"><button type="button" class="form-control btn btn-outline-primary btn-block" style="white-space:nowrap; overflow:hidden;">重置</button></a>
                   </div>
                 </div>
               </div>
@@ -73,7 +73,7 @@
           </div>
         </div>
         <div class="table-responsive pl-4 pr-4">
-          <table class="table align-items-center table-flush table-hover text-center">
+          <table class="table align-items-center table-flush table-hover text-left">
             <thead class="thead-light">
               <tr>
                 <th style='width:6%;'>序号</th>
@@ -82,8 +82,7 @@
                 <th style='width:10%;'>班号</th>
                 <th style='width:8%;'>年级</th>
                 <th style='width:8%;'>科目</th>
-                <th style='width:8%;'>当前人数</th>
-                <th style='width:8%;'>最大人数</th>
+                <th style='width:8%;'>班级人数</th>
                 <th style='width:8%;'>负责教师</th>
                 <th>操作管理</th>
               </tr>
@@ -94,16 +93,24 @@
               @endif
               @foreach ($rows as $row)
               <tr title="班级：{{ $row->class_name }}。创建时间：{{ $row->class_createtime }}。">
-                <td class="p-2">{{ $startIndex+$loop->iteration }}</td>
-                <td class="p-2">{{ $row->department_name }}</td>
-                <td class="text-left pb-2 pt-2">{{ $row->class_name }}</td>
-                <td class="p-2">{{ $row->class_id }}</td>
-                <td class="p-2">{{ $row->grade_name }}</td>
-                <td class="p-2">@if($row->class_subject==0) 全科目 @else{{ $row->subject_name }}@endif</td>
-                <td class="p-2">{{ $row->class_current_num }}人</td>
-                <td class="p-2">{{ $row->class_max_num }}人</td>
-                <td class="p-2">{{ $row->user_name }}</td>
-                <td class="p-2">
+                <td>{{ $startIndex+$loop->iteration }}</td>
+                <td>{{ $row->department_name }}</td>
+                <td>{{ $row->class_name }}</td>
+                <td>{{ $row->class_id }}</td>
+                <td>{{ $row->grade_name }}</td>
+                <td>@if($row->class_subject==0) 全科目 @else{{ $row->subject_name }}@endif</td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <span class="completion mr-2">{{ $row->class_current_num }}/{{ $row->class_max_num }}</span>
+                    <div>
+                      <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ $row->user_name }}</td>
+                <td>
                   <form action="class/{{$row->class_id}}" method="POST">
                     @method('DELETE')
                     @csrf
@@ -116,7 +123,7 @@
             </tbody>
           </table>
         </div>
-        {{ pageLink($currentPage, $totalPage, $request) }}
+        {{ pageLink($currentPage, $totalPage, $request, $totalNum) }}
       </div>
     </div>
   </div>

@@ -53,8 +53,10 @@ class PaymentController extends Controller
             $rows = $rows->where('student_grade', '=', $request->input('filter4'));
         }
 
+        // 保存数据总数
+        $totalNum = $rows->count();
         // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($rows->count(), $request, 20);
+        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
         $rows = $rows->where('payment_status', 1)
@@ -75,6 +77,7 @@ class PaymentController extends Controller
                                               'totalPage' => $totalPage,
                                               'startIndex' => $offset,
                                               'request' => $request,
+                                              'totalNum' => $totalNum,
                                               'filter_departments' => $filter_departments,
                                               'filter_students' => $filter_students,
                                               'filter_courses' => $filter_courses,
@@ -99,7 +102,7 @@ class PaymentController extends Controller
      * 创建新购课页面2
      * URL: GET /payment/create
      */
-    public function create_second(Request $request){
+    public function createStep2(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -120,7 +123,7 @@ class PaymentController extends Controller
                      ->where('course_status', 1)
                      ->orderBy('course_createtime', 'asc')
                      ->get();
-        return view('finance/payment/create_second', ['student' => $student,
+        return view('finance/payment/create2', ['student' => $student,
                                                       'courses' => $courses]);
     }
 
