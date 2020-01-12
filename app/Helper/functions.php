@@ -33,3 +33,9 @@ function pagination($totalRecord, $request, $rowPerPage=20){
     $offset = ($currentPage-1)*$rowPerPage;
     return array($offset, $rowPerPage, $currentPage, $totalPage);
 }
+
+
+function numberToCh($num){
+    $ch=array('零','一','二','三','四','五','六','七','八','九');
+    return $ch[$num];
+}

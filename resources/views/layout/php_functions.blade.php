@@ -15,9 +15,9 @@ function pageLink($currentPage, $totalPage, $request, $totalNum)
       }
   }
   // 输出HTML
-  echo "<div class='card-footer'>";
+  // echo "<div class='card-body p-2'>";
   // 第一行：页码
-  echo "<div class='row'>";
+  echo "<div class='row pb-1'>";
   echo "<div class='col-12'>";
   echo "<nav>";
   echo "<ul class='pagination justify-content-center'>";
@@ -106,7 +106,6 @@ function deleteConfirm($id,$messages){
                 <button type='button' class='btn btn-link' data-dismiss='modal'>关闭</button>
               </div>
             </div>
-          </div>
-        </div>";
+          </div>";
 }
 ?>

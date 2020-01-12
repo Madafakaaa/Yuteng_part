@@ -41,6 +41,7 @@ class LoginController extends Controller
         // 获取数据库对应用户信息
         $db_user = DB::table('user')
                      ->join('department', 'user.user_department', '=', 'department.department_id')
+                     ->join('position', 'user.user_position', '=', 'position.position_id')
                      ->where('user_id', $request_user_id)->get();
         // 未在数据库中获得对应用户数据，返回到主页
         if($db_user->count()!==1){
@@ -65,7 +66,7 @@ class LoginController extends Controller
         Session::put('login', true);
         Session::put('user_id', $db_user->user_id);
         Session::put('user_name', $db_user->user_name);
-        Session::put('user_level', $db_user->user_level);
+        Session::put('user_level', $db_user->position_level);
         Session::put('user_gender', $db_user->user_gender);
         Session::put('user_department', $db_user->user_department);
         Session::put('user_department_name', $db_user->department_name);

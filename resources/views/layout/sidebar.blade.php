@@ -31,7 +31,7 @@
         <li class="nav-item">
           <a class="nav-link" href="#navbar-1" data-toggle="collapse" aria-expanded="false" role="button" aria-controls="navbar-1" id="link-1">
             <i class="ni ni-archive-2 text-green"></i>
-            <span class="nav-link-text">学校管理</span>
+            <span class="nav-link-text">内部管理</span>
           </a>
           <div class="collapse" id="navbar-1">
             <ul class="nav nav-sm flex-column">
@@ -41,12 +41,6 @@
                   <ul class="nav nav-sm flex-column">
                     <li class="nav-item">
                       <a href="/department" class="nav-link" id="department">校区设置</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="/school" class="nav-link" id="school">学校设置</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="/classroom" class="nav-link" id="classroom">教室设置</a>
                     </li>
                   </ul>
                 </div>
@@ -59,14 +53,9 @@
                       <a href="/user" class="nav-link" id="user">用户列表</a>
                     </li>
                     <li class="nav-item">
-                      <a href="/position" class="nav-link" id="position">岗位设置</a>
+                      <a href="/section" class="nav-link" id="section">部门架构</a>
                     </li>
-                    <li class="nav-item">
-                      <a href="/level" class="nav-link" id="level">等级设置</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="/archive" class="nav-link" id="archive">档案管理</a>
-                    </li>
+                    <!-- <li class="nav-item"><a href="/archive" class="nav-link" id="archive">档案管理</a></li> -->
                   </ul>
                 </div>
               </li>
@@ -77,12 +66,7 @@
                     <li class="nav-item">
                       <a href="/course" class="nav-link" id="course">课程设置</a>
                     </li>
-                    <li class="nav-item">
-                      <a href="/grade" class="nav-link" id="grade">年级设置</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="/subject" class="nav-link" id="subject">科目设置</a>
-                    </li>
+                    <!-- <li class="nav-item"><a href="/grade" class="nav-link" id="grade">年级设置</a></li> -->
                   </ul>
                 </div>
               </li>
@@ -92,15 +76,16 @@
         <li class="nav-item">
           <a class="nav-link" href="#navbar-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-2" id="link-2">
             <i class="ni ni-ungroup text-orange"></i>
-            <span class="nav-link-text">招生管理</span>
+            <span class="nav-link-text">招生中心</span>
           </a>
           <div class="collapse" id="navbar-2">
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
                 <a href="/customer" class="nav-link" id="customer">客户管理</a>
               </li>
+              <!-- <li class="nav-item"><a href="/source" class="nav-link" id="source">来源设置</a></li> -->
               <li class="nav-item">
-                <a href="/source" class="nav-link" id="source">来源设置</a>
+                <a href="/school" class="nav-link" id="school">公立学校</a>
               </li>
             </ul>
           </div>
@@ -121,6 +106,10 @@
               <li class="nav-item">
                 <a href="/schedule" class="nav-link" id="schedule">课程安排</a>
               </li>
+              <!-- <li class="nav-item"><a href="/subject" class="nav-link" id="subject">科目设置</a></li> -->
+              <li class="nav-item">
+                <a href="/classroom" class="nav-link" id="classroom">教室设置</a>
+              </li>
             </ul>
           </div>
         </li>
@@ -132,7 +121,7 @@
           <div class="collapse" id="navbar-4">
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
-                <a href="/payment" class="nav-link" id="payment">学生购课</a>
+                <a href="/contract" class="nav-link" id="contract">学生购课</a>
               </li>
             </ul>
           </div>

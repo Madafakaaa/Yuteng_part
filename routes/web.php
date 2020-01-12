@@ -51,56 +51,50 @@ Route::get('/exit', 'LoginController@exit');
 Route::get('/home', 'HomeController@home');
 // 2.    学校管理
 // 2.1.1 校区设置
-Route::resource('/department', 'School\DepartmentController');
+Route::resource('/department', 'DepartmentController');
 // 2.1.2 学校设置
-Route::resource('/school', 'School\SchoolController');
+Route::resource('/school', 'SchoolController');
 // 2.1.3 教室设置
-Route::resource('/classroom', 'School\ClassroomController');
+Route::resource('/classroom', 'ClassroomController');
 // 2.2.1 用户管理
-Route::resource('/user', 'School\UserController');
+Route::resource('/user', 'UserController');
 // 2.2.2 岗位管理
-Route::resource('/position', 'School\PositionController');
-// 2.2.3 等级管理
-Route::resource('/level', 'School\LevelController');
+Route::resource('/position', 'PositionController');
+// 2.2.3 部门管理
+Route::resource('/section', 'SectionController');
 // 2.2.4 档案管理
-Route::resource('/archive', 'School\ArchiveController');
+Route::resource('/archive', 'ArchiveController');
 // 2.3.1 课程管理
-Route::resource('/course', 'School\CourseController');
-// 2.3.2 年级管理
-Route::resource('/grade', 'School\GradeController');
-// 2.3.3 课程管理
-Route::resource('/subject', 'School\SubjectController');
-// 2.3.4 上课时间
-// Route::resource('/timeset', 'School\TimesetController');
+Route::resource('/course', 'CourseController');
 
 // 3.    招生管理
 // 3.1.1 客户管理
-Route::resource('/customer', 'Market\CustomerController');
-Route::post('/customer/{id}/record', 'Market\CustomerController@record');
-// 3.1.2 来源设置
-Route::resource('/source', 'Market\SourceController');
+Route::resource('/customer', 'CustomerController');
+Route::post('/customer/{id}/record', 'CustomerController@record');
 
 // 4.    教务中心
 // 4.1   学生管理
-Route::resource('/student', 'Teaching\StudentController');
+Route::resource('/student', 'StudentController');
 // 4.2   班级管理
-Route::resource('/class', 'Teaching\ClassController');
+Route::resource('/class', 'ClassController');
 // 4.2   班级成员管理
-Route::post('/member/{class_id}', 'Teaching\MemberController@add');
-Route::delete('/member/{class_id}', 'Teaching\MemberController@delete');
+Route::post('/member/{class_id}', 'MemberController@add');
+Route::delete('/member/{class_id}', 'MemberController@delete');
 // 4.3   课程安排
-Route::resource('/schedule', 'Teaching\ScheduleController');
-Route::post('/schedule/create/step2', 'Teaching\ScheduleController@createStep2');
-Route::post('/schedule/create/step3', 'Teaching\ScheduleController@createStep3');
-Route::post('/schedule/{schedule_id}/attend', 'Teaching\ScheduleController@attend');
+Route::resource('/schedule', 'ScheduleController');
+Route::post('/schedule/create/step2', 'ScheduleController@createStep2');
+Route::post('/schedule/create/step3', 'ScheduleController@createStep3');
+Route::get('/schedule/attend/{schedule_id}', 'ScheduleController@attend');
+Route::post('/schedule/attend/{schedule_id}/step2', 'ScheduleController@attendStep2');
+Route::post('/schedule/attend/{schedule_id}/step3', 'ScheduleController@attendStep3');
 
 // 5.    财务中心
 // 5.1   学生购课
-Route::resource('/payment', 'Finance\PaymentController');
-Route::post('/payment/create/step2', 'Finance\PaymentController@createStep2');
+Route::resource('/contract', 'ContractController');
+Route::post('/contract/create/step2', 'ContractController@createStep2');
 
 // test calendar
-Route::get('/calendar', 'Teaching\ScheduleController@calendar');
+Route::get('/calendar', 'ScheduleController@calendar');
 // test page
 Route::get('/buttons', function () { return view('button_template'); });
 

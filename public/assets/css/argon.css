@@ -614,8 +614,8 @@ h6,
 
 hr
 {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-top: 0.3rem;
+    margin-bottom: 0.9rem;
 
     border: 0;
     border-top: 1px solid rgba(0, 0, 0, .1);
@@ -1954,7 +1954,7 @@ pre code
     width: 100%;
     margin-bottom: 1rem;
     table-layout:fixed;
-    color: #525f7f;
+    color: #505050;
     background-color: transparent;
 }
 .table th,
@@ -1978,6 +1978,7 @@ pre code
 
     border-bottom: 2px solid #e9ecef;
 }
+
 .table tbody + tbody
 {
     border-top: 2px solid #e9ecef;
@@ -2349,7 +2350,7 @@ pre code
 
 .table .thead-light th
 {
-    color: #8898aa;
+    color: #aabacc;
     border-color: #e9ecef;
     background-color: #f6f9fc;
 }
@@ -6024,9 +6025,13 @@ input[type='button'].btn-block
 {
     margin-bottom: 0;
     padding: 1.25rem 1.5rem;
-
-    border-bottom: 1px solid rgba(0, 0, 0, .05);
+    border-bottom: 1px solid #D5D8DB; 
     background-color: #fff;
+}
+.table-top
+{
+	border: none;
+	background-color:#ECEFF5;
 }
 .card-header:first-child
 {
