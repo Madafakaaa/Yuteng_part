@@ -11,6 +11,19 @@
 
 @section('content')
 <div class="container-fluid mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example mb-4">
+      <div class="row justify-content-center">
+        <div class="col-2 text-center">
+          <span class="badge badge-pill badge-success">选择报名学生</span>
+        </div>
+        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
+        <div class="col-2 text-center">
+          <span class="badge badge-pill badge-info">选择报名课程</span>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-6">
       <div class="card">
@@ -19,7 +32,7 @@
             <div class="col-4">
               <div class="form-group row mb-0">
                 <label class="col-md-4 col-form-label form-control-label">学生</label>
-                <div class="col-md-8">
+                <div class="col-md-8 px-2 mb-2">
                   <input class="form-control" type="text" value="{{ $student->student_name }}" readonly>
                   <input type="hidden" name="input1" value="{{ $student->student_id }}" readonly>
                 </div>
@@ -28,7 +41,7 @@
             <div class="col-4">
               <div class="form-group row mb-0">
                 <label class="col-md-4 col-form-label form-control-label">校区</label>
-                <div class="col-md-8">
+                <div class="col-md-8 px-2 mb-2">
                   <input class="form-control" type="text" value="{{ $student->department_name }}" readonly>
                 </div>
               </div>
@@ -36,7 +49,7 @@
             <div class="col-4">
               <div class="form-group row mb-0">
                 <label class="col-md-4 col-form-label form-control-label">年级</label>
-                <div class="col-md-8">
+                <div class="col-md-8 px-2 mb-2">
                   <input class="form-control" type="text" value="{{ $student->grade_name }}" readonly>
                 </div>
               </div>
@@ -64,7 +77,7 @@
                       <option value=''>请选择课程...</option>
                       @foreach ($courses as $course)
                         <option value="{{ $course->course_id }}">
-                          @if($course->course_type=="一对一") 1v1： @else 班级： @endif{{ $course->course_name }}，{{ $course->grade_name }}，{{ $course->course_unit_price }}元/课时
+                          {{ $course->course_type }}: {{ $course->course_name }}，{{ $course->grade_name }}，{{ $course->course_unit_price }}元/课时
                         </option>
                       @endforeach
                     </select>
@@ -87,15 +100,15 @@
               <tr>
                 <th style='width:55px;'>序号</th>
                 <th style='width:180px;'>报读课程</th>
-                <th style='width:120px;'>类型</th>
+                <th style='width:103px;'>类型</th>
                 <th style='width:120px;'>单价</th>
                 <th style='width:90px;'>数量</th>
                 <th style='width:130px;'>总金额</th>
                 <th style='width:110px;'>折扣优惠</th>
-                <th style='width:100px;'>金额优惠</th>
+                <th style='width:110px;'>金额优惠</th>
                 <th style='width:90px;'>赠送课时</th>
                 <th style='width:90px;'>总课时</th>
-                <th style='width:130px;'>应收金额</th>
+                <th style='width:142px;'>应收金额</th>
                 <th style='width:80px;' class="text-center">操作</th>
                 <th></th>
               </tr>
@@ -109,11 +122,7 @@
                 <td>{{ $loop->iteration }}</td>
                 <td title="{{ $selected_course->course_name }}">{{ $selected_course->course_name }}</td>
                 <td>
-                  @if($selected_course->course_type=="一对一")
-                    <img src="{{ asset(_ASSETS_.'/img/icons/course_type_1.png') }}" />
-                  @else
-                    <img src="{{ asset(_ASSETS_.'/img/icons/course_type_2.png') }}" />
-                  @endif
+                  <img src="{{ asset(_ASSETS_.$selected_course->course_type_icon_path) }}" />
                   &nbsp;
                   {{ $selected_course->course_type }}
                 </td>
@@ -195,8 +204,35 @@
           <h2 class="mb-0">合同备注</h2>
         </div>
         <div class="card-body">
-          <div class="form-group">
-            <textarea class="form-control" name="remark" rows="8" resize="none" placeholder="合同备注..."></textarea>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <textarea class="form-control" name="remark" rows="8" resize="none" placeholder="合同备注..." maxlength="255"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group row">
+                <label class="col-md-4 col-form-label form-control-label">支付方式<span style="color:red">*</span></label>
+                <div class="col-md-8">
+                  <select class="form-control" name="payment_method" data-toggle="select" required>
+                    <option value=''>请选择支付方式...</option>
+                    @foreach ($payment_methods as $payment_method)
+                      <option value="{{ $payment_method->payment_method_name }}">{{ $payment_method->payment_method_name }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group row">
+                <label class="col-md-4 col-form-label form-control-label">签约时间<span style="color:red">*</span></label>
+                <div class="col-md-8">
+                  <input class="form-control datepicker" name="contract_date" type="text" value="{{ date('Y-m-d') }}" required>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -237,15 +273,16 @@
           </div>
         </div>
         <div class="card-footer">
-            <div class="row">
-              <div class="col-5">
-                <a href="javascript:window.location.href='/contract'"><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
-              </div>
-              <div class="col-2"></div>
-              <div class="col-5">
-                <input type="submit" class="btn btn-warning btn-block" id="submit_button" value="提交" disabled="true">
-              </div>
+          <hr class="my-3">
+          <div class="row">
+            <div class="col-lg-5 col-md-5 col-sm-12">
+              <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">上一步</button></a>
             </div>
+            <div class="col-lg-2 col-md-2 col-sm-12 my-2"></div>
+            <div class="col-lg-5 col-md-5 col-sm-12">
+              <input type="submit" class="btn btn-warning btn-block" id="submit_button" value="提交" disabled="true">
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -85,7 +85,11 @@ class DepartmentController extends Controller
         $department_name = $request->input('input1');
         $department_location = $request->input('input2');
         $department_phone1 = $request->input('input3');
-        $department_phone2 = $request->input('input4');
+        if($request->filled('input4')) {
+            $department_phone2 = $request->input('input4');
+        }else{
+            $department_phone2 = "";
+        }
         // 获取当前用户ID
         $department_createuser = Session::get('user_id');
         // 插入数据库
@@ -189,7 +193,11 @@ class DepartmentController extends Controller
         $department_name = $request->input('input1');
         $department_location = $request->input('input2');
         $department_phone1 = $request->input('input3');
-        $department_phone2 = $request->input('input4');
+        if($request->filled('input4')) {
+            $department_phone2 = $request->input('input4');
+        }else{
+            $department_phone2 = "";
+        }
         // 更新数据库
         try{
             DB::table('department')
@@ -207,9 +215,9 @@ class DepartmentController extends Controller
                                                                         'message' => '校区修改失败，请重新输入信息']);
         }
         return redirect("/department")->with(['notify' => true,
-                                                               'type' => 'success',
-                                                               'title' => '校区修改成功',
-                                                               'message' => '校区修改成功，校区名称: '.$department_name]);
+                                              'type' => 'success',
+                                              'title' => '校区修改成功',
+                                              'message' => '校区修改成功，校区名称: '.$department_name]);
     }
 
     /**

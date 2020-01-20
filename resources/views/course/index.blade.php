@@ -84,16 +84,17 @@
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:70px;'>序号</th>
-                <th style='width:10%;'>课程名称</th>
-                <th style='width:10%;'>课程类型</th>
-                <th style='width:10%;'>开课校区</th>
-                <th style='width:10%;'>课程季度</th>
-                <th style='width:10%;'>课程年级</th>
-                <th style='width:10%;'>课程科目</th>
-                <th style='width:10%;'>课时单价</th>
-                <th style='width:10%;'>课程时长</th>
-                <th>操作管理</th>
+                <th style='width:80px;'>序号</th>
+                <th style='width:220px;'>课程名称</th>
+                <th style='width:130px;'>课程类型</th>
+                <th style='width:110px;'>开课校区</th>
+                <th style='width:110px;'>课程季度</th>
+                <th style='width:110px;'>课程年级</th>
+                <th style='width:110px;'>课程科目</th>
+                <th style='width:130px;'>课时单价</th>
+                <th style='width:130px;'>课程时长</th>
+                <th style='width:187px;'>操作管理</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -104,7 +105,7 @@
               <tr title="备注：{{ $row->course_remark }}， 创建日期：{{ $row->course_createtime }}">
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>{{ $row->course_name }}</td>
-                <td>{{ $row->course_type }}</td>
+                <td><img src="{{ asset(_ASSETS_.$row->course_type_icon_path) }}" /> {{ $row->course_type }}</td>
                 <td>@if($row->course_department==0) 全校区 @else{{ $row->department_name }}@endif</td>
                 <td>{{ $row->course_quarter }}</td>
                 <td>@if($row->course_grade==0) 全年级 @else{{ $row->grade_name }}@endif</td>
@@ -135,8 +136,6 @@
 <script>
   linkActive('link-1');
   navbarActive('navbar-1');
-  linkActive('link-1-3');
-  navbarActive('navbar-1-3');
   linkActive('course');
 </script>
 @endsection

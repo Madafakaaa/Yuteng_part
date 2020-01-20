@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">财务中心</li>
-    <li class="breadcrumb-item active">学生购课</li>
+    <li class="breadcrumb-item active">退费申请</li>
 @endsection
 
 @section('content')
@@ -58,9 +58,9 @@
         <div class="card-header table-top">
           <div class="row">
             <div class="col-6">
-              <a href="/contract/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加购课">
+              <a href="/refund/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加购课">
                 <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">添加购课</span>
+                <span class="btn-inner--text">申请退费</span>
               </a>
             </div>
           </div>
@@ -70,19 +70,16 @@
             <thead class="thead-light">
               <tr>
                 <th style='width:70px;'>序号</th>
-                <th style='width:91px;'>校区</th>
-                <th style='width:100px;'>学生</th>
-                <th style='width:70px;'>年级</th>
-                <th style='width:80px;' class="text-right">课程数量</th>
-                <th style='width:90px;' class="text-right">购买课时</th>
-                <th style='width:80px;' class="text-right">赠送课时</th>
-                <th style='width:110px;' class="text-right">原金额</th>
-                <th style='width:110px;' class="text-right">优惠金额</th>
-                <th style='width:90px;' class="text-right">合计课时</th>
-                <th style='width:110px;' class="text-right">实付金额</th>
-                <th style='width:80px;'>支付方式</th>
-                <th style='width:96px;'>购课日期</th>
-                <th style='width:140px;'>操作管理</th>
+                <th style='width:95px;'>校区</th>
+                <th style='width:105px;'>学生</th>
+                <th style='width:187px;'>课程</th>
+                <th style='width:100px;'>类型</th>
+                <th style='width:90px;' class="text-right">扣除课时</th>
+                <th style='width:110px;' class="text-right">违约金</th>
+                <th style='width:110px;' class="text-right">退款金额</th>
+                <th style='width:100px;'>日期</th>
+                <th style='width:80px;'>状态</th>
+                <th style='width:270px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>
@@ -91,27 +88,37 @@
               <tr class="text-center"><td colspan="14">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr title="备注：{{ $row->contract_remark }}. 创建时间：{{ $row->contract_createtime }}。">
+              <tr title="可退金额：{{ number_format($row->refund_amount, 1) }} 元.年级：{{ $row->grade_name }}. 创建时间：{{ $row->refund_createtime }}. 创建用户：{{ $row->user_name }}. 备注：{{ $row->refund_remark }}.">
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td title="{{ $row->department_name }}">{{ $row->department_name }}</td>
                 <td title="{{ $row->student_name }}">{{ $row->student_name }}</td>
-                <td title="{{ $row->grade_name }}">{{ $row->grade_name }}</td>
-                <td class="text-right" title="{{ $row->contract_course_num }} 种课程">{{ $row->contract_course_num }} 种课程</td>
-                <td class="text-right" title="{{ $row->contract_original_hour }} 课时">{{ $row->contract_original_hour }} 课时</td>
-                <td class="text-right" title="{{ $row->contract_free_hour }} 课时">{{ $row->contract_free_hour }} 课时</td>
-                <td class="text-right" title="{{ number_format($row->contract_original_price, 1) }} 元">{{ number_format($row->contract_original_price, 1) }} 元</td>
-                <td class="text-right" title="- {{ number_format($row->contract_discount_price, 1) }} 元"><span style="color:red;">- {{ number_format($row->contract_discount_price, 1) }} 元</span></td>
-                <td class="text-right" title="{{ $row->contract_total_hour }} 课时"><strong>{{ $row->contract_total_hour }} 课时</strong></td>
-                <td class="text-right" title="{{ number_format($row->contract_total_price, 1) }} 元"><strong>{{ number_format($row->contract_total_price, 1) }} 元</strong></td>
-                <td title="{{ $row->contract_payment_method }}">{{ $row->contract_payment_method }}</td>
-                <td title="{{ $row->contract_date }}">{{ $row->contract_date }}</td>
+                <td title="{{ $row->course_name }}">{{ $row->course_name }}</td>
+                <td title="{{ $row->course_type }}">{{ $row->course_type }}</td>
+                <td class="text-right" title="{{ $row->refund_total_hour }} 课时 (包含赠送课时)">{{ $row->refund_total_hour }} 课时</td>
+                <td class="text-right" title="- {{ number_format($row->refund_fine, 1) }} 元"><span style="color:red;">- {{ number_format($row->refund_fine, 1) }} 元</span></td>
+                <td class="text-right" title="{{ number_format($row->refund_actual_amount, 1) }} 元"><strong>{{ number_format($row->refund_actual_amount, 1) }} 元</strong></td>
+                <td title="{{ $row->refund_date }}">{{ $row->refund_date }}</td>
+                @if($row->refund_checked==0)
+                  <td title="未审核"><span style="color:red;">未审核</span></td>
+                @else
+                  <td title="已审核"><span style="color:green;">已审核</span></td>
+                @endif
                 <td>
-                  <form action="contract/{{$row->contract_id}}" method="POST">
+                  <form action="refund/{{$row->refund_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/contract/{{$row->contract_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a>
-                    {{ deleteConfirm($row->contract_id, ["购课学生：".$row->student_name."，<br> 购买课程：".$row->contract_course_num."课程，
-                                                          购课数量：".$row->contract_total_hour."课时，金额：".$row->contract_total_price."元。"]) }}
+                    <a href='/refund/{{$row->refund_id}}'><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>&nbsp;
+                    <a href='/contract/{{$row->refund_contract}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a>&nbsp;
+                    @if($row->refund_checked==0&&$row->refund_createuser!=Session::get('user_id'))
+                      <a href='/refund/{{$row->refund_id}}/edit'><button type="button" class="btn btn-warning btn-sm">审核</button></a>&nbsp;
+                    @else
+                      <a href='#'><button type="button" class="btn btn-warning btn-sm" disabled>审核</button></a>&nbsp;
+                    @endif
+                    @if($row->refund_checked==1)
+                      <a href='#'><button type="button" class="btn btn-outline-danger btn-sm" disabled>删除</button></a>&nbsp;
+                    @else
+                      {{ deleteConfirm($row->refund_id, ["退费学生：".$row->student_name]) }}
+                    @endif
                   </form>
                 </td>
               </tr>
@@ -130,6 +137,6 @@
 <script>
   linkActive('link-4');
   navbarActive('navbar-4');
-  linkActive('contract');
+  linkActive('refund');
 </script>
 @endsection

@@ -82,7 +82,9 @@ Route::post('/member/{class_id}', 'MemberController@add');
 Route::delete('/member/{class_id}', 'MemberController@delete');
 // 4.3   课程安排
 Route::resource('/schedule', 'ScheduleController');
+Route::get('/schedule/create/Irregular', 'ScheduleController@createIrregular');
 Route::post('/schedule/create/step2', 'ScheduleController@createStep2');
+Route::post('/schedule/create/step2Irregular', 'ScheduleController@createStep2Irregular');
 Route::post('/schedule/create/step3', 'ScheduleController@createStep3');
 Route::get('/schedule/attend/{schedule_id}', 'ScheduleController@attend');
 Route::post('/schedule/attend/{schedule_id}/step2', 'ScheduleController@attendStep2');
@@ -92,9 +94,16 @@ Route::post('/schedule/attend/{schedule_id}/step3', 'ScheduleController@attendSt
 // 5.1   学生购课
 Route::resource('/contract', 'ContractController');
 Route::post('/contract/create/step2', 'ContractController@createStep2');
+// 5.2   退费申请
+Route::resource('/refund', 'RefundController');
+Route::post('/refund/create/step2', 'RefundController@createStep2');
+Route::post('/refund/create/step3', 'RefundController@createStep3');
+Route::post('/refund/create/step4', 'RefundController@createStep4');
 
-// test calendar
-Route::get('/calendar', 'ScheduleController@calendar');
+// 课程表 Calendar
+Route::get('/calendar', 'CalendarController@calendar');
+
+
 // test page
 Route::get('/buttons', function () { return view('button_template'); });
 

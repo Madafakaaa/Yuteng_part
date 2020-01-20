@@ -85,16 +85,17 @@
               <tr>
                 <th style='width:70px;'>序号</th>
                 <th style='width:70px;'>校区</th>
-                <th style='width:180px;'>学生/班级</th>
-                <th style='width:140px;'>课程</th>
-                <th style='width:90px;'>教师</th>
-                <th style='width:90px;'>科目</th>
-                <th style='width:90px;'>年级</th>
+                <th style='width:160px;'>学生/班级</th>
+                <th style='width:160px;'>课程</th>
+                <th style='width:100px;'>教师</th>
+                <th style='width:80px;'>科目</th>
+                <th style='width:80px;'>年级</th>
                 <th style='width:100px;'>日期</th>
-                <th style='width:120px;'>时间</th>
-                <th style='width:90px;'>时长</th>
-                <th style='width:140px;'>地点</th>
-                <th>操作管理</th>
+                <th style='width:110px;'>时间</th>
+                <th style='width:110px;'>地点</th>
+                <th style='width:90px;'>考勤状态</th>
+                <th style='width:170px;'>操作管理</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -112,13 +113,20 @@
                 <td>{{ $row->grade_name }}</td>
                 <td>{{ $row->schedule_date }}</td>
                 <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
-                <td>{{ $row->schedule_time }}分钟</td>
                 <td>{{ $row->classroom_name }}</td>
+                @if($row->schedule_attended==0)
+                  <td><span style="color:red;">未考勤</span></td>
+                @elseif($row->schedule_checked==0)
+                  <td><span style="color:orange;">待审核</span></td>
+                @else
+                  <td><span style="color:green;">已审核</span></td>
+                @endif
                 <td>
                   <form action="schedule/{{$row->schedule_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/schedule/attend/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">考勤</button></a>&nbsp;
+                    <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">查看</button></a>&nbsp;
+                    <a href='/schedule/attend/{{$row->schedule_id}}'><button type="button" class="btn btn-warning btn-sm">考勤</button></a>&nbsp;
                     {{ deleteConfirm($row->schedule_id, ["上课成员：".$row->student_name.$row->class_name.", 教师：".$row->user_name]) }}
                   </form>
                 </td>

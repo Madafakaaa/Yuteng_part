@@ -108,8 +108,6 @@
 <script>
   linkActive('link-1');
   navbarActive('navbar-1');
-  linkActive('link-1-3');
-  navbarActive('navbar-1-3');
   linkActive('course');
 </script>
 @endsection

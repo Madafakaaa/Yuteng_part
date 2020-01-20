@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-<div class="container-fluid mt--4">
+<div class="container-fluid mt-4">
   <div class="row">
     <div class="col-lg-4 col-md-8 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
@@ -56,10 +56,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-1');
-  navbarActive('navbar-1');
-  linkActive('link-1-1');
-  navbarActive('navbar-1-1');
+  linkActive('link-2');
+  navbarActive('navbar-2');
   linkActive('school');
 </script>
 @endsection

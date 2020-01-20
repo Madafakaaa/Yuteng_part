@@ -33,8 +33,9 @@
             <thead class="thead-light">
               <tr>
                 <th style='width:70px;'>序号</th>
-                <th style='width:140px;'>部门</th>
-                <th>操作管理</th>
+                <th style='width:180px;'>部门</th>
+                <th style='width:168px;'>操作管理</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -101,12 +102,13 @@
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:60px;'>序号</th>
+                <th style='width:80px;'>序号</th>
                 <th style='width:180px;'>岗位</th>
-                <th style='width:140px;'>部门</th>
-                <th style='width:90px;'>等级</th>
+                <th style='width:180px;'>部门</th>
+                <th style='width:140px;'>等级</th>
                 <th style='width:140px;'>权限</th>
-                <th>操作管理</th>
+                <th style='width:147px;'>操作管理</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>

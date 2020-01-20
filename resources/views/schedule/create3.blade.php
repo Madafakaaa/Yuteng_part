@@ -6,23 +6,40 @@
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">教务中心</li>
     <li class="breadcrumb-item"><a href="/schedule">课程安排</a></li>
-    <li class="breadcrumb-item active">新建排课</li>
+    <li class="breadcrumb-item active">确认上课信息</li>
 @endsection
 
 @section('content')
 <div class="container-fluid mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
+      <div class="row justify-content-center">
+        <div class="col-2 text-center">
+          <span class="badge badge-pill badge-success">选择上课时间</span>
+        </div>
+        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
+        <div class="col-2 text-center">
+          <span class="badge badge-pill badge-success">选择课程信息</span>
+        </div>
+        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
+        <div class="col-2 text-center">
+          <span class="badge badge-pill badge-info">确认上课信息</span>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
         <form action="/schedule" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">三、确认课程信息</h4>
+            <h4 class="mb-0">三、确认上课信息</h4>
           </div>
           <!-- Card body -->
           <div class="card-body pt-2">
             <div class="row">
-              <div class="col-2">
+              <div class="col-2 text-right">
                 <label class="form-control-label">上课校区</label>
               </div>
               <div class="col-10">
@@ -36,7 +53,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-2">
+              <div class="col-2 text-right">
                 <label class="form-control-label">上课日期(<span style="color:red;">{{ count($schedule_dates) }}</span>天)</label>
               </div>
               <div class="col-10">
@@ -52,7 +69,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-2">
+              <div class="col-2 text-right">
                 <label class="form-control-label">上课时间</label>
               </div>
               <div class="col-10">
@@ -69,7 +86,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-2">
+              <div class="col-2 text-right">
                 <label class="form-control-label">学生/班级</label>
               </div>
               <div class="col-10">
@@ -86,7 +103,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-2">
+              <div class="col-2 text-right">
                 <label class="form-control-label">任课教师</label>
               </div>
               <div class="col-10">
@@ -100,7 +117,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-2">
+              <div class="col-2 text-right">
                 <label class="form-control-label">课程</label>
               </div>
               <div class="col-10">
@@ -114,7 +131,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-2">
+              <div class="col-2 text-right">
                 <label class="form-control-label">科目</label>
               </div>
               <div class="col-10">
@@ -128,7 +145,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-2">
+              <div class="col-2 text-right">
                 <label class="form-control-label">教室</label>
               </div>
               <div class="col-10">
@@ -141,12 +158,13 @@
                 </div>
               </div>
             </div>
+            <hr>
             <div class="row">
-              <div class="col-3">
+              <div class="col-lg-3 col-md-5 col-sm-12">
                 <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">上一步</button></a>
               </div>
-              <div class="col-6"></div>
-              <div class="col-3">
+              <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
+              <div class="col-lg-3 col-md-5 col-sm-12">
                 <input type="hidden" name="input1" value="{{ $schedule_participant }}">
                 <input type="hidden" name="input2" value="{{ $schedule_teacher }}">
                 <input type="hidden" name="input3" value="{{ $schedule_classroom }}">

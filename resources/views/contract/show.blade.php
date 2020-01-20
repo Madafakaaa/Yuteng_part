@@ -6,8 +6,9 @@
     <div class="card m-4">
       <div class="card-header m-1 p-2">
         <div class="row m-0 p-0">
-          <div class="col-2"><h2 class="m-0">育藤教育</h2></div>
-          <div class="col-8 text-center"><span style="font-family: 华文中宋; font-weight:normal;">快乐学习的第三课堂</span></div>
+          <div class="col-3"><h2 class="m-0">育藤教育</h2></div>
+          <div class="col-6 text-center"><span style="font-family: 华文中宋; font-weight:normal;">快乐学习的第三课堂</span></div>
+          <div class="col-3 text-right"><h3 class="m-0">合同号：<span style="color:red;">{{ $contract->contract_id }}</span></h3></div>
         </div>
       </div>
       <div class="card-body m-1 p-2">
@@ -40,14 +41,14 @@
           <div class="col-4">
             <h3 class="m-0">
               <span style="font-family: 华文中宋; font-weight:normal;">
-                乙方：学员姓名：{{ $contract->student_name }}
+                乙方：{{ $contract->student_name }}
               </span>
             </h3>
           </div>
           <div class="col-6">
             <h3 class="m-0">
               <span style="font-family: 华文中宋; font-weight:normal;">
-                乙方法定监护人：监护人姓名：{{ $contract->student_guardian }}
+                乙方法定监护人：{{ $contract->student_guardian }}
               </span>
             </h3>
           </div>
@@ -76,12 +77,12 @@
                 <tr class="text-center"><td colspan="6">没有购买课程！</td></tr>
                 @endif
                 @foreach ($contract_courses as $contract_course)
-                <tr>
+                <tr @if($contract_course->contract_course_status==0) style="text-decoration:line-through;" @endif>
                   <td style="border:1px solid #32325d;">{{ $contract_course->course_name }}</td>
                   <td style="border:1px solid #32325d;">{{ $contract_course->course_type }}</td>
-                  <td style="border:1px solid #32325d;">{{ number_format($contract_course->contract_course_original_unit_price, 2) }} 元</td>
+                  <td style="border:1px solid #32325d;">{{ number_format($contract_course->contract_course_original_unit_price, 1) }} 元</td>
                   <td style="border:1px solid #32325d;">{{ number_format($contract_course->contract_course_original_hour) }} 课时</td>
-                  <td style="border:1px solid #32325d;">{{ number_format($contract_course->contract_course_total_price, 2) }} 元</td>
+                  <td style="border:1px solid #32325d;">{{ number_format($contract_course->contract_course_total_price, 1) }} 元</td>
                   <td style="border:1px solid #32325d;">
                     @if($contract_course->contract_course_discount_rate!=1)
                       折扣 ：{{ numberToCh($contract_course->contract_course_discount_rate*10/1) }}@if($contract_course->contract_course_discount_rate*100%10!=0){{ numberToCh($contract_course->contract_course_discount_rate*100%10) }}@endif 折.
@@ -98,6 +99,12 @@
                   </td>
                 </tr>
                 @endforeach
+                <tr>
+                  <td style="border:1px solid #32325d;" colspan="3"><strong>合计</strong></td>
+                  <td style="border:1px solid #32325d;"><strong>{{ number_format($contract->contract_original_hour) }} 课时</strong></td>
+                  <td style="border:1px solid #32325d;"><strong>{{ number_format($contract->contract_total_price, 1) }} 元</strong></td>
+                  <td style="border:1px solid #32325d;"><strong>共计优惠：{{ number_format($contract->contract_discount_price, 1) }} 元.</strong></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -220,8 +227,9 @@
     <div class="card m-4">
       <div class="card-header m-1 p-2">
         <div class="row m-0 p-0">
-          <div class="col-2"><h2 class="m-0">育藤教育</h2></div>
-          <div class="col-8 text-center"><span style="font-family: 华文中宋; font-weight:normal;">快乐学习的第三课堂</span></div>
+          <div class="col-3"><h2 class="m-0">育藤教育</h2></div>
+          <div class="col-6 text-center"><span style="font-family: 华文中宋; font-weight:normal;">快乐学习的第三课堂</span></div>
+          <div class="col-3 text-right"><h3 class="m-0">合同号：<span style="color:red;">{{ $contract->contract_id }}</span></h3></div>
         </div>
       </div>
       <div class="card-body m-1 p-2">
@@ -312,8 +320,54 @@
           <div class="col-12">
             <hr class="mt-3 mx-4" style="border-top:1px solid #32325d;">
           </div>
-          <div class="col-12">
+          <div class="col-12 mb-6">
             <hr class="mt-3 mx-4" style="border-top:1px solid #32325d;">
+          </div>
+        </div>
+        <div class="row mx-1 my-6 px-2">
+          <div class="col-6">
+            <h3 class="m-0">
+              <span style="font-family: 华文中宋; font-weight:normal;">
+                甲方：上海育藤培训学校有限公司{{ $contract->department_name }}
+              </span>
+            </h3>
+          </div>
+          <div class="col-6">
+            <h3 class="m-0">
+              <span style="font-family: 华文中宋; font-weight:normal;">
+                乙方学员签字：
+              </span>
+            </h3>
+          </div>
+        </div>
+        <div class="row mx-1 my-6 px-2">
+          <div class="col-6">
+            <h3 class="m-0">
+              <span style="font-family: 华文中宋; font-weight:normal;">
+                甲方代表签字：
+              </span>
+            </h3>
+          </div>
+          <div class="col-6">
+            <h3 class="m-0">
+              <span style="font-family: 华文中宋; font-weight:normal;">
+                乙方监护人签字：
+              </span>
+            </h3>
+          </div>
+        </div>
+        <div class="row mx-1 my-3 px-2">
+          <div class="col-6"></div>
+          <div class="col-6">
+            <h3 class="m-0">
+              <span style="font-family: 华文中宋; font-weight:normal;">
+                本协议于
+                <u>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</u>年
+                <u>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</u>月
+                <u>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</u>日
+                签订
+              </span>
+            </h3>
           </div>
         </div>
       </div>

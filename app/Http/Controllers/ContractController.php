@@ -133,8 +133,9 @@ class ContractController extends Controller
         $selected_courses = array();
         for($i=0; $i<$selected_course_num; $i++){
             $selected_courses[] = DB::table('course')
-                                   ->where('course_id', $selected_course_ids[$i])
-                                   ->first();
+                                    ->join('course_type', 'course.course_type', '=', 'course_type.course_type_name')
+                                    ->where('course_id', $selected_course_ids[$i])
+                                    ->first();
         }
         // 获取课程信息
         $courses = DB::table('course')
@@ -151,11 +152,16 @@ class ContractController extends Controller
                            ->orderBy('course_grade', 'asc')
                            ->orderBy('course_time', 'asc')
                            ->get();
+        // 获取支付方式
+        $payment_methods = DB::table('payment_method')
+                             ->where('payment_method_status', 1)
+                             ->get();
         return view('contract/create2', ['student' => $student,
-                                        'courses' => $courses,
-                                        'selected_course_ids' => $selected_course_ids,
-                                        'selected_course_num' => $selected_course_num,
-                                        'selected_courses' => $selected_courses]);
+                                         'courses' => $courses,
+                                         'payment_methods' => $payment_methods,
+                                         'selected_course_ids' => $selected_course_ids,
+                                         'selected_course_num' => $selected_course_num,
+                                         'selected_courses' => $selected_courses]);
     }
 
     /**
@@ -175,7 +181,20 @@ class ContractController extends Controller
         // 获取表单输入
         $request_student_id = $request->input('student_id');
         $request_selected_course_num = $request->input('selected_course_num');
+        $request_contract_payment_method = $request->input('payment_method');
+        $request_contract_date = $request->input('contract_date');
+        if($request->filled('remark')) {
+            $request_contract_remark = $request->input('remark');
+        }else{
+            $request_contract_remark = "";
+        }
         $request_courses = array();
+        // 生成新合同号
+        $sub_student_id = substr($request_student_id , 1 , 10);
+        $new_contract_num = DB::table('contract')
+                              ->where('contract_student', $request_student_id)
+                              ->count()+1;
+        $contract_id = "H".$sub_student_id.sprintf("%02d", $new_contract_num);
         for($i=1; $i<=$request_selected_course_num; $i++){
             $temp = array();
             $temp[] = (int)$request->input("course_{$i}_0");
@@ -199,7 +218,9 @@ class ContractController extends Controller
         $contract_original_price = 0;
         $contract_discount_price = 0;
         $contract_total_price = 0;
-        $contract_date = date('Y-m-d');
+        $contract_date = $request_contract_date;
+        $contract_remark = $request_contract_remark;
+        $contract_payment_method = $request_contract_payment_method;
         foreach($request_courses as $request_course){
             $contract_original_hour += $request_course[2];
             $contract_free_hour += $request_course[6];
@@ -211,11 +232,13 @@ class ContractController extends Controller
         $contract_original_price = round($contract_original_price, 2);
         $contract_discount_price = round($contract_discount_price, 2);
         $contract_total_price = round($contract_total_price, 2);
+        DB::beginTransaction();
         // 插入数据库
         try{
             // 插入Contract表
-            $contract_id = DB::table('contract')->insertGetId(
-                ['contract_department' => $contract_department,
+            DB::table('contract')->insert(
+                ['contract_id' => $contract_id,
+                 'contract_department' => $contract_department,
                  'contract_student' => $contract_student,
                  'contract_course_num' => $contract_course_num,
                  'contract_original_hour' => $contract_original_hour,
@@ -225,6 +248,8 @@ class ContractController extends Controller
                  'contract_discount_price' => $contract_discount_price,
                  'contract_total_price' => $contract_total_price,
                  'contract_date' => $contract_date,
+                 'contract_payment_method' => $contract_payment_method,
+                 'contract_remark' => $contract_remark,
                  'contract_createuser' => $contract_createuser]
             );
             foreach($request_courses as $request_course){
@@ -252,6 +277,7 @@ class ContractController extends Controller
                      'hour_student' => $contract_student,
                      'hour_course' => $request_course[0],
                      'hour_type' => 0,
+                     'hour_original' => $request_course[2],
                      'hour_remain' => $request_course[2],
                      'hour_used' => 0,
                      'hour_createuser' => $contract_createuser]
@@ -261,6 +287,7 @@ class ContractController extends Controller
                      'hour_student' => $contract_student,
                      'hour_course' => $request_course[0],
                      'hour_type' => 1,
+                     'hour_original' => $request_course[6],
                      'hour_remain' => $request_course[6],
                      'hour_used' => 0,
                      'hour_createuser' => $contract_createuser]
@@ -269,6 +296,7 @@ class ContractController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
+            DB::rollBack();
             // 返回购课列表
             return redirect()->action('ContractController@index')
                              ->with(['notify' => true,
@@ -276,6 +304,7 @@ class ContractController extends Controller
                                      'title' => '购课添加失败',
                                      'message' => '购课添加失败，请重新添加']);
         }
+        DB::commit();
         // 获取学生、课程名称
         $student_name = DB::table('student')
                           ->where('student_id', $contract_student)
@@ -337,48 +366,52 @@ class ContractController extends Controller
         }
         // 获取Contract信息
         $contract = DB::table('contract')
-                     ->where('contract_id', $contract_id)
-                     ->first();
-        // 获取Hour信息
-        $hour = DB::table('hour')
-                  ->where('hour_student', $contract->contract_student)
-                  ->where('hour_course', $contract->contract_course)
-                  ->first();
-        if($hour->hour_remain>=$contract->contract_amount){//剩余课时足够
+                      ->where('contract_id', $contract_id)
+                      ->first();
+        // 获取课程包中已使用Hour信息数量
+        $invalid_hour_num = DB::table('hour')
+                              ->where('hour_contract', $contract_id)
+                              ->whereColumn('hour_original', "<>", 'hour_remain')
+                              ->count();
+        // 非法课时为零
+        if($invalid_hour_num==0){
+            DB::beginTransaction();
             try{
-                // 更新Hour表
+                // 删除Hour表
                 DB::table('hour')
-                  ->where('hour_student', $contract->contract_student)
-                  ->where('hour_course', $contract->contract_course)
-                  ->decrement('hour_remain', $contract->contract_amount);
-                // 删除无效Hour数据
-                DB::table('hour')
-                  ->where('hour_remain', 0)
-                  ->where('hour_used', 0)
+                  ->where('hour_contract', $contract_id)
                   ->delete();
-                // 删除Contract数据
-                DB::table('contract')->where('contract_id', $contract_id)->update(['contract_status' => 0]);
+                // 删除Contract_course表
+                DB::table('contract_course')
+                  ->where('contract_course_contract', $contract_id)
+                  ->delete();
+                // 删除Contract表
+                DB::table('contract')
+                  ->where('contract_id', $contract_id)
+                  ->delete();
             }
             // 捕获异常
             catch(Exception $e){
+                DB::rollBack();
                 return redirect()->action('ContractController@index')
                                  ->with(['notify' => true,
                                          'type' => 'danger',
-                                         'title' => '购课删除失败',
-                                         'message' => '购课删除失败，请联系系统管理员']);
+                                         'title' => '购课记录删除失败',
+                                         'message' => '购课记录删除失败，请联系系统管理员']);
             }
+            DB::commit();
             // 返回购课列表
             return redirect()->action('ContractController@index')
                              ->with(['notify' => true,
                                      'type' => 'success',
-                                     'title' => '购课删除成功',
-                                     'message' => '购课删除成功']);
+                                     'title' => '购课记录删除成功',
+                                     'message' => '购课记录删除成功']);
         }else{
             return redirect()->action('ContractController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
-                                     'title' => '购课删除失败',
-                                     'message' => '学生剩余课时不足，购课删除失败。']);
+                                     'title' => '购课记录删除失败',
+                                     'message' => '学生剩余课时不足，购课记录删除失败。']);
         }
     }
 }

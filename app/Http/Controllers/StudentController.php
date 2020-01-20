@@ -123,7 +123,11 @@ class StudentController extends Controller
         $student_grade = $request->input('input3');
         $student_gender = $request->input('input4');
         $student_birthday = $request->input('input5');
-        $student_school = $request->input('input6');
+        if($request->filled('input6')) {
+            $student_school = $request->input('input6');
+        }else{
+            $student_school = 0;
+        }
         $student_guardian = $request->input('input7');
         $student_guardian_relationship = $request->input('input8');
         $student_phone = $request->input('input9');
@@ -250,7 +254,11 @@ class StudentController extends Controller
         $student_grade = $request->input('input3');
         $student_gender = $request->input('input4');
         $student_birthday = $request->input('input5');
-        $student_school = $request->input('input6');
+        if($request->filled('input6')) {
+            $student_school = $request->input('input6');
+        }else{
+            $student_school = 0;
+        }
         $student_guardian = $request->input('input7');
         $student_guardian_relationship = $request->input('input8');
         $student_phone = $request->input('input9');

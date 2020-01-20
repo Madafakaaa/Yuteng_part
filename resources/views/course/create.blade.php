@@ -94,8 +94,9 @@
                   <label class="form-control-label">课程类型<span style="color:red">*</span></label>
                   <select class="form-control" name="input7" data-toggle="select" required>
                     <option value=''>请选择课程类型...</option>
-                    <option value='一对一'>一对一</option>
-                    <option value='班课'>班课</option>
+                    @foreach ($course_types as $course_type)
+                      <option value="{{ $course_type->course_type_name }}">{{ $course_type->course_type_name }}</option>
+                    @endforeach
                   </select>
                 </div>
               </div>
@@ -143,8 +144,6 @@
 <script>
   linkActive('link-1');
   navbarActive('navbar-1');
-  linkActive('link-1-3');
-  navbarActive('navbar-1-3');
   linkActive('course');
 </script>
 @endsection

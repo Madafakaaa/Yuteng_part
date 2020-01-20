@@ -61,13 +61,13 @@ class ArchiveController extends Controller
         $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('school/archive/index', ['rows' => $rows,
-                                             'currentPage' => $currentPage,
-                                             'totalPage' => $totalPage,
-                                             'startIndex' => $offset,
-                                             'request' => $request,
-                                             'totalNum' => $totalNum,
-                                             'filter_departments' => $filter_departments]);
+        return view('archive/index', ['rows' => $rows,
+                                      'currentPage' => $currentPage,
+                                      'totalPage' => $totalPage,
+                                      'startIndex' => $offset,
+                                      'request' => $request,
+                                      'totalNum' => $totalNum,
+                                      'filter_departments' => $filter_departments]);
     }
 
     /**

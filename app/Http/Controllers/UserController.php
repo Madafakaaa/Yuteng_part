@@ -127,14 +127,16 @@ class UserController extends Controller
         $user_position = $request->input('input4');
         $user_entry_date = $request->input('input5');
         $user_cross_teaching = $request->input('input6');
-        $user_phone = $request->input('input7');
-        $user_wechat = $request->input('input8');
-        // 判断是否为空，为空设为NULL
-        if($user_phone == ""){
-            $user_phone = "NULL";
+        // 判断是否为空，为空设为""
+        if($request->filled('input7')) {
+            $user_phone = $request->input('input7');
+        }else{
+            $user_phone = "";
         }
-        if($user_wechat == ""){
-            $user_wechat = "NULL";
+        if($request->filled('input8')) {
+            $user_wechat = $request->input('input8');
+        }else{
+            $user_wechat = "";
         }
         // 获取当前用户ID
         $user_createuser = Session::get('user_id');
@@ -260,14 +262,15 @@ class UserController extends Controller
         $user_position = $request->input('input4');
         $user_entry_date = $request->input('input5');
         $user_cross_teaching = $request->input('input6');
-        $user_phone = $request->input('input7');
-        $user_wechat = $request->input('input8');
-        // 判断是否为空，为空设为NULL
-        if($user_phone == ""){
-            $user_phone = "NULL";
+        if($request->filled('input7')) {
+            $user_phone = $request->input('input7');
+        }else{
+            $user_phone = "";
         }
-        if($user_wechat == ""){
-            $user_wechat = "NULL";
+        if($request->filled('input8')) {
+            $user_wechat = $request->input('input8');
+        }else{
+            $user_wechat = "";
         }
         // 更新数据库
         try{

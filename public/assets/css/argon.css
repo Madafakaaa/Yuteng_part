@@ -1987,7 +1987,7 @@ pre code
 .table-sm th,
 .table-sm td
 {
-    padding: .5rem;
+    padding: .4rem;
 }
 
 .table-bordered
@@ -29538,9 +29538,8 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     padding: 0 .5rem;
 
     color: #8898aa;
-    border: none;
     border-radius: .25rem;
-    background-color: #adb5bd;
+    background-color: #FFFFFF;
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove

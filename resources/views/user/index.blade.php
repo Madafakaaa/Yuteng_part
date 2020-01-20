@@ -74,17 +74,17 @@
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:70px;'>序号</th>
+                <th style='width:80px;'>序号</th>
                 <th style='width:160px;'>姓名</th>
                 <th style='width:100px;'>账号</th>
-                <th style='width:80px;'>校区</th>
-                <th style='width:100px;'>部门</th>
-                <th style='width:100px;'>岗位</th>
-                <th style='width:80px;'>等级</th>
-                <th style='width:100px;'>跨校区教学</th>
-                <th style='width:100px;'>手机</th>
-                <th style='width:100px;'>微信</th>
-                <th>操作管理</th>
+                <th style='width:100px;'>校区</th>
+                <th style='width:140px;'>部门</th>
+                <th style='width:140px;'>岗位</th>
+                <th style='width:120px;'>等级</th>
+                <th style='width:120px;'>跨校区教学</th>
+                <th style='width:140px;'>手机</th>
+                <th style='width:217px;'>操作管理</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -92,21 +92,20 @@
               <tr class="text-center"><td colspan="10">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr title="入职日期: {{ $row->user_entry_date }}, 手机: {{ $row->user_phone }}, 微信: {{ $row->user_wechat }}。">
+              <tr title="入职日期: {{ $row->user_entry_date }}, 微信: {{ $row->user_wechat }}。">
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->user_name }}</td>
-                <td>{{ $row->user_id }}</td>
-                <td>{{ $row->department_name }}</td>
-                <td>{{ $row->section_name }}</td>
-                <td>{{ $row->position_name }}</td>
-                <td>等级{{ $row->position_level }}</td>
+                <td title="{{ $row->user_name }}">{{ $row->user_name }}</td>
+                <td title="{{ $row->user_id }}">{{ $row->user_id }}</td>
+                <td title="{{ $row->department_name }}">{{ $row->department_name }}</td>
+                <td title="{{ $row->section_name }}">{{ $row->section_name }}</td>
+                <td title="{{ $row->position_name }}">{{ $row->position_name }}</td>
+                <td title="等级{{ $row->position_level }}">等级{{ $row->position_level }}</td>
                 @if($row->user_cross_teaching==1)
-                  <td><span style="color:green;">是</span></td>
+                  <td title="是"><span style="color:green;">是</span></td>
                 @else
-                  <td><span style="color:red;">否</span></td>
+                  <td title="否"><span style="color:red;">否</span></td>
                 @endif
-                <td>{{ $row->user_phone }}</td>
-                <td>{{ $row->user_wechat }}</td>
+                <td title="{{ $row->user_phone }}">{{ $row->user_phone }}</td>
                 <td>
                   <form action="/user/{{ $row->user_id }}" method="POST">
                     @method('DELETE')

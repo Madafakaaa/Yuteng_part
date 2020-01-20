@@ -14,7 +14,7 @@
   <div class="row justify-content-center">
     <div class="col-12 card-wrapper ct-example">
       <div class="card mb-1">
-        <div class="card-header border-0 p-0 m-1">
+        <div class="card-header border-0 p-0 mb-1">
           <form action="" method="get" id="filter" name="filter">
             <div class="row m-2">
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
@@ -43,13 +43,9 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <!-- Card header -->
-        <div class="card-header border-0">
+        <div class="card-header table-top">
           <div class="row">
             <div class="col-6">
-              <h4 class="mb-0">公立学校列表</h4>
-            </div>
-            <div class="col-6 text-right">
               <a href="school/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加学校">
                 <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
                 <span class="btn-inner--text">添加学校</span>
@@ -71,7 +67,7 @@
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="6"">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="6">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
               <tr>
@@ -102,10 +98,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-1');
-  navbarActive('navbar-1');
-  linkActive('link-1-1');
-  navbarActive('navbar-1-1');
+  linkActive('link-2');
+  navbarActive('navbar-2');
   linkActive('school');
 </script>
 @endsection

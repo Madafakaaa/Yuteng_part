@@ -55,7 +55,8 @@
                   <select class="form-control" name="input4" data-toggle="select" required>
                     <option value=''>请选择教室类型...</option>
                     <option value="一对一教室" @if($classroom->classroom_type=="一对一教室") selected @endif>一对一教室</option>
-                    <option value="小班教室" @if($classroom->classroom_type=="小班教室") selected @endif>小班教室</option>
+                    <option value="小教室" @if($classroom->classroom_type=="小教室") selected @endif>小教室</option>
+                    <option value="中教室" @if($classroom->classroom_type=="小教室") selected @endif>中教室</option>
                     <option value="大教室" @if($classroom->classroom_type=="大教室") selected @endif>大教室</option>
                     <option value="多媒体教室" @if($classroom->classroom_type=="多媒体教室") selected @endif>多媒体教室</option>
                   </select>
@@ -86,10 +87,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-1');
-  navbarActive('navbar-1');
-  linkActive('link-1-1');
-  navbarActive('navbar-1-1');
+  linkActive('link-3');
+  navbarActive('navbar-3');
   linkActive('classroom');
 </script>
 @endsection

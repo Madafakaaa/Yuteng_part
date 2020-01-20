@@ -49,12 +49,13 @@
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:80px;'>序号</th>
-                <th style='width:160px;'>名称</th>
-                <th style='width:150px;'>电话1</th>
-                <th style='width:150px;'>电话2</th>
-                <th style='width:420px;'>地址</th>
-                <th>操作管理</th>
+                <th style='width:100px;'>序号</th>
+                <th style='width:200px;'>名称</th>
+                <th style='width:180px;'>电话1</th>
+                <th style='width:180px;'>电话2</th>
+                <th style='width:480px;'>地址</th>
+                <th style='width:177px;'>操作管理</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -62,12 +63,12 @@
               <tr class="text-center"><td colspan="6">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr title="地址：{{ $row->department_location }}，创建时间：{{ $row->department_createtime }}。">
+              <tr title="创建时间：{{ $row->department_createtime }}">
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->department_name }}</td>
-                <td>{{ $row->department_phone1 }}</td>
-                <td>{{ $row->department_phone2 }}</td>
-                <td>{{ $row->department_location }}</td>
+                <td title="{{ $row->department_name }}">{{ $row->department_name }}</td>
+                <td title="{{ $row->department_phone1 }}">{{ $row->department_phone1 }}</td>
+                <td title="{{ $row->department_phone2 }}">{{ $row->department_phone2 }}</td>
+                <td title="{{ $row->department_location }}">{{ $row->department_location }}</td>
                 <td>
                   <form action="department/{{$row->department_id}}" method="POST">
                     @method('DELETE')
@@ -92,8 +93,6 @@
 <script>
   linkActive('link-1');
   navbarActive('navbar-1');
-  linkActive('link-1-1');
-  navbarActive('navbar-1-1');
   linkActive('department');
 </script>
 @endsection

@@ -38,8 +38,7 @@ class ScheduleController extends Controller
                   ->join('course', 'schedule.schedule_course', '=', 'course.course_id')
                   ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
-                  ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
-                  ->where('schedule_status', 1);
+                  ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id');
 
         // 添加筛选条件
         // 课程安排校区
@@ -85,45 +84,16 @@ class ScheduleController extends Controller
 
         // 返回列表视图
         return view('schedule/index', ['rows' => $rows,
-                                                'currentPage' => $currentPage,
-                                                'totalPage' => $totalPage,
-                                                'startIndex' => $offset,
-                                                'request' => $request,
-                                                'totalNum' => $totalNum,
-                                                'filter_departments' => $filter_departments,
-                                                'filter_students' => $filter_students,
-                                                'filter_classes' => $filter_classes,
-                                                'filter_grades' => $filter_grades,
-                                                'filter_users' => $filter_users]);
-    }
-
-    /**
-     * 课程表
-     * URL: GET /calendar
-     */
-    public function calendar(){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取用户信息
-        $user_schedule = Session::get('user_schedule');
-        // 获取表单信息
-        $date = date('Y-m-d');
-        // 获取一周日期
-        $diff=array(6, 0, 1, 2, 3, 4, 5);
-        $first_day = date('Y-m-d', strtotime ("-".$diff[date("w",strtotime($date))]." day", strtotime($date)));
-        $days = array();
-        for($i=0; $i<7; $i++){
-            $days[] = date('Y-m-d', strtotime ("+".$i." day", strtotime($first_day)));;
-        }
-        // 获取课程表信息
-        $rows = DB::table('schedule')->get();
-        // 获取学生信息(筛选)
-        $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        return view('schedule/student', ['rows' => $rows,
-                                                  'days' => $days,
-                                                  'filter_students' => $filter_students]);
+                                       'currentPage' => $currentPage,
+                                       'totalPage' => $totalPage,
+                                       'startIndex' => $offset,
+                                       'request' => $request,
+                                       'totalNum' => $totalNum,
+                                       'filter_departments' => $filter_departments,
+                                       'filter_students' => $filter_students,
+                                       'filter_classes' => $filter_classes,
+                                       'filter_grades' => $filter_grades,
+                                       'filter_users' => $filter_users]);
     }
 
     /**
@@ -136,6 +106,18 @@ class ScheduleController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         return view('schedule/create');
+    }
+
+    /**
+     * 创建新课程安排页面
+     * URL: GET /schedule/createIrregular
+     */
+    public function createIrregular(){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        return view('schedule/createIrregular');
     }
 
     /**
@@ -152,10 +134,44 @@ class ScheduleController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取表单输入
-        $schedule_dates_str = $request->input('input1');
-        $schedule_start = $request->input('input2');
-        $schedule_end = $request->input('input3');
-        // 如果输入日期为空返回上一页(可以删除)
+        $schedule_date_start = $request->input('input1');
+        $schedule_date_end = $request->input('input2');
+        $schedule_days = $request->input('input3');
+        $schedule_start = $request->input('input4');
+        $schedule_end = $request->input('input5');
+        // 判断Checkbox是否为空
+        if(!isset($schedule_days)){
+            return redirect("/schedule/create")->with(['notify' => true,
+                                                       'type' => 'danger',
+                                                       'title' => '未选择上课规律',
+                                                       'message' => '至少选择一天上课规律，请重新输入！']);
+        }
+        // 表单输入数据处理
+        $schedule_date_start = date('Y-m-d', strtotime( $schedule_date_start));
+        $schedule_date_end = date('Y-m-d', strtotime( $schedule_date_end));
+        $schedule_date_temp = $schedule_date_start;
+        $schedule_dates_str = "";
+        while($schedule_date_temp <= $schedule_date_end){
+            foreach($schedule_days as $schedule_day){
+                if(date("w", strtotime($schedule_date_temp))==$schedule_day){
+                    if($schedule_dates_str==""){
+                        $schedule_dates_str.=$schedule_date_temp;
+                    }else{
+                        $schedule_dates_str.=",".$schedule_date_temp;
+                    }
+                    break;
+                }
+            }
+            $schedule_date_temp = date('Y-m-d', strtotime ("+1 day", strtotime($schedule_date_temp)));
+        }
+        // 如果输入日期为空返回上一页(不会发生)
+        if($schedule_date_start>$schedule_date_end){
+            return redirect("/schedule/create")->with(['notify' => true,
+                                                       'type' => 'danger',
+                                                       'title' => '开始日期在结束日期之后',
+                                                       'message' => '开始日期应在结束日期之前，请重新输入！']);
+        }
+        // 如果输入日期为空返回上一页(不会发生)
         if($schedule_dates_str==""){
             return redirect("/schedule/create")->with(['notify' => true,
                                                        'type' => 'danger',
@@ -232,7 +248,6 @@ class ScheduleController extends Controller
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '<', $schedule_start],
                                   ['schedule_end', '>', $schedule_start],
-                                  ['schedule_status', '=', 1],
                                   ['student_status', '=', 1],
                                   ['user_status', '=', 1],
                                   ['classroom_status', '=', 1]
@@ -241,7 +256,6 @@ class ScheduleController extends Controller
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '<', $schedule_end],
                                   ['schedule_end', '>', $schedule_end],
-                                  ['schedule_status', '=', 1],
                                   ['student_status', '=', 1],
                                   ['user_status', '=', 1],
                                   ['classroom_status', '=', 1]
@@ -250,7 +264,6 @@ class ScheduleController extends Controller
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '>', $schedule_start],
                                   ['schedule_end', '<', $schedule_end],
-                                  ['schedule_status', '=', 1],
                                   ['student_status', '=', 1],
                                   ['user_status', '=', 1],
                                   ['classroom_status', '=', 1]
@@ -258,7 +271,6 @@ class ScheduleController extends Controller
                       ->orWhere([
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '=', $schedule_start],
-                                  ['schedule_status', '=', 1],
                                   ['student_status', '=', 1],
                                   ['user_status', '=', 1],
                                   ['classroom_status', '=', 1]
@@ -266,7 +278,6 @@ class ScheduleController extends Controller
                       ->orWhere([
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_end', '=', $schedule_end],
-                                  ['schedule_status', '=', 1],
                                   ['student_status', '=', 1],
                                   ['user_status', '=', 1],
                                   ['classroom_status', '=', 1]
@@ -307,7 +318,6 @@ class ScheduleController extends Controller
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '<', $schedule_start],
                                   ['schedule_end', '>', $schedule_start],
-                                  ['schedule_status', '=', 1],
                                   ['class_status', '=', 1],
                                   ['student_status', '=', 1],
                                   ['user_status', '=', 1],
@@ -317,7 +327,6 @@ class ScheduleController extends Controller
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '<', $schedule_end],
                                   ['schedule_end', '>', $schedule_end],
-                                  ['schedule_status', '=', 1],
                                   ['class_status', '=', 1],
                                   ['student_status', '=', 1],
                                   ['user_status', '=', 1],
@@ -327,7 +336,6 @@ class ScheduleController extends Controller
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '>', $schedule_start],
                                   ['schedule_end', '<', $schedule_end],
-                                  ['schedule_status', '=', 1],
                                   ['class_status', '=', 1],
                                   ['student_status', '=', 1],
                                   ['user_status', '=', 1],
@@ -336,7 +344,6 @@ class ScheduleController extends Controller
                       ->orWhere([
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '=', $schedule_start],
-                                  ['schedule_status', '=', 1],
                                   ['class_status', '=', 1],
                                   ['student_status', '=', 1],
                                   ['user_status', '=', 1],
@@ -345,7 +352,6 @@ class ScheduleController extends Controller
                       ->orWhere([
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_end', '=', $schedule_end],
-                                  ['schedule_status', '=', 1],
                                   ['class_status', '=', 1],
                                   ['student_status', '=', 1],
                                   ['user_status', '=', 1],
@@ -379,16 +385,259 @@ class ScheduleController extends Controller
         $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
         $courses = DB::table('course')->where('course_status', 1)->orderBy('course_createtime', 'asc')->get();
         return view('schedule/create2', ['schedule_dates_str' => $schedule_dates_str,
-                                                  'schedule_dates' => $schedule_dates,
-                                                  'schedule_start' => $schedule_start,
-                                                  'schedule_end' => $schedule_end,
-                                                  'schedule_time' => $schedule_time,
-                                                  'students' => $students,
-                                                  'classes' => $classes,
-                                                  'users' => $users,
-                                                  'classrooms' => $classrooms,
-                                                  'subjects' => $subjects,
-                                                  'courses' => $courses]);
+                                         'schedule_dates' => $schedule_dates,
+                                         'schedule_start' => $schedule_start,
+                                         'schedule_end' => $schedule_end,
+                                         'schedule_time' => $schedule_time,
+                                         'students' => $students,
+                                         'classes' => $classes,
+                                         'users' => $users,
+                                         'classrooms' => $classrooms,
+                                         'subjects' => $subjects,
+                                         'courses' => $courses]);
+    }
+
+    /**
+     * 创建新课程安排页面2
+     * URL: GET /schedule/create/step2
+     * @param  Request  $request
+     * @param  $request->input('input1'): 上课日期
+     * @param  $request->input('input2'): 上课时间
+     * @param  $request->input('input3'): 下课时间
+     */
+    public function createStep2Irregular(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取表单输入
+        $schedule_dates_str = $request->input('input1');
+        $schedule_start = $request->input('input2');
+        $schedule_end = $request->input('input3');
+        // 如果输入日期为空返回上一页(不会发生)
+        if($schedule_dates_str==""){
+            return redirect("/schedule/create")->with(['notify' => true,
+                                                       'type' => 'danger',
+                                                       'title' => '请选择上课日期',
+                                                       'message' => '至少选择一个上课日期！']);
+        }
+        // 拆分上课日期字符串
+        $schedule_dates = explode(',', $schedule_dates_str);
+        // 获取所选日期数量
+        $schedule_date_num = count($schedule_dates);
+        if($schedule_date_num>50){
+            return redirect("/schedule/create")->with(['notify' => true,
+                                                       'type' => 'danger',
+                                                       'title' => '请选择重新上课日期',
+                                                       'message' => '上课日期数量过多，超过最大上限50！']);
+        }
+        for($i=0; $i<$schedule_date_num; $i++){
+            if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $schedule_dates[$i])){
+                return redirect("/schedule/create")->with(['notify' => true,
+                                                           'type' => 'danger',
+                                                           'title' => '请选择重新上课日期',
+                                                           'message' => '上课日期格式有误！']);
+            }
+        }
+        // 如果上课时间不在下课时间之前返回上一页
+        $time_start = date('H:i', strtotime($schedule_start));
+        $time_end = date('H:i', strtotime($schedule_end));
+        if($time_start>=$time_end){
+            return redirect("/schedule/create")->with(['notify' => true,
+                                                       'type' => 'danger',
+                                                       'title' => '请重新选择上课、下课时间',
+                                                       'message' => '上课时间须在下课时间前！']);
+        }
+        // 计算课程时长
+        $schedule_time = 60*(intval(explode(':', $schedule_end)[0])-intval(explode(':', $schedule_start)[0]))+intval(explode(':', $schedule_end)[1])-intval(explode(':', $schedule_start)[1]);
+        // 计算可选学生列表
+        // 获取所有学生名单
+        $db_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
+        $student_num = count($db_students);
+        $students = array();
+        for($i=0;$i<$student_num;$i++){
+            $students[$db_students[$i]->student_id] = array($db_students[$i]->student_id, $db_students[$i]->student_name, 0);
+        }
+        // 获取所有班级名单
+        $db_classes = DB::table('class')->where('class_status', 1)->orderBy('class_createtime', 'asc')->get();
+        $class_num = count($db_classes);
+        $classes = array();
+        for($i=0; $i<$class_num; $i++){
+            $classes[$db_classes[$i]->class_id] = array($db_classes[$i]->class_id, $db_classes[$i]->class_name, 0);
+        }
+        // 获取所有教师名单
+        $db_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
+        $user_num = count($db_users);
+        $users = array();
+        for($i=0; $i<$user_num; $i++){
+            $users[$db_users[$i]->user_id] = array($db_users[$i]->user_id, $db_users[$i]->user_name, 0);
+        }
+        // 获取所有教室名单
+        $db_classrooms = DB::table('classroom')->where('classroom_status', 1)->orderBy('classroom_createtime', 'asc')->get();
+        $classroom_num = count($db_classrooms);
+        $classrooms = array();
+        for($i=0; $i<$classroom_num; $i++){
+            $classrooms[$db_classrooms[$i]->classroom_id] = array($db_classrooms[$i]->classroom_id, $db_classrooms[$i]->classroom_name, 0);
+        }
+        // 获取所选时间已有上课安排的学生、班级、教师、教室
+        // 获取所选时间已有一对一上课安排的学生及其班级、教师、教室
+        for($i=0; $i<$schedule_date_num; $i++){
+            $rows = DB::table('schedule')
+                      ->join('student', 'schedule.schedule_participant', '=', 'student.student_id')
+                      ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                      ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                      ->select('student.student_id', 'user.user_id', 'classroom.classroom_id')
+                      ->where([
+                                  ['schedule_date', '=', $schedule_dates[$i]],
+                                  ['schedule_start', '<', $schedule_start],
+                                  ['schedule_end', '>', $schedule_start],
+                                  ['student_status', '=', 1],
+                                  ['user_status', '=', 1],
+                                  ['classroom_status', '=', 1]
+                              ])
+                      ->orWhere([
+                                  ['schedule_date', '=', $schedule_dates[$i]],
+                                  ['schedule_start', '<', $schedule_end],
+                                  ['schedule_end', '>', $schedule_end],
+                                  ['student_status', '=', 1],
+                                  ['user_status', '=', 1],
+                                  ['classroom_status', '=', 1]
+                                ])
+                      ->orWhere([
+                                  ['schedule_date', '=', $schedule_dates[$i]],
+                                  ['schedule_start', '>', $schedule_start],
+                                  ['schedule_end', '<', $schedule_end],
+                                  ['student_status', '=', 1],
+                                  ['user_status', '=', 1],
+                                  ['classroom_status', '=', 1]
+                                ])
+                      ->orWhere([
+                                  ['schedule_date', '=', $schedule_dates[$i]],
+                                  ['schedule_start', '=', $schedule_start],
+                                  ['student_status', '=', 1],
+                                  ['user_status', '=', 1],
+                                  ['classroom_status', '=', 1]
+                                ])
+                      ->orWhere([
+                                  ['schedule_date', '=', $schedule_dates[$i]],
+                                  ['schedule_end', '=', $schedule_end],
+                                  ['student_status', '=', 1],
+                                  ['user_status', '=', 1],
+                                  ['classroom_status', '=', 1]
+                                ])
+                      ->distinct()
+                      ->get();
+            $row_num = count($rows);
+            for($j=0; $j<$row_num; $j++){
+                // 学生列表次数加一
+                $students[$rows[$j]->student_id][2]=$students[$rows[$j]->student_id][2]+1;
+                // 学生的班级次数加一
+                $student_classes = DB::table('student')
+                                     ->join('member', 'student.student_id', '=', 'member.member_student')
+                                     ->join('class', 'member.member_class', '=', 'class.class_id')
+                                     ->select('class.class_id')
+                                     ->where('student.student_id', '=', $rows[$j]->student_id)
+                                     ->get();
+                $student_class_num = count($student_classes);
+                for($k=0; $k<$student_class_num; $k++){
+                    $classes[$student_classes[$k]->class_id][2]=$classes[$student_classes[$k]->class_id][2]+1;
+                }
+                // 教师列表次数加一
+                $users[$rows[$j]->user_id][2]=$users[$rows[$j]->user_id][2]+1;
+                // 教室列表次数加一
+                $classrooms[$rows[$j]->classroom_id][2]=$classrooms[$rows[$j]->classroom_id][2]+1;
+            }
+        }
+        // 获取所选时间已有班级上课安排的学生及其班级、班级、教师、教室
+        for($i=0; $i<$schedule_date_num; $i++){
+            $rows = DB::table('schedule')
+                      ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                      ->join('member', 'class.class_id', '=', 'member.member_class')
+                      ->join('student', 'member.member_student', '=', 'student.student_id')
+                      ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                      ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                      ->select('class.class_id', 'student.student_id', 'user.user_id', 'classroom.classroom_id')
+                      ->where([
+                                  ['schedule_date', '=', $schedule_dates[$i]],
+                                  ['schedule_start', '<', $schedule_start],
+                                  ['schedule_end', '>', $schedule_start],
+                                  ['class_status', '=', 1],
+                                  ['student_status', '=', 1],
+                                  ['user_status', '=', 1],
+                                  ['classroom_status', '=', 1]
+                              ])
+                      ->orWhere([
+                                  ['schedule_date', '=', $schedule_dates[$i]],
+                                  ['schedule_start', '<', $schedule_end],
+                                  ['schedule_end', '>', $schedule_end],
+                                  ['class_status', '=', 1],
+                                  ['student_status', '=', 1],
+                                  ['user_status', '=', 1],
+                                  ['classroom_status', '=', 1]
+                                ])
+                      ->orWhere([
+                                  ['schedule_date', '=', $schedule_dates[$i]],
+                                  ['schedule_start', '>', $schedule_start],
+                                  ['schedule_end', '<', $schedule_end],
+                                  ['class_status', '=', 1],
+                                  ['student_status', '=', 1],
+                                  ['user_status', '=', 1],
+                                  ['classroom_status', '=', 1]
+                                ])
+                      ->orWhere([
+                                  ['schedule_date', '=', $schedule_dates[$i]],
+                                  ['schedule_start', '=', $schedule_start],
+                                  ['class_status', '=', 1],
+                                  ['student_status', '=', 1],
+                                  ['user_status', '=', 1],
+                                  ['classroom_status', '=', 1]
+                                ])
+                      ->orWhere([
+                                  ['schedule_date', '=', $schedule_dates[$i]],
+                                  ['schedule_end', '=', $schedule_end],
+                                  ['class_status', '=', 1],
+                                  ['student_status', '=', 1],
+                                  ['user_status', '=', 1],
+                                  ['classroom_status', '=', 1]
+                                ])
+                      ->distinct()
+                      ->get();
+            $row_num = count($rows);
+            for($j=0; $j<$row_num; $j++){
+                // 学生列表次数加一
+                $students[$rows[$j]->student_id][2]=$students[$rows[$j]->student_id][2]+1;
+                // 学生的班级次数加一
+                $student_classes = DB::table('student')
+                                     ->join('member', 'student.student_id', '=', 'member.member_student')
+                                     ->join('class', 'member.member_class', '=', 'class.class_id')
+                                     ->select('class.class_id')
+                                     ->where('student.student_id', '=', $rows[$j]->student_id)
+                                     ->get();
+                $student_class_num = count($student_classes);
+                for($k=0; $k<$student_class_num; $k++){
+                    $classes[$student_classes[$k]->class_id][2]=$classes[$student_classes[$k]->class_id][2]+1;
+                }
+                // 班级列表次数加一
+                $classes[$rows[$j]->class_id][2]=$classes[$rows[$j]->class_id][2]+1;
+                // 教师列表次数加一
+                $users[$rows[$j]->user_id][2]=$users[$rows[$j]->user_id][2]+1;
+                // 教室列表次数加一
+                $classrooms[$rows[$j]->classroom_id][2]=$classrooms[$rows[$j]->classroom_id][2]+1;
+            }
+        }
+        $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
+        $courses = DB::table('course')->where('course_status', 1)->orderBy('course_createtime', 'asc')->get();
+        return view('schedule/create2', ['schedule_dates_str' => $schedule_dates_str,
+                                         'schedule_dates' => $schedule_dates,
+                                         'schedule_start' => $schedule_start,
+                                         'schedule_end' => $schedule_end,
+                                         'schedule_time' => $schedule_time,
+                                         'students' => $students,
+                                         'classes' => $classes,
+                                         'users' => $users,
+                                         'classrooms' => $classrooms,
+                                         'subjects' => $subjects,
+                                         'courses' => $courses]);
     }
 
     /**
@@ -467,22 +716,22 @@ class ScheduleController extends Controller
                                      ->first()
                                      ->classroom_name;
         return view('schedule/create3', ['schedule_participant' => $schedule_participant,
-                                                  'schedule_participant_name' => $schedule_participant_name,
-                                                  'schedule_teacher' => $schedule_teacher,
-                                                  'schedule_teacher_name' => $schedule_teacher_name,
-                                                  'schedule_course' => $schedule_course,
-                                                  'schedule_course_name' => $schedule_course_name,
-                                                  'schedule_subject' => $schedule_subject,
-                                                  'schedule_subject_name' => $schedule_subject_name,
-                                                  'schedule_grade' => $schedule_grade,
-                                                  'schedule_grade_name' => $schedule_grade_name,
-                                                  'schedule_classroom' => $schedule_classroom,
-                                                  'schedule_classroom_name' => $schedule_classroom_name,
-                                                  'schedule_dates' => $schedule_dates,
-                                                  'schedule_dates_str' => $schedule_dates_str,
-                                                  'schedule_start' => $schedule_start,
-                                                  'schedule_end' => $schedule_end,
-                                                  'schedule_time' => $schedule_time]);
+                                         'schedule_participant_name' => $schedule_participant_name,
+                                         'schedule_teacher' => $schedule_teacher,
+                                         'schedule_teacher_name' => $schedule_teacher_name,
+                                         'schedule_course' => $schedule_course,
+                                         'schedule_course_name' => $schedule_course_name,
+                                         'schedule_subject' => $schedule_subject,
+                                         'schedule_subject_name' => $schedule_subject_name,
+                                         'schedule_grade' => $schedule_grade,
+                                         'schedule_grade_name' => $schedule_grade_name,
+                                         'schedule_classroom' => $schedule_classroom,
+                                         'schedule_classroom_name' => $schedule_classroom_name,
+                                         'schedule_dates' => $schedule_dates,
+                                         'schedule_dates_str' => $schedule_dates_str,
+                                         'schedule_start' => $schedule_start,
+                                         'schedule_end' => $schedule_end,
+                                         'schedule_time' => $schedule_time]);
     }
 
     /**
@@ -525,6 +774,7 @@ class ScheduleController extends Controller
         // 获取所选日期数量
         $schedule_date_num = count($schedule_dates);
         // 插入数据库
+        DB::beginTransaction();
         try{
             for($i=0; $i<$schedule_date_num; $i++){
                 DB::table('schedule')->insert(
@@ -545,12 +795,15 @@ class ScheduleController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
+            DB::rollBack();
+            return $e;
             return redirect()->action('ScheduleController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
                                      'title' => '课程安排添加失败',
                                      'message' => '课程安排添加失败，请联系系统管理员。']);
         }
+        DB::commit();
         // 返回课程安排列表
         return redirect()->action('ScheduleController@index')
                          ->with(['notify' => true,
@@ -618,7 +871,6 @@ class ScheduleController extends Controller
                               ['schedule_date', '=', $schedule_date],
                               ['schedule_start', '<', $schedule_start],
                               ['schedule_end', '>', $schedule_start],
-                              ['schedule_status', '=', 1],
                               ['user_status', '=', 1],
                               ['classroom_status', '=', 1]
                           ])
@@ -626,7 +878,6 @@ class ScheduleController extends Controller
                               ['schedule_date', '=', $schedule_date],
                               ['schedule_start', '<', $schedule_end],
                               ['schedule_end', '>', $schedule_end],
-                              ['schedule_status', '=', 1],
                               ['user_status', '=', 1],
                               ['classroom_status', '=', 1]
                             ])
@@ -634,21 +885,18 @@ class ScheduleController extends Controller
                               ['schedule_date', '=', $schedule_date],
                               ['schedule_start', '>', $schedule_start],
                               ['schedule_end', '<', $schedule_end],
-                              ['schedule_status', '=', 1],
                               ['user_status', '=', 1],
                               ['classroom_status', '=', 1]
                             ])
                   ->orWhere([
                               ['schedule_date', '=', $schedule_date],
                               ['schedule_start', '=', $schedule_start],
-                              ['schedule_status', '=', 1],
                               ['user_status', '=', 1],
                               ['classroom_status', '=', 1]
                             ])
                   ->orWhere([
                               ['schedule_date', '=', $schedule_date],
                               ['schedule_end', '=', $schedule_end],
-                              ['schedule_status', '=', 1],
                               ['user_status', '=', 1],
                               ['classroom_status', '=', 1]
                             ])
@@ -729,7 +977,8 @@ class ScheduleController extends Controller
             $courses = DB::table('student')
                          ->join('hour', 'student.student_id', '=', 'hour.hour_student')
                          ->join('course', 'hour.hour_course', '=', 'course.course_id')
-                         ->where('student_id', $schedule_participant)
+                         ->where('student.student_id', $schedule_participant)
+                         ->where('hour.hour_remain', '>', 0)
                          ->get();
             $student_courses[] = array($student, $courses);
         }else{ // 上课成员为班级
@@ -756,11 +1005,11 @@ class ScheduleController extends Controller
             }
         }
         return view('schedule/attend2', ['schedule' => $schedule,
-                                                  'schedule_teacher' => $schedule_teacher,
-                                                  'schedule_teacher_name' => $schedule_teacher_name,
-                                                  'schedule_classroom' => $schedule_classroom,
-                                                  'schedule_classroom_name' => $schedule_classroom_name,
-                                                  'student_courses' => $student_courses]);
+                                         'schedule_teacher' => $schedule_teacher,
+                                         'schedule_teacher_name' => $schedule_teacher_name,
+                                         'schedule_classroom' => $schedule_classroom,
+                                         'schedule_classroom_name' => $schedule_classroom_name,
+                                         'student_courses' => $student_courses]);
     }
 
     /**
@@ -770,9 +1019,32 @@ class ScheduleController extends Controller
      * @param  Request  $request
      * @param  $request->input('input1'): 任课教师
      * @param  $request->input('input2'): 上课教室
-     * @param  $request->input('input3'): 课程最大人数
+     * @param  $request->input('input3'): 学生人数
      */
     public function attendStep3(Request $request, $schedule_id){
+
+        // 更新数据库
+        try{
+            DB::table('schedule')
+              ->where('schedule_id', $schedule_id)
+              ->update(['schedule_attended' => 1,
+                        'schedule_attended_user' => Session::get('user_id')]);
+        }
+        // 捕获异常
+        catch(Exception $e){
+            return redirect("/schedule")->with(['notify' => true,
+                                                'type' => 'danger',
+                                                'title' => '课程考勤失败',
+                                                'message' => '课程考勤失败，请联系系统管理员']);
+        }
+        return redirect("/schedule")->with(['notify' => true,
+                                            'type' => 'success',
+                                            'title' => '课程考勤成功',
+                                            'message' => '课程考勤成功！']);
+
+
+
+
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -781,6 +1053,19 @@ class ScheduleController extends Controller
         $schedule_teacher = $request->input('input1');
         $schedule_classroom = $request->input('input2');
         $schedule_student_num = $request->input('input3');
+        $schedule_student_courses = array();
+        for($i=1;$i<=$schedule_student_num;$i++){
+            $temp = array($request->input('input'.$i.'_0'), $request->input('input'.$i.'_1'));
+            $course_id = $request->input('input'.$i.'_2');
+            $temp[] = DB::table('course')
+                        ->leftJoin('department', 'course.course_department', '=', 'department.department_id')
+                        ->leftJoin('grade', 'course.course_grade', '=', 'grade.grade_id')
+                        ->leftJoin('subject', 'course.course_subject', '=', 'subject.subject_id')
+                        ->where('course_id', $course_id)
+                        ->get();
+            $schedule_student_courses[]=$temp;
+        }
+        return $schedule_student_courses;
         // 获取数据信息
         $schedule = DB::table('schedule')
                       ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
@@ -801,12 +1086,12 @@ class ScheduleController extends Controller
         $schedule = $schedule[0];
 
         return view('schedule/attend2', ['schedule' => $schedule,
-                                                  'schedule_teacher' => $schedule_teacher,
-                                                  'schedule_teacher_name' => $schedule_teacher_name,
-                                                  'schedule_classroom' => $schedule_classroom,
-                                                  'schedule_classroom_name' => $schedule_classroom_name,
-                                                  'students' => $students,
-                                                  'student_courses' => $student_courses]);
+                                         'schedule_teacher' => $schedule_teacher,
+                                         'schedule_teacher_name' => $schedule_teacher_name,
+                                         'schedule_classroom' => $schedule_classroom,
+                                         'schedule_classroom_name' => $schedule_classroom_name,
+                                         'students' => $students,
+                                         'student_courses' => $student_courses]);
     }
 
     /**
@@ -850,9 +1135,9 @@ class ScheduleController extends Controller
         // 捕获异常
         catch(Exception $e){
             return redirect("/schedule/{$schedule_id}/edit")->with(['notify' => true,
-                                                                  'type' => 'danger',
-                                                                  'title' => '课程安排修改失败',
-                                                                  'message' => '课程安排修改失败，请重新输入信息']);
+                                                                    'type' => 'danger',
+                                                                    'title' => '课程安排修改失败',
+                                                                    'message' => '课程安排修改失败，请重新输入信息']);
         }
         return redirect("/schedule")->with(['notify' => true,
                                             'type' => 'success',
@@ -883,7 +1168,7 @@ class ScheduleController extends Controller
                       ->first();
         // 删除数据
         try{
-            DB::table('schedule')->where('schedule_id', $schedule_id)->update(['schedule_status' => 0]);
+            DB::table('schedule')->where('schedule_id', $schedule_id)->delete();
         }
         // 捕获异常
         catch(Exception $e){

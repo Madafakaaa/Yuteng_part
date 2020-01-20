@@ -26,7 +26,7 @@
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">姓名<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" name="input1" placeholder="请输入用户姓名..." autocomplete='off' required maxlength="10">
+                  <input class="form-control" type="text" name="input1" placeholder="请输入用户姓名..." autocomplete='off' required maxlength="5">
                 </div>
               </div>
               <div class="col-6">
@@ -77,7 +77,7 @@
                   <select class="form-control" name="input6" data-toggle="select" required>
                     <option value=''>请选择是否可以跨校区上课...</option>
                     <option value='1'>是</option>
-                    <option value='0'>否</option>
+                    <option value='0' selected>否</option>
                   </select>
                 </div>
               </div>

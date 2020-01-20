@@ -31,6 +31,7 @@ class CourseController extends Controller
 
         // 获取数据
         $rows = DB::table('course')
+                  ->join('course_type', 'course.course_type', '=', 'course_type.course_type_name')
                   ->leftJoin('department', 'course.course_department', '=', 'department.department_id')
                   ->leftJoin('grade', 'course.course_grade', '=', 'grade.grade_id')
                   ->leftJoin('subject', 'course.course_subject', '=', 'subject.subject_id')
@@ -95,11 +96,15 @@ class CourseController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取年级、科目信息
+        // 获取年级、科目信息、课程类型
         $departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
         $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
-        return view('course/create', ['departments' => $departments, 'grades' => $grades, 'subjects' => $subjects]);
+        $course_types = DB::table('course_type')->where('course_type_status', 1)->get();
+        return view('course/create', ['departments' => $departments,
+                                      'grades' => $grades,
+                                      'subjects' => $subjects,
+                                      'course_types' => $course_types]);
     }
 
     /**
@@ -130,7 +135,11 @@ class CourseController extends Controller
         $course_unit_price = $request->input('input6');
         $course_type = $request->input('input7');
         $course_time = $request->input('input8');
-        $course_remark = $request->input('input9');
+        if($request->filled('input9')) {
+            $course_remark = $request->input('input9');
+        }else{
+            $course_remark = "";
+        }
         // 获取当前用户ID
         $course_createuser = Session::get('user_id');
         // 插入数据库
@@ -215,11 +224,19 @@ class CourseController extends Controller
                                      'message' => '课程显示失败，请联系系统管理员']);
         }
         $course = $course[0];
-        // 获取校区、年级、科目信息(筛选)
+        // 获取校区、年级、科目信息
         $departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
         $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
-        return view('course/edit', ['course' => $course, 'departments' => $departments, 'grades' => $grades, 'subjects' => $subjects]);
+        // 获取课程类型
+        $course_types = DB::table('course_type')
+                           ->where('course_type_status', 1)
+                           ->get();
+        return view('course/edit', ['course' => $course,
+                                    'departments' => $departments,
+                                    'grades' => $grades,
+                                    'subjects' => $subjects,
+                                    'course_types' => $course_types]);
     }
 
     /**
@@ -251,7 +268,11 @@ class CourseController extends Controller
         $course_unit_price = $request->input('input6');
         $course_type = $request->input('input7');
         $course_time = $request->input('input8');
-        $course_remark = $request->input('input9');
+        if($request->filled('input9')) {
+            $course_remark = $request->input('input9');
+        }else{
+            $course_remark = "";
+        }
         // 更新数据库
         try{
             DB::table('course')
@@ -293,7 +314,7 @@ class CourseController extends Controller
         $course_name = DB::table('course')->where('course_id', $course_id)->value('course_name');
         // 删除数据
         try{
-            DB::table('course')->where('course_id', $course_id)->delete();
+            DB::table('course')->where('course_id', $class_id)->update(['course_status' => 0]);
         }
         // 捕获异常
         catch(Exception $e){

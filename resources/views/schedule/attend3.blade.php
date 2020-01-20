@@ -12,6 +12,23 @@
 @section('content')
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
+      <div class="row justify-content-center">
+        <div class="col-2 text-center">
+          <span class="badge badge-pill badge-info">修改上课信息</span>
+        </div>
+        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #fdd1da;" /></div>
+        <div class="col-2 text-center">
+          <span class="badge badge-pill badge-danger">填写考勤信息</span>
+        </div>
+        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #fdd1da;" /></div>
+        <div class="col-2 text-center">
+          <span class="badge badge-pill badge-danger">确认考勤信息</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
         <form action="/schedule/attend/{{ $schedule->schedule_id }}/step3" method="post" id="form1" name="form1">

@@ -13,8 +13,8 @@
 <div class="container-fluid mt-2">
   <div class="row justify-content-center">
     <div class="col-12 card-wrapper ct-example">
-      <div class="card mb-3">
-        <div class="card-header border-0 p-0 m-2">
+      <div class="card mb-1">
+        <div class="card-header border-0 p-0 mb-1">
           <form action="" method="get" id="filter" name="filter">
             <div class="row m-2">
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
@@ -46,11 +46,10 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <!-- Card header -->
-        <div class="card-header border-0">
+        <div class="card-header table-top">
           <div class="row">
             <div class="col-6">
-              <a href="/archive/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加档案">
+              <a href="archive/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加档案">
                 <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
                 <span class="btn-inner--text">添加档案</span>
               </a>

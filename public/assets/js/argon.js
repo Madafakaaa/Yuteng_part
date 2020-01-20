@@ -2625,18 +2625,14 @@ var QuillEditor = (function() {
 'use strict';
 
 var Select2 = (function() {
-
 	//
 	// Variables
 	//
-
 	var $select = $('[data-toggle="select"]');
-
 
 	//
 	// Methods
 	//
-
 	function init($this) {
 		// var options = {
             // tag: true,
@@ -2644,25 +2640,55 @@ var Select2 = (function() {
 			// minimumResultsForSearch: $this.data('minimum-results-for-search'),
 			// templateResult: formatAvatar
 		// };
-
 		$this.select2({
             tags: true
         });
 	}
 
-
 	//
 	// Events
 	//
-
 	if ($select.length) {
-
 		// Init selects
 		$select.each(function() {
 			init($(this));
 		});
 	}
+})();
 
+var Select2Multi = (function() {
+    //
+    // Variables
+    //
+    var $select = $('[data-toggle="selectMulti"]');
+
+    //
+    // Methods
+    //
+    function init($this) {
+        // var options = {
+        // tag: true,
+        // dropdownParent: $this.closest('.modal').length ? $this.closest('.modal') : $(document.body),
+        // minimumResultsForSearch: $this.data('minimum-results-for-search'),
+        // templateResult: formatAvatar
+        // };
+        $this.select2({
+            tags: true,
+            multiple: true,
+            placeholder: 'This is my placeholder',
+            allowClear: true
+        });
+    }
+
+    //
+    // Events
+    //
+    if ($select.length) {
+        // Init selects
+        $select.each(function() {
+            init($(this));
+        });
+    }
 })();
 
 //
