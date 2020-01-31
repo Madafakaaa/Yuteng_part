@@ -4,8 +4,6 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">内部管理</li>
-    <li class="breadcrumb-item active">校区管理</li>
     <li class="breadcrumb-item active">校区设置</li>
 @endsection
 
@@ -49,12 +47,12 @@
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:100px;'>序号</th>
-                <th style='width:200px;'>名称</th>
-                <th style='width:180px;'>电话1</th>
-                <th style='width:180px;'>电话2</th>
-                <th style='width:480px;'>地址</th>
-                <th style='width:177px;'>操作管理</th>
+                <th style='width:80px;'>序号</th>
+                <th style='width:150px;'>名称</th>
+                <th style='width:205px;'>电话1</th>
+                <th style='width:205px;'>电话2</th>
+                <th style='width:489px;'>地址</th>
+                <th style='width:188px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>
@@ -65,10 +63,10 @@
               @foreach ($rows as $row)
               <tr title="创建时间：{{ $row->department_createtime }}">
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td title="{{ $row->department_name }}">{{ $row->department_name }}</td>
-                <td title="{{ $row->department_phone1 }}">{{ $row->department_phone1 }}</td>
-                <td title="{{ $row->department_phone2 }}">{{ $row->department_phone2 }}</td>
-                <td title="{{ $row->department_location }}">{{ $row->department_location }}</td>
+                <td title="名称：{{ $row->department_name }}">{{ $row->department_name }}</td>
+                <td title="电话1：{{ $row->department_phone1 }}">{{ $row->department_phone1 }}</td>
+                <td title="电话2：{{ $row->department_phone2 }}">{{ $row->department_phone2 }}</td>
+                <td title="地址：{{ $row->department_location }}">{{ $row->department_location }}</td>
                 <td>
                   <form action="department/{{$row->department_id}}" method="POST">
                     @method('DELETE')

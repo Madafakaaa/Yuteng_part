@@ -19,18 +19,28 @@ class CalendarController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+
         // 获取用户信息
         $user_schedule = Session::get('user_schedule');
-        // 获取表单信息
-        $date = date('Y-m-d');
+
+        // 获取表单日期
+        if ($request->filled('filter1')) {
+            $date = $request->input('filter1');
+        }else{
+            $date = date('Y-m-d');
+        }
 
         // 获取一周日期数组
-        $diff=array(6, 0, 1, 2, 3, 4, 5);
+        $diff = array(6, 0, 1, 2, 3, 4, 5);
         $first_day = date('Y-m-d', strtotime ("-".$diff[date("w",strtotime($date))]." day", strtotime($date)));
         $days = array();
         for($i=0; $i<7; $i++){
-            $days[] = date('Y-m-d', strtotime ("+".$i." day", strtotime($first_day)));;
+            $days[] = date('Y-m-d', strtotime ("+".$i." day", strtotime($first_day)));
         }
+        // 获取上周周一日期
+        $first_day_prev = date('Y-m-d', strtotime ("-7 day", strtotime($first_day)));
+        // 获取下周周一日期
+        $first_day_next = date('Y-m-d', strtotime ("+7 day", strtotime($first_day)));
         // 获取反转日期数组
         $days_fliped = array_flip($days);
 
@@ -61,8 +71,12 @@ class CalendarController extends Controller
                        ->where('schedule_date', '<=', $days[6]);
         // 添加筛选条件
         // 学生、班级筛选
-        if ($request->filled('filter1')) {
-            $schedules = $schedules->where('schedule_participant', '=', $request->input('filter1'));
+        if ($request->filled('filter2')) {
+            $schedules = $schedules->where('schedule_participant', '=', $request->input('filter2'));
+        }
+        // 教师筛选
+        if ($request->filled('filter3')) {
+            $schedules = $schedules->where('schedule_teacher', '=', $request->input('filter3'));
         }
         $schedules = $schedules->get();
         // 创建课程表数据
@@ -82,21 +96,37 @@ class CalendarController extends Controller
                 $calendar[$i][$date_index] = -2;
             }
         }
+        // 日期数字转中文数组
+        $numToStr = array('零', '周一', '周二', '周三', '周四', '周五', '周六', '周日');
+        // 生成链接url
+        $request_url = "?";
+        if ($request->filled('filter3')) {
+            $request_url .= "filter3=".$request->input('filter3')."&";
+        }
+        if ($request->filled('filter2')) {
+            $request_url .= "filter2=".$request->input('filter2')."&";
+        }
+        $request_url_prev = $request_url."filter1=".$first_day_prev."&";
+        $request_url_today = $request_url."filter1=".date('Y-m-d')."&";
+        $request_url_next = $request_url."filter1=".$first_day_next."&";
         // 获取筛选数据
-        // 获取学生、班级信息
-        $students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        $classes = DB::table('class')->where('class_status', 1)->orderBy('class_createtime', 'asc')->get();
-        // 获取教师信息
-        $users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
-        $ch_str = array('零', '一', '二', '三', '四', '五', '六', '日');
+        // 获取学生、班级、教师信息
+        $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
+        $filter_classes = DB::table('class')->where('class_status', 1)->orderBy('class_createtime', 'asc')->get();
+        $filter_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
         // 返回课程表视图
-        return view('calendar/calendar', ['students' => $students,
-                                          'classes' => $classes,
+        return view('calendar/calendar', ['filter_students' => $filter_students,
+                                          'filter_classes' => $filter_classes,
+                                          'filter_users' => $filter_users,
                                           'schedules' => $schedules,
                                           'calendar' => $calendar,
                                           'days' => $days,
                                           'times' => $times,
-                                          'ch_str' => $ch_str]);
+                                          'numToStr' => $numToStr,
+                                          'request' => $request,
+                                          'request_url_prev' => $request_url_prev,
+                                          'request_url_today' => $request_url_today,
+                                          'request_url_next' => $request_url_next]);
     }
 
 

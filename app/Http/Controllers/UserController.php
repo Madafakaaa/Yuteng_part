@@ -131,12 +131,12 @@ class UserController extends Controller
         if($request->filled('input7')) {
             $user_phone = $request->input('input7');
         }else{
-            $user_phone = "";
+            $user_phone = "无";
         }
         if($request->filled('input8')) {
             $user_wechat = $request->input('input8');
         }else{
-            $user_wechat = "";
+            $user_wechat = "无";
         }
         // 获取当前用户ID
         $user_createuser = Session::get('user_id');
@@ -265,12 +265,12 @@ class UserController extends Controller
         if($request->filled('input7')) {
             $user_phone = $request->input('input7');
         }else{
-            $user_phone = "";
+            $user_phone = "无";
         }
         if($request->filled('input8')) {
             $user_wechat = $request->input('input8');
         }else{
-            $user_wechat = "";
+            $user_wechat = "无";
         }
         // 更新数据库
         try{

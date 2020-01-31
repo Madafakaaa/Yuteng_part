@@ -4,8 +4,8 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">财务中心</li>
-    <li class="breadcrumb-item"><a href="/contract">学生购课</a></li>
+    <li class="breadcrumb-item active">招生中心</li>
+    <li class="breadcrumb-item active">学生签约</li>
     <li class="breadcrumb-item active">选择报名学生</li>
 @endsection
 
@@ -42,7 +42,7 @@
                 <select class="form-control form-control-sm" name="input1" data-toggle="select" required>
                   <option value=''>请选择学生...</option>
                   @foreach ($students as $student)
-                    <option value="{{ $student->student_id }}">{{ $student->student_name }}</option>
+                    <option value="{{ $student->student_id }}" @if($student_id==$student->student_id) selected @endif>{{ $student->student_name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -67,8 +67,7 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-4');
-  navbarActive('navbar-4');
-  linkActive('contract');
+  linkActive('link-2');
+  navbarActive('navbar-2');
 </script>
 @endsection

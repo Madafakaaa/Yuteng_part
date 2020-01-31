@@ -98,8 +98,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-2');
-  navbarActive('navbar-2');
+  linkActive('link-1');
+  navbarActive('navbar-1');
   linkActive('school');
 </script>
 @endsection

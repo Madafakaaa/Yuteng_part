@@ -68,9 +68,24 @@ Route::resource('/archive', 'ArchiveController');
 Route::resource('/course', 'CourseController');
 
 // 3.    招生管理
-// 3.1.1 客户管理
+// 3.1   全部客户
 Route::resource('/customer', 'CustomerController');
+// 客户修改
 Route::post('/customer/{id}/record', 'CustomerController@record');
+Route::post('/customer/{id}/remark', 'CustomerController@remark');
+Route::post('/customer/{id}/follower', 'CustomerController@follower');
+Route::post('/customer/{id}/followLevel', 'CustomerController@followLevel');
+// 3.2   公共客户
+Route::resource('/publicCustomer', 'PublicCustomerController');
+// 3.3   我的客户
+Route::resource('/myCustomer', 'MyCustomerController');
+// 3.4   已签约客户
+Route::resource('/signedCustomer', 'SignedCustomerController');
+// 3.5   全部签约
+Route::resource('/contract', 'ContractController');
+Route::post('/contract/create/step2', 'ContractController@createStep2');
+// 3.6   我的签约
+Route::resource('/myContract', 'MyContractController');
 
 // 4.    教务中心
 // 4.1   学生管理
@@ -91,9 +106,6 @@ Route::post('/schedule/attend/{schedule_id}/step2', 'ScheduleController@attendSt
 Route::post('/schedule/attend/{schedule_id}/step3', 'ScheduleController@attendStep3');
 
 // 5.    财务中心
-// 5.1   学生购课
-Route::resource('/contract', 'ContractController');
-Route::post('/contract/create/step2', 'ContractController@createStep2');
 // 5.2   退费申请
 Route::resource('/refund', 'RefundController');
 Route::post('/refund/create/step2', 'RefundController@createStep2');

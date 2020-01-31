@@ -79,14 +79,25 @@ class ContractController extends Controller
      * 创建新购课页面
      * URL: GET /contract/create
      */
-    public function create(){
+    public function create(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 获取表单输入
+        if($request->filled('student_id')) {
+            $student_id = $request->input('student_id');
+        }else{
+            $student_id = '';
+        }
         // 获取学生信息
-        $students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        return view('contract/create', ['students' => $students]);
+        $students = DB::table('student')
+                      ->where('student_follower', Session::get('user_id'))
+                      ->where('student_status', 1)
+                      ->orderBy('student_createtime', 'asc')
+                      ->get();
+        return view('contract/create', ['students' => $students,
+                                        'student_id' => $student_id]);
     }
 
     /**
@@ -232,6 +243,11 @@ class ContractController extends Controller
         $contract_original_price = round($contract_original_price, 2);
         $contract_discount_price = round($contract_discount_price, 2);
         $contract_total_price = round($contract_total_price, 2);
+        // 获取学生签约状态
+        $student_customer_status = DB::table('student')
+                                     ->where('student_id', $request_student_id)
+                                     ->first()
+                                     ->student_customer_status;
         DB::beginTransaction();
         // 插入数据库
         try{
@@ -293,6 +309,17 @@ class ContractController extends Controller
                      'hour_createuser' => $contract_createuser]
                 );
             }
+            // 更新客户签约状态、最后签约时间
+            DB::table('student')
+              ->where('student_id', $request_student_id)
+              ->update(['student_customer_status' =>  1,
+                        'student_last_contract_date' =>  date('Y-m-d')]);
+            // 添加学生动态
+            DB::table('student_record')->insert(
+                ['student_record_student' => $request_student_id,
+                 'student_record_type' => '签约合同',
+                 'student_record_content' => '客户签约合同，课程种类：'.$contract_course_num.' 种，合计金额：'.$contract_total_price.' 元。签约人：'.Session::get('user_name')."。",
+                 'student_record_createuser' => Session::get('user_id')]);
         }
         // 捕获异常
         catch(Exception $e){

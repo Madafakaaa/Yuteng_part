@@ -85,14 +85,14 @@ class MemberController extends Controller
         // 捕获异常
         catch(Exception $e){
             return redirect("/class/".$class_id)->with(['notify' => true,
-                                                            'type' => 'danger',
-                                                            'title' => '班级成员删除失败',
-                                                            'message' => '班级删除失败，请练习系统管理员！']);
+                                                        'type' => 'danger',
+                                                        'title' => '班级成员删除失败',
+                                                        'message' => '班级删除失败，请练习系统管理员！']);
         }
         // 返回成员列表
         return redirect("/class/".$class_id)->with(['notify' => true,
-                                                        'type' => 'success',
-                                                        'title' => '班级成员删除成功',
-                                                        'message' => '班级名称: '.$class_name.',学生名称: '.$student_name]);
+                                                    'type' => 'success',
+                                                    'title' => '班级成员删除成功',
+                                                    'message' => '班级名称: '.$class_name.',学生名称: '.$student_name]);
     }
 }

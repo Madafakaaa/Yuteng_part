@@ -4,9 +4,8 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">学校管理</li>
-    <li class="breadcrumb-item active">用户管理</li>
-    <li class="breadcrumb-item active">客户设置</li>
+    <li class="breadcrumb-item active">招生中心</li>
+    <li class="breadcrumb-item active">全部客户</li>
 @endsection
 
 @section('content')
@@ -56,7 +55,7 @@
             <div class="col-6">
               <a href="/customer/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加客户">
                 <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">添加客户</span>
+                <span class="btn-inner--text">新客户录入</span>
               </a>
             </div>
           </div>
@@ -65,39 +64,60 @@
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:6%;'>序号</th>
-                <th style='width:12%;'>客户姓名</th>
-                <th style='width:8%;'>客户校区</th>
-                <th style='width:12%;'>联系电话</th>
-                <th style='width:12%;'>学生姓名</th>
-                <th style='width:8%;'>学生年级</th>
-                <th style='width:8%;'>负责人</th>
-                <th style='width:8%;'>跟进次数</th>
-                <th style='width:8%;'>签约状态</th>
-                <th>操作管理</th>
+                <th style='width:70px;'>序号</th>
+                <th style='width:90px;'>校区</th>
+                <th style='width:90px;'>学生</th>
+                <th style='width:60px;'>年级</th>
+                <th style='width:58px;'>性别</th>
+                <th style='width:140px;'>监护人</th>
+                <th style='width:108px;'>电话</th>
+                <th style='width:105px;'>微信</th>
+                <th style='width:80px;'>跟进人</th>
+                <th style='width:82px;'>跟进次数</th>
+                <th style='width:100px;'>上次跟进</th>
+                <th style='width:66px;'>优先级</th>
+                <th style='width:80px;'>签约状态</th>
+                <th style='width:188px;'>操作管理</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="10">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="14">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr title="微信号：{{ $row->customer_wechat }}。来源类型：{{ $row->source_name }}。客户关系：{{ $row->customer_relationship }}。意向课程：{{ $row->course_name }}。备注：{{ $row->customer_remark }}">
-                <td class="p-2">{{ $startIndex+$loop->iteration }}</td>
-                <td class="p-2">{{ $row->customer_name }}</td>
-                <td class="p-2">{{ $row->department_name }}</td>
-                <td class="p-2">{{ $row->customer_phone }}</td>
-                <td class="p-2">{{ $row->customer_student_name }}</td>
-                <td class="p-2">{{ $row->grade_name }}</td>
-                <td class="p-2">{{ $row->user_name }}</td>
-                <td class="p-2">{{ $row->customer_follow_time }}</td>
-                <td class="p-2">@if($row->customer_conversed==1) <span style="color:green">已签约</span> @else <span style="color:red">未签约</span> @endif</td>
-                <td class="p-2">
-                  <form action="customer/{{$row->customer_id}}" method="POST">
+              <tr title="备注：{{ $row->student_remark }}">
+                <td>{{ $startIndex+$loop->iteration }}</td>
+                <td title="校区：{{ $row->department_name }}">{{ $row->department_name }}</td>
+                <td title="学生：{{ $row->student_name }}">{{ $row->student_name }}</td>
+                <td title="年级：{{ $row->grade_name }}">{{ $row->grade_name }}</td>
+                <td title="性别：{{ $row->student_gender }}">{{ $row->student_gender }}</td>
+                <td title="{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}">{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
+                <td title="电话：{{ $row->student_phone }}">{{ $row->student_phone }}</td>
+                <td title="微信：{{ $row->student_wechat }}">{{ $row->student_wechat }}</td>
+                <td title="跟进人：{{ $row->user_name }}">{{ $row->user_name }}</td>
+                <td title="跟进次数：{{ $row->student_follow_num }} 次">{{ $row->student_follow_num }} 次</td>
+                <td title="上次跟进：{{ $row->student_last_follow_date }}">{{ $row->student_last_follow_date }}</td>
+                @if($row->student_follow_level==1)
+                  <td title="优先级：低"><span>低</span></td>
+                @elseif($row->student_follow_level==2)
+                  <td title="优先级：中"><span style="color:#8B4513;">中</span></td>
+                @elseif($row->student_follow_level==3)
+                  <td title="优先级：高"><span style="color:#FF4500;">高</span></td>
+                @else
+                  <td title="优先级：重点"><span style="color:#FF0000;">重点*</span></td>
+                @endif
+                @if($row->student_customer_status==0)
+                  <td title="签约状态：未签约"><span style="color:red;">未签约</span></td>
+                @else
+                  <td title="签约状态：已签约"><span style="color:green;">已签约</span></td>
+                @endif
+                <td>
+                  <form action="customer/{{$row->student_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/customer/{{$row->customer_id}}'><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
-                    {{ deleteConfirm($row->customer_id, ["客户名称：".$row->customer_name]) }}
+                    <a href='/customer/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                    <a href='#'><button type="button" class="btn btn-outline-danger btn-sm" disabled>删除</button></a>
                   </form>
                 </td>
               </tr>

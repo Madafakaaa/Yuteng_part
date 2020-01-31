@@ -167,8 +167,6 @@
 <script>
   linkActive('link-1');
   navbarActive('navbar-1');
-  linkActive('link-1-2');
-  navbarActive('navbar-1-2');
   linkActive('user');
 </script>
 @endsection

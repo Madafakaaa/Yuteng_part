@@ -4,8 +4,6 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">学校管理</li>
-    <li class="breadcrumb-item active">用户管理</li>
     <li class="breadcrumb-item active">用户列表</li>
 @endsection
 
@@ -74,16 +72,17 @@
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:80px;'>序号</th>
-                <th style='width:160px;'>姓名</th>
+                <th style='width:70px;'>序号</th>
+                <th style='width:120px;'>姓名</th>
                 <th style='width:100px;'>账号</th>
                 <th style='width:100px;'>校区</th>
                 <th style='width:140px;'>部门</th>
                 <th style='width:140px;'>岗位</th>
-                <th style='width:120px;'>等级</th>
-                <th style='width:120px;'>跨校区教学</th>
+                <th style='width:70px;'>等级</th>
+                <th style='width:100px;'>跨校区教学</th>
                 <th style='width:140px;'>手机</th>
-                <th style='width:217px;'>操作管理</th>
+                <th style='width:149px;'>微信</th>
+                <th style='width:188px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>
@@ -94,18 +93,19 @@
               @foreach ($rows as $row)
               <tr title="入职日期: {{ $row->user_entry_date }}, 微信: {{ $row->user_wechat }}。">
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td title="{{ $row->user_name }}">{{ $row->user_name }}</td>
-                <td title="{{ $row->user_id }}">{{ $row->user_id }}</td>
-                <td title="{{ $row->department_name }}">{{ $row->department_name }}</td>
-                <td title="{{ $row->section_name }}">{{ $row->section_name }}</td>
-                <td title="{{ $row->position_name }}">{{ $row->position_name }}</td>
-                <td title="等级{{ $row->position_level }}">等级{{ $row->position_level }}</td>
+                <td title="姓名：{{ $row->user_name }}">{{ $row->user_name }}</td>
+                <td title="账号：{{ $row->user_id }}">{{ $row->user_id }}</td>
+                <td title="校区：{{ $row->department_name }}">{{ $row->department_name }}</td>
+                <td title="部门：{{ $row->section_name }}">{{ $row->section_name }}</td>
+                <td title="岗位：{{ $row->position_name }}">{{ $row->position_name }}</td>
+                <td title="等级：等级 {{ $row->position_level }}">等级 {{ $row->position_level }}</td>
                 @if($row->user_cross_teaching==1)
-                  <td title="是"><span style="color:green;">是</span></td>
+                  <td title="跨校区教学：是"><span style="color:green;">是</span></td>
                 @else
-                  <td title="否"><span style="color:red;">否</span></td>
+                  <td title="跨校区教学：否"><span style="color:red;">否</span></td>
                 @endif
-                <td title="{{ $row->user_phone }}">{{ $row->user_phone }}</td>
+                <td title="手机：{{ $row->user_phone }}">{{ $row->user_phone }}</td>
+                <td title="微信：{{ $row->user_wechat }}">{{ $row->user_wechat }}</td>
                 <td>
                   <form action="/user/{{ $row->user_id }}" method="POST">
                     @method('DELETE')
@@ -130,8 +130,6 @@
 <script>
   linkActive('link-1');
   navbarActive('navbar-1');
-  linkActive('link-1-2');
-  navbarActive('navbar-1-2');
   linkActive('user');
 </script>
 @endsection

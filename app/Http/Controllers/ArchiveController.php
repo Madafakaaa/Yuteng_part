@@ -111,11 +111,10 @@ class ArchiveController extends Controller
         $archive_file_size = $file->getClientSize()/1024/1024+0.01;
         // 判断文件是否大于20MB
         if($archive_file_size>20){
-            return redirect()->action('School\ArchiveController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '档案添加失败',
-                                     'message' => '文件大于20MB，档案添加失败，请重新上传文件']);
+            return redirect("/archive")->with(['notify' => true,
+                                               'type' => 'danger',
+                                               'title' => '档案添加失败',
+                                               'message' => '文件大于20MB，档案添加失败，请重新上传文件']);
         }
         // 获取文件名称
         $archive_file_name = $file->getClientOriginalName();

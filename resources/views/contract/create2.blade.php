@@ -201,16 +201,9 @@
     <div class="col-8">
       <div class="card">
         <div class="card-header">
-          <h2 class="mb-0">合同备注</h2>
+          <h2 class="mb-0">合同信息</h2>
         </div>
         <div class="card-body">
-          <div class="row">
-            <div class="col-12">
-              <div class="form-group">
-                <textarea class="form-control" name="remark" rows="8" resize="none" placeholder="合同备注..." maxlength="255"></textarea>
-              </div>
-            </div>
-          </div>
           <div class="row">
             <div class="col-6">
               <div class="form-group row">
@@ -231,6 +224,13 @@
                 <div class="col-md-8">
                   <input class="form-control datepicker" name="contract_date" type="text" value="{{ date('Y-m-d') }}" required>
                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <textarea class="form-control" name="remark" rows="6" resize="none" placeholder="合同备注..." maxlength="140"></textarea>
               </div>
             </div>
           </div>
@@ -273,7 +273,6 @@
           </div>
         </div>
         <div class="card-footer">
-          <hr class="my-3">
           <div class="row">
             <div class="col-lg-5 col-md-5 col-sm-12">
               <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">上一步</button></a>
@@ -292,11 +291,6 @@
 @endsection
 
 @section('sidebar_status')
-<script>
-  linkActive('link-4');
-  navbarActive('navbar-4');
-  linkActive('contract');
-</script>
 <script type="text/javascript">
 function update(course_num){
     $('#submit_button').attr("disabled", false);
@@ -397,7 +391,10 @@ function update(course_num){
         $("#total_price_sum").text(total_price_sum);
     }
 }
-
 update({{ $selected_course_num }});
+</script>
+<script>
+  linkActive('link-2');
+  navbarActive('navbar-2');
 </script>
 @endsection

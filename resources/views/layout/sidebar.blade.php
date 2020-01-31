@@ -39,24 +39,19 @@
                 <a href="/department" class="nav-link" id="department">校区设置</a>
               </li>
               <li class="nav-item">
-                <a href="#navbar-1-2" class="nav-link" data-toggle="collapse" role="button" aria-controls="navbar-1-2" id="link-1-2">人事管理</a>
-                <div class="collapse" id="navbar-1-2">
-                  <ul class="nav nav-sm flex-column">
-                    <li class="nav-item">
-                      <a href="/user" class="nav-link" id="user">用户列表</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="/archive" class="nav-link" id="archive">员工档案</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="/section" class="nav-link" id="section">部门架构</a>
-                    </li>
-                    <!-- <li class="nav-item"><a href="/archive" class="nav-link" id="archive">档案管理</a></li> -->
-                  </ul>
-                </div>
+                <a href="/user" class="nav-link" id="user">用户列表</a>
+              </li>
+              <li class="nav-item">
+                <a href="/archive" class="nav-link" id="archive">员工档案</a>
+              </li>
+              <li class="nav-item">
+                <a href="/section" class="nav-link" id="section">部门架构</a>
               </li>
               <li class="nav-item">
                 <a href="/course" class="nav-link" id="course">课程设置</a>
+              </li>
+              <li class="nav-item">
+                <a href="/school" class="nav-link" id="school">公立学校</a>
               </li>
             </ul>
           </div>
@@ -69,11 +64,22 @@
           <div class="collapse" id="navbar-2">
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
-                <a href="/customer" class="nav-link" id="customer">客户管理</a>
+                <a href="/customer" class="nav-link" id="customer">全部客户</a>
               </li>
-              <!-- <li class="nav-item"><a href="/source" class="nav-link" id="source">来源设置</a></li> -->
               <li class="nav-item">
-                <a href="/school" class="nav-link" id="school">公立学校</a>
+                <a href="/publicCustomer" class="nav-link" id="publicCustomer">公共客户</a>
+              </li>
+              <li class="nav-item">
+                <a href="/myCustomer" class="nav-link" id="myCustomer">我的客户</a>
+              </li>
+              <li class="nav-item">
+                <a href="/signedCustomer" class="nav-link" id="signedCustomer">已签约客户</a>
+              </li>
+              <li class="nav-item">
+                <a href="/contract" class="nav-link" id="contract">全部签约</a>
+              </li>
+              <li class="nav-item">
+                <a href="/myContract" class="nav-link" id="myContract">我的签约</a>
               </li>
             </ul>
           </div>
@@ -110,11 +116,6 @@
             <span class="nav-link-text">财务中心</span>
           </a>
           <div class="collapse" id="navbar-4">
-            <ul class="nav nav-sm flex-column">
-              <li class="nav-item">
-                <a href="/contract" class="nav-link" id="contract">学生购课</a>
-              </li>
-            </ul>
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
                 <a href="/refund" class="nav-link" id="refund">退费申请</a>

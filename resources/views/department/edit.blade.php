@@ -4,14 +4,12 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">内部管理</li>
-    <li class="breadcrumb-item active">校区管理</li>
     <li class="breadcrumb-item"><a href="/department">校区设置</a></li>
-    <li class="breadcrumb-item active">校区详情</li>
+    <li class="breadcrumb-item active">修改校区</li>
 @endsection
 
 @section('content')
-<div class="container-fluid mt-2">
+<div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
@@ -27,7 +25,7 @@
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">名称<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" name="input1" value="{{ $department->department_name }}" autocomplete='off' required maxlength="8">
+                  <input class="form-control" type="text" name="input1" value="{{ $department->department_name }}" autocomplete='off' required maxlength="5">
                 </div>
               </div>
               <div class="col-6">
@@ -41,13 +39,13 @@
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">电话1<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" name="input3" value="{{ $department->department_phone1 }}" autocomplete='off' required maxlength="15">
+                  <input class="form-control" type="text" name="input3" value="{{ $department->department_phone1 }}" autocomplete='off' required maxlength="11">
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">电话2</label>
-                  <input class="form-control" type="text" name="input4" value="{{ $department->department_phone2 }}" autocomplete='off' maxlength="15">
+                  <input class="form-control" type="text" name="input4" value="{{ $department->department_phone2 }}" autocomplete='off' maxlength="11">
                 </div>
               </div>
             </div>
@@ -59,6 +57,7 @@
                 </div>
               </div>
             </div>
+            <hr>
             <div class="row">
               <div class="col-3">
                 <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>

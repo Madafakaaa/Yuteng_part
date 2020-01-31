@@ -4,14 +4,12 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">学校管理</li>
-    <li class="breadcrumb-item active">用户管理</li>
     <li class="breadcrumb-item"><a href="/user">用户列表</a></li>
     <li class="breadcrumb-item active">添加用户</li>
 @endsection
 
 @section('content')
-<div class="container-fluid mt-2">
+<div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
@@ -96,8 +94,15 @@
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <input type="submit" class="btn btn-primary" value="添加用户">
+            <hr>
+            <div class="row">
+              <div class="col-3">
+                <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
+              </div>
+              <div class="col-6"></div>
+              <div class="col-3">
+                <input type="submit" class="btn btn-warning btn-block" value="提交">
+              </div>
             </div>
           </div>
         <form>
@@ -111,8 +116,6 @@
 <script>
   linkActive('link-1');
   navbarActive('navbar-1');
-  linkActive('link-1-2');
-  navbarActive('navbar-1-2');
   linkActive('user');
 </script>
 @endsection

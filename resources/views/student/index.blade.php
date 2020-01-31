@@ -72,12 +72,12 @@
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:80px;'>序号</th>
-                <th style='width:120px;'>校区</th>
-                <th style='width:160px;'>学生</th>
+                <th style='width:70px;'>序号</th>
+                <th style='width:100px;'>校区</th>
+                <th style='width:120px;'>学生</th>
                 <th style='width:120px;'>学号</th>
-                <th style='width:120px;'>年级</th>
-                <th style='width:120px;'>性别</th>
+                <th style='width:80px;'>年级</th>
+                <th style='width:80px;'>性别</th>
                 <th style='width:120px;'>公立学校</th>
                 <th style='width:120px;'>监护人</th>
                 <th style='width:120px;'>联系电话</th>

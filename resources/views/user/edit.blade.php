@@ -39,10 +39,8 @@
             </div>
             <div class="row">
               <div class="col-6">
-                <div class="form-group mb-2">
-                  <label class="form-control-label">性别<span style="color:red">*</span></label>
-                </div>
                 <div class="form-group">
+                  <label class="form-control-label">性别<span style="color:red">*</span></label>
                   <select class="form-control" name="input2" data-toggle="select" required>
                     <option value=''>请选择性别...</option>
                     <option value='男' @if($user->user_gender=="男") selected @endif>男</option>
@@ -134,8 +132,6 @@
 <script>
   linkActive('link-1');
   navbarActive('navbar-1');
-  linkActive('link-1-2');
-  navbarActive('navbar-1-2');
   linkActive('user');
 </script>
 @endsection

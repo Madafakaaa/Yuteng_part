@@ -4,15 +4,15 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">财务中心</li>
-    <li class="breadcrumb-item active">学生购课</li>
+    <li class="breadcrumb-item active">招生中心</li>
+    <li class="breadcrumb-item active">全部签约</li>
 @endsection
 
 @section('content')
-<div class="container-fluid mt-2">
+<div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-12 card-wrapper ct-example">
-      <div class="card mb-1">
+      <div class="card mb-4">
         <div class="card-header border-0 p-0 mb-1">
           <form action="" method="get" id="filter" name="filter">
             <div class="row m-2">
@@ -55,23 +55,13 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="card-header table-top">
-          <div class="row">
-            <div class="col-6">
-              <a href="/contract/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加购课">
-                <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">添加购课</span>
-              </a>
-            </div>
-          </div>
-        </div>
         <div class="table-responsive">
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
                 <th style='width:70px;'>序号</th>
-                <th style='width:91px;'>校区</th>
-                <th style='width:100px;'>学生</th>
+                <th style='width:90px;'>校区</th>
+                <th style='width:90px;'>学生</th>
                 <th style='width:70px;'>年级</th>
                 <th style='width:80px;' class="text-right">课程数量</th>
                 <th style='width:90px;' class="text-right">购买课时</th>
@@ -128,8 +118,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-4');
-  navbarActive('navbar-4');
+  linkActive('link-2');
+  navbarActive('navbar-2');
   linkActive('contract');
 </script>
 @endsection

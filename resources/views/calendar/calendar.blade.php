@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-<div class="container-fluid mt-4">
+<div class="container-fluid mt-3">
   <div class="row">
     <div class="col-lg-2 col-md-12 col-sm-12">
       <div class="row justify-content-center mb-3">
@@ -26,22 +26,42 @@
           <div class="row">
             <div class="col-12 px-2 mb-2">
               <div class="form-group mb-1">
-                <select class="form-control" name="filter1" data-toggle="select">
-                  <option value=''>请选择学生/班级...</option>
-                  @foreach ($students as $student)
-                    <option value="{{ $student->student_id }}">学生: {{ $student->student_name }}</option>
+                <input class="form-control datepicker" name="filter1" type="text" autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @else value="{{ date('Y-m-d') }}" @endif>
+              </div>
+            </div>
+            <div class="col-12 px-2 mb-2">
+              <div class="form-group mb-1">
+                <select class="form-control" name="filter2" data-toggle="select">
+                  <option value=''>请选择学生...</option>
+                  @foreach ($filter_students as $filter_student)
+                    <option value="{{ $filter_student->student_id }}" @if($request->filter2==$filter_student->student_id) selected @endif>学生: {{ $filter_student->student_name }}</option>
                   @endforeach
-                  @foreach ($classes as $class)
-                    <option value="{{ $class->class_id }}">班级: {{ $class->class_name }}</option>
+                  @foreach ($filter_classes as $filter_class)
+                    <option value="{{ $filter_class->class_id }}" @if($request->filter2==$filter_class->class_id) selected @endif>班级: {{ $filter_class->class_name }}</option>
                   @endforeach
                 </select>
+              </div>
+            </div>
+            <div class="col-12 px-2 mb-2">
+              <div class="form-group mb-1">
+                <select class="form-control" name="filter3" data-toggle="select">
+                  <option value=''>请选择教师...</option>
+                  @foreach ($filter_users as $filter_user)
+                    <option value="{{ $filter_user->user_id }}" @if($request->filter3==$filter_user->user_id) selected @endif>教师: {{ $filter_user->user_name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="col-12 px-2 mb-2">
+              <div class="form-group mb-1">
+                <input type="submit" class="btn btn-primary btn-block" value="查询">
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-12 px-2">
               <div class="form-group mb-1">
-                <input type="submit" class="btn btn-primary btn-block" value="查询">
+                <a href="?"><button type="button" class="form-control btn btn-outline-primary btn-block" style="white-space:nowrap; overflow:hidden;">重置</button></a>
               </div>
             </div>
           </div>
@@ -51,19 +71,19 @@
     </div>
     <div class="col-lg-10 col-md-12 col-sm-12">
       <div class="row justify-content-center mb-3 text-center">
-        <div class="col-lg-2 col-md-2 col-sm-3 mb-1">
-          <a href="/schedule/create" class="btn btn-sm btn-neutral btn-round btn-block" data-toggle="tooltip" data-original-title="上一周">
+        <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
+          <a href="{{ $request_url_prev }}" class="btn btn-sm btn-neutral btn-round btn-block" data-toggle="tooltip" data-original-title="上一周">
             <span class="btn-inner--icon"><i class="ni ni-bold-left"></i></span>
             <span class="btn-inner--text">上一周</span>
           </a>
         </div>
-        <div class="col-lg-3 col-md-4 col-sm-4 mb-1">
-          <button type="button" class="btn btn-secondary btn-sm btn-block" disabled>
-            {{ $days[0] }} ~ {{ $days[6] }}
-          </button>
+        <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
+          <a href="{{ $request_url_today }}" class="btn btn-sm btn-neutral btn-round btn-block" data-toggle="tooltip" data-original-title="今天">
+            <span class="btn-inner--text">今天</span>
+          </a>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-3 mb-1">
-          <a href="/schedule/create" class="btn btn-sm btn-neutral btn-round btn-block" data-toggle="tooltip" data-original-title="下一周">
+        <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
+          <a href="{{ $request_url_next }}" class="btn btn-sm btn-neutral btn-round btn-block" data-toggle="tooltip" data-original-title="下一周">
             <span class="btn-inner--text">下一周</span>
             <span class="btn-inner--icon"><i class="ni ni-bold-right"></i></span>
           </a>
@@ -77,15 +97,15 @@
                 <th style='width:76px;'>时间</th>
                 @foreach ($days as $day)
                   @if($day==date('Y-m-d'))
-                    <th style='width:143px; color:#FFF;background-color:#DC965A;'>{{ date('m-d', strtotime($day)) }} 周{{ $ch_str[$loop->iteration] }} </th>
+                    <th style='width:143px; color:#FFF;background-color:#DC965A;'>{{ date('m-d', strtotime($day)) }} {{ $numToStr[$loop->iteration] }} </th>
                   @else
-                    <th style='width:143px;'> {{ date('m-d', strtotime($day)) }} 周{{ $ch_str[$loop->iteration] }}</th>
+                    <th style='width:143px;'> {{ date('m-d', strtotime($day)) }} {{ $numToStr[$loop->iteration] }}</th>
                   @endif
                 @endforeach
                 <th></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody style="max-height:100px; overflow:hidden;">
               @foreach($calendar as $row)
                 <tr style="height:32px;">
                   <td style="height:32px;">{{  date('H:i', strtotime($times[$loop->iteration-1])) }}</th>
@@ -95,10 +115,10 @@
                     @elseif($column>=0)
                       @if($schedules[$column]->schedule_attended==1)
                         <td rowspan="{{ $schedules[$column]->schedule_time/30 }}" class="text-left align-top p-1 m-0" style="overflow-y:hidden; background-color:#19A06E; border-radius:15px;">
-                          <div style="height:{{ $schedules[$column]->schedule_time*32/30 }}px; background-color:#2DCE89; border-radius:10px;">
+                          <div class="px-1" style="height:{{ $schedules[$column]->schedule_time*32/30 }}px; background-color:#2DCE89; border-radius:10px;">
                       @else
                         <td rowspan="{{ $schedules[$column]->schedule_time/30 }}" class="text-left align-top p-1 m-0" style="overflow-y:hidden; background-color:#B43246; border-radius:15px;">
-                          <div style="height:{{ $schedules[$column]->schedule_time*32/30 }}px; background-color:#F5365C; border-radius:10px;">
+                          <div class="px-1" style="height:{{ $schedules[$column]->schedule_time*32/30 }}px; background-color:#F5365C; border-radius:10px;">
                       @endif
                         <div class="row m-0 p-0 pt-1" style="height:32px;">
                           <div class="col-2 mx-0 my-1 px-1 py-0">
@@ -160,6 +180,32 @@
               @endforeach
             </tbody>
           </table>
+        </div>
+      </div>
+      <div class="row justify-content-center mb-3 text-center">
+        <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
+          <a href="{{ $request_url_prev }}" class="btn btn-sm btn-neutral btn-round btn-block" data-toggle="tooltip" data-original-title="上一周">
+            <span class="btn-inner--icon"><i class="ni ni-bold-left"></i></span>
+            <span class="btn-inner--text">上一周</span>
+          </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
+          <a href="{{ $request_url_today }}" class="btn btn-sm btn-neutral btn-round btn-block" data-toggle="tooltip" data-original-title="今天">
+            <span class="btn-inner--text">今天</span>
+          </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
+          <a href="{{ $request_url_next }}" class="btn btn-sm btn-neutral btn-round btn-block" data-toggle="tooltip" data-original-title="下一周">
+            <span class="btn-inner--text">下一周</span>
+            <span class="btn-inner--icon"><i class="ni ni-bold-right"></i></span>
+          </a>
+        </div>
+      </div>
+      <div class="row justify-content-center mb-3 text-center">
+        <div class="col-lg-4 col-md-6 col-sm-8 mb-1">
+          <button type="button" class="btn btn-secondary btn-sm btn-block" disabled>
+            {{ $days[0] }} ~ {{ $days[6] }}
+          </button>
         </div>
       </div>
     </div>

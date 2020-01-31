@@ -910,8 +910,8 @@ class ScheduleController extends Controller
             $classrooms[$rows[$j]->classroom_id][2]=$classrooms[$rows[$j]->classroom_id][2]+1;
         }
         return view('schedule/attend', ['schedule' => $schedule,
-                                                 'users' => $users,
-                                                 'classrooms' => $classrooms]);
+                                        'users' => $users,
+                                        'classrooms' => $classrooms]);
     }
 
     /**
