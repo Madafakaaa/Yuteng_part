@@ -75,23 +75,34 @@ Route::post('/customer/{id}/record', 'CustomerController@record');
 Route::post('/customer/{id}/remark', 'CustomerController@remark');
 Route::post('/customer/{id}/follower', 'CustomerController@follower');
 Route::post('/customer/{id}/followLevel', 'CustomerController@followLevel');
-// 3.2   公共客户
-Route::resource('/publicCustomer', 'PublicCustomerController');
+// 3.2   本校区客户
+Route::resource('/departmentCustomer', 'DepartmentCustomerController');
 // 3.3   我的客户
 Route::resource('/myCustomer', 'MyCustomerController');
-// 3.4   已签约客户
-Route::resource('/signedCustomer', 'SignedCustomerController');
-// 3.5   全部签约
+// 3.4   全部签约
 Route::resource('/contract', 'ContractController');
 Route::post('/contract/create/step2', 'ContractController@createStep2');
+// 3.5   全部签约
+Route::resource('/departmentContract', 'DepartmentContractController');
 // 3.6   我的签约
 Route::resource('/myContract', 'MyContractController');
 
 // 4.    教务中心
-// 4.1   学生管理
+// 4.1   全部学生
 Route::resource('/student', 'StudentController');
-// 4.2   班级管理
+Route::post('/student/{id}/remark', 'StudentController@remark');
+Route::post('/student/{id}/follower', 'StudentController@follower');
+// 4.2   本校学生
+Route::resource('/departmentStudent', 'DepartmentStudentController');
+// 4.3   我的学生
+Route::resource('/myStudent', 'MyStudentController');
+// 4.2   全部班级
 Route::resource('/class', 'ClassController');
+Route::post('/class/{id}/remark', 'ClassController@remark');
+// 4.2   本校班级
+Route::resource('/departmentClass', 'DepartmentClassController');
+// 4.2   我的班级
+Route::resource('/myClass', 'MyClassController');
 // 4.2   班级成员管理
 Route::post('/member/{class_id}', 'MemberController@add');
 Route::delete('/member/{class_id}', 'MemberController@delete');

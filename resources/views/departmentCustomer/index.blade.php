@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">招生中心</li>
-    <li class="breadcrumb-item active">公共客户</li>
+    <li class="breadcrumb-item active">本校区客户</li>
 @endsection
 
 @section('content')
@@ -53,9 +53,9 @@
         <div class="card-header table-top">
           <div class="row">
             <div class="col-6">
-              <a href="/publicCustomer/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加客户">
+              <a href="/departmentCustomer/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加客户">
                 <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">新客户录入</span>
+                <span class="btn-inner--text">客户录入</span>
               </a>
             </div>
           </div>
@@ -95,7 +95,7 @@
                 <td title="{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}">{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
                 <td title="电话：{{ $row->student_phone }}">{{ $row->student_phone }}</td>
                 <td title="微信：{{ $row->student_wechat }}">{{ $row->student_wechat }}</td>
-                <td title="跟进人：无 (公共)">无 (公共)</td>
+                <td title="跟进人：{{ $row->user_name }}">{{ $row->user_name }}</td>
                 <td title="跟进次数：{{ $row->student_follow_num }} 次">{{ $row->student_follow_num }} 次</td>
                 <td title="上次跟进：{{ $row->student_last_follow_date }}">{{ $row->student_last_follow_date }}</td>
                 @if($row->student_follow_level==1)
@@ -116,8 +116,12 @@
                   <form action="customer/{{$row->student_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/customer/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
-                    <a href='#'><button type="button" class="btn btn-outline-danger btn-sm" disabled>删除</button></a>
+                    @if($row->student_customer_status==0)
+                      <a href='/customer/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                    @else
+                      <a href='/student/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                    @endif
+                    {{ deleteConfirm($row->student_id, ["学生姓名：".$row->student_name]) }}
                   </form>
                 </td>
               </tr>
@@ -136,6 +140,6 @@
 <script>
   linkActive('link-2');
   navbarActive('navbar-2');
-  linkActive('publicCustomer');
+  linkActive('departmentCustomer');
 </script>
 @endsection

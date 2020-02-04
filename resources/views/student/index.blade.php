@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">教务中心</li>
-    <li class="breadcrumb-item active">学生管理</li>
+    <li class="breadcrumb-item active">全部学生</li>
 @endsection
 
 @section('content')
@@ -58,16 +58,6 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="card-header table-top">
-          <div class="row">
-            <div class="col-6">
-              <a href="/student/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加学生">
-                <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">添加学生</span>
-              </a>
-            </div>
-          </div>
-        </div>
         <div class="table-responsive">
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
@@ -75,19 +65,20 @@
                 <th style='width:70px;'>序号</th>
                 <th style='width:100px;'>校区</th>
                 <th style='width:120px;'>学生</th>
-                <th style='width:120px;'>学号</th>
-                <th style='width:80px;'>年级</th>
-                <th style='width:80px;'>性别</th>
+                <th style='width:110px;'>学号</th>
+                <th style='width:70px;'>年级</th>
+                <th style='width:70px;'>性别</th>
                 <th style='width:120px;'>公立学校</th>
                 <th style='width:120px;'>监护人</th>
                 <th style='width:120px;'>联系电话</th>
-                <th style='width:150px;'>操作管理</th>
+                <th style='width:120px;'>负责人</th>
+                <th style='width:297px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="9">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="11">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
               <tr title="创建时间：{{ $row->student_createtime }}。">
@@ -100,11 +91,12 @@
                 <td>{{ $row->school_name }}</td>
                 <td>{{ $row->student_guardian_relationship }} {{ $row->student_guardian }}</td>
                 <td>{{ $row->student_phone }}</td>
+                <td>{{ $row->user_name }}</td>
                 <td>
                   <form action="student/{{$row->student_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                    <a href='/student/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
                     {{ deleteConfirm($row->student_id, ["学生名称：".$row->student_name]) }}
                   </form>
                 </td>

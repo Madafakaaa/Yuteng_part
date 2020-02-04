@@ -49,9 +49,10 @@ class CustomerController extends Controller
         // 计算分页信息
         list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
         // 排序并获取数据对象
-        $rows = $rows->orderBy('student_follow_level', 'desc')
+        $rows = $rows->orderBy('student_customer_status', 'desc')
                      ->orderBy('student_department', 'asc')
-                     ->orderBy('student_grade', 'asc')
+                     ->orderBy('student_follow_level', 'desc')
+                     ->orderBy('student_grade', 'desc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
@@ -232,6 +233,8 @@ class CustomerController extends Controller
                                                 'message' => '客户显示失败，请联系系统管理员']);
         }
         $student = $student[0];
+        $student_department = $student->student_department;
+        // 获取学生动态
         $student_records = DB::table('student_record')
                              ->join('student', 'student_record.student_record_student', '=', 'student.student_id')
                              ->join('department', 'student.student_department', '=', 'department.department_id')
@@ -240,7 +243,11 @@ class CustomerController extends Controller
                              ->orderBy('student_record_createtime', 'desc')
                              ->limit(50)
                              ->get();
-        $users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
+        $users = DB::table('user')
+                   ->where('user_department', $student_department)
+                   ->where('user_status', 1)
+                   ->orderBy('user_createtime', 'asc')
+                   ->get();
         return view('customer/show', ['student' => $student,
                                       'users' => $users,
                                       'student_records' => $student_records]);
@@ -270,15 +277,11 @@ class CustomerController extends Controller
         // 获取校区、来源、课程、用户、年级信息
         $departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
         $sources = DB::table('source')->where('source_status', 1)->orderBy('source_createtime', 'asc')->get();
-        $courses = DB::table('course')->where('course_status', 1)->orderBy('course_createtime', 'asc')->get();
-        $users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
         $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         $schools = DB::table('school')->where('school_status', 1)->orderBy('school_createtime', 'asc')->get();
         return view('customer/edit', ['student' => $student,
                                       'departments' => $departments,
                                       'sources' => $sources,
-                                      'courses' => $courses,
-                                      'users' => $users,
                                       'grades' => $grades,
                                       'schools' => $schools]);
     }
@@ -350,7 +353,7 @@ class CustomerController extends Controller
             DB::table('student_record')->insert(
                 ['student_record_student' => $student_id,
                  'student_record_type' => '修改信息',
-                 'student_record_content' => '修改学生信息，修改人：'.Session::get('user_name').'。',
+                 'student_record_content' => '修改客户信息，修改人：'.Session::get('user_name').'。',
                  'student_record_createuser' => Session::get('user_id')]
             );
         }
@@ -404,7 +407,7 @@ class CustomerController extends Controller
             // 更新跟进时间
             DB::table('student')
               ->where('student_id', $student_id)
-              ->update(['student_last_follow_date' =>  date('Y-m-d')]);
+              ->update(['student_last_follow_date' =>  $request->input('input3')]);
             // 添加学生动态
             DB::table('student_record')->insert(
                 ['student_record_student' => $student_record_student,

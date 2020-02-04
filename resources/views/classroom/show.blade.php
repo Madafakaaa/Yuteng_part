@@ -56,8 +56,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-3');
-  navbarActive('navbar-3');
+  linkActive('link-1');
+  navbarActive('navbar-1');
   linkActive('classroom');
 </script>
 @endsection

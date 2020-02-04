@@ -5,14 +5,14 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">招生中心</li>
-    <li class="breadcrumb-item active">全部签约</li>
+    <li class="breadcrumb-item active">本校签约</li>
 @endsection
 
 @section('content')
-<div class="container-fluid mt-4">
+<div class="container-fluid mt-2">
   <div class="row justify-content-center">
     <div class="col-12 card-wrapper ct-example">
-      <div class="card mb-4">
+      <div class="card mb-1">
         <div class="card-header border-0 p-0 mb-1">
           <form action="" method="get" id="filter" name="filter">
             <div class="row m-2">
@@ -60,7 +60,7 @@
             <thead class="thead-light">
               <tr>
                 <th style='width:70px;'>序号</th>
-                <th style='width:90px;'>校区</th>
+                <th style='width:91px;'>校区</th>
                 <th style='width:100px;'>学生</th>
                 <th style='width:70px;'>年级</th>
                 <th style='width:80px;' class="text-right">课程数量</th>
@@ -120,6 +120,6 @@
 <script>
   linkActive('link-2');
   navbarActive('navbar-2');
-  linkActive('contract');
+  linkActive('departmentContract');
 </script>
 @endsection

@@ -18,7 +18,7 @@
           <div class="col-lg-3 order-lg-2">
             <div class="card-profile-image">
               <a href="#">
-                <img src="../../assets/img/portrait/user_1.gif" class="rounded-circle">
+                <img src="../../assets/img/portrait/user_4.gif" class="rounded-circle">
               </a>
             </div>
           </div>
@@ -26,7 +26,11 @@
         <div class="card-header text-center border-0 pb-0 pb-4">
           <div class="d-flex justify-content-between">
             <a href="/customer/{{ $student->student_id }}/edit" class="btn btn-sm btn-primary mr-4">修改信息</a>
-            <a href="/contract/create?student_id={{ $student->student_id }}"  target="_blank" class="btn btn-sm btn-warning float-right">签约合同</a>
+            @if($student->student_follower==Session::get('user_id'))
+              <a href="/contract/create?student_id={{ $student->student_id }}"  target="_blank" class="btn btn-sm btn-warning float-right">签约合同</a>
+            @else
+              <button class="btn btn-sm btn-warning float-right" disabled>签约合同</button>
+            @endif
           </div>
         </div>
         <div class="card-body pt-0">
@@ -49,6 +53,9 @@
               </div>
               <div class="col-6">
                 <div class="h4">家长 - {{ $student->student_guardian_relationship }} {{ $student->student_guardian }}</div>
+              </div>
+              <div class="col-6">
+                <div class="h4">来源 - {{ $student->student_source }}</div>
               </div>
               <div class="col-6">
                 <div class="h4">电话 - {{ $student->student_phone }}</div>
@@ -92,12 +99,14 @@
                 <div>
                   <span class="heading">
                     @if($student->student_customer_status==0)
-                      <span style="color:red;">未签约</span>
+                      <span style="color:red;">未签约客户</span>
+                    @elseif($student->student_customer_status==1)
+                      <span style="color:orange;">已签约客户</span>
                     @else
-                      <span style="color:green;">已签约</span>
+                      <span style="color:green;">学生</span>
                     @endif
                   </span>
-                  <span class="description">签约状态</span>
+                  <span class="description">状态</span>
                 </div>
               </div>
             </div>

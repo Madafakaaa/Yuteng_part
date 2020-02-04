@@ -4,9 +4,8 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">学校管理</li>
-    <li class="breadcrumb-item active">校区管理</li>
-    <li class="breadcrumb-item active">教室设置</li>
+    <li class="breadcrumb-item active">教务中心</li>
+    <li class="breadcrumb-item active">我的学生</li>
 @endsection
 
 @section('content')
@@ -18,7 +17,7 @@
           <form action="" method="get" id="filter" name="filter">
             <div class="row m-2">
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                <input class="form-control" type="text" name="filter1" placeholder="教室名称..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
+                <input class="form-control" type="text" name="filter1" placeholder=" 学生名称..." autocomplete="off" autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <select class="form-control" name="filter2" data-toggle="select">
@@ -30,11 +29,18 @@
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <select class="form-control" name="filter3" data-toggle="select">
-                  <option value=''>全部类型</option>
-                  <option value="一对一教室" @if($request->input('filter3')=="一对一教室") selected @endif>一对一教室</option>
-                  <option value="小班教室" @if($request->input('filter3')=="小班教室") selected @endif>小班教室</option>
-                  <option value="大教室" @if($request->input('filter3')=="大教室") selected @endif>大教室</option>
-                  <option value="多媒体教室" @if($request->input('filter3')=="多媒体教室") selected @endif>多媒体教室</option>
+                  <option value=''>全部年级</option>
+                  @foreach ($filter_grades as $filter_grade)
+                    <option value="{{ $filter_grade->grade_id }}" @if($request->input('filter3')==$filter_grade->grade_id) selected @endif>{{ $filter_grade->grade_name }}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
+                <select class="form-control" name="filter4" data-toggle="select">
+                  <option value=''>全部公立学校</option>
+                  @foreach ($filter_schools as $filter_school)
+                    <option value="{{ $filter_school->school_id }}" @if($request->input('filter4')==$filter_school->school_id) selected @endif>{{ $filter_school->school_name }}</option>
+                  @endforeach
                 </select>
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
@@ -52,45 +58,46 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="card-header table-top">
-          <div class="row">
-            <div class="col-6">
-              <a href="classroom/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加教室">
-                <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">添加教室</span>
-              </a>
-            </div>
-          </div>
-        </div>
         <div class="table-responsive">
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:8%;'>序号</th>
-                <th style='width:16%;'>教室名称</th>
-                <th style='width:16%;'>所属校区</th>
-                <th style='width:16%;'>容纳人数</th>
-                <th style='width:16%;'>教室类型</th>
-                <th>操作管理</th>
+                <th style='width:70px;'>序号</th>
+                <th style='width:100px;'>校区</th>
+                <th style='width:120px;'>学生</th>
+                <th style='width:110px;'>学号</th>
+                <th style='width:70px;'>年级</th>
+                <th style='width:70px;'>性别</th>
+                <th style='width:120px;'>公立学校</th>
+                <th style='width:120px;'>监护人</th>
+                <th style='width:120px;'>联系电话</th>
+                <th style='width:120px;'>负责人</th>
+                <th style='width:297px;'>操作管理</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="6">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="11">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr>
+              <tr title="创建时间：{{ $row->student_createtime }}。">
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->classroom_name }}</td>
                 <td>{{ $row->department_name }}</td>
-                <td>{{ $row->classroom_student_num }}人</td>
-                <td>{{ $row->classroom_type }}</td>
+                <td>{{ $row->student_name }}</td>
+                <td>{{ $row->student_id }}</td>
+                <td>{{ $row->grade_name }}</td>
+                <td>{{ $row->student_gender }}</td>
+                <td>{{ $row->school_name }}</td>
+                <td>{{ $row->student_guardian_relationship }} {{ $row->student_guardian }}</td>
+                <td>{{ $row->student_phone }}</td>
+                <td>{{ $row->user_name }}</td>
                 <td>
-                  <form action="classroom/{{$row->classroom_id}}" method="POST">
+                  <form action="student/{{$row->student_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/classroom/{{$row->classroom_id}}/edit'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
-                    {{ deleteConfirm($row->classroom_id, ["教室名称：".$row->classroom_name]) }}
+                    <a href='/student/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                    {{ deleteConfirm($row->student_id, ["学生名称：".$row->student_name]) }}
                   </form>
                 </td>
               </tr>
@@ -107,8 +114,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-1');
-  navbarActive('navbar-1');
-  linkActive('classroom');
+  linkActive('link-3');
+  navbarActive('navbar-3');
+  linkActive('myStudent');
 </script>
 @endsection

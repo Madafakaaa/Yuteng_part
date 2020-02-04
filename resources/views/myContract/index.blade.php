@@ -55,16 +55,6 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="card-header table-top">
-          <div class="row">
-            <div class="col-6">
-              <a href="/contract/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加购课">
-                <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">添加购课</span>
-              </a>
-            </div>
-          </div>
-        </div>
         <div class="table-responsive">
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
@@ -76,11 +66,11 @@
                 <th style='width:80px;' class="text-right">课程数量</th>
                 <th style='width:90px;' class="text-right">购买课时</th>
                 <th style='width:80px;' class="text-right">赠送课时</th>
-                <th style='width:110px;' class="text-right">原金额</th>
                 <th style='width:110px;' class="text-right">优惠金额</th>
                 <th style='width:90px;' class="text-right">合计课时</th>
                 <th style='width:110px;' class="text-right">实付金额</th>
                 <th style='width:80px;'>支付方式</th>
+                <th style='width:110px;'>签约人</th>
                 <th style='width:96px;'>购课日期</th>
                 <th style='width:140px;'>操作管理</th>
                 <th></th>
@@ -99,11 +89,11 @@
                 <td class="text-right" title="{{ $row->contract_course_num }} 种课程">{{ $row->contract_course_num }} 种课程</td>
                 <td class="text-right" title="{{ $row->contract_original_hour }} 课时">{{ $row->contract_original_hour }} 课时</td>
                 <td class="text-right" title="{{ $row->contract_free_hour }} 课时">{{ $row->contract_free_hour }} 课时</td>
-                <td class="text-right" title="{{ number_format($row->contract_original_price, 1) }} 元">{{ number_format($row->contract_original_price, 1) }} 元</td>
                 <td class="text-right" title="- {{ number_format($row->contract_discount_price, 1) }} 元"><span style="color:red;">- {{ number_format($row->contract_discount_price, 1) }} 元</span></td>
                 <td class="text-right" title="{{ $row->contract_total_hour }} 课时"><strong>{{ $row->contract_total_hour }} 课时</strong></td>
                 <td class="text-right" title="{{ number_format($row->contract_total_price, 1) }} 元"><strong>{{ number_format($row->contract_total_price, 1) }} 元</strong></td>
                 <td title="{{ $row->contract_payment_method }}">{{ $row->contract_payment_method }}</td>
+                <td title="{{ $row->user_name }}">{{ $row->user_name }}</td>
                 <td title="{{ $row->contract_date }}">{{ $row->contract_date }}</td>
                 <td>
                   <form action="contract/{{$row->contract_id}}" method="POST">

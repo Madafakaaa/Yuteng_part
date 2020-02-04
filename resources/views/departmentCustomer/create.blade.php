@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">招生中心</li>
-    <li class="breadcrumb-item"><a href="/publicCustomer">公共客户</a></li>
+    <li class="breadcrumb-item"><a href="/departmentCustomer">本校区客户</a></li>
     <li class="breadcrumb-item active">添加客户</li>
 @endsection
 
@@ -14,7 +14,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/publicCustomer" method="post" id="form1" name="form1">
+        <form action="/departmentCustomer" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
             <h4 class="mb-0">添加客户</h4>
@@ -181,6 +181,6 @@
 <script>
   linkActive('link-2');
   navbarActive('navbar-2');
-  linkActive('publicCustomer');
+  linkActive('departmentCustomer');
 </script>
 @endsection

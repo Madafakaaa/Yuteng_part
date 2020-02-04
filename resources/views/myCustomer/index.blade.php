@@ -55,7 +55,7 @@
             <div class="col-6">
               <a href="/myCustomer/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加客户">
                 <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">我的客户录入</span>
+                <span class="btn-inner--text">客户录入</span>
               </a>
             </div>
           </div>
@@ -116,8 +116,13 @@
                   <form action="customer/{{$row->student_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/customer/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
-                    <a href='/contract/create?student_id={{$row->student_id}}' target="_blank"><button type="button" class="btn btn-warning btn-sm">签约</button></a>
+                    @if($row->student_customer_status==0)
+                      <a href='/customer/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                      <a href='/contract/create?student_id={{$row->student_id}}' target="_blank"><button type="button" class="btn btn-warning btn-sm">签约</button></a>
+                    @else
+                      <a href='/student/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                      <a href='#'><button type="button" class="btn btn-warning btn-sm" disabled>签约</button></a>
+                    @endif
                     {{ deleteConfirm($row->student_id, ["学生姓名：".$row->student_name]) }}
                   </form>
                 </td>

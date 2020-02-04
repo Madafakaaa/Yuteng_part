@@ -31,7 +31,7 @@
         <li class="nav-item">
           <a class="nav-link" href="#navbar-1" data-toggle="collapse" aria-expanded="false" role="button" aria-controls="navbar-1" id="link-1">
             <i class="ni ni-archive-2 text-green"></i>
-            <span class="nav-link-text">内部管理</span>
+            <span class="nav-link-text">全校管理</span>
           </a>
           <div class="collapse" id="navbar-1">
             <ul class="nav nav-sm flex-column">
@@ -53,6 +53,9 @@
               <li class="nav-item">
                 <a href="/school" class="nav-link" id="school">公立学校</a>
               </li>
+              <li class="nav-item">
+                <a href="/classroom" class="nav-link" id="classroom">教室设置</a>
+              </li>
             </ul>
           </div>
         </li>
@@ -67,16 +70,16 @@
                 <a href="/customer" class="nav-link" id="customer">全部客户</a>
               </li>
               <li class="nav-item">
-                <a href="/publicCustomer" class="nav-link" id="publicCustomer">公共客户</a>
+                <a href="/departmentCustomer" class="nav-link" id="departmentCustomer">本校客户</a>
               </li>
               <li class="nav-item">
                 <a href="/myCustomer" class="nav-link" id="myCustomer">我的客户</a>
               </li>
               <li class="nav-item">
-                <a href="/signedCustomer" class="nav-link" id="signedCustomer">已签约客户</a>
+                <a href="/contract" class="nav-link" id="contract">全部签约</a>
               </li>
               <li class="nav-item">
-                <a href="/contract" class="nav-link" id="contract">全部签约</a>
+                <a href="/departmentContract" class="nav-link" id="departmentContract">本校签约</a>
               </li>
               <li class="nav-item">
                 <a href="/myContract" class="nav-link" id="myContract">我的签约</a>
@@ -92,20 +95,28 @@
           <div class="collapse" id="navbar-3">
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
-                <a href="/student" class="nav-link" id="student">学生管理</a>
+                <a href="/student" class="nav-link" id="student">全部学生</a>
               </li>
               <li class="nav-item">
-                <a href="/class" class="nav-link" id="class">班级管理</a>
+                <a href="/departmentStudent" class="nav-link" id="departmentStudent">本校学生</a>
+              </li>
+              <li class="nav-item">
+                <a href="/myStudent" class="nav-link" id="myStudent">我的学生</a>
+              </li>
+              <li class="nav-item">
+                <a href="/class" class="nav-link" id="class">全部班级</a>
+              </li>
+              <li class="nav-item">
+                <a href="/departmentClass" class="nav-link" id="departmentClass">本校班级</a>
+              </li>
+              <li class="nav-item">
+                <a href="/myClass" class="nav-link" id="myClass">我的班级</a>
               </li>
               <li class="nav-item">
                 <a href="/schedule" class="nav-link" id="schedule">课程安排</a>
               </li>
               <li class="nav-item">
                 <a href="/calendar" class="nav-link" id="calendar">课程表</a>
-              </li>
-              <!-- <li class="nav-item"><a href="/subject" class="nav-link" id="subject">科目设置</a></li> -->
-              <li class="nav-item">
-                <a href="/classroom" class="nav-link" id="classroom">教室设置</a>
               </li>
             </ul>
           </div>

@@ -23,17 +23,15 @@ class MyContractController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-
         // 获取用户信息
         $user_level = Session::get('user_level');
-
         // 获取数据
         $rows = DB::table('contract')
                   ->join('student', 'contract.contract_student', '=', 'student.student_id')
                   ->join('department', 'student.student_department', '=', 'department.department_id')
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
-                  ->where('user_id', '=', Session::get('user_id'));
+                  ->where('contract_createuser', '=', Session::get('user_id'));
         // 添加筛选条件
         // 购课校区
         if ($request->filled('filter1')) {

@@ -62,6 +62,7 @@
                 </div>
               </div>
             </div>
+            <hr>
             <div class="row">
               <div class="col-3">
                 <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
@@ -81,8 +82,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-3');
-  navbarActive('navbar-3');
+  linkActive('link-1');
+  navbarActive('navbar-1');
   linkActive('classroom');
 </script>
 @endsection

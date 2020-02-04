@@ -309,7 +309,11 @@ class ContractController extends Controller
                      'hour_createuser' => $contract_createuser]
                 );
             }
-            // 更新客户签约状态、最后签约时间
+            // 增加学生签约次数
+            DB::table('student')
+              ->where('student_id', $request_student_id)
+              ->increment('student_contract_num');
+            // 更新客户状态、最后签约时间
             DB::table('student')
               ->where('student_id', $request_student_id)
               ->update(['student_customer_status' =>  1,
@@ -318,18 +322,17 @@ class ContractController extends Controller
             DB::table('student_record')->insert(
                 ['student_record_student' => $request_student_id,
                  'student_record_type' => '签约合同',
-                 'student_record_content' => '客户签约合同，课程种类：'.$contract_course_num.' 种，合计金额：'.$contract_total_price.' 元。签约人：'.Session::get('user_name')."。",
+                 'student_record_content' => '客户签约合同，合同号：'.$contract_id.'，课程种类：'.$contract_course_num.' 种，合计金额：'.$contract_total_price.' 元。签约人：'.Session::get('user_name')."。",
                  'student_record_createuser' => Session::get('user_id')]);
         }
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
             // 返回购课列表
-            return redirect()->action('ContractController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '购课添加失败',
-                                     'message' => '购课添加失败，请重新添加']);
+            return redirect("/myCustomer")->with(['notify' => true,
+                                                 'type' => 'danger',
+                                                 'title' => '购课添加失败',
+                                                 'message' => '购课添加失败，请重新添加']);
         }
         DB::commit();
         // 获取学生、课程名称
@@ -337,11 +340,10 @@ class ContractController extends Controller
                           ->where('student_id', $contract_student)
                           ->value('student_name');
         // 返回购课列表
-        return redirect()->action('ContractController@index')
-                         ->with(['notify' => true,
-                                 'type' => 'success',
-                                 'title' => '购课添加成功',
-                                 'message' => '购课学生: '.$student_name]);
+        return redirect("/myContract")->with(['notify' => true,
+                                             'type' => 'success',
+                                             'title' => '购课添加成功',
+                                             'message' => '购课学生: '.$student_name]);
     }
 
     /**

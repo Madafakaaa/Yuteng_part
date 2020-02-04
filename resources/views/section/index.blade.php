@@ -122,7 +122,7 @@
                 <td>{{ $row->section_name }}</td>
                 <td>等级 {{ $row->position_level }}</td>
                 @if($row->position_view_all==1)
-                  <td>全部校区</td>
+                  <td>全部校区 <img src="{{ asset(_ASSETS_.'/img/icons/common/all.png') }}"></td>
                 @else
                   <td>所在校区</td>
                 @endif
