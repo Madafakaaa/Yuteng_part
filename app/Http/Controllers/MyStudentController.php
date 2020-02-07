@@ -34,7 +34,7 @@ class MyStudentController extends Controller
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->join('user', 'student.student_follower', '=', 'user.user_id')
                   ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
-                  ->where('student_customer_status', 2)
+                  ->where('student_customer_status', 1)
                   ->where('student_follower', Session::get('user_id'))
                   ->where('student_status', 1);
         // 添加筛选条件

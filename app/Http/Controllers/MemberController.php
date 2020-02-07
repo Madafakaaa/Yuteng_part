@@ -27,6 +27,18 @@ class MemberController extends Controller
         $member_student = $request->input('input1');
         // 获取当前用户ID
         $member_createuser = Session::get('user_id');
+        // 获取班级信息
+        $class = DB::table('class')
+                   ->where('class_id', $class_id)
+                   ->first();
+        $class_current_num = $class->class_current_num;
+        $class_max_num = $class->class_max_num;
+        if($class_current_num>=$class_max_num){
+            return redirect("/class/".$member_class)->with(['notify' => true,
+                                                            'type' => 'danger',
+                                                            'title' => '成员添加失败',
+                                                            'message' => '班级人数已达上限，无法添加学生！']);
+        }
         // 修改数据库
         try{
             // 插入成员数据

@@ -30,7 +30,7 @@ class MyCustomerController extends Controller
                   ->leftJoin('user', 'student.student_follower', '=', 'user.user_id')
                   ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
                   ->where('student_follower', Session::get('user_id'))
-                  ->whereIn('student_customer_status', [0, 1])
+                  ->where('student_customer_status', 0)
                   ->where('student_status', 1);
         // 添加筛选条件
         // 客户名称

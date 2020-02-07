@@ -64,26 +64,25 @@
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:70px;'>序号</th>
+                <th style='width:69px;'>序号</th>
                 <th style='width:90px;'>校区</th>
-                <th style='width:90px;'>学生</th>
-                <th style='width:60px;'>年级</th>
-                <th style='width:58px;'>性别</th>
-                <th style='width:140px;'>监护人</th>
-                <th style='width:108px;'>电话</th>
-                <th style='width:105px;'>微信</th>
-                <th style='width:80px;'>跟进人</th>
-                <th style='width:82px;'>跟进次数</th>
+                <th style='width:110px;'>学生</th>
+                <th style='width:70px;'>年级</th>
+                <th style='width:70px;'>性别</th>
+                <th style='width:130px;'>监护人</th>
+                <th style='width:110px;'>电话</th>
+                <th style='width:110px;'>微信</th>
+                <th style='width:90px;'>跟进人</th>
+                <th style='width:90px;'>优先级</th>
+                <th style='width:90px;'>跟进次数</th>
                 <th style='width:100px;'>上次跟进</th>
-                <th style='width:66px;'>优先级</th>
-                <th style='width:80px;'>签约状态</th>
                 <th style='width:188px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="14">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="13">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
               <tr title="备注：{{ $row->student_remark }}">
@@ -95,9 +94,11 @@
                 <td title="{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}">{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
                 <td title="电话：{{ $row->student_phone }}">{{ $row->student_phone }}</td>
                 <td title="微信：{{ $row->student_wechat }}">{{ $row->student_wechat }}</td>
-                <td title="跟进人：{{ $row->user_name }}">{{ $row->user_name }}</td>
-                <td title="跟进次数：{{ $row->student_follow_num }} 次">{{ $row->student_follow_num }} 次</td>
-                <td title="上次跟进：{{ $row->student_last_follow_date }}">{{ $row->student_last_follow_date }}</td>
+                @if($row->student_follower=="")
+                  <td title="跟进人：无 (公共)"><span style="color:red;">无 (公共)</span></td>
+                @else
+                  <td title="跟进人：{{ $row->user_name }}">{{ $row->user_name }}</td>
+                @endif
                 @if($row->student_follow_level==1)
                   <td title="优先级：低"><span>低</span></td>
                 @elseif($row->student_follow_level==2)
@@ -107,22 +108,14 @@
                 @else
                   <td title="优先级：重点"><span style="color:#FF0000;">重点*</span></td>
                 @endif
-                @if($row->student_customer_status==0)
-                  <td title="签约状态：未签约"><span style="color:red;">未签约</span></td>
-                @else
-                  <td title="签约状态：已签约"><span style="color:green;">已签约</span></td>
-                @endif
+                <td title="跟进次数：{{ $row->student_follow_num }} 次">{{ $row->student_follow_num }} 次</td>
+                <td title="上次跟进：{{ $row->student_last_follow_date }}">{{ $row->student_last_follow_date }}</td>
                 <td>
                   <form action="customer/{{$row->student_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    @if($row->student_customer_status==0)
-                      <a href='/customer/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
-                      <a href='/contract/create?student_id={{$row->student_id}}' target="_blank"><button type="button" class="btn btn-warning btn-sm">签约</button></a>
-                    @else
-                      <a href='/student/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
-                      <a href='#'><button type="button" class="btn btn-warning btn-sm" disabled>签约</button></a>
-                    @endif
+                    <a href='/customer/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                    <a href='/contract/create?student_id={{$row->student_id}}' target="_blank"><button type="button" class="btn btn-warning btn-sm">签约</button></a>
                     {{ deleteConfirm($row->student_id, ["学生姓名：".$row->student_name]) }}
                   </form>
                 </td>

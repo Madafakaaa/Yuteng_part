@@ -31,7 +31,7 @@
           <div class="row">
             <div class="col-4">
               <div class="form-group row mb-0">
-                <label class="col-md-4 col-form-label form-control-label">学生</label>
+                <label class="col-md-4 col-form-label form-control-label">姓名</label>
                 <div class="col-md-8 px-2 mb-2">
                   <input class="form-control" type="text" value="{{ $student->student_name }}" readonly>
                   <input type="hidden" name="input1" value="{{ $student->student_id }}" readonly>
@@ -40,9 +40,9 @@
             </div>
             <div class="col-4">
               <div class="form-group row mb-0">
-                <label class="col-md-4 col-form-label form-control-label">校区</label>
+                <label class="col-md-4 col-form-label form-control-label">状态</label>
                 <div class="col-md-8 px-2 mb-2">
-                  <input class="form-control" type="text" value="{{ $student->department_name }}" readonly>
+                  <input class="form-control" type="text" value="@if($student->student_customer_status==0) 客户 @else 学生 @endif" readonly>
                 </div>
               </div>
             </div>
@@ -207,6 +207,29 @@
           <div class="row">
             <div class="col-6">
               <div class="form-group row">
+                <label class="col-md-4 col-form-label form-control-label">签约类型<span style="color:red">*</span></label>
+                <div class="col-md-8 mt-2">
+                    <div class="custom-control custom-radio custom-control-inline ml-2 mr-4">
+                      <input type="radio" id="contract_type_1" name="contract_type"  class="custom-control-input" value="0" checked>
+                      <label class="custom-control-label" for="contract_type_1">首签</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline ml-2 mr-4">
+                      <input type="radio" id="contract_type_2" name="contract_type" class="custom-control-input" value="1">
+                      <label class="custom-control-label" for="contract_type_2">续费</label>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group row">
+                <label class="col-md-4 col-form-label form-control-label">综合服务费<span style="color:red">*</span></label>
+                <div class="col-md-8">
+                  <input class="form-control" type="number" value="0" autocomplete='off' required min="0.00" step="0.01" name="extra_fee" id="extra_fee" oninput="update({{ $selected_course_num }})">
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group row">
                 <label class="col-md-4 col-form-label form-control-label">支付方式<span style="color:red">*</span></label>
                 <div class="col-md-8">
                   <select class="form-control" name="payment_method" data-toggle="select" required>
@@ -266,6 +289,10 @@
           <div class="row">
             <div class="col-6 text-right">优惠金额</div>
             <div class="col-6 text-right"><span style="color:red;">- <span id="discount_sum"></span> 元</span></div>
+          </div>
+          <div class="row">
+            <div class="col-6 text-right">综合服务费</div>
+            <div class="col-6 text-right"><span id="contract_extra_fee"></span> 元</span></div>
           </div>
           <div class="row">
             <div class="col-6 text-right"><h3>应收金额</h3></div>
@@ -349,10 +376,15 @@ function update(course_num){
             $('#submit_button').attr("disabled", true);
         }
     }
+    var extra_fee = Math.floor( parseFloat($("#extra_fee").val()) * 100) / 100 ;
+    // 判断输入是否合法
+    if(isNaN(extra_fee)||extra_fee<0){
+        $('#submit_button').attr("disabled", true);
+    }
     // 保留两位小数
     var original_price_sum = Math.floor(original_price_sum * 10) / 10;
-    var total_price_sum = Math.ceil(total_price_sum * 10) / 10;
     var discount_sum = Math.floor( (original_price_sum * 10 - total_price_sum * 10) ) / 10;
+    var total_price_sum = Math.ceil( total_price_sum * 10 + extra_fee * 10) / 10;
     // 显示统计合计
     if(isNaN(original_hour_sum)||original_hour_sum<=0||original_hour_sum>10000){
         $("#original_hour").text(0);
@@ -390,11 +422,18 @@ function update(course_num){
     }else{
         $("#total_price_sum").text(total_price_sum);
     }
+    if(isNaN(extra_fee)||extra_fee<0||extra_fee>1000000){
+        $("#contract_extra_fee").text(0);
+        $('#submit_button').attr("disabled", true);
+    }else{
+        $("#contract_extra_fee").text(extra_fee);
+    }
 }
 update({{ $selected_course_num }});
 </script>
 <script>
-  linkActive('link-2');
-  navbarActive('navbar-2');
+  linkActive('link-4');
+  navbarActive('navbar-4');
+  linkActive('contract');
 </script>
 @endsection

@@ -29,7 +29,7 @@ class CustomerController extends Controller
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->leftJoin('user', 'student.student_follower', '=', 'user.user_id')
                   ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
-                  ->whereIn('student_customer_status', [0, 1])
+                  ->where('student_customer_status', 0)
                   ->where('student_status', 1);
         // 添加筛选条件
         // 客户名称
@@ -49,8 +49,7 @@ class CustomerController extends Controller
         // 计算分页信息
         list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
         // 排序并获取数据对象
-        $rows = $rows->orderBy('student_customer_status', 'desc')
-                     ->orderBy('student_department', 'asc')
+        $rows = $rows->orderBy('student_department', 'asc')
                      ->orderBy('student_follow_level', 'desc')
                      ->orderBy('student_grade', 'desc')
                      ->offset($offset)

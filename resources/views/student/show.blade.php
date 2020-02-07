@@ -27,7 +27,7 @@
           <div class="d-flex justify-content-between">
             <a href="/student/{{ $student->student_id }}/edit" class="btn btn-sm btn-primary mr-4">修改信息</a>
             @if($student->student_follower==Session::get('user_id'))
-              <a href="/extension/create?student_id={{ $student->student_id }}"  target="_blank" class="btn btn-sm btn-warning float-right">续约合同</a>
+              <a href="/contract/create?student_id={{ $student->student_id }}"  target="_blank" class="btn btn-sm btn-warning float-right">续约合同</a>
             @else
               <button class="btn btn-sm btn-warning float-right" disabled>续约合同</button>
             @endif
@@ -67,6 +67,9 @@
                 <div class="h4">生日 - {{ $student->student_birthday }}</div>
               </div>
               <div class="col-6">
+                <div class="h4">创建日期 - {{ date('Y-m-d', strtotime($student->student_createtime)) }}</div>
+              </div>
+              <div class="col-6">
                 <div class="h4">负责人 - @if($student->user_name=="") 无 (公共) @else {{ $student->user_name }} @endif</div>
               </div>
             </div>
@@ -95,13 +98,7 @@
                 </div>
                 <div>
                   <span class="heading">
-                    @if($student->student_customer_status==0)
-                      <span style="color:red;">未签约客户</span>
-                    @elseif($student->student_customer_status==1)
-                      <span style="color:orange;">已签约客户</span>
-                    @else
-                      <span style="color:green;">学生</span>
-                    @endif
+                    <span style="color:green;">学生</span>
                   </span>
                   <span class="description">状态</span>
                 </div>

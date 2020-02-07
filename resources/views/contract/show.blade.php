@@ -103,7 +103,7 @@
                   <td style="border:1px solid #32325d;" colspan="3"><strong>合计</strong></td>
                   <td style="border:1px solid #32325d;"><strong>{{ number_format($contract->contract_original_hour) }} 课时</strong></td>
                   <td style="border:1px solid #32325d;"><strong>{{ number_format($contract->contract_total_price, 1) }} 元</strong></td>
-                  <td style="border:1px solid #32325d;"><strong>共计优惠：{{ number_format($contract->contract_discount_price, 1) }} 元.</strong></td>
+                  <td style="border:1px solid #32325d;"><strong>综合手续费：{{ number_format($contract->contract_extra_fee, 1) }} 元.</strong></td>
                 </tr>
               </tbody>
             </table>

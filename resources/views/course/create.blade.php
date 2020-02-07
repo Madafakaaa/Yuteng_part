@@ -105,12 +105,8 @@
                   <label class="form-control-label">课程时长<span style="color:red">*</span></label>
                   <select class="form-control" name="input8" data-toggle="select" required>
                     <option value=''>请选择课程时长...</option>
-                    <option value='30'>30分钟</option>
-                    <option value='60'>60分钟</option>
+                    <option value='40'>40分钟</option>
                     <option value='90'>90分钟</option>
-                    <option value='120'>120分钟</option>
-                    <option value='150'>150分钟</option>
-                    <option value='180'>180分钟</option>
                   </select>
                 </div>
               </div>

@@ -75,15 +75,6 @@
               <li class="nav-item">
                 <a href="/myCustomer" class="nav-link" id="myCustomer">我的客户</a>
               </li>
-              <li class="nav-item">
-                <a href="/contract" class="nav-link" id="contract">全部签约</a>
-              </li>
-              <li class="nav-item">
-                <a href="/departmentContract" class="nav-link" id="departmentContract">本校签约</a>
-              </li>
-              <li class="nav-item">
-                <a href="/myContract" class="nav-link" id="myContract">我的签约</a>
-              </li>
             </ul>
           </div>
         </li>
@@ -128,6 +119,15 @@
           </a>
           <div class="collapse" id="navbar-4">
             <ul class="nav nav-sm flex-column">
+              <li class="nav-item">
+                <a href="/contract" class="nav-link" id="contract">全部签约</a>
+              </li>
+              <li class="nav-item">
+                <a href="/departmentContract" class="nav-link" id="departmentContract">本校签约</a>
+              </li>
+              <li class="nav-item">
+                <a href="/myContract" class="nav-link" id="myContract">我的签约</a>
+              </li>
               <li class="nav-item">
                 <a href="/refund" class="nav-link" id="refund">退费申请</a>
               </li>

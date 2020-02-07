@@ -31,7 +31,6 @@ class PositionController extends Controller
      * @param  $request->input('input1'): 名称
      * @param  $request->input('input2'): 部门
      * @param  $request->input('input3'): 等级
-     * @param  $request->input('input4'): 校区权限
      */
     public function store(Request $request){
         // 检查登录状态
@@ -42,7 +41,6 @@ class PositionController extends Controller
         $position_name = $request->input('input1');
         $position_section = $request->input('input2');
         $position_level = $request->input('input3');
-        $position_view_all = $request->input('input4');
         // 获取当前用户ID
         $position_createuser = Session::get('user_id');
         // 插入数据库
@@ -51,7 +49,6 @@ class PositionController extends Controller
                 ['position_name' => $position_name,
                  'position_section' => $position_section,
                  'position_level' => $position_level,
-                 'position_view_all' => $position_view_all,
                  'position_createuser' => $position_createuser]
             );
         }
@@ -95,7 +92,7 @@ class PositionController extends Controller
         // 获取部门信息
         $sections = DB::table('section')->where('section_status', 1)->get();
         return view('position/edit', ['sections' => $sections,
-                                             'position' => $position]);
+                                      'position' => $position]);
     }
 
     /**
@@ -105,7 +102,6 @@ class PositionController extends Controller
      * @param  $request->input('input1'): 名称
      * @param  $request->input('input2'): 部门
      * @param  $request->input('input3'): 等级
-     * @param  $request->input('input4'): 校区权限
      * @param  int  $position_id
      */
     public function update(Request $request, $position_id){
@@ -117,15 +113,13 @@ class PositionController extends Controller
         $position_name = $request->input('input1');
         $position_section = $request->input('input2');
         $position_level = $request->input('input3');
-        $position_view_all = $request->input('input4');
         // 更新数据库
         try{
             DB::table('position')
                     ->where('position_id', $position_id)
                     ->update(['position_name' => $position_name,
                               'position_section' => $position_section,
-                              'position_level' => $position_level,
-                              'position_view_all' => $position_view_all]);
+                              'position_level' => $position_level]);
         }
         // 捕获异常
         catch(Exception $e){

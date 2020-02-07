@@ -60,14 +60,14 @@
             <thead class="thead-light">
               <tr>
                 <th style='width:70px;'>序号</th>
-                <th style='width:91px;'>校区</th>
+                <th style='width:90px;'>校区</th>
                 <th style='width:100px;'>学生</th>
                 <th style='width:70px;'>年级</th>
+                <th style='width:70px;'>类型</th>
                 <th style='width:80px;' class="text-right">课程数量</th>
-                <th style='width:90px;' class="text-right">购买课时</th>
-                <th style='width:80px;' class="text-right">赠送课时</th>
-                <th style='width:110px;' class="text-right">优惠金额</th>
                 <th style='width:90px;' class="text-right">合计课时</th>
+                <th style='width:90px;' class="text-right">优惠金额</th>
+                <th style='width:90px;' class="text-right">服务费</th>
                 <th style='width:110px;' class="text-right">实付金额</th>
                 <th style='width:80px;'>支付方式</th>
                 <th style='width:110px;'>签约人</th>
@@ -86,11 +86,15 @@
                 <td title="{{ $row->department_name }}">{{ $row->department_name }}</td>
                 <td title="{{ $row->student_name }}">{{ $row->student_name }}</td>
                 <td title="{{ $row->grade_name }}">{{ $row->grade_name }}</td>
+                @if($row->contract_type==0)
+                  <td title="首签"><span style="color:red;">首签</span></td>
+                @else
+                  <td title="续费"><span style="color:green;">续费</span></td>
+                @endif
                 <td class="text-right" title="{{ $row->contract_course_num }} 种课程">{{ $row->contract_course_num }} 种课程</td>
-                <td class="text-right" title="{{ $row->contract_original_hour }} 课时">{{ $row->contract_original_hour }} 课时</td>
-                <td class="text-right" title="{{ $row->contract_free_hour }} 课时">{{ $row->contract_free_hour }} 课时</td>
-                <td class="text-right" title="- {{ number_format($row->contract_discount_price, 1) }} 元"><span style="color:red;">- {{ number_format($row->contract_discount_price, 1) }} 元</span></td>
                 <td class="text-right" title="{{ $row->contract_total_hour }} 课时"><strong>{{ $row->contract_total_hour }} 课时</strong></td>
+                <td class="text-right" title="- {{ number_format($row->contract_discount_price, 1) }} 元"><span style="color:red;">- {{ number_format($row->contract_discount_price, 1) }} 元</span></td>
+                <td class="text-right" title="{{ number_format($row->contract_extra_fee, 1) }} 元">{{ number_format($row->contract_extra_fee, 1) }} 元</td>
                 <td class="text-right" title="{{ number_format($row->contract_total_price, 1) }} 元"><strong>{{ number_format($row->contract_total_price, 1) }} 元</strong></td>
                 <td title="{{ $row->contract_payment_method }}">{{ $row->contract_payment_method }}</td>
                 <td title="{{ $row->user_name }}">{{ $row->user_name }}</td>
@@ -118,8 +122,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-2');
-  navbarActive('navbar-2');
+  linkActive('link-4');
+  navbarActive('navbar-4');
   linkActive('myContract');
 </script>
 @endsection

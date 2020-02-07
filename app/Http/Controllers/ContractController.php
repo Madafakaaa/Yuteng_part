@@ -92,9 +92,10 @@ class ContractController extends Controller
         }
         // 获取学生信息
         $students = DB::table('student')
+                      ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                       ->where('student_follower', Session::get('user_id'))
-                      ->where('student_status', 1)
-                      ->orderBy('student_createtime', 'asc')
+                      ->orderBy('student_customer_status', 'asc')
+                      ->orderBy('student_grade', 'asc')
                       ->get();
         return view('contract/create', ['students' => $students,
                                         'student_id' => $student_id]);
@@ -199,6 +200,8 @@ class ContractController extends Controller
         }else{
             $request_contract_remark = "";
         }
+        $request_contract_type = $request->input('contract_type');
+        $request_contract_extra_fee = round((float)$request->input("extra_fee"), 2);
         $request_courses = array();
         // 生成新合同号
         $sub_student_id = substr($request_student_id , 1 , 10);
@@ -242,7 +245,7 @@ class ContractController extends Controller
         $contract_discount_price = $contract_original_price - $contract_total_price;
         $contract_original_price = round($contract_original_price, 2);
         $contract_discount_price = round($contract_discount_price, 2);
-        $contract_total_price = round($contract_total_price, 2);
+        $contract_total_price = round($contract_total_price+$request_contract_extra_fee, 2);
         // 获取学生签约状态
         $student_customer_status = DB::table('student')
                                      ->where('student_id', $request_student_id)
@@ -266,6 +269,8 @@ class ContractController extends Controller
                  'contract_date' => $contract_date,
                  'contract_payment_method' => $contract_payment_method,
                  'contract_remark' => $contract_remark,
+                 'contract_type' => $request_contract_type,
+                 'contract_extra_fee' => $request_contract_extra_fee,
                  'contract_createuser' => $contract_createuser]
             );
             foreach($request_courses as $request_course){

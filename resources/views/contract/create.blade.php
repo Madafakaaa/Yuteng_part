@@ -42,7 +42,9 @@
                 <select class="form-control form-control-sm" name="input1" data-toggle="select" required>
                   <option value=''>请选择学生...</option>
                   @foreach ($students as $student)
-                    <option value="{{ $student->student_id }}" @if($student_id==$student->student_id) selected @endif>{{ $student->student_name }}</option>
+                    <option value="{{ $student->student_id }}" @if($student_id==$student->student_id) selected @endif>
+                      @if($student->student_customer_status==0) 客户 @else 学生 @endif{{ $student->grade_name }} - {{ $student->student_name }}
+                    </option>
                   @endforeach
                 </select>
               </div>
@@ -67,7 +69,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-2');
-  navbarActive('navbar-2');
+  linkActive('link-4');
+  navbarActive('navbar-4');
+  linkActive('contract');
 </script>
 @endsection

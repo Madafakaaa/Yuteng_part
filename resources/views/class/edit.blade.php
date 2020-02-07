@@ -53,6 +53,7 @@
                     </select>
                   @else
                       <input class="form-control" type="text" value="{{ $class->grade_name }}" readonly>
+                      <input type="hidden" name="input2" value="{{ $class->class_grade }}">
                   @endif
                 </div>
               </div>

@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-<div class="container-fluid mt-2">
+<div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
@@ -44,7 +44,7 @@
             <div class="row">
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">岗位等级<span style="color:red">*</span></label>
+                  <label class="form-control-label">等级<span style="color:red">*</span></label>
                   <select class="form-control" name="input3" data-toggle="select" required>
                     <option value=''>请选择等级...</option>
                     <option value='1'>1</option>
@@ -59,17 +59,17 @@
                   </select>
                 </div>
               </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">校区权限<span style="color:red">*</span></label>
-                  <select class="form-control" name="input4" data-toggle="select" required>
-                    <option value='0'>仅可查看本人所在校区信息</option>
-                    <option value='1'>可查看所有校区数据信息</option>
-                  </select>
-                </div>
+            </div>
+            <hr class="my-3">
+            <div class="row">
+              <div class="col-lg-3 col-md-5 col-sm-12">
+                <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
+              </div>
+              <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
+              <div class="col-lg-3 col-md-5 col-sm-12">
+            	<input type="submit" class="btn btn-warning btn-block" value="添加">
               </div>
             </div>
-            <input type="submit" class="btn btn-primary" value="添加岗位">
           </div>
         <form>
       </div>
@@ -82,8 +82,6 @@
 <script>
   linkActive('link-1');
   navbarActive('navbar-1');
-  linkActive('link-1-2');
-  navbarActive('navbar-1-2');
-  linkActive('position');
+  linkActive('section');
 </script>
 @endsection

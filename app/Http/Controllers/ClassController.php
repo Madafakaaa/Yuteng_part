@@ -120,7 +120,7 @@ class ClassController extends Controller
         $students = DB::table('student')
                       ->where('student_grade', $student_grade)
                       ->where('student_department', $student_department)
-                      ->where('student_customer_status', 2)
+                      ->where('student_customer_status', 1)
                       ->where('student_status', 1)
                       ->orderBy('student_createtime', 'asc')
                       ->get();
