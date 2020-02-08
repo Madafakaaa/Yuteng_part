@@ -7,6 +7,7 @@
     <li class="breadcrumb-item active">教务中心</li>
     <li class="breadcrumb-item"><a href="/schedule">课程安排</a></li>
     <li class="breadcrumb-item active">课程考勤</li>
+    <li class="breadcrumb-item active">修改上课信息</li>
 @endsection
 
 @section('content')
@@ -136,7 +137,6 @@
               </div>
               <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-3 col-md-5 col-sm-12">
-                <input type="hidden" name="input3" value="{{ $schedule->schedule_id }}">
                 <input type="submit" class="btn btn-primary btn-block" value="下一步">
               </div>
             </div>

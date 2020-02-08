@@ -30,9 +30,9 @@
     </div>
   </div>
   <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
+    <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/schedule/attend/{{ $schedule->schedule_id }}/step3" method="post" id="form1" name="form1">
+        <form action="/schedule/attend/{{ $schedule->schedule_id }}/step3" method="post">
           @csrf
           <div class="card-header">
             <h4 class="mb-0">二、填写考勤信息</h4>
@@ -40,18 +40,18 @@
           <!-- Card body -->
           <div class="card-body pt-2">
             @foreach ($student_courses as $student_course)
-            <div class="row">
-              <div class="col-2 text-right">
+              <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-4">
                   <label class="form-control-label">上课学生{{ $loop->iteration }}</label>
-              </div>
-              <div class="col-3 px-2 mb-2">
-                <div class="form-group mb-1">
-                   <input class="form-control form-control-sm" type="text" value="{{ $student_course[0]->student_name }}" readonly>
-                   <input type="hidden" name="input{{ $loop->iteration }}_0" value="{{ $student_course[0]->student_id }}">
                 </div>
-              </div>
-              <div class="col-5 px-2 mb-2">
-                <div class="form-group mb-1">
+                <div class="col-lg-4 col-md-4 col-sm-8">
+                  <div class="form-group mb-1">
+                    <input class="form-control form-control-sm" type="text" value="{{ $student_course[0]->student_name }}" readonly>
+                    <input type="hidden" name="input{{ $loop->iteration }}_0" value="{{ $student_course[0]->student_id }}">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group mb-1">
                     <div class="custom-control custom-radio custom-control-inline ml-2 mr-4">
                       <input type="radio" id="radio{{ $loop->iteration }}_1" name="input{{ $loop->iteration }}_1"  class="custom-control-input" value="1" checked onchange="disableInput({{ $loop->iteration }});">
                       <label class="custom-control-label" for="radio{{ $loop->iteration }}_1">正常</label>
@@ -61,35 +61,46 @@
                       <label class="custom-control-label" for="radio{{ $loop->iteration }}_2">请假</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline ml-2 mr-4">
-                      <input type="radio" id="radio{{ $loop->iteration }}_3" name="input{{ $loop->iteration }}_1" class="custom-control-input" value="1" onchange="disableInput({{ $loop->iteration }});">
+                      <input type="radio" id="radio{{ $loop->iteration }}_3" name="input{{ $loop->iteration }}_1" class="custom-control-input" value="2" onchange="disableInput({{ $loop->iteration }});">
                       <label class="custom-control-label" for="radio{{ $loop->iteration }}_3">旷课</label>
                     </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-2 text-right">
-                  <label class="form-control-label"><span style="color:red">*</span>扣除课时</label>
-              </div>
-              <div class="col-4 px-2 mb-2">
-                <div class="form-group mb-1">
+              <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-4">
+                  <label class="form-control-label"><span style="color:red">*</span>扣除课程</label>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-8">
+                  <div class="form-group mb-1">
                     <select class="form-control form-control-sm" name="input{{ $loop->iteration }}_2" id="input{{ $loop->iteration }}_2" data-toggle="select" required>
                       <option value=''>请选择课程...</option>
                       @foreach ($student_course[1] as $course)
-                        <option value="{{ $course->course_id }}" @if($schedule->schedule_course==$course->course_id) selected @endif>{{ $course->course_name }} (剩余: {{ $course->hour_remain }} 课时)</option>
+                        <option value="{{ $course->hour_id }}" @if($schedule->schedule_course==$course->course_id) selected @endif>{{ $course->course_name }} (剩余: {{ $course->hour_remain }} 课时)@if($course->hour_type==1) (赠) @endif</option>
                       @endforeach
                     </select>
+                  </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4">
+                  <label class="form-control-label"><span style="color:red">*</span>扣除课时</label>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6">
+                  <div class="form-group mb-1">
+                    <select class="form-control form-control-sm" name="input{{ $loop->iteration }}_3" id="input{{ $loop->iteration }}_3" data-toggle="select" required>
+                      <option value='1'>1 课时</option>
+                      <option value='3' selected>3 课时</option>
+                    </select>
+                  </div>
                 </div>
               </div>
-            </div>
               <hr>
             @endforeach
             <div class="row">
-              <div class="col-3">
+              <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                 <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">上一步</button></a>
               </div>
-              <div class="col-6"></div>
-              <div class="col-3">
+              <div class="col-lg-6 col-md-4 col-sm-12 mb-1"></div>
+              <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                 <input type="hidden" name="input1" value="{{ $schedule_teacher }}">
                 <input type="hidden" name="input2" value="{{ $schedule_classroom }}">
                 <input type="hidden" name="input3" value="{{ count($student_courses) }}">
@@ -113,9 +124,11 @@
   function disableInput(a){
     if($("input[name='input"+a+"_1']:checked").val()==0){
       $("#input"+a+"_2").attr("disabled","disabled");
+      $("#input"+a+"_3").attr("disabled","disabled");
       // $("#input"+a+"_2 option[index='0']").attr("selected", true);
     }else{
       $("#input"+a+"_2").removeAttr("disabled");
+      $("#input"+a+"_3").removeAttr("disabled");
     }
   }
 </script>

@@ -115,6 +115,7 @@ Route::post('/schedule/create/step3', 'ScheduleController@createStep3');
 Route::get('/schedule/attend/{schedule_id}', 'ScheduleController@attend');
 Route::post('/schedule/attend/{schedule_id}/step2', 'ScheduleController@attendStep2');
 Route::post('/schedule/attend/{schedule_id}/step3', 'ScheduleController@attendStep3');
+Route::post('/schedule/attend/{schedule_id}/step4', 'ScheduleController@attendStep4');
 
 // 5.    财务中心
 // 5.2   退费申请

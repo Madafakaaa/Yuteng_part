@@ -773,6 +773,11 @@ class ScheduleController extends Controller
         $schedule_dates = explode(',', $schedule_dates_str);
         // 获取所选日期数量
         $schedule_date_num = count($schedule_dates);
+        // 获取上课成员类型
+        $schedule_participant_type = 0;
+        if(substr($schedule_participant, 0, 1)=="C"){
+            $schedule_participant_type = 1;
+        }
         // 插入数据库
         DB::beginTransaction();
         try{
@@ -780,6 +785,7 @@ class ScheduleController extends Controller
                 DB::table('schedule')->insert(
                     ['schedule_department' => $schedule_department,
                      'schedule_participant' => $schedule_participant,
+                     'schedule_participant_type' => $schedule_participant_type,
                      'schedule_teacher' => $schedule_teacher,
                      'schedule_course' => $schedule_course,
                      'schedule_subject' => $schedule_subject,
@@ -796,7 +802,6 @@ class ScheduleController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
             return redirect()->action('ScheduleController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
@@ -964,7 +969,7 @@ class ScheduleController extends Controller
         $student_courses = array();
         // 获取成员ID
         $schedule_participant = $schedule->schedule_participant;
-        // 获取ID首字母
+        // 获取成员ID首字母
         $schedule_type = substr($schedule_participant , 0 , 1);
         if($schedule_type=="S"){ // 上课成员为学生
             // 获取学生信息
@@ -979,6 +984,7 @@ class ScheduleController extends Controller
                          ->join('course', 'hour.hour_course', '=', 'course.course_id')
                          ->where('student.student_id', $schedule_participant)
                          ->where('hour.hour_remain', '>', 0)
+                         ->orderBy('hour.hour_type', 'desc')
                          ->get();
             $student_courses[] = array($student, $courses);
         }else{ // 上课成员为班级
@@ -1000,6 +1006,8 @@ class ScheduleController extends Controller
                              ->join('hour', 'student.student_id', '=', 'hour.hour_student')
                              ->join('course', 'hour.hour_course', '=', 'course.course_id')
                              ->where('student_id', $member->student_id)
+                             ->where('hour.hour_remain', '>', 0)
+                             ->orderBy('hour.hour_type', 'desc')
                              ->get();
                 $student_courses[] = array($student, $courses);
             }
@@ -1013,7 +1021,7 @@ class ScheduleController extends Controller
     }
 
     /**
-     * 填写上课成员详细信息页面
+     * 确认考勤信息页面
      * URL: POST /schedule/{schedule_id}/attend/step3
      * @param  int  $schedule_id
      * @param  Request  $request
@@ -1022,29 +1030,6 @@ class ScheduleController extends Controller
      * @param  $request->input('input3'): 学生人数
      */
     public function attendStep3(Request $request, $schedule_id){
-
-        // 更新数据库
-        try{
-            DB::table('schedule')
-              ->where('schedule_id', $schedule_id)
-              ->update(['schedule_attended' => 1,
-                        'schedule_attended_user' => Session::get('user_id')]);
-        }
-        // 捕获异常
-        catch(Exception $e){
-            return redirect("/schedule")->with(['notify' => true,
-                                                'type' => 'danger',
-                                                'title' => '课程考勤失败',
-                                                'message' => '课程考勤失败，请联系系统管理员']);
-        }
-        return redirect("/schedule")->with(['notify' => true,
-                                            'type' => 'success',
-                                            'title' => '课程考勤成功',
-                                            'message' => '课程考勤成功！']);
-
-
-
-
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -1053,19 +1038,56 @@ class ScheduleController extends Controller
         $schedule_teacher = $request->input('input1');
         $schedule_classroom = $request->input('input2');
         $schedule_student_num = $request->input('input3');
-        $schedule_student_courses = array();
+        // 获取教师姓名
+        $schedule_teacher_name = DB::table('user')
+                                   ->select('user_name')
+                                   ->where('user_id', $schedule_teacher)
+                                   ->first()
+                                   ->user_name;
+        // 获取教室名称
+        $schedule_classroom_name = DB::table('classroom')
+                                   ->select('classroom_name')
+                                   ->where('classroom_id', $schedule_classroom)
+                                   ->first()
+                                   ->classroom_name;
+        // 声明数据数组
+        $student_courses = array();
         for($i=1;$i<=$schedule_student_num;$i++){
-            $temp = array($request->input('input'.$i.'_0'), $request->input('input'.$i.'_1'));
-            $course_id = $request->input('input'.$i.'_2');
-            $temp[] = DB::table('course')
-                        ->leftJoin('department', 'course.course_department', '=', 'department.department_id')
-                        ->leftJoin('grade', 'course.course_grade', '=', 'grade.grade_id')
-                        ->leftJoin('subject', 'course.course_subject', '=', 'subject.subject_id')
-                        ->where('course_id', $course_id)
-                        ->get();
-            $schedule_student_courses[]=$temp;
+            $participant_student = $request->input('input'.$i.'_0');
+            $student_name = DB::table('student')
+                              ->where('student_id', $participant_student)
+                              ->first()
+                              ->student_name;
+            $participant_attend_status = $request->input('input'.$i.'_1');
+            if($participant_attend_status==0){
+                $student_courses[] = array($participant_student, $participant_attend_status, 0, 0, $student_name, "无");
+                continue;
+            }
+            $participant_hour = $request->input('input'.$i.'_2');
+            $participant_amount = $request->input('input'.$i.'_3');
+            // 查询剩余课时
+            $hour = DB::table('hour')
+                      ->join('course', 'hour.hour_course', '=', 'course.course_id')
+                      ->where('hour_id', $participant_hour)
+                      ->first();
+            $hour_remain = $hour->hour_remain;
+            $course_name = $hour->course_name;
+            // 剩余课时不足
+            if($participant_amount>$hour_remain){
+                // 查询学生名称
+                $student_name = DB::table('student')
+                                  ->where('student_id', $participant_student)
+                                  ->first()
+                                  ->student_name;
+                // 返回第一步
+                return redirect("/schedule/attend/{$schedule_id}")->with(['notify' => true,
+                                                                         'type' => 'danger',
+                                                                         'title' => '学生剩余课时不足，请重新选择',
+                                                                         'message' => $student_name.'剩余课时不足，请重新选择']);
+
+            }
+            $student_courses[] = array($participant_student, $participant_attend_status, $participant_hour, $participant_amount, $student_name, $course_name);
         }
-        return $schedule_student_courses;
         // 获取数据信息
         $schedule = DB::table('schedule')
                       ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
@@ -1080,19 +1102,107 @@ class ScheduleController extends Controller
             return redirect()->action('ScheduleController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
-                                     'title' => '课程安排显示失败',
-                                     'message' => '课程安排显示失败，请联系系统管理员']);
+                                     'title' => '课程考勤失败',
+                                     'message' => '课程考勤失败，请联系系统管理员']);
         }
         $schedule = $schedule[0];
-
-        return view('schedule/attend2', ['schedule' => $schedule,
+        return view('schedule/attend3', ['schedule' => $schedule,
                                          'schedule_teacher' => $schedule_teacher,
                                          'schedule_teacher_name' => $schedule_teacher_name,
                                          'schedule_classroom' => $schedule_classroom,
                                          'schedule_classroom_name' => $schedule_classroom_name,
-                                         'students' => $students,
                                          'student_courses' => $student_courses]);
     }
+
+    /**
+     * 提交考勤信息
+     * URL: POST /schedule/{schedule_id}/attend/step4
+     * @param  int  $schedule_id
+     * @param  Request  $request
+     * @param  $request->input('input1'): 任课教师
+     * @param  $request->input('input2'): 上课教室
+     * @param  $request->input('input3'): 学生人数
+     */
+    public function attendStep4(Request $request, $schedule_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取表单输入
+        $schedule_teacher = $request->input('input1');
+        $schedule_classroom = $request->input('input2');
+        $schedule_student_num = $request->input('input3');
+        // 统计上课人数
+        $schedule_attended_num = 0; // 正常
+        $schedule_leave_num = 0; // 请假
+        $schedule_absence_num = 0; // 旷课
+
+        DB::beginTransaction();
+        try{
+            for($i=1;$i<=$schedule_student_num;$i++){
+                $participant_student = $request->input('input'.$i.'_0');
+                $participant_attend_status = $request->input('input'.$i.'_1');
+                if($participant_attend_status==0){ // 请假（不计课时）
+                    $participant_hour = 0;
+                    $participant_amount = 0;
+                    $schedule_leave_num = $schedule_leave_num + 1; // 增加请假人数
+                }else if($participant_attend_status==1){ // 正常（计课时）
+                    $participant_hour = $request->input('input'.$i.'_2');
+                    $participant_amount = $request->input('input'.$i.'_3');
+                    $schedule_attended_num = $schedule_attended_num + 1; // 增加正常上课人数
+                }else{ // 旷课（计课时）
+                    $participant_hour = $request->input('input'.$i.'_2');
+                    $participant_amount = $request->input('input'.$i.'_3');
+                    $schedule_absence_num = $schedule_absence_num + 1; // 增加旷课人数
+                }
+                // 扣除学生课时
+                DB::table('hour')
+                  ->where('hour_id', $participant_hour)
+                  ->decrement('hour_remain', $participant_amount);
+                // 增加已用课时数
+                DB::table('hour')
+                  ->where('hour_id', $participant_hour)
+                  ->increment('hour_used', $participant_amount);
+                // 添加上课成员表
+                DB::table('participant')->insert(
+                    ['participant_schedule' => $schedule_id,
+                     'participant_student' => $participant_student,
+                     'participant_attend_status' => $participant_attend_status,
+                     'participant_hour' => $participant_hour,
+                     'participant_amount' => $participant_amount,
+                     'participant_createuser' => Session::get('user_id')]
+                );
+            }
+            DB::table('schedule')
+              ->where('schedule_id', $schedule_id)
+              ->update(['schedule_teacher' => $schedule_teacher,
+                        'schedule_classroom' => $schedule_classroom,
+                        'schedule_student_num' => $schedule_student_num,
+                        'schedule_attended_num' => $schedule_attended_num,
+                        'schedule_leave_num' => $schedule_leave_num,
+                        'schedule_absence_num' => $schedule_absence_num,
+                        'schedule_attended' => 1,
+                        'schedule_attended_user' => Session::get('user_id')]);
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return $e;
+            // 返回第一步
+            return redirect("/schedule/attend/{$schedule_id}")->with(['notify' => true,
+                                                                     'type' => 'danger',
+                                                                     'title' => '学生剩余课时不足，请重新选择',
+                                                                     'message' => '学生剩余课时不足，请重新选择']);
+        }
+        DB::commit();
+        // 返回课程安排列表
+        return redirect()->action('ScheduleController@index')
+                         ->with(['notify' => true,
+                                 'type' => 'success',
+                                 'title' => '课程考勤成功',
+                                 'message' => '课程考勤成功！']);
+    }
+
 
     /**
      * 修改新课程安排提交数据库
