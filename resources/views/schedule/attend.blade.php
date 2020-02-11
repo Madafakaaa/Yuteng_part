@@ -20,11 +20,11 @@
         </div>
         <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #fdd1da;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-danger">填写考勤信息</span>
+          <span class="badge badge-pill badge-danger">选择学生考勤</span>
         </div>
         <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #fdd1da;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-danger">确认考勤信息</span>
+          <span class="badge badge-pill badge-danger">上传教案文件</span>
         </div>
       </div>
     </div>
@@ -35,7 +35,7 @@
         <form action="/schedule/attend/{{ $schedule->schedule_id }}/step2" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">一、选择课程信息</h4>
+            <h4 class="mb-0">一、修改上课信息</h4>
           </div>
           <!-- Card body -->
           <div class="card-body pt-2">
@@ -68,7 +68,7 @@
                   <input class="form-control form-control-sm" value="{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}" readonly>
                 </div>
               </div>
-              <div class="col-4 px-2 mb-2">
+              <div class="col-2 px-2 mb-2">
                 <div class="form-group mb-1">
                   <input class="form-control form-control-sm" value="{{ $schedule->schedule_time }}分钟" readonly>
                 </div>

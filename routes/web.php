@@ -106,7 +106,7 @@ Route::resource('/myClass', 'MyClassController');
 // 4.2   班级成员管理
 Route::post('/member/{class_id}', 'MemberController@add');
 Route::delete('/member/{class_id}', 'MemberController@delete');
-// 4.3   课程安排
+// 4.3   全部课程安排
 Route::resource('/schedule', 'ScheduleController');
 Route::get('/schedule/create/Irregular', 'ScheduleController@createIrregular');
 Route::post('/schedule/create/step2', 'ScheduleController@createStep2');
@@ -116,6 +116,16 @@ Route::get('/schedule/attend/{schedule_id}', 'ScheduleController@attend');
 Route::post('/schedule/attend/{schedule_id}/step2', 'ScheduleController@attendStep2');
 Route::post('/schedule/attend/{schedule_id}/step3', 'ScheduleController@attendStep3');
 Route::post('/schedule/attend/{schedule_id}/step4', 'ScheduleController@attendStep4');
+// 4.3   本校课程安排
+Route::resource('/departmentSchedule', 'DepartmentScheduleController');
+// 4.3   我的课程安排
+Route::resource('/mySchedule', 'MyScheduleController');
+// 4.3   全部上课记录
+Route::resource('/attendedSchedule', 'AttendedScheduleController');
+// 4.3   本校上课记录
+Route::resource('/departmentAttendedSchedule', 'DepartmentAttendedScheduleController');
+// 4.3   我的上课记录
+Route::resource('/myAttendedSchedule', 'MyAttendedScheduleController');
 
 // 5.    财务中心
 // 5.2   退费申请
@@ -123,6 +133,11 @@ Route::resource('/refund', 'RefundController');
 Route::post('/refund/create/step2', 'RefundController@createStep2');
 Route::post('/refund/create/step3', 'RefundController@createStep3');
 Route::post('/refund/create/step4', 'RefundController@createStep4');
+
+// 6     教案查询
+Route::resource('/document', 'DocumentController');
+// 7     个人信息
+Route::resource('/profile', 'ProfileController');
 
 // 课程表 Calendar
 Route::get('/calendar', 'CalendarController@calendar');

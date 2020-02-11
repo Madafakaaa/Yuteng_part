@@ -20,11 +20,11 @@
         </div>
         <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-info">填写考勤信息</span>
+          <span class="badge badge-pill badge-info">选择学生考勤</span>
         </div>
         <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #fdd1da;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-danger">确认考勤信息</span>
+          <span class="badge badge-pill badge-danger">上传教案文件</span>
         </div>
       </div>
     </div>
@@ -35,7 +35,7 @@
         <form action="/schedule/attend/{{ $schedule->schedule_id }}/step3" method="post">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">二、填写考勤信息</h4>
+            <h4 class="mb-0">二、选择学生考勤</h4>
           </div>
           <!-- Card body -->
           <div class="card-body pt-2">

@@ -20,11 +20,11 @@
         </div>
         <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-success">填写考勤信息</span>
+          <span class="badge badge-pill badge-success">选择学生考勤</span>
         </div>
         <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-info">确认考勤信息</span>
+          <span class="badge badge-pill badge-info">上传教案文件</span>
         </div>
       </div>
     </div>
@@ -32,10 +32,10 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/schedule/attend/{{ $schedule->schedule_id }}/step4" method="post">
+        <form action="/schedule/attend/{{ $schedule->schedule_id }}/step4" method="post" enctype="multipart/form-data">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">三、确认考勤信息</h4>
+            <h4 class="mb-0">三、上传教案文件</h4>
           </div>
           <!-- Card body -->
           <div class="card-body pt-2">
@@ -152,6 +152,23 @@
                 </div>
               </div>
             @endforeach
+            <hr>
+            <div class="row">
+              <div class="col-lg-2 col-md-2 col-sm-4 text-right">
+                <label class="form-control-label"><span style="color:red">*</span>教案</label>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="form-group mb-1">
+                  <input id='location' class="form-control form-control-sm" disabled aria-describedby="button-addon">
+                </div>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-4">
+                <div class="input-group-append">
+                  <input type="button" id="i-check" value="浏览文件" class="btn btn-outline-primary btn-sm btn-block" onClick="$('#i-file').click();" style="margin:0;" id="button-addon">
+                  <input type="file" name='file1' id='i-file' onChange="$('#location').val($('#i-file').val());" style="display: none" required>
+                </div>
+              </div>
+            </div>
             <hr class="my-3">
             <div class="row">
               <div class="col-lg-3 col-md-4 col-sm-6 mb-1">

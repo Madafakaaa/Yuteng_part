@@ -121,7 +121,7 @@ class ArchiveController extends Controller
         // 获取文件扩展名
         $archive_ext = $file->getClientOriginalExtension();
         // 生成随机文件名
-        $archive_path = date('ymdHis').rand(1000000000,9999999999).".".$archive_ext;
+        $archive_path = "A".date('ymdHis').rand(1000000000,9999999999).".".$archive_ext;
         // 获取表单输入
         $archive_user = $request->input('input1');
         $archive_name = $request->input('input2');
@@ -174,11 +174,10 @@ class ArchiveController extends Controller
         $archive = DB::table('archive')->where('archive_id', $archive_id)->get();
         if($archive->count()!==1){
             // 未获取到数据
-            return redirect()->action('School\ArchiveController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '档案显示失败',
-                                     'message' => '档案显示失败，请联系系统管理员']);
+            return redirect("/archive")->with(['notify' => true,
+                                                 'type' => 'danger',
+                                                 'title' => '档案下载失败',
+                                                 'message' => '档案下载失败，请联系系统管理员']);
         }
         $archive = $archive[0];
         // 获取文件名和路径
@@ -188,11 +187,10 @@ class ArchiveController extends Controller
         if (file_exists($file_path)) {// 文件存在
             return response()->download($file_path, $file_name ,$headers = ['Content-Type'=>'application/zip;charset=utf-8']);
         }else{ // 文件不存在
-            return redirect()->action('School\ArchiveController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '档案下载失败',
-                                     'message' => '档案文件不存在，下载失败']);
+            return redirect("/archive")->with(['notify' => true,
+                                                 'type' => 'danger',
+                                                 'title' => '档案下载失败',
+                                                 'message' => '档案文件不存在，下载失败']);
         }
     }
 

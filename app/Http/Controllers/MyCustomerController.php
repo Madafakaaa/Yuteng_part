@@ -79,15 +79,11 @@ class MyCustomerController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取校区、来源、课程、用户、年级信息
-        $departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        // 获取来源、用户、年级信息
         $sources = DB::table('source')->where('source_status', 1)->orderBy('source_createtime', 'asc')->get();
-        $courses = DB::table('course')->where('course_status', 1)->orderBy('course_createtime', 'asc')->get();
         $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $schools = DB::table('school')->where('school_status', 1)->orderBy('school_createtime', 'asc')->get();
-        return view('myCustomer/create', ['departments' => $departments,
-                                          'sources' => $sources,
-                                          'courses' => $courses,
+        $schools = DB::table('school')->where('school_department', Session::get('user_department'))->where('school_status', 1)->orderBy('school_createtime', 'asc')->get();
+        return view('myCustomer/create', ['sources' => $sources,
                                           'schools' => $schools,
                                           'grades' => $grades]);
     }

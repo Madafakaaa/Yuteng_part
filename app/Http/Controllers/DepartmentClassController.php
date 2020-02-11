@@ -101,7 +101,6 @@ class DepartmentClassController extends Controller
                    ->join('department', 'user.user_department', '=', 'department.department_id')
                    ->where('user_department', '=', Session::get('user_department'))
                    ->where('user_status', 1)
-                   ->orderBy('user_department', 'asc')
                    ->union($users)
                    ->get();
         return view('departmentClass/create', ['grades' => $grades,

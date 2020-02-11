@@ -123,7 +123,7 @@
                         <option value=''>请选择教师...</option>
                         @foreach ($users as $user)
                           @if($user[2]==0)
-                            <option value="{{ $user[0] }}">{{ $user[1] }}</option>
+                            <option value="{{ $user[0] }}">@if($user[4]!=Session::get('user_department')){{ $user[3] }}：@endif{{ $user[1] }}</option>
                           @endif
                         @endforeach
                       </select>

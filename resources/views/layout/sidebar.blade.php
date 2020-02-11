@@ -104,7 +104,22 @@
                 <a href="/myClass" class="nav-link" id="myClass">我的班级</a>
               </li>
               <li class="nav-item">
-                <a href="/schedule" class="nav-link" id="schedule">课程安排</a>
+                <a href="/schedule" class="nav-link" id="schedule">全部课程安排</a>
+              </li>
+              <li class="nav-item">
+                <a href="/departmentSchedule" class="nav-link" id="departmentSchedule">本校课程安排</a>
+              </li>
+              <li class="nav-item">
+                <a href="/mySchedule" class="nav-link" id="mySchedule">我的课程安排</a>
+              </li>
+              <li class="nav-item">
+                <a href="/attendedSchedule" class="nav-link" id="attendedSchedule">全部上课记录</a>
+              </li>
+              <li class="nav-item">
+                <a href="/departmentAttendedSchedule" class="nav-link" id="departmentAttendedSchedule">本校上课记录</a>
+              </li>
+              <li class="nav-item">
+                <a href="/myAttendedSchedule" class="nav-link" id="myAttendedSchedule">我的上课记录</a>
               </li>
               <li class="nav-item">
                 <a href="/calendar" class="nav-link" id="calendar">课程表</a>
@@ -134,7 +149,7 @@
             </ul>
           </div>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="#navbar-maps" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-maps">
             <i class="ni ni-map-big text-primary"></i>
             <span class="nav-link-text">报表</span>
@@ -146,15 +161,21 @@
               </li>
             </ul>
           </div>
+        </li> -->
+        <li class="nav-item">
+          <a class="nav-link" href="/document" id="document">
+            <i class="ni ni-archive-2 text-red"></i>
+            <span class="nav-link-text">教案查询</span>
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../../pages/widgets.html">
-            <i class="ni ni-archive-2 text-green"></i>
+          <a class="nav-link" href="#">
+            <i class="ni ni-notification-70 text-green"></i>
             <span class="nav-link-text">站内通知</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../../pages/charts.html">
+          <a class="nav-link" href="/profile" id="profile">
             <i class="ni ni-circle-08 text-info"></i>
             <span class="nav-link-text">个人信息</span>
           </a>

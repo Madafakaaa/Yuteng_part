@@ -114,6 +114,7 @@ class RefundController extends Controller
                      ->join('course', 'hour.hour_course', '=', 'course.course_id')
                      ->where('hour_type', 0)
                      ->where('hour_remain', '>', 0)
+                     ->where('hour_student', $student_id)
                      ->get();
         if($hours->count()==0){
             return redirect("/refund/create")->with(['notify' => true,
