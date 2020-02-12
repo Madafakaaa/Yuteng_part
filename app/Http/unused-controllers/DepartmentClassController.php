@@ -11,11 +11,11 @@ class DepartmentClassController extends Controller
 {
     /**
      * 显示本校班级记录
-     * URL: GET /class
+     * URL: GET /departmentClass
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      */
-    public function index(Request $request){
+    public function department(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -77,101 +77,6 @@ class DepartmentClassController extends Controller
                                               'filter_departments' => $filter_departments,
                                               'filter_grades' => $filter_grades,
                                               'filter_subjects' => $filter_subjects]);
-    }
-
-    /**
-     * 创建新班级页面
-     * URL: GET /class/create
-     */
-    public function create(){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取年级、科目、用户信息
-        $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
-        $users = DB::table('user')
-                   ->join('department', 'user.user_department', '=', 'department.department_id')
-                   ->where('user_cross_teaching', '=', 1)
-                   ->where('user_department', '<>', Session::get('user_department'))
-                   ->where('user_status', 1)
-                   ->orderBy('user_department', 'asc');
-        $users = DB::table('user')
-                   ->join('department', 'user.user_department', '=', 'department.department_id')
-                   ->where('user_department', '=', Session::get('user_department'))
-                   ->where('user_status', 1)
-                   ->union($users)
-                   ->get();
-        return view('departmentClass/create', ['grades' => $grades,
-                                               'subjects' => $subjects,
-                                               'users' => $users]);
-    }
-
-    /**
-     * 创建新班级提交数据库
-     * URL: POST
-     * @param  Request  $request
-     * @param  $request->input('input1'): 班级名称
-     * @param  $request->input('input2'): 班级校区
-     * @param  $request->input('input3'): 班级年级
-     * @param  $request->input('input4'): 班级科目
-     * @param  $request->input('input5'): 负责教师
-     * @param  $request->input('input6'): 班级人数
-     * @param  $request->input('input7'): 班级备注
-     */
-    public function store(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取表单输入
-        $class_name = $request->input('input1');
-        $class_department = $request->input('input2');
-        $class_grade = $request->input('input3');
-        $class_subject = $request->input('input4');
-        $class_teacher = $request->input('input5');
-        $class_max_num = $request->input('input6');
-        if($request->filled('input7')) {
-            $class_remark = $request->input('input7');
-        }else{
-            $class_remark = '无';
-        }
-        // 获取当前用户ID
-        $class_createuser = Session::get('user_id');
-        // 生成新班级ID
-        $class_num = DB::table('class')
-                       ->where('class_department', $class_department)
-                       ->whereYear('class_createtime', date('Y'))
-                       ->whereMonth('class_createtime', date('m'))
-                       ->count()+1;
-        $class_id = "C".substr(date('Ym'),2).sprintf("%02d", $class_department).sprintf("%03d", $class_num);
-        // 插入数据库
-        try{
-            DB::table('class')->insert(
-                ['class_id' => $class_id,
-                 'class_name' => $class_name,
-                 'class_department' => $class_department,
-                 'class_grade' => $class_grade,
-                 'class_subject' => $class_subject,
-                 'class_teacher' => $class_teacher,
-                 'class_max_num' => $class_max_num,
-                 'class_remark' => $class_remark,
-                 'class_createuser' => $class_createuser]
-            );
-        }
-        // 捕获异常
-        catch(Exception $e){
-            return redirect("/departmentClass")->with(['notify' => true,
-                                                         'type' => 'danger',
-                                                         'title' => '班级添加失败',
-                                                         'message' => '班级添加失败，请重新输入信息']);
-        }
-        // 返回班级列表
-        return redirect("/departmentClass")->with(['notify' => true,
-                                                     'type' => 'success',
-                                                     'title' => '班级添加成功',
-                                                     'message' => '班级名称: '.$class_name.', 班级学号: '.$class_id]);
     }
 
     /**

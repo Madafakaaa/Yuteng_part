@@ -5,8 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">教务中心</li>
-    <li class="breadcrumb-item"><a href="/departmentClass">本校班级</a></li>
-    <li class="breadcrumb-item active">添加班级</li>
+    <li class="breadcrumb-item active">新建班级</li>
 @endsection
 
 @section('content')
@@ -14,7 +13,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/departmentClass" method="post" id="form1" name="form1">
+        <form action="/class" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
             <h4 class="mb-0">添加班级</h4>
@@ -67,7 +66,11 @@
                   <select class="form-control" name="input5" data-toggle="select" required>
                     <option value=''>请选择用户...</option>
                     @foreach ($users as $user)
-                      <option value="{{ $user->user_id }}">{{ $user->department_name }}: {{ $user->user_name }}</option>
+                      @if($user->user_department==Session::get('user_department'))
+                        <option value="{{ $user->user_id }}">{{ $user->user_name }} ({{ $user->position_name }})</option>
+                      @else
+                        <option value="{{ $user->user_id }}">{{ $user->user_name }} ({{ $user->position_name }} {{ $user->department_name }})</option>
+                      @endif
                     @endforeach
                   </select>
                 </div>
@@ -107,8 +110,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-3');
-  navbarActive('navbar-3');
-  linkActive('departmentClass');
+  linkActive('link-4');
+  navbarActive('navbar-4');
+  linkActive('classCreate');
 </script>
 @endsection

@@ -71,7 +71,7 @@
                 <th style='width:120px;'>公立学校</th>
                 <th style='width:120px;'>监护人</th>
                 <th style='width:120px;'>联系电话</th>
-                <th style='width:120px;'>负责人</th>
+                <th style='width:120px;'>班主任</th>
                 <th style='width:297px;'>操作管理</th>
                 <th></th>
               </tr>
@@ -91,7 +91,7 @@
                 <td>{{ $row->school_name }}</td>
                 <td>{{ $row->student_guardian_relationship }} {{ $row->student_guardian }}</td>
                 <td>{{ $row->student_phone }}</td>
-                <td>{{ $row->user_name }}</td>
+                <td>{{ $row->user_name }} ({{ $row->position_name }})</td>
                 <td>
                   <form action="student/{{$row->student_id}}" method="POST">
                     @method('DELETE')
@@ -114,8 +114,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-3');
-  navbarActive('navbar-3');
+  linkActive('link-2');
+  navbarActive('navbar-2');
   linkActive('student');
 </script>
 @endsection

@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">教务中心</li>
-    <li class="breadcrumb-item active">我的课程安排</li>
+    <li class="breadcrumb-item active">我的学生</li>
 @endsection
 
 @section('content')
@@ -17,21 +17,13 @@
           <form action="" method="get" id="filter" name="filter">
             <div class="row m-2">
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                <select class="form-control" name="filter1" data-toggle="select">
-                  <option value=''>全部校区</option>
-                  @foreach ($filter_departments as $filter_department)
-                    <option value="{{ $filter_department->department_id }}" @if($request->input('filter1')==$filter_department->department_id) selected @endif>{{ $filter_department->department_name }}</option>
-                  @endforeach
-                </select>
+                <input class="form-control" type="text" name="filter1" placeholder=" 学生名称..." autocomplete="off" autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <select class="form-control" name="filter2" data-toggle="select">
-                  <option value=''>全部学生/班级</option>
-                  @foreach ($filter_students as $filter_student)
-                    <option value="{{ $filter_student->student_id }}" @if($request->input('filter2')==$filter_student->student_id) selected @endif>学生: {{ $filter_student->student_name }}</option>
-                  @endforeach
-                  @foreach ($filter_classes as $filter_class)
-                    <option value="{{ $filter_class->class_id }}" @if($request->input('filter2')==$filter_class->class_id) selected @endif>班级: {{ $filter_class->class_name }}</option>
+                  <option value=''>全部校区</option>
+                  @foreach ($filter_departments as $filter_department)
+                    <option value="{{ $filter_department->department_id }}" @if($request->input('filter2')==$filter_department->department_id) selected @endif>{{ $filter_department->department_name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -45,14 +37,11 @@
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <select class="form-control" name="filter4" data-toggle="select">
-                  <option value=''>全部教师</option>
-                  @foreach ($filter_users as $filter_user)
-                    <option value="{{ $filter_user->user_id }}" @if($request->input('filter4')==$filter_user->user_id) selected @endif>{{ $filter_user->user_name }}</option>
+                  <option value=''>全部公立学校</option>
+                  @foreach ($filter_schools as $filter_school)
+                    <option value="{{ $filter_school->school_id }}" @if($request->input('filter4')==$filter_school->school_id) selected @endif>{{ $filter_school->school_name }}</option>
                   @endforeach
                 </select>
-              </div>
-              <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                <input class="form-control datepicker" name="filter5" type="text" autocomplete="off" placeholder="全部日期" @if($request->filled('filter5')) value="{{ $request->filter5 }}" @endif>
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <div class="row">
@@ -74,37 +63,43 @@
             <thead class="thead-light">
               <tr>
                 <th style='width:70px;'>序号</th>
-                <th style='width:99px;'>校区</th>
-                <th style='width:200px;'>学生/班级</th>
-                <th style='width:200px;'>课程</th>
-                <th style='width:100px;'>教师</th>
-                <th style='width:70px;'>科目</th>
+                <th style='width:100px;'>校区</th>
+                <th style='width:120px;'>学生</th>
+                <th style='width:110px;'>学号</th>
                 <th style='width:70px;'>年级</th>
-                <th style='width:100px;'>日期</th>
-                <th style='width:110px;'>时间</th>
-                <th style='width:110px;'>地点</th>
-                <th style='width:188px;'>操作管理</th>
+                <th style='width:70px;'>性别</th>
+                <th style='width:120px;'>公立学校</th>
+                <th style='width:120px;'>监护人</th>
+                <th style='width:120px;'>联系电话</th>
+                <th style='width:120px;'>班主任</th>
+                <th style='width:297px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-                <tr class="text-center"><td colspan="12">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="11">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr title="创建时间：{{ $row->schedule_createtime }}。">
+              <tr title="创建时间：{{ $row->student_createtime }}。">
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>{{ $row->department_name }}</td>
-                <td>{{ $row->student_name }}{{ $row->class_name }}</td>
-                <td>{{ $row->course_name }}</td>
-                <td>{{ $row->user_name }}</td>
-                <td>{{ $row->subject_name }}</td>
+                <td>{{ $row->student_name }}</td>
+                <td>{{ $row->student_id }}</td>
                 <td>{{ $row->grade_name }}</td>
-                <td>{{ $row->schedule_date }}</td>
-                <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
-                <td>{{ $row->classroom_name }}</td>
+                <td>{{ $row->student_gender }}</td>
+                <td>{{ $row->school_name }}</td>
+                <td>{{ $row->student_guardian_relationship }} {{ $row->student_guardian }}</td>
+                <td>{{ $row->student_phone }}</td>
+                <td>{{ $row->user_name }} ({{ $row->position_name }})</td>
                 <td>
-                  <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                  <form action="student/{{$row->student_id}}" method="POST">
+                    @method('DELETE')
+                    @csrf
+                    <a href='/student/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                    <a href='/contract/create?student_id={{$row->student_id}}' target="_blank"><button type="button" class="btn btn-warning btn-sm">续签</button></a>
+                    {{ deleteConfirm($row->student_id, ["学生名称：".$row->student_name]) }}
+                  </form>
                 </td>
               </tr>
               @endforeach
@@ -120,8 +115,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-3');
-  navbarActive('navbar-3');
-  linkActive('mySchedule');
+  linkActive('link-4');
+  navbarActive('navbar-4');
+  linkActive('myStudent');
 </script>
 @endsection

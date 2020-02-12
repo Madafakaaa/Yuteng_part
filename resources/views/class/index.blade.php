@@ -62,15 +62,16 @@
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:80px;'>序号</th>
-                <th style='width:120px;'>校区</th>
-                <th style='width:160px;'>班级</th>
+                <th style='width:70px;'>序号</th>
+                <th style='width:339px;'>班级</th>
+                <th style='width:100px;'>校区</th>
                 <th style='width:120px;'>班号</th>
-                <th style='width:120px;'>年级</th>
-                <th style='width:120px;'>科目</th>
-                <th style='width:120px;'>班级人数</th>
-                <th style='width:120px;'>负责教师</th>
-                <th>操作管理</th>
+                <th style='width:90px;'>年级</th>
+                <th style='width:90px;'>科目</th>
+                <th style='width:110px;'>班级人数</th>
+                <th style='width:210px;'>负责教师</th>
+                <th style='width:188px;'>操作管理</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -80,18 +81,15 @@
               @foreach ($rows as $row)
               <tr title="班级：{{ $row->class_name }}。创建时间：{{ $row->class_createtime }}。">
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->department_name }}</td>
                 <td>{{ $row->class_name }}</td>
+                <td>{{ $row->department_name }}</td>
                 <td>{{ $row->class_id }}</td>
                 <td>{{ $row->grade_name }}</td>
                 <td>@if($row->class_subject==0) 全科目 @else{{ $row->subject_name }}@endif</td>
                 <td>
-                  <div class="d-flex align-items-center">
-                    <!-- <div><div class="progress" style="width:70px;"><div class="progress-bar bg-success" style="width: 50%;"></div></div></div> -->
-                    <span class="completion ml-2">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
-                  </div>
+                  {{ $row->class_current_num }} / {{ $row->class_max_num }} 人
                 </td>
-                <td>{{ $row->user_name }}</td>
+                <td>{{ $row->user_name }} ({{ $row->position_name }})</td>
                 <td>
                   <form action="class/{{$row->class_id}}" method="POST">
                     @method('DELETE')
@@ -114,8 +112,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-3');
-  navbarActive('navbar-3');
+  linkActive('link-2');
+  navbarActive('navbar-2');
   linkActive('class');
 </script>
 @endsection

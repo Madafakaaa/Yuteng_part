@@ -69,16 +69,6 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="card-header table-top">
-          <div class="row">
-            <div class="col-6">
-              <a href="/schedule/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="新建排课">
-                <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">新建排课</span>
-              </a>
-            </div>
-          </div>
-        </div>
         <div class="table-responsive">
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
@@ -136,8 +126,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-3');
-  navbarActive('navbar-3');
+  linkActive('link-2');
+  navbarActive('navbar-2');
   linkActive('attendedSchedule');
 </script>
 @endsection

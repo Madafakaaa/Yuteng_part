@@ -43,70 +43,47 @@ Route::prefix('admin')->group(function(){
 });
 */
 
-// 0.    登陆控制器
+// 0.  登陆控制器
 Route::get('/', 'LoginController@index');
 Route::post('/login', 'LoginController@login');
 Route::get('/exit', 'LoginController@exit');
-// 1.    主页
+// 1.  主页
 Route::get('/home', 'HomeController@home');
-// 2.    学校管理
-// 2.1.1 校区设置
-Route::resource('/department', 'DepartmentController');
-// 2.1.2 学校设置
-Route::resource('/school', 'SchoolController');
-// 2.1.3 教室设置
-Route::resource('/classroom', 'ClassroomController');
-// 2.2.1 用户管理
-Route::resource('/user', 'UserController');
-// 2.2.2 岗位管理
-Route::resource('/position', 'PositionController');
-// 2.2.3 部门管理
-Route::resource('/section', 'SectionController');
-// 2.2.4 档案管理
-Route::resource('/archive', 'ArchiveController');
-// 2.3.1 课程管理
-Route::resource('/course', 'CourseController');
 
-// 3.    招生管理
-// 3.1   全部客户
+// 2.  内部管理
+// 2.1 校区设置
+Route::resource('/department', 'DepartmentController');
+// 2.2 用户管理
+Route::resource('/user', 'UserController');
+// 2.3 员工档案
+Route::resource('/archive', 'ArchiveController');
+// 2.3 部门架构
+Route::resource('/position', 'PositionController');
+Route::resource('/section', 'SectionController');
+// 2.4 课程设置
+Route::resource('/course', 'CourseController');
+// 2.5 公立学校
+Route::resource('/school', 'SchoolController');
+// 2.6 教室设置
+Route::resource('/classroom', 'ClassroomController');
+
+// 3.  全校数据
+// 3.1 全部客户
 Route::resource('/customer', 'CustomerController');
 // 客户修改
 Route::post('/customer/{id}/record', 'CustomerController@record');
 Route::post('/customer/{id}/remark', 'CustomerController@remark');
 Route::post('/customer/{id}/follower', 'CustomerController@follower');
 Route::post('/customer/{id}/followLevel', 'CustomerController@followLevel');
-// 3.2   本校区客户
-Route::resource('/departmentCustomer', 'DepartmentCustomerController');
-// 3.3   我的客户
-Route::resource('/myCustomer', 'MyCustomerController');
-// 3.4   全部签约
-Route::resource('/contract', 'ContractController');
-Route::post('/contract/create/step2', 'ContractController@createStep2');
-// 3.5   全部签约
-Route::resource('/departmentContract', 'DepartmentContractController');
-// 3.6   我的签约
-Route::resource('/myContract', 'MyContractController');
-
-// 4.    教务中心
-// 4.1   全部学生
+Route::delete('/myCustomer/{id}', 'CustomerController@myDelete');
+// 3.2 全部学生
 Route::resource('/student', 'StudentController');
 Route::post('/student/{id}/remark', 'StudentController@remark');
 Route::post('/student/{id}/follower', 'StudentController@follower');
-// 4.2   本校学生
-Route::resource('/departmentStudent', 'DepartmentStudentController');
-// 4.3   我的学生
-Route::resource('/myStudent', 'MyStudentController');
-// 4.2   全部班级
+// 3.3 全部班级
 Route::resource('/class', 'ClassController');
 Route::post('/class/{id}/remark', 'ClassController@remark');
-// 4.2   本校班级
-Route::resource('/departmentClass', 'DepartmentClassController');
-// 4.2   我的班级
-Route::resource('/myClass', 'MyClassController');
-// 4.2   班级成员管理
-Route::post('/member/{class_id}', 'MemberController@add');
-Route::delete('/member/{class_id}', 'MemberController@delete');
-// 4.3   全部课程安排
+// 3.4 全部课程安排
 Route::resource('/schedule', 'ScheduleController');
 Route::get('/schedule/create/Irregular', 'ScheduleController@createIrregular');
 Route::post('/schedule/create/step2', 'ScheduleController@createStep2');
@@ -116,33 +93,62 @@ Route::get('/schedule/attend/{schedule_id}', 'ScheduleController@attend');
 Route::post('/schedule/attend/{schedule_id}/step2', 'ScheduleController@attendStep2');
 Route::post('/schedule/attend/{schedule_id}/step3', 'ScheduleController@attendStep3');
 Route::post('/schedule/attend/{schedule_id}/step4', 'ScheduleController@attendStep4');
-// 4.3   本校课程安排
-Route::resource('/departmentSchedule', 'DepartmentScheduleController');
-// 4.3   我的课程安排
-Route::resource('/mySchedule', 'MyScheduleController');
-// 4.3   全部上课记录
+// 3.5 全部上课记录
 Route::resource('/attendedSchedule', 'AttendedScheduleController');
-// 4.3   本校上课记录
-Route::resource('/departmentAttendedSchedule', 'DepartmentAttendedScheduleController');
-// 4.3   我的上课记录
-Route::resource('/myAttendedSchedule', 'MyAttendedScheduleController');
-
-// 5.    财务中心
-// 5.2   退费申请
+// 3.6 全部签约记录
+Route::resource('/contract', 'ContractController');
+Route::post('/contract/create/step2', 'ContractController@createStep2');
+// 3.7 全部退费记录
 Route::resource('/refund', 'RefundController');
 Route::post('/refund/create/step2', 'RefundController@createStep2');
 Route::post('/refund/create/step3', 'RefundController@createStep3');
 Route::post('/refund/create/step4', 'RefundController@createStep4');
 
-// 6     教案查询
+// 4.  招生中心
+// 4.1 客户录入
+// 4.2 本校客户
+Route::get('/departmentCustomer', 'CustomerController@department');
+// 4.3 我的客户
+Route::get('/myCustomer', 'CustomerController@my');
+
+// 5.  教务中心
+// 5.0 班级成员管理
+Route::post('/member/{class_id}', 'MemberController@add');
+Route::delete('/member/{class_id}', 'MemberController@delete');
+// 5.1 新建班级
+// 5.2 安排课程
+// 5.3 本校学生
+Route::get('/departmentStudent', 'StudentController@department');
+// 5.4 本校班级
+Route::get('/departmentClass', 'ClassController@department');
+// 5.5 本校课程安排
+Route::get('/departmentSchedule', 'ScheduleController@department');
+// 5.6 本校上课记录
+Route::get('/departmentAttendedSchedule', 'AttendedScheduleController@department');
+// 5.7 我的学生
+Route::get('/myStudent', 'StudentController@my');
+// 5.8 我的班级
+Route::get('/myClass', 'ClassController@my');
+// 5.9 我的课程安排
+Route::get('/mySchedule', 'ScheduleController@my');
+// 5.10 我的上课记录
+Route::get('/myAttendedSchedule', 'AttendedScheduleController@my');
+
+// 5.  财务中心
+// 5.1 签约合同
+// 5.2 课时退费
+// 5.3 本校签约
+Route::get('/departmentContract', 'ContractController@department');
+// 5.5 本校退费
+Route::get('/departmentRefund', 'RefundController@department');
+// 5.4 我的签约
+Route::get('/myContract', 'ContractController@my');
+// 5.3 我的退费
+Route::get('/myRefund', 'RefundController@my');
+
+// 6   教案查询
 Route::resource('/document', 'DocumentController');
-// 7     个人信息
-Route::resource('/profile', 'ProfileController');
-
-// 课程表 Calendar
+// 7   课程表
 Route::get('/calendar', 'CalendarController@calendar');
-
-
-// test page
-Route::get('/buttons', function () { return view('button_template'); });
-
+// 8   个人信息
+Route::resource('/profile', 'ProfileController');

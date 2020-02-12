@@ -60,19 +60,18 @@
             <thead class="thead-light">
               <tr>
                 <th style='width:70px;'>序号</th>
+                <th style='width:120px;'>学生</th>
                 <th style='width:90px;'>校区</th>
-                <th style='width:100px;'>学生</th>
-                <th style='width:70px;'>年级</th>
-                <th style='width:70px;'>类型</th>
-                <th style='width:80px;' class="text-right">课程数量</th>
+                <th style='width:65px;'>年级</th>
+                <th style='width:65px;'>类型</th>
                 <th style='width:90px;' class="text-right">合计课时</th>
-                <th style='width:90px;' class="text-right">优惠金额</th>
-                <th style='width:90px;' class="text-right">服务费</th>
+                <th style='width:101px;' class="text-right">优惠金额</th>
+                <th style='width:101px;' class="text-right">服务费</th>
                 <th style='width:110px;' class="text-right">实付金额</th>
                 <th style='width:80px;'>支付方式</th>
-                <th style='width:110px;'>签约人</th>
-                <th style='width:96px;'>购课日期</th>
-                <th style='width:140px;'>操作管理</th>
+                <th style='width:140px;'>签约人</th>
+                <th style='width:97px;'>购课日期</th>
+                <th style='width:188px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>
@@ -83,27 +82,27 @@
               @foreach ($rows as $row)
               <tr title="备注：{{ $row->contract_remark }}. 创建时间：{{ $row->contract_createtime }}。">
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td title="{{ $row->department_name }}">{{ $row->department_name }}</td>
                 <td title="{{ $row->student_name }}">{{ $row->student_name }}</td>
+                <td title="{{ $row->department_name }}">{{ $row->department_name }}</td>
                 <td title="{{ $row->grade_name }}">{{ $row->grade_name }}</td>
                 @if($row->contract_type==0)
                   <td title="首签"><span style="color:red;">首签</span></td>
                 @else
                   <td title="续费"><span style="color:green;">续费</span></td>
                 @endif
-                <td class="text-right" title="{{ $row->contract_course_num }} 种课程">{{ $row->contract_course_num }} 种课程</td>
                 <td class="text-right" title="{{ $row->contract_total_hour }} 课时"><strong>{{ $row->contract_total_hour }} 课时</strong></td>
                 <td class="text-right" title="- {{ number_format($row->contract_discount_price, 1) }} 元"><span style="color:red;">- {{ number_format($row->contract_discount_price, 1) }} 元</span></td>
                 <td class="text-right" title="{{ number_format($row->contract_extra_fee, 1) }} 元">{{ number_format($row->contract_extra_fee, 1) }} 元</td>
                 <td class="text-right" title="{{ number_format($row->contract_total_price, 1) }} 元"><strong>{{ number_format($row->contract_total_price, 1) }} 元</strong></td>
                 <td title="{{ $row->contract_payment_method }}">{{ $row->contract_payment_method }}</td>
-                <td title="{{ $row->user_name }}">{{ $row->user_name }}</td>
+                <td title="{{ $row->user_name }} ({{ $row->position_name }})">{{ $row->user_name }} ({{ $row->position_name }})</td>
                 <td title="{{ $row->contract_date }}">{{ $row->contract_date }}</td>
                 <td>
                   <form action="contract/{{$row->contract_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/contract/{{$row->contract_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a>
+                    <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
+                    <a href='/contract/{{$row->contract_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">合同</button></a>
                     {{ deleteConfirm($row->contract_id, ["购课学生：".$row->student_name."，<br> 购买课程：".$row->contract_course_num."课程，
                                                           购课数量：".$row->contract_total_hour."课时，金额：".$row->contract_total_price."元。"]) }}
                   </form>
@@ -122,8 +121,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-4');
-  navbarActive('navbar-4');
+  linkActive('link-5');
+  navbarActive('navbar-5');
   linkActive('departmentContract');
 </script>
 @endsection

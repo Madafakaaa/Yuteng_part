@@ -74,7 +74,11 @@
                   <label class="form-control-label">负责教师<span style="color:red">*</span></label>
                   <select class="form-control" name="input4" data-toggle="select" required>
                     @foreach ($users as $user)
-                      <option value="{{ $user->user_id }}">{{ $user->department_name }}: {{ $user->user_name }}</option>
+                      @if($user->user_department==Session::get('user_department'))
+                        <option value="{{ $user->user_id }}" @if($class->class_teacher==$user->user_id) selected @endif>{{ $user->user_name }} ({{ $user->position_name }})</option>
+                      @else
+                        <option value="{{ $user->user_id }}" @if($class->class_teacher==$user->user_id) selected @endif>{{ $user->user_name }} ({{ $user->position_name }} {{ $user->department_name }})</option>
+                      @endif
                     @endforeach
                   </select>
                 </div>

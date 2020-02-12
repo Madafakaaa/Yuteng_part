@@ -7,16 +7,16 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Exception;
 
-class DepartmentCustomerController extends Controller
+class MyCustomerController extends Controller
 {
 
     /**
-     * 显示全部客户记录
-     * URL: GET /index
+     * 显示我的客户记录
+     * URL: GET /myCustomer
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      */
-    public function index(Request $request){
+    public function my(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -29,8 +29,8 @@ class DepartmentCustomerController extends Controller
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->leftJoin('user', 'student.student_follower', '=', 'user.user_id')
                   ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
+                  ->where('student_follower', Session::get('user_id'))
                   ->where('student_customer_status', 0)
-                  ->where('student_department', Session::get('user_department'))
                   ->where('student_status', 1);
         // 添加筛选条件
         // 客户名称
@@ -50,7 +50,8 @@ class DepartmentCustomerController extends Controller
         // 计算分页信息
         list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
         // 排序并获取数据对象
-        $rows = $rows->orderBy('student_follow_level', 'desc')
+        $rows = $rows->orderBy('student_customer_status', 'desc')
+                     ->orderBy('student_follow_level', 'desc')
                      ->orderBy('student_grade', 'desc')
                      ->offset($offset)
                      ->limit($rowPerPage)
@@ -59,14 +60,14 @@ class DepartmentCustomerController extends Controller
         $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         // 返回列表视图
-        return view('departmentCustomer/index', ['rows' => $rows,
-                                       'currentPage' => $currentPage,
-                                       'totalPage' => $totalPage,
-                                       'startIndex' => $offset,
-                                       'request' => $request,
-                                       'totalNum' => $totalNum,
-                                       'filter_departments' => $filter_departments,
-                                       'filter_grades' => $filter_grades]);
+        return view('customer/my', ['rows' => $rows,
+                                   'currentPage' => $currentPage,
+                                   'totalPage' => $totalPage,
+                                   'startIndex' => $offset,
+                                   'request' => $request,
+                                   'totalNum' => $totalNum,
+                                   'filter_departments' => $filter_departments,
+                                   'filter_grades' => $filter_grades]);
     }
 
     /**
@@ -80,13 +81,11 @@ class DepartmentCustomerController extends Controller
         }
         // 获取来源、用户、年级信息
         $sources = DB::table('source')->where('source_status', 1)->orderBy('source_createtime', 'asc')->get();
-        $users = DB::table('user')->where('user_department', Session::get('user_department'))->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
         $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         $schools = DB::table('school')->where('school_department', Session::get('user_department'))->where('school_status', 1)->orderBy('school_createtime', 'asc')->get();
-        return view('departmentCustomer/create', ['sources' => $sources,
-                                                  'users' => $users,
-                                                  'schools' => $schools,
-                                                  'grades' => $grades]);
+        return view('myCustomer/create', ['sources' => $sources,
+                                          'schools' => $schools,
+                                          'grades' => $grades]);
     }
 
     /**
@@ -191,17 +190,17 @@ class DepartmentCustomerController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return redirect("/departmentCustomer")->with(['notify' => true,
-                                                     'type' => 'danger',
-                                                     'title' => '客户添加失败',
-                                                     'message' => '客户添加失败，请重新输入信息']);
+            return redirect("/myCustomer")->with(['notify' => true,
+                                                  'type' => 'danger',
+                                                  'title' => '客户添加失败',
+                                                  'message' => '客户添加失败，请重新输入信息']);
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/departmentCustomer")->with(['notify' => true,
-                                                 'type' => 'success',
-                                                 'title' => '学生添加成功',
-                                                 'message' => '学生名称: '.$student_name]);
+        return redirect("/myCustomer")->with(['notify' => true,
+                                             'type' => 'success',
+                                             'title' => '学生添加成功',
+                                             'message' => '学生名称: '.$student_name]);
     }
 
 }

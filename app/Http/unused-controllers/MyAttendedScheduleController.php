@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Exception;
 
-class DepartmentScheduleController extends Controller
+class MyAttendedScheduleController extends Controller
 {
     /**
-     * 显示所有课程安排记录
-     * URL: GET /schedule
+     * 显示我的上课记录
+     * URL: GET /mySchedule
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 课程安排校区
@@ -20,7 +20,7 @@ class DepartmentScheduleController extends Controller
      * @param  $request->input('filter4'): 课程安排教师
      * @param  $request->input('filter5'): 课程安排日期
      */
-    public function index(Request $request){
+    public function my(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -39,8 +39,8 @@ class DepartmentScheduleController extends Controller
                   ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
-                  ->where('schedule_attended', '=', 0)
-                  ->where('schedule_department', '=', Session::get('user_department'));
+                  ->where('schedule_attended', '=', 1)
+                  ->where('schedule_teacher', '=', Session::get('user_id'));
         // 添加筛选条件
         // 课程安排校区
         if ($request->filled('filter1')) {
@@ -84,16 +84,16 @@ class DepartmentScheduleController extends Controller
         $filter_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('departmentSchedule/index', ['rows' => $rows,
-                                       'currentPage' => $currentPage,
-                                       'totalPage' => $totalPage,
-                                       'startIndex' => $offset,
-                                       'request' => $request,
-                                       'totalNum' => $totalNum,
-                                       'filter_departments' => $filter_departments,
-                                       'filter_students' => $filter_students,
-                                       'filter_classes' => $filter_classes,
-                                       'filter_grades' => $filter_grades,
-                                       'filter_users' => $filter_users]);
+        return view('attendedSchedule/my', ['rows' => $rows,
+                                           'currentPage' => $currentPage,
+                                           'totalPage' => $totalPage,
+                                           'startIndex' => $offset,
+                                           'request' => $request,
+                                           'totalNum' => $totalNum,
+                                           'filter_departments' => $filter_departments,
+                                           'filter_students' => $filter_students,
+                                           'filter_classes' => $filter_classes,
+                                           'filter_grades' => $filter_grades,
+                                           'filter_users' => $filter_users]);
     }
 }

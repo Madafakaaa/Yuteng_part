@@ -101,16 +101,28 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right">
             <a href="#!" class="dropdown-item">
-              <i class="ni ni-single-02"></i>
-              <span>个人信息</span>
+              <i class="ni ni-single-02 text-green"></i>
+              <span>{{ Session::get('user_name') }}</span>
             </a>
             <a href="#!" class="dropdown-item">
-              <i class="ni ni-settings-gear-65"></i>
-              <span>系统设置</span>
+              <i class="ni ni-square-pin text-green"></i>
+              <span>{{ Session::get('user_department_name') }}</span>
+            </a>
+            <a href="#!" class="dropdown-item">
+              <i class="ni ni-building text-green"></i>
+              <span>{{ Session::get('user_section') }}</span>
+            </a>
+            <a href="#!" class="dropdown-item">
+              <i class="ni ni-badge text-green"></i>
+              <span>{{ Session::get('user_position') }}</span>
+            </a>
+            <a href="#!" class="dropdown-item">
+              <i class="ni ni-chart-bar-32 text-green"></i>
+              <span>等级 {{ Session::get('user_level') }}</span>
             </a>
             <div class="dropdown-divider"></div>
             <a href="/exit" class="dropdown-item">
-              <i class="ni ni-user-run"></i>
+              <i class="ni ni-user-run text-red"></i>
               <span>退出系统</span>
             </a>
           </div>

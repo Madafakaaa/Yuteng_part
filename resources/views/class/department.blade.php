@@ -58,29 +58,20 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="card-header table-top">
-          <div class="row">
-            <div class="col-6">
-              <a href="/departmentClass/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加班级">
-                <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">添加班级</span>
-              </a>
-            </div>
-          </div>
-        </div>
         <div class="table-responsive">
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:80px;'>序号</th>
-                <th style='width:120px;'>校区</th>
-                <th style='width:160px;'>班级</th>
+                <th style='width:70px;'>序号</th>
+                <th style='width:339px;'>班级</th>
+                <th style='width:100px;'>校区</th>
                 <th style='width:120px;'>班号</th>
-                <th style='width:120px;'>年级</th>
-                <th style='width:120px;'>科目</th>
-                <th style='width:120px;'>班级人数</th>
-                <th style='width:120px;'>负责教师</th>
-                <th>操作管理</th>
+                <th style='width:90px;'>年级</th>
+                <th style='width:90px;'>科目</th>
+                <th style='width:110px;'>班级人数</th>
+                <th style='width:210px;'>负责教师</th>
+                <th style='width:188px;'>操作管理</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -101,7 +92,7 @@
                     <span class="completion ml-2">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
                   </div>
                 </td>
-                <td>{{ $row->user_name }}</td>
+                <td>{{ $row->user_name }} ({{ $row->position_name }})</td>
                 <td>
                   <form action="class/{{$row->class_id}}" method="POST">
                     @method('DELETE')
@@ -124,8 +115,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-3');
-  navbarActive('navbar-3');
+  linkActive('link-4');
+  navbarActive('navbar-4');
   linkActive('departmentClass');
 </script>
 @endsection

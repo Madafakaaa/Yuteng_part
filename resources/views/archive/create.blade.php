@@ -11,9 +11,9 @@
 @endsection
 
 @section('content')
-<div class="container-fluid mt-2">
+<div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
+    <div class="col-lg-6 col-md-9 col-sm-12">
       <div class="card main_card" style="display:none">
         <form action="/archive" method="post" id="form1" name="form1" enctype="multipart/form-data">
           @csrf
@@ -57,9 +57,14 @@
                 </div>
               </div>
             </div>
+            <hr class="my-3">
             <div class="row">
-              <div class="col-4">
-                <input type="submit" class="btn btn-warning btn-block" value="添加档案">
+              <div class="col-lg-3 col-md-5 col-sm-12">
+                <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
+              </div>
+              <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
+              <div class="col-lg-3 col-md-5 col-sm-12">
+            	<input type="submit" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>
           </div>

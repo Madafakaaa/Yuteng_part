@@ -5,14 +5,14 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">招生中心</li>
-    <li class="breadcrumb-item active">全部签约</li>
+    <li class="breadcrumb-item active">我的签约</li>
 @endsection
 
 @section('content')
-<div class="container-fluid mt-4">
+<div class="container-fluid mt-2">
   <div class="row justify-content-center">
     <div class="col-12 card-wrapper ct-example">
-      <div class="card mb-4">
+      <div class="card mb-1">
         <div class="card-header border-0 p-0 mb-1">
           <form action="" method="get" id="filter" name="filter">
             <div class="row m-2">
@@ -121,8 +121,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-2');
-  navbarActive('navbar-2');
-  linkActive('contract');
+  linkActive('link-5');
+  navbarActive('navbar-5');
+  linkActive('myContract');
 </script>
 @endsection

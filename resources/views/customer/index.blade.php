@@ -55,16 +55,16 @@
             <thead class="thead-light">
               <tr>
                 <th style='width:69px;'>序号</th>
-                <th style='width:90px;'>校区</th>
                 <th style='width:110px;'>学生</th>
-                <th style='width:70px;'>年级</th>
-                <th style='width:70px;'>性别</th>
+                <th style='width:90px;'>校区</th>
+                <th style='width:60px;'>年级</th>
+                <th style='width:60px;'>性别</th>
                 <th style='width:130px;'>监护人</th>
-                <th style='width:110px;'>电话</th>
-                <th style='width:110px;'>微信</th>
-                <th style='width:90px;'>跟进人</th>
-                <th style='width:90px;'>优先级</th>
-                <th style='width:90px;'>跟进次数</th>
+                <th style='width:105px;'>电话</th>
+                <th style='width:105px;'>微信</th>
+                <th style='width:140px;'>跟进人</th>
+                <th style='width:75px;'>优先级</th>
+                <th style='width:85px;'>跟进次数</th>
                 <th style='width:100px;'>上次跟进</th>
                 <th style='width:188px;'>操作管理</th>
                 <th></th>
@@ -77,8 +77,8 @@
               @foreach ($rows as $row)
               <tr title="备注：{{ $row->student_remark }}">
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td title="校区：{{ $row->department_name }}">{{ $row->department_name }}</td>
                 <td title="学生：{{ $row->student_name }}">{{ $row->student_name }}</td>
+                <td title="校区：{{ $row->department_name }}">{{ $row->department_name }}</td>
                 <td title="年级：{{ $row->grade_name }}">{{ $row->grade_name }}</td>
                 <td title="性别：{{ $row->student_gender }}">{{ $row->student_gender }}</td>
                 <td title="{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}">{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
@@ -87,7 +87,7 @@
                 @if($row->student_follower=="")
                   <td title="跟进人：无 (公共)"><span style="color:red;">无 (公共)</span></td>
                 @else
-                  <td title="跟进人：{{ $row->user_name }}">{{ $row->user_name }}</td>
+                  <td title="跟进人：{{ $row->user_name }} ({{ $row->position_name }})">{{ $row->user_name }} ({{ $row->position_name }})</td>
                 @endif
                 @if($row->student_follow_level==1)
                   <td title="优先级：低"><span>低</span></td>
@@ -101,12 +101,7 @@
                 <td title="跟进次数：{{ $row->student_follow_num }} 次">{{ $row->student_follow_num }} 次</td>
                 <td title="上次跟进：{{ $row->student_last_follow_date }}">{{ $row->student_last_follow_date }}</td>
                 <td>
-                  <form action="customer/{{$row->student_id}}" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <a href='/customer/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
-                    {{ deleteConfirm($row->student_id, ["学生姓名：".$row->student_name]) }}
-                  </form>
+                  <a href='/customer/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
                 </td>
               </tr>
               @endforeach

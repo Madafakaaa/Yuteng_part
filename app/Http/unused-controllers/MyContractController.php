@@ -11,14 +11,14 @@ class MyContractController extends Controller
 {
     /**
      * 显示我的签约
-     * URL: GET /contract
+     * URL: GET /myContract
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 校区
      * @param  $request->input('filter2'): 学生
      * @param  $request->input('filter3'): 年级
      */
-    public function index(Request $request){
+    public function my(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -63,7 +63,7 @@ class MyContractController extends Controller
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('myContract/index', ['rows' => $rows,
+        return view('contract/my', ['rows' => $rows,
                                        'currentPage' => $currentPage,
                                        'totalPage' => $totalPage,
                                        'startIndex' => $offset,

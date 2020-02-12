@@ -123,7 +123,7 @@
                         <option value=''>请选择教师...</option>
                         @foreach ($users as $user)
                           @if($user[2]==0)
-                            <option value="{{ $user[0] }}">@if($user[4]!=Session::get('user_department')){{ $user[3] }}：@endif{{ $user[1] }}</option>
+                            <option value="{{ $user[0] }}">{{ $user[1] }} ({{ $user[5] }}@if($user[4]!=Session::get('user_department')) {{ $user[3] }}@endif)</option>
                           @endif
                         @endforeach
                       </select>
@@ -215,8 +215,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-3');
-  navbarActive('navbar-3');
-  linkActive('schedule');
+  linkActive('link-4');
+  navbarActive('navbar-4');
+  linkActive('scheduleCreate');
 </script>
 @endsection

@@ -135,8 +135,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-4');
-  navbarActive('navbar-4');
+  linkActive('link-2');
+  navbarActive('navbar-2');
   linkActive('refund');
 </script>
 @endsection

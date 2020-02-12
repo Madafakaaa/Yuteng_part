@@ -5,7 +5,6 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">招生中心</li>
-    <li class="breadcrumb-item"><a href="/myCustomer">我的客户</a></li>
     <li class="breadcrumb-item active">添加客户</li>
 @endsection
 
@@ -14,7 +13,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/myCustomer" method="post" id="form1" name="form1">
+        <form action="/customer" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
             <h4 class="mb-0">添加客户</h4>
@@ -31,8 +30,12 @@
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">负责人<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" value="{{ Session::get('user_name') }}" readonly>
-                  <input class="form-control" type="hidden" name="input1" value="{{ Session::get('user_id') }}" readonly>
+                  <select class="form-control" name="input1" data-toggle="select">
+                    <option value=''>无负责人（公共）</option>
+                    @foreach ($users as $user)
+                      <option value="{{ $user->user_id }}">{{ $user->user_name }} ({{ $user->position_name }})</option>
+                    @endforeach
+                  </select>
                 </div>
               </div>
             </div>
@@ -175,8 +178,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-2');
-  navbarActive('navbar-2');
-  linkActive('myCustomer');
+  linkActive('link-3');
+  navbarActive('navbar-3');
+  linkActive('customerCreate');
 </script>
 @endsection

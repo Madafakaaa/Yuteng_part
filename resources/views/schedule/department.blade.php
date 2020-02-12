@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">教务中心</li>
-    <li class="breadcrumb-item active">全部课程安排</li>
+    <li class="breadcrumb-item active">本校课程安排</li>
 @endsection
 
 @section('content')
@@ -69,6 +69,16 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
+        <div class="card-header table-top">
+          <div class="row">
+            <div class="col-6">
+              <a href="/schedule/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="新建排课">
+                <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
+                <span class="btn-inner--text">新建排课</span>
+              </a>
+            </div>
+          </div>
+        </div>
         <div class="table-responsive">
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
@@ -104,7 +114,13 @@
                 <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
                 <td>{{ $row->classroom_name }}</td>
                 <td>
-                  <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                  <form action="schedule/{{$row->schedule_id}}" method="POST">
+                    @method('DELETE')
+                    @csrf
+                    <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">查看</button></a>&nbsp;
+                    <a href='/schedule/attend/{{$row->schedule_id}}'><button type="button" class="btn btn-warning btn-sm">考勤</button></a>&nbsp;
+                    {{ deleteConfirm($row->schedule_id, ["上课成员：".$row->student_name.$row->class_name.", 教师：".$row->user_name]) }}
+                  </form>
                 </td>
               </tr>
               @endforeach
@@ -120,8 +136,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-2');
-  navbarActive('navbar-2');
-  linkActive('schedule');
+  linkActive('link-4');
+  navbarActive('navbar-4');
+  linkActive('departmentSchedule');
 </script>
 @endsection

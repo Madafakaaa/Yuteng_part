@@ -10,15 +10,15 @@ use Exception;
 class DepartmentContractController extends Controller
 {
     /**
-     * 显示我的签约
-     * URL: GET /contract
+     * 显示本校签约
+     * URL: GET /departmentContract
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 校区
      * @param  $request->input('filter2'): 学生
      * @param  $request->input('filter3'): 年级
      */
-    public function index(Request $request){
+    public function department(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -63,14 +63,14 @@ class DepartmentContractController extends Controller
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('departmentContract/index', ['rows' => $rows,
-                                       'currentPage' => $currentPage,
-                                       'totalPage' => $totalPage,
-                                       'startIndex' => $offset,
-                                       'request' => $request,
-                                       'totalNum' => $totalNum,
-                                       'filter_departments' => $filter_departments,
-                                       'filter_students' => $filter_students,
-                                       'filter_grades' => $filter_grades]);
+        return view('contract/department', ['rows' => $rows,
+                                           'currentPage' => $currentPage,
+                                           'totalPage' => $totalPage,
+                                           'startIndex' => $offset,
+                                           'request' => $request,
+                                           'totalNum' => $totalNum,
+                                           'filter_departments' => $filter_departments,
+                                           'filter_students' => $filter_students,
+                                           'filter_grades' => $filter_grades]);
     }
 }

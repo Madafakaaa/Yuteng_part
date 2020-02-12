@@ -87,13 +87,13 @@
                 <th style='width:80px;'>序号</th>
                 <th style='width:220px;'>课程名称</th>
                 <th style='width:130px;'>课程类型</th>
-                <th style='width:110px;'>开课校区</th>
-                <th style='width:110px;'>课程季度</th>
-                <th style='width:110px;'>课程年级</th>
-                <th style='width:110px;'>课程科目</th>
-                <th style='width:130px;'>课时单价</th>
+                <th style='width:100px;'>开课校区</th>
+                <th style='width:100px;'>课程季度</th>
+                <th style='width:100px;'>课程年级</th>
+                <th style='width:100px;'>课程科目</th>
+                <th style='width:152px;'>课时单价</th>
                 <th style='width:130px;'>课程时长</th>
-                <th style='width:187px;'>操作管理</th>
+                <th style='width:188px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>

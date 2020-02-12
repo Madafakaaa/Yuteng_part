@@ -218,9 +218,9 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-3');
-  navbarActive('navbar-3');
-  linkActive('schedule');
+  linkActive('link-4');
+  navbarActive('navbar-4');
+  linkActive('scheduleCreate');
 
   function CheckAll(){
       // 判断是全选还是反选

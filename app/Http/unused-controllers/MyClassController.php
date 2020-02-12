@@ -11,11 +11,11 @@ class MyClassController extends Controller
 {
     /**
      * 显示我的班级记录
-     * URL: GET /class
+     * URL: GET /myClass
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      */
-    public function index(Request $request){
+    public function my(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -68,15 +68,15 @@ class MyClassController extends Controller
         $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('myClass/index', ['rows' => $rows,
-                                             'currentPage' => $currentPage,
-                                             'totalPage' => $totalPage,
-                                             'startIndex' => $offset,
-                                             'request' => $request,
-                                             'totalNum' => $totalNum,
-                                             'filter_departments' => $filter_departments,
-                                             'filter_grades' => $filter_grades,
-                                             'filter_subjects' => $filter_subjects]);
+        return view('class/my', ['rows' => $rows,
+                                 'currentPage' => $currentPage,
+                                 'totalPage' => $totalPage,
+                                 'startIndex' => $offset,
+                                 'request' => $request,
+                                 'totalNum' => $totalNum,
+                                 'filter_departments' => $filter_departments,
+                                 'filter_grades' => $filter_grades,
+                                 'filter_subjects' => $filter_subjects]);
     }
 
     /**

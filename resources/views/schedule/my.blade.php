@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">教务中心</li>
-    <li class="breadcrumb-item active">我的上课记录</li>
+    <li class="breadcrumb-item active">我的课程安排</li>
 @endsection
 
 @section('content')
@@ -69,31 +69,20 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="card-header table-top">
-          <div class="row">
-            <div class="col-6">
-              <a href="/schedule/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="新建排课">
-                <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">新建排课</span>
-              </a>
-            </div>
-          </div>
-        </div>
         <div class="table-responsive">
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
                 <th style='width:70px;'>序号</th>
                 <th style='width:99px;'>校区</th>
-                <th style='width:160px;'>学生/班级</th>
-                <th style='width:160px;'>课程</th>
-                <th style='width:90px;'>教师</th>
+                <th style='width:200px;'>学生/班级</th>
+                <th style='width:200px;'>课程</th>
+                <th style='width:100px;'>教师</th>
                 <th style='width:70px;'>科目</th>
                 <th style='width:70px;'>年级</th>
                 <th style='width:100px;'>日期</th>
                 <th style='width:110px;'>时间</th>
                 <th style='width:110px;'>地点</th>
-                <th style='width:90px;'>复核状态</th>
                 <th style='width:188px;'>操作管理</th>
                 <th></th>
               </tr>
@@ -114,13 +103,8 @@
                 <td>{{ $row->schedule_date }}</td>
                 <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
                 <td>{{ $row->classroom_name }}</td>
-                @if($row->schedule_checked==0)
-                  <td><span style="color:red;">未复核</span></td>
-                @else
-                  <td><span style="color:green;">已复核</span></td>
-                @endif
                 <td>
-                  <a href='/document/{{$row->schedule_document}}'><button type="button" class="btn btn-primary btn-sm">教案下载</button></a>&nbsp;
+                  <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
                 </td>
               </tr>
               @endforeach
@@ -136,8 +120,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-3');
-  navbarActive('navbar-3');
-  linkActive('myAttendedSchedule');
+  linkActive('link-4');
+  navbarActive('navbar-4');
+  linkActive('mySchedule');
 </script>
 @endsection

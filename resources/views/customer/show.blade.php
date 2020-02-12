@@ -27,7 +27,7 @@
           <div class="d-flex justify-content-between">
             <a href="/customer/{{ $student->student_id }}/edit" class="btn btn-sm btn-primary mr-4">修改信息</a>
             @if($student->student_follower==Session::get('user_id'))
-              <a href="/contract/create?student_id={{ $student->student_id }}"  target="_blank" class="btn btn-sm btn-warning float-right">签约合同</a>
+              <a href="/contract/create?student_id={{ $student->student_id }}" class="btn btn-sm btn-warning float-right">签约合同</a>
             @else
               <button class="btn btn-sm btn-warning float-right" disabled>签约合同</button>
             @endif
@@ -69,10 +69,13 @@
               <div class="col-6">
                 <div class="h4">创建日期 - {{ date('Y-m-d', strtotime($student->student_createtime)) }}</div>
               </div>
-              <div class="col-6">
-                <div class="h4">跟进人 - @if($student->user_name=="") 无 (公共) @else {{ $student->user_name }} @endif</div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-12">
+                <div class="h4">跟进人 - @if($student->user_name=="") 无 (公共) @else {{ $student->user_name }} ({{ $student->position_name }}) @endif</div>
               </div>
-              <div class="col-6">
+              <div class="col-12">
                 <div class="h4">上次跟进 - {{ $student->student_last_follow_date }}</div>
               </div>
             </div>
@@ -101,7 +104,7 @@
                 </div>
                 <div>
                   <span class="heading">
-                    <span style="color:red;">未签约客户</span>
+                    <span style="color:red;">客户</span>
                   </span>
                   <span class="description">状态</span>
                 </div>

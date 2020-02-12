@@ -210,11 +210,11 @@
                 <label class="col-md-4 col-form-label form-control-label">签约类型<span style="color:red">*</span></label>
                 <div class="col-md-8 mt-2">
                     <div class="custom-control custom-radio custom-control-inline ml-2 mr-4">
-                      <input type="radio" id="contract_type_1" name="contract_type"  class="custom-control-input" value="0" checked>
+                      <input type="radio" id="contract_type_1" name="contract_type"  class="custom-control-input" value="0" @if($student->student_customer_status==0) checked @endif>
                       <label class="custom-control-label" for="contract_type_1">首签</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline ml-2 mr-4">
-                      <input type="radio" id="contract_type_2" name="contract_type" class="custom-control-input" value="1">
+                      <input type="radio" id="contract_type_2" name="contract_type" class="custom-control-input" value="1" @if($student->student_customer_status==1) checked @endif>
                       <label class="custom-control-label" for="contract_type_2">续费</label>
                     </div>
                 </div>
@@ -432,8 +432,8 @@ function update(course_num){
 update({{ $selected_course_num }});
 </script>
 <script>
-  linkActive('link-4');
-  navbarActive('navbar-4');
-  linkActive('contract');
+  linkActive('link-5');
+  navbarActive('navbar-5');
+  linkActive('contractCreate');
 </script>
 @endsection
