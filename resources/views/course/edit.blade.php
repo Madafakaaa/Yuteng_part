@@ -107,6 +107,7 @@
                   <select class="form-control" name="input8" data-toggle="select" required>
                     <option value=''>请选择课程时长...</option>
                     <option value='40' @if($course->course_time==40) selected @endif>40分钟</option>
+                    <option value='60' @if($course->course_time==60) selected @endif>60分钟</option>
                     <option value='90' @if($course->course_time==90) selected @endif>90分钟</option>
                   </select>
                 </div>

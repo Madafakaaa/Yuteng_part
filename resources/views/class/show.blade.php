@@ -42,25 +42,6 @@
               </div>
             </div>
           </div>
-          <hr>
-          <div class="row">
-            <div class="col">
-              <div class="card-profile-stats d-flex justify-content-center p-0">
-                <div>
-                  <span class="heading">{{ $class->class_current_num }}</span>
-                  <span class="description">班级人数</span>
-                </div>
-                <div>
-                  <span class="heading">{{ $class->class_current_num }}</span>
-                  <span class="description">上课次数</span>
-                </div>
-                <div>
-                  <span class="heading">{{ $class->class_last_lesson_date }}</span>
-                  <span class="description">最后上课</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div class="card">
@@ -149,10 +130,97 @@
           <li class="nav-item">
             <a class="nav-link mb-3" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>上课记录</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link mb-3" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>课程表</a>
+          </li>
         </ul>
       </div>
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+          <div class="card main_card mb-4" style="display:none">
+            <div class="table-responsive">
+              <table class="table align-items-center table-hover text-left table-bordered">
+                <thead class="thead-light">
+                  <tr>
+                    <th style='width:60px;'>序号</th>
+                    <th style='width:90px;'>校区</th>
+                    <th style='width:120px;'>课程</th>
+                    <th style='width:136px;'>教师</th>
+                    <th style='width:60px;'>科目</th>
+                    <th style='width:60px;'>年级</th>
+                    <th style='width:100px;'>日期</th>
+                    <th style='width:120px;'>时间</th>
+                    <th style='width:110px;'>地点</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if(count($all_schedules)==0)
+                    <tr class="text-center"><td colspan="9">当前没有记录</td></tr>
+                  @else
+                    @foreach ($all_schedules as $schedule)
+                      <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $schedule->department_name }}</td>
+                        <td>{{ $schedule->course_name }}</td>
+                        <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                        <td>{{ $schedule->subject_name }}</td>
+                        <td>{{ $schedule->grade_name }}</td>
+                        <td>{{ $schedule->schedule_date }}</td>
+                        <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
+                        <td>{{ $schedule->classroom_name }}</td>
+                      </tr>
+                    @endforeach
+                  @endif
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
+          <div class="card main_card mb-4" style="display:none">
+            <div class="table-responsive">
+              <table class="table align-items-center table-hover text-left table-bordered">
+                <thead class="thead-light">
+                  <tr>
+                    <th style='width:60px;'>序号</th>
+                    <th style='width:90px;'>校区</th>
+                    <th style='width:120px;'>课程</th>
+                    <th style='width:136px;'>教师</th>
+                    <th style='width:60px;'>科目</th>
+                    <th style='width:60px;'>年级</th>
+                    <th style='width:100px;'>日期</th>
+                    <th style='width:120px;'>时间</th>
+                    <th style='width:110px;'>地点</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if(count($all_attended_schedules)==0)
+                    <tr class="text-center"><td colspan="9">当前没有记录</td></tr>
+                  @else
+                    @foreach ($all_attended_schedules as $schedule)
+                      <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $schedule->department_name }}</td>
+                        <td>{{ $schedule->course_name }}</td>
+                        <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                        <td>{{ $schedule->subject_name }}</td>
+                        <td>{{ $schedule->grade_name }}</td>
+                        <td>{{ $schedule->schedule_date }}</td>
+                        <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
+                        <td>{{ $schedule->classroom_name }}</td>
+                      </tr>
+                    @endforeach
+                  @endif
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
           <div class="row justify-content-center text-center py-1">
             <div class="col-lg-3 col-md-3 col-sm-3 mb-1">
               <a href="{{ $request_url_prev }}" class="btn btn-sm btn-neutral btn-round btn-block" data-toggle="tooltip" data-original-title="上一周">
@@ -267,9 +335,6 @@
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
         </div>
 
       </div>

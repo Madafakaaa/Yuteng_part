@@ -430,20 +430,11 @@ class ContractController extends Controller
                     ['hour_contract' => $contract_id,
                      'hour_student' => $contract_student,
                      'hour_course' => $request_course[0],
-                     'hour_type' => 0,
-                     'hour_original' => $request_course[2],
+                     'hour_original' => $request_course[2]+$request_course[6],
                      'hour_remain' => $request_course[2],
                      'hour_used' => 0,
-                     'hour_createuser' => $contract_createuser]
-                );
-                DB::table('hour')->insert(
-                    ['hour_contract' => $contract_id,
-                     'hour_student' => $contract_student,
-                     'hour_course' => $request_course[0],
-                     'hour_type' => 1,
-                     'hour_original' => $request_course[6],
-                     'hour_remain' => $request_course[6],
-                     'hour_used' => 0,
+                     'hour_remain_free' => $request_course[6],
+                     'hour_used_free' => 0,
                      'hour_createuser' => $contract_createuser]
                 );
             }

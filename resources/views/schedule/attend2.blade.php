@@ -76,7 +76,9 @@
                     <select class="form-control form-control-sm" name="input{{ $loop->iteration }}_2" id="input{{ $loop->iteration }}_2" data-toggle="select" required>
                       <option value=''>请选择课程...</option>
                       @foreach ($student_course[1] as $course)
-                        <option value="{{ $course->hour_id }}" @if($schedule->schedule_course==$course->course_id) selected @endif>{{ $course->course_name }} (剩余: {{ $course->hour_remain }} 课时)@if($course->hour_type==1) (赠) @endif</option>
+                        <option value="{{ $course->hour_id }}" @if($schedule->schedule_course==$course->course_id) selected @endif>
+                          {{ $course->course_name }} ({{ $course->hour_remain }} 课时 @if($course->hour_remain_free>0) / {{ $course->hour_remain_free }} 赠送) @endif
+                        </option>
                       @endforeach
                     </select>
                   </div>

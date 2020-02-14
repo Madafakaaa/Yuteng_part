@@ -106,6 +106,7 @@
                   <select class="form-control" name="input8" data-toggle="select" required>
                     <option value=''>请选择课程时长...</option>
                     <option value='40'>40分钟</option>
+                    <option value='60'>60分钟</option>
                     <option value='90'>90分钟</option>
                   </select>
                 </div>

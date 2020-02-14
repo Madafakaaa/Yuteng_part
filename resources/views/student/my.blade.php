@@ -96,8 +96,8 @@
                   <form action="student/{{$row->student_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/student/{{$row->student_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
-                    <a href='/contract/create?student_id={{$row->student_id}}' target="_blank"><button type="button" class="btn btn-warning btn-sm">续签</button></a>
+                    <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                    <a href='/contract/create?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">续签</button></a>
                     {{ deleteConfirm($row->student_id, ["学生名称：".$row->student_name]) }}
                   </form>
                 </td>

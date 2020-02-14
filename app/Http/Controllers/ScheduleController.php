@@ -1251,9 +1251,14 @@ class ScheduleController extends Controller
             $courses = DB::table('student')
                          ->join('hour', 'student.student_id', '=', 'hour.hour_student')
                          ->join('course', 'hour.hour_course', '=', 'course.course_id')
-                         ->where('student.student_id', $schedule_participant)
-                         ->where('hour.hour_remain', '>', 0)
-                         ->orderBy('hour.hour_type', 'desc')
+                         ->where([
+                             ['student.student_id', '=', $schedule_participant],
+                             ['hour.hour_remain', '>', '0'],
+                         ])
+                         ->orWhere([
+                             ['student.student_id', '=', $schedule_participant],
+                             ['hour.hour_remain_free', '>', '0'],
+                         ])
                          ->get();
             $student_courses[] = array($student, $courses);
         }else{ // 上课成员为班级
@@ -1274,9 +1279,14 @@ class ScheduleController extends Controller
                 $courses = DB::table('student')
                              ->join('hour', 'student.student_id', '=', 'hour.hour_student')
                              ->join('course', 'hour.hour_course', '=', 'course.course_id')
-                             ->where('student_id', $member->student_id)
-                             ->where('hour.hour_remain', '>', 0)
-                             ->orderBy('hour.hour_type', 'desc')
+                             ->where([
+                                 ['student.student_id', '=', $member->student_id],
+                                 ['hour.hour_remain', '>', '0'],
+                             ])
+                             ->orWhere([
+                                 ['student.student_id', '=', $member->student_id],
+                                 ['hour.hour_remain_free', '>', '0'],
+                             ])
                              ->get();
                 $student_courses[] = array($student, $courses);
             }
@@ -1339,7 +1349,7 @@ class ScheduleController extends Controller
                       ->join('course', 'hour.hour_course', '=', 'course.course_id')
                       ->where('hour_id', $participant_hour)
                       ->first();
-            $hour_remain = $hour->hour_remain;
+            $hour_remain = $hour->hour_remain+$hour->hour_remain_free;
             $course_name = $hour->course_name;
             // 剩余课时不足
             if($participant_amount>$hour_remain){
@@ -1459,14 +1469,52 @@ class ScheduleController extends Controller
                     $participant_amount = $request->input('input'.$i.'_3');
                     $schedule_absence_num = $schedule_absence_num + 1; // 增加旷课人数
                 }
-                // 扣除学生课时
-                DB::table('hour')
-                  ->where('hour_id', $participant_hour)
-                  ->decrement('hour_remain', $participant_amount);
-                // 增加已用课时数
-                DB::table('hour')
-                  ->where('hour_id', $participant_hour)
-                  ->increment('hour_used', $participant_amount);
+                // 获取剩余课时信息
+                $hour = DB::table('hour')
+                          ->where('hour_id', $participant_hour)
+                          ->first();
+                // 有正常课时
+                if($hour->hour_remain>0){
+                    //正常课时足够
+                    if($hour->hour_remain>=$participant_amount){
+                        // 扣除学生正常课时
+                        DB::table('hour')
+                          ->where('hour_id', $participant_hour)
+                          ->decrement('hour_remain', $participant_amount);
+                        // 增加已用正常课时数
+                        DB::table('hour')
+                          ->where('hour_id', $participant_hour)
+                          ->increment('hour_used', $participant_amount);
+                    }else{ //正常课时不足
+                        // 扣除学生正常课时
+                        DB::table('hour')
+                          ->where('hour_id', $participant_hour)
+                          ->decrement('hour_remain', $hour->hour_remain);
+                        // 增加已用正常课时数
+                        DB::table('hour')
+                          ->where('hour_id', $participant_hour)
+                          ->increment('hour_used', $hour->hour_remain);
+                        // 剩余需扣除赠送课时
+                        $participant_free_amount = $participant_amount-$hour->hour_remain;
+                        // 扣除学生赠送课时
+                        DB::table('hour')
+                          ->where('hour_id', $participant_hour)
+                          ->decrement('hour_remain_free', $participant_free_amount);
+                        // 增加已用赠送课时数
+                        DB::table('hour')
+                          ->where('hour_id', $participant_hour)
+                          ->increment('hour_used_free', $participant_free_amount);
+                    }
+                }else{ // 没有正常课时
+                    // 扣除学生正常课时
+                    DB::table('hour')
+                      ->where('hour_id', $participant_hour)
+                      ->decrement('hour_remain_free', $participant_amount);
+                    // 增加已用正常课时数
+                    DB::table('hour')
+                      ->where('hour_id', $participant_hour)
+                      ->increment('hour_used_free', $participant_amount);
+                }
                 // 添加上课成员表
                 DB::table('participant')->insert(
                     ['participant_schedule' => $schedule_id,
@@ -1502,11 +1550,10 @@ class ScheduleController extends Controller
         // 上传文件
         $file->move("files/document", $document_path);
         // 返回课程安排列表
-        return redirect()->action('ScheduleController@index')
-                         ->with(['notify' => true,
-                                 'type' => 'success',
-                                 'title' => '课程考勤成功',
-                                 'message' => '课程考勤成功！']);
+        return redirect("/departmentSchedule")->with(['notify' => true,
+                                                     'type' => 'success',
+                                                     'title' => '课程考勤成功',
+                                                     'message' => '课程考勤成功！']);
     }
 
     /**

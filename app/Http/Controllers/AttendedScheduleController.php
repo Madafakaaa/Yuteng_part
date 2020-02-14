@@ -291,14 +291,48 @@ class AttendedScheduleController extends Controller
                               ->get();
             // 恢复学生课时
             foreach($participants as $participant){
-                // 增加学生课时
-                DB::table('hour')
-                  ->where('hour_id', $participant->participant_hour)
-                  ->increment('hour_remain', $participant->participant_amount);
-                // 扣除已用课时数
-                DB::table('hour')
-                  ->where('hour_id', $participant->participant_hour)
-                  ->decrement('hour_used', $participant->participant_amount);
+                // 获取剩余课时信息
+                $hour = DB::table('hour')
+                          ->where('hour_id', $participant->participant_hour)
+                          ->first();
+                if($hour->hour_used_free>=$participant->participant_amount){ // 全部使用赠送课时
+                    // 增加学生赠送课时
+                    DB::table('hour')
+                      ->where('hour_id', $participant->participant_hour)
+                      ->increment('hour_remain_free', $participant->participant_amount);
+                    // 扣除已用赠送课时数
+                    DB::table('hour')
+                      ->where('hour_id', $participant->participant_hour)
+                      ->decrement('hour_used_free', $participant->participant_amount);
+                }else if($hour->hour_used_free==0){ // 全部使用正常课时
+                    // 增加学生正常课时
+                    DB::table('hour')
+                      ->where('hour_id', $participant->participant_hour)
+                      ->increment('hour_remain', $participant->participant_amount);
+                    // 扣除已用正常课时数
+                    DB::table('hour')
+                      ->where('hour_id', $participant->participant_hour)
+                      ->decrement('hour_used', $participant->participant_amount);
+                }else{ // 使用赠送课时和正常课时
+                    // 增加赠送学生课时
+                    DB::table('hour')
+                      ->where('hour_id', $participant->participant_hour)
+                      ->increment('hour_remain_free', $hour->hour_used_free);
+                    // 扣除已用赠送课时数
+                    DB::table('hour')
+                      ->where('hour_id', $participant->participant_hour)
+                      ->decrement('hour_used_free', $hour->hour_used_free);
+                    // 计算赠送课时使用量
+                    $participant_amount = $participant->participant_amount - $hour->hour_used_free;
+                    // 增加学生正常课时
+                    DB::table('hour')
+                      ->where('hour_id', $participant->participant_hour)
+                      ->increment('hour_remain', $participant_amount);
+                    // 扣除已用赠送课时数
+                    DB::table('hour')
+                      ->where('hour_id', $participant->participant_hour)
+                      ->decrement('hour_used', $participant_amount);
+                }
             }
             // 删除上课成员信息
             DB::table('participant')
@@ -310,9 +344,10 @@ class AttendedScheduleController extends Controller
                           ->where('schedule_id', $schedule_id)
                           ->first();
             // 删除教案文件
+            $document_path = "files/document/".$document->document_path;
             // 如果文件存在，删除文件
-            if (file_exists($document->document_path)) {
-                unlink($document->document_path);
+            if (file_exists($document_path)) {
+                unlink($document_path);
             }
             // 删除教案记录
             DB::table('document')->where('document_id', $document->document_id)->delete();

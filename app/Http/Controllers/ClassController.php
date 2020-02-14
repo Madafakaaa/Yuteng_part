@@ -367,6 +367,32 @@ class ClassController extends Controller
                       ->orderBy('student_createtime', 'asc')
                       ->get();
 
+        // 获取所有课程安排
+        $all_schedules = DB::table('schedule')
+                          ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
+                          ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                          ->join('position', 'user.user_position', '=', 'position.position_id')
+                          ->join('course', 'schedule.schedule_course', '=', 'course.course_id')
+                          ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
+                          ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
+                          ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                          ->where('schedule_attended', '=', 0)
+                          ->where('schedule_participant', '=', $class_id)
+                          ->get();
+
+        // 获取所有上课记录
+        $all_attended_schedules = DB::table('schedule')
+                                      ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
+                                      ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                                      ->join('position', 'user.user_position', '=', 'position.position_id')
+                                      ->join('course', 'schedule.schedule_course', '=', 'course.course_id')
+                                      ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
+                                      ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
+                                      ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                                      ->where('schedule_attended', '=', 1)
+                                      ->where('schedule_participant', '=', $class_id)
+                                      ->get();
+
         // 获取班级课程表
         // 获取课程表日期
         if ($request->filled('filter1')) {
@@ -432,7 +458,7 @@ class ClassController extends Controller
         }
         // 日期数字转中文数组
         $numToStr = array('零', '周一', '周二', '周三', '周四', '周五', '周六', '周日');
-        // 生成链接url
+        // 生成课程表链接url
         $request_url = "?";
         $request_url_prev = $request_url."filter1=".$first_day_prev."&";
         $request_url_today = $request_url."filter1=".date('Y-m-d')."&";
@@ -441,6 +467,8 @@ class ClassController extends Controller
         return view('class/show', ['class' => $class,
                                    'students' => $students,
                                    'members' => $members,
+                                   'all_schedules' =>$all_schedules,
+                                   'all_attended_schedules' =>$all_attended_schedules,
                                    'schedules' => $schedules,
                                    'calendar' => $calendar,
                                    'days' => $days,

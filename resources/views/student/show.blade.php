@@ -74,37 +74,6 @@
               </div>
             </div>
           </div>
-          <hr>
-          <div class="row">
-            <div class="col">
-              <div class="card-profile-stats d-flex justify-content-center p-0">
-                <div>
-                  <span class="heading">{{ $student->student_contract_num }}</span>
-                  <span class="description">签约次数</span>
-                </div>
-                <div>
-                  <span class="heading">
-                    @if($student->student_follow_level==1)
-                      <span>低</span>
-                    @elseif($student->student_follow_level==2)
-                      <span style="color:#8B4513;">中</span>
-                    @elseif($student->student_follow_level==3)
-                      <span style="color:#FF4500;">高</span>
-                    @else
-                      <span style="color:#FF0000;">重点*</span>
-                    @endif
-                  </span>
-                  <span class="description">跟进优先级</span>
-                </div>
-                <div>
-                  <span class="heading">
-                    <span style="color:green;">学生</span>
-                  </span>
-                  <span class="description">状态</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div class="card">
@@ -169,162 +138,201 @@
             <a class="nav-link mb-3" id="tabs-icons-text-4-tab" data-toggle="tab" href="#tabs-icons-text-4" role="tab" aria-controls="tabs-icons-text-4" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>学生合同</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mb-3" id="tabs-icons-text-5-tab" data-toggle="tab" href="#tabs-icons-text-5" role="tab" aria-controls="tabs-icons-text-5" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>学生档案</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link mb-3" id="tabs-icons-text-6-tab" data-toggle="tab" href="#tabs-icons-text-6" role="tab" aria-controls="tabs-icons-text-6" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>学生动态</a>
+            <a class="nav-link mb-3" id="tabs-icons-text-5-tab" data-toggle="tab" href="#tabs-icons-text-5" role="tab" aria-controls="tabs-icons-text-5" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>学生动态</a>
           </li>
         </ul>
       </div>
-      <div class="card shadow">
-        <div class="card-body p-0">
-          <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
-              <div class="row justify-content-center text-center my-1">
-                <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                  <a href="{{ $request_url_prev }}" class="btn btn-sm btn-neutral btn-round btn-block" data-toggle="tooltip" data-original-title="上一周">
-                    <span class="btn-inner--icon"><i class="ni ni-bold-left"></i></span>
-                    <span class="btn-inner--text">上一周</span>
-                  </a>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                  <a href="{{ $request_url_today }}" class="btn btn-sm btn-neutral btn-round btn-block" data-toggle="tooltip" data-original-title="今天">
-                    <span class="btn-inner--text">今天</span>
-                  </a>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                  <a href="{{ $request_url_next }}" class="btn btn-sm btn-neutral btn-round btn-block" data-toggle="tooltip" data-original-title="下一周">
-                    <span class="btn-inner--text">下一周</span>
-                    <span class="btn-inner--icon"><i class="ni ni-bold-right"></i></span>
-                  </a>
-                </div>
-              </div>
-              <div class="table-responsive">
-                <table class="table align-items-center text-center table-bordered table-hover">
-                  <thead class="thead-light">
-                    <tr>
-                      <th style='width:65px;'>时间</th>
-                      @foreach ($days as $day)
-                        @if($day==date('Y-m-d'))
-                          <th style='width:113px; color:#FFF;background-color:#DC965A;'>{{ date('m-d', strtotime($day)) }} {{ $numToStr[$loop->iteration] }} </th>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+          <div class="card main_card mb-4" style="display:none">
+            <div class="table-responsive">
+              <table class="table align-items-center table-hover text-left table-bordered">
+                <thead class="thead-light">
+                  <tr>
+                    <th style='width:65px;'>序号</th>
+                    <th style='width:185px;'>班级</th>
+                    <th style='width:176px;'>教师</th>
+                    <th style='width:55px;'>科目</th>
+                    <th style='width:55px;'>年级</th>
+                    <th style='width:95px;'>日期</th>
+                    <th style='width:105px;'>时间</th>
+                    <th style='width:120px;'>地点</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if(count($schedules)==0)
+                    <tr class="text-center"><td colspan="8">当前没有记录</td></tr>
+                  @else
+                    @foreach ($schedules as $schedule)
+                      <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
+                        <td>{{ $loop->iteration }}</td>
+                        @if($schedule->schedule_participant_type==0)
+                          <td><span style="color:green;">一对一</span></td>
                         @else
-                          <th style='width:113px;'> {{ date('m-d', strtotime($day)) }} {{ $numToStr[$loop->iteration] }}</th>
+                          <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
                         @endif
-                      @endforeach
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody style="max-height:100px; overflow:hidden;">
-                    @foreach($calendar as $row)
-                      <tr style="height:32px;">
-                        <td style="height:32px;">{{  date('H:i', strtotime($times[$loop->iteration-1])) }}</th>
-                        @foreach($row as $column)
-                          @if($column==-1)
-                            <td></td>
-                          @elseif($column>=0)
-                            @if($schedules[$column]->schedule_attended==1)
-                              <td rowspan="{{ $schedules[$column]->schedule_time/30 }}" class="text-left align-top p-1 m-0" style="overflow-y:hidden; background-color:#19A06E; border-radius:15px;">
-                                <div class="px-1" style="height:{{ $schedules[$column]->schedule_time*32/30 }}px; background-color:#2DCE89; border-radius:10px;">
-                            @else
-                              <td rowspan="{{ $schedules[$column]->schedule_time/30 }}" class="text-left align-top p-1 m-0" style="overflow-y:hidden; background-color:#B43246; border-radius:15px;">
-                                <div class="px-1" style="height:{{ $schedules[$column]->schedule_time*32/30 }}px; background-color:#F5365C; border-radius:10px;">
-                            @endif
-                              <div class="row m-0 p-0 pt-1" style="height:32px;">
-                                <div class="col-2 mx-0 my-1 px-1 py-0">
-                                  <i class="ni ni-single-02 text-white"></i>
-                                </div>
-                                <div class="col-10 mx-0 my-1 px-1 py-0">
-                                  <span style="color:white;" class="align-items-center">
-                                    {{ $schedules[$column]->student_name }}{{ $schedules[$column]->class_name }}
-                                  </span>
-                                </div>
-                              </div>
-                              <div class="row m-0 p-0" style="height:32px;">
-                                <div class="col-2 mx-0 my-1 px-1 py-0">
-                                  <i class="ni ni-badge text-white"></i>
-                                </div>
-                                <div class="col-10 mx-0 my-1 px-1 py-0">
-                                  <span style="color:white;" class="align-items-center">
-                                    {{ $schedules[$column]->user_name }}
-                                  </span>
-                                </div>
-                              </div>
-                              <div class="row m-0 p-0" style="height:32px;">
-                                <div class="col-2 mx-0 my-1 px-1 py-0">
-                                  <i class="ni ni-pin-3 text-white"></i>
-                                </div>
-                                <div class="col-10 mx-0 my-1 px-1 py-0">
-                                  <span style="color:white;" class="align-items-center">
-                                    {{ $schedules[$column]->department_name }}
-                                    {{ $schedules[$column]->classroom_name }}
-                                  </span>
-                                </div>
-                              </div>
-                              <div class="row m-0 p-0" style="height:32px;">
-                                <div class="col-2 mx-0 my-1 px-1 py-0">
-                                  <i class="ni ni-book-bookmark text-white"></i>
-                                </div>
-                                <div class="col-10 mx-0 my-1 px-1 py-0">
-                                  <span style="color:white;" class="align-items-center">
-                                    {{ $schedules[$column]->grade_name }}
-                                    {{ $schedules[$column]->subject_name }}
-                                  </span>
-                                </div>
-                              </div>
-                              <div class="row m-0 p-0" style="height:32px;">
-                                <div class="col-2 mx-0 my-1 px-1 py-0">
-                                  <i class="ni ni-watch-time text-white"></i>
-                                </div>
-                                <div class="col-10 mx-0 my-1 px-1 py-0">
-                                  <span style="color:white;" class="align-items-center">
-                                    {{  date('H:i', strtotime($schedules[$column]->schedule_start)) }} - {{ date('H:i', strtotime($schedules[$column]->schedule_end)) }}
-                                  </span>
-                                </div>
-                              </div>
-                              </div>
-                            </td>
-                          @endif
-                        @endforeach
+                        <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                        <td>{{ $schedule->subject_name }}</td>
+                        <td>{{ $schedule->grade_name }}</td>
+                        <td>{{ $schedule->schedule_date }}</td>
+                        <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
+                        <td>{{ $schedule->classroom_name }}</td>
                       </tr>
                     @endforeach
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
-            </div>
-
-            <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
-            </div>
-
-            <div class="tab-pane fade" id="tabs-icons-text-4" role="tabpanel" aria-labelledby="tabs-icons-text-4-tab">
-            </div>
-
-            <div class="tab-pane fade" id="tabs-icons-text-5" role="tabpanel" aria-labelledby="tabs-icons-text-5-tab">
-            </div>
-
-            <div class="tab-pane fade" id="tabs-icons-text-6" role="tabpanel" aria-labelledby="tabs-icons-text-6-tab">
-              <div class="list-group list-group-flush" style="max-height:990px; overflow:auto;">
-                @foreach ($student_records as $student_record)
-                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-4 px-4">
-                  <div class="d-flex w-100 justify-content-between">
-                    <div>
-                      <div class="d-flex w-100 align-items-center">
-                        <img src="../assets/img/theme/team-1.jpg" alt="Image placeholder" class="avatar avatar-xs mr-2" />
-                        <h5 class="mb-1">{{ $student_record->user_name }}</h5>
-                      </div>
-                    </div>
-                    <small>{{ $student_record->student_record_createtime }}</small>
-                  </div>
-                  <h4 class="mt-3 mb-1">{{ $student_record->student_record_type }}</h4>
-                  <p class="text-sm mb-0">{!! $student_record->student_record_content !!}</p>
-                </a>
-                @endforeach
-              </div>
+                  @endif
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
+
+        <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
+          <div class="card main_card mb-4" style="display:none">
+            <div class="table-responsive">
+              <table class="table align-items-center table-hover text-left table-bordered">
+                <thead class="thead-light">
+                  <tr>
+                    <th style='width:60px;'>序号</th>
+                    <th style='width:145px;'>班级</th>
+                    <th style='width:151px;'>教师</th>
+                    <th style='width:55px;'>科目</th>
+                    <th style='width:55px;'>年级</th>
+                    <th style='width:95px;'>日期</th>
+                    <th style='width:105px;'>时间</th>
+                    <th style='width:100px;'>地点</th>
+                    <th style='width:90px;'>操作</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if(count($schedules)==0)
+                    <tr class="text-center"><td colspan="8">当前没有记录</td></tr>
+                  @else
+                    @foreach ($attended_schedules as $schedule)
+                      <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
+                        <td>{{ $loop->iteration }}</td>
+                        @if($schedule->schedule_participant_type==0)
+                          <td><span style="color:green;">一对一</span></td>
+                        @else
+                          <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
+                        @endif
+                        <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                        <td>{{ $schedule->subject_name }}</td>
+                        <td>{{ $schedule->grade_name }}</td>
+                        <td>{{ $schedule->schedule_date }}</td>
+                        <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
+                        <td>{{ $schedule->classroom_name }}</td>
+                        <td><a href='/document/{{$schedule->schedule_document}}'><button type="button" class="btn btn-primary btn-sm">教案下载</button></a></td>
+                      </tr>
+                    @endforeach
+                  @endif
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
+          <div class="card main_card mb-4" style="display:none">
+            <div class="table-responsive">
+              <table class="table align-items-center table-hover text-left table-bordered">
+                <thead class="thead-light">
+                  <tr>
+                    <th style='width:60px;'>序号</th>
+                    <th style='width:196px;'>课程</th>
+                    <th style='width:150px;'>已用正常课时</th>
+                    <th style='width:150px;'>已用赠送课时</th>
+                    <th style='width:150px;'>剩余正常课时</th>
+                    <th style='width:150px;'>剩余赠送课时</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if(count($hours)==0)
+                    <tr class="text-center"><td colspan="6">当前没有记录</td></tr>
+                  @else
+                    @foreach ($hours as $hour)
+                      <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $hour->course_name }}</td>
+                        <td>{{ $hour->hour_used }} 课时</td>
+                        <td>{{ $hour->hour_used_free }} 课时</td>
+                        <td>{{ $hour->hour_remain }} 课时</td>
+                        <td>{{ $hour->hour_remain_free }} 课时</td>
+                      </tr>
+                    @endforeach
+                  @endif
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="tabs-icons-text-4" role="tabpanel" aria-labelledby="tabs-icons-text-4-tab">
+          <div class="card main_card mb-4" style="display:none">
+            <div class="table-responsive">
+              <table class="table align-items-center table-hover text-left table-bordered">
+                <thead class="thead-light">
+                  <tr>
+                    <th style='width:70px;'>序号</th>
+                    <th style='width:70px;'>类型</th>
+                    <th style='width:120px;' class="text-right">合计课时</th>
+                    <th style='width:120px;' class="text-right">实付金额</th>
+                    <th style='width:150px;'>签约人</th>
+                    <th style='width:100px;'>支付方式</th>
+                    <th style='width:100px;'>购课日期</th>
+                    <th style='width:126px;'>操作</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if(count($contracts)==0)
+                    <tr class="text-center"><td colspan="6">当前没有记录</td></tr>
+                  @else
+                    @foreach ($contracts as $contract)
+                      <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        @if($contract->contract_type==0)
+                          <td><span style="color:red;">首签</span></td>
+                        @else
+                          <td><span style="color:green;">续签</span></td>
+                        @endif
+                        <td class="text-right" title="{{ $contract->contract_total_hour }} 课时"><strong>{{ $contract->contract_total_hour }} 课时</strong></td>
+                        <td class="text-right" title="{{ number_format($contract->contract_total_price, 1) }} 元"><strong>{{ number_format($contract->contract_total_price, 1) }} 元</strong></td>
+                        <td title="{{ $contract->user_name }} ({{ $contract->position_name }})">{{ $contract->user_name }} ({{ $contract->position_name }})</td>
+                        <td title="{{ $contract->contract_payment_method }}">{{ $contract->contract_payment_method }}</td>
+                        <td title="{{ $contract->contract_date }}">{{ $contract->contract_date }}</td>
+                        <td><a href='/contract/{{$contract->contract_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a></td>
+                      </tr>
+                    @endforeach
+                  @endif
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="tabs-icons-text-5" role="tabpanel" aria-labelledby="tabs-icons-text-5-tab">
+          <div class="list-group list-group-flush" style="max-height:990px; overflow:auto;">
+            @foreach ($student_records as $student_record)
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-4 px-4">
+              <div class="d-flex w-100 justify-content-between">
+                <div>
+                  <div class="d-flex w-100 align-items-center">
+                    <img src="../assets/img/theme/team-1.jpg" alt="Image placeholder" class="avatar avatar-xs mr-2" />
+                    <h5 class="mb-1">{{ $student_record->user_name }}</h5>
+                  </div>
+                </div>
+                <small>{{ $student_record->student_record_createtime }}</small>
+              </div>
+              <h4 class="mt-3 mb-1">{{ $student_record->student_record_type }}</h4>
+              <p class="text-sm mb-0">{!! $student_record->student_record_content !!}</p>
+            </a>
+            @endforeach
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
