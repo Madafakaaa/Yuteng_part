@@ -4,8 +4,7 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">教务中心</li>
-    <li class="breadcrumb-item"><a href="/student">学生管理</a></li>
+    <li class="breadcrumb-item active">学生详情</li>
     <li class="breadcrumb-item active">修改学生</li>
 @endsection
 
@@ -18,7 +17,7 @@
           @method('PUT')
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">修改客户</h4>
+            <h4 class="mb-0">修改学生</h4>
           </div>
           <!-- Card body -->
           <div class="card-body">

@@ -20,11 +20,10 @@ class HomeController extends Controller
             return view('/main');
         }else{
             // 未登录，返回登陆视图
-            return redirect()->action('LoginController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '您尚未登录',
-                                     'message' => '请输入用户名及密码登陆系统']);
+            return redirect('/')->with(['notify' => true,
+                                        'type' => 'danger',
+                                        'title' => '您尚未登录',
+                                        'message' => '请输入用户名及密码登陆系统']);
         }
     }
 

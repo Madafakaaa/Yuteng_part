@@ -19,7 +19,7 @@ class LoginController extends Controller
         // 检查登录状态,
         if(Session::has('login')){
             // 已登录，返回主页视图
-            return redirect()->action('HomeController@home');
+            return redirect('/home');
         }else{
             // 未登录，返回登陆视图
             return view('login');
@@ -57,11 +57,10 @@ class LoginController extends Controller
         $db_user_password = $db_user->user_password;
         // 表单输入密码与数据库不一致，返回到主页
         if($db_user_password!==$request_user_password){
-            return redirect()->action('LoginController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '登录系统失败',
-                                     'message' => '您的用户名或密码有误，请重新输入']);
+            return redirect('/')->with(['notify' => true,
+                                         'type' => 'danger',
+                                         'title' => '登录系统失败',
+                                         'message' => '您的用户名或密码有误，请重新输入']);
         }
         // 注册信息到Session中
         Session::put('login', true);
@@ -74,11 +73,10 @@ class LoginController extends Controller
         Session::put('user_department', $db_user->user_department);
         Session::put('user_department_name', $db_user->department_name);
         // 返回主界面视图
-        return redirect()->action('HomeController@home')
-                         ->with(['notify' => true,
-                                 'type' => 'success',
-                                 'title' => '登陆系统成功',
-                                 'message' => '欢迎，'.$db_user->user_name]);
+        return redirect('/home')->with(['notify' => true,
+                                        'type' => 'success',
+                                        'title' => '登陆系统成功',
+                                        'message' => '欢迎，'.$db_user->user_name]);
     }
 
     /**
@@ -90,11 +88,10 @@ class LoginController extends Controller
         // 清空会话信息
         Session::flush();
         // 返回登陆视图
-        return redirect()
-               ->action('LoginController@index')
-               ->with(['notify' => true,
-                       'type' => 'success',
-                       'title' => '退出系统成功',
-                       'message' => '',]);
+        return redirect('/')->with(['notify' => true,
+                                    'type' => 'success',
+                                    'title' => '退出系统成功',
+                                    'message' => '',]);
     }
+
 }

@@ -28,7 +28,7 @@ function notify(title, message, type){
     });
 }
 
-//Sidebar Status
+//Active Status
 function linkActive(id){
     document.getElementById(id).setAttribute("class", "nav-link active");
     document.getElementById(id).setAttribute("aria-expanded", "true");

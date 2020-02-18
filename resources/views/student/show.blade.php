@@ -4,7 +4,6 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">教务中心</li>
     <li class="breadcrumb-item active">学生详情</li>
 @endsection
 
@@ -26,11 +25,6 @@
         <div class="card-header text-center border-0 pb-0 pb-4">
           <div class="d-flex justify-content-between">
             <a href="/student/{{ $student->student_id }}/edit" class="btn btn-sm btn-primary mr-4">修改信息</a>
-            @if($student->student_follower==Session::get('user_id'))
-              <a href="/contract/create?student_id={{ $student->student_id }}"  target="_blank" class="btn btn-sm btn-warning float-right">续约合同</a>
-            @else
-              <button class="btn btn-sm btn-warning float-right" disabled>续约合同</button>
-            @endif
           </div>
         </div>
         <div class="card-body pt-0">
@@ -69,34 +63,43 @@
               <div class="col-6">
                 <div class="h4">创建日期 - {{ date('Y-m-d', strtotime($student->student_createtime)) }}</div>
               </div>
+            </div>
+            <hr>
+            <div class="row text-left ml-2">
+              <div class="col-12">
+                <div class="h4">课程顾问 - @if($student->consultant_name=="") <span style="color:red;">无</span> @else {{ $student->consultant_name }}({{ $student->consultant_position_name }}) @endif</div>
+              </div>
               <div class="col-6">
-                <div class="h4">负责人 - @if($student->user_name=="") 无 (公共) @else {{ $student->user_name }} @endif</div>
+                <div class="h4">
+                  跟进优先级 -
+                  @if($student->student_follow_level==1)
+                    <span style="color:#8B4513;">低</span>
+                  @elseif($student->student_follow_level==2)
+                    <span style="color:#FF4500;">中</span>
+                  @elseif($student->student_follow_level==3)
+                    <span style="color:#FF0000;">高</span>
+                  @endif
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="h4">跟进次数 - {{ $student->student_follow_num }}</div>
+              </div>
+              <div class="col-6">
+                <div class="h4">上次跟进 - {{ $student->student_last_follow_date }}</div>
+              </div>
+              <div class="col-6">
+                <div class="h4">签约次数 - {{ $student->student_contract_num }}</div>
               </div>
             </div>
+            <hr>
+            <div class="row text-left ml-2">
+              <div class="col-12">
+                <div class="h4">班主任 - @if($student->class_adviser_name=="") <span style="color:red;">无</span> @else {{ $student->class_adviser_name }}({{ $student->class_adviser_position_name }}) @endif</div>
+              </div>
+            </div>
+            <hr>
           </div>
         </div>
-      </div>
-      <div class="card">
-        <form action="/student/{{ $student->student_id }}/follower" method="post">
-          @csrf
-          <div class="card-body">
-            <div class="row">
-              <div class="col-3 text-center">
-                <label class="form-control-label">负责人</label>
-              </div>
-              <div class="col-5">
-                <select class="form-control form-control-sm" name="input1" data-toggle="select">
-                  @foreach ($users as $user)
-                    <option value="{{ $user->user_id }}" @if($user->user_id==$student->student_follower) selected @endif>{{ $user->user_name }}</option>
-                  @endforeach
-                </select>
-              </div>
-              <div class="col-4">
-                <input type="submit" class="btn btn-sm btn-warning btn-block" value="修改">
-              </div>
-            </div>
-          </div>
-        </form>
       </div>
       <div class="card">
         <div class="card-header">
@@ -126,24 +129,24 @@
       <div class="nav-wrapper">
         <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
           <li class="nav-item">
-            <a class="nav-link mb-3 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true"><i class="ni ni-badge mr-2"></i>课程安排</a>
+            <a class="nav-link mb-3 active" id="schedule-tab" data-toggle="tab" href="#schedule-card" role="tab" aria-selected="true"><i class="ni ni-badge mr-2"></i>课程安排</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mb-3" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>上课记录</a>
+            <a class="nav-link mb-3" id="attended-schedule-tab" data-toggle="tab" href="#attended-schedule-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>上课记录</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mb-3" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>剩余课时</a>
+            <a class="nav-link mb-3" id="hour-tab" data-toggle="tab" href="#hour-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>剩余课时</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mb-3" id="tabs-icons-text-4-tab" data-toggle="tab" href="#tabs-icons-text-4" role="tab" aria-controls="tabs-icons-text-4" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>学生合同</a>
+            <a class="nav-link mb-3" id="contract-tab" data-toggle="tab" href="#contract-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>学生合同</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mb-3" id="tabs-icons-text-5-tab" data-toggle="tab" href="#tabs-icons-text-5" role="tab" aria-controls="tabs-icons-text-5" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>学生动态</a>
+            <a class="nav-link mb-3" id="record-tab" data-toggle="tab" href="#record-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>学生动态</a>
           </li>
         </ul>
       </div>
       <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+        <div class="tab-pane fade show active" id="schedule-card" role="tabpanel">
           <div class="card main_card mb-4" style="display:none">
             <div class="table-responsive">
               <table class="table align-items-center table-hover text-left table-bordered">
@@ -187,7 +190,7 @@
           </div>
         </div>
 
-        <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
+        <div class="tab-pane fade" id="attended-schedule-card" role="tabpanel">
           <div class="card main_card mb-4" style="display:none">
             <div class="table-responsive">
               <table class="table align-items-center table-hover text-left table-bordered">
@@ -233,7 +236,7 @@
           </div>
         </div>
 
-        <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
+        <div class="tab-pane fade" id="hour-card" role="tabpanel">
           <div class="card main_card mb-4" style="display:none">
             <div class="table-responsive">
               <table class="table align-items-center table-hover text-left table-bordered">
@@ -269,7 +272,7 @@
           </div>
         </div>
 
-        <div class="tab-pane fade" id="tabs-icons-text-4" role="tabpanel" aria-labelledby="tabs-icons-text-4-tab">
+        <div class="tab-pane fade" id="contract-card" role="tabpanel">
           <div class="card main_card mb-4" style="display:none">
             <div class="table-responsive">
               <table class="table align-items-center table-hover text-left table-bordered">
@@ -288,7 +291,7 @@
                 </thead>
                 <tbody>
                   @if(count($contracts)==0)
-                    <tr class="text-center"><td colspan="6">当前没有记录</td></tr>
+                    <tr class="text-center"><td colspan="8">当前没有记录</td></tr>
                   @else
                     @foreach ($contracts as $contract)
                       <tr>
@@ -313,7 +316,53 @@
           </div>
         </div>
 
-        <div class="tab-pane fade" id="tabs-icons-text-5" role="tabpanel" aria-labelledby="tabs-icons-text-5-tab">
+        <div class="tab-pane fade" id="record-card" role="tabpanel">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="h3 mb-0">添加跟进记录</h5>
+            </div>
+            <form action="/student/{{ $student->student_id }}/record" method="post">
+              @csrf
+              <div class="card-body p-3">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group mb-2">
+                      <textarea class="form-control" name="input1" rows="2" resize="none" spellcheck="false" autocomplete='off' maxlength="140" placeholder="请输入跟进内容..." required></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-2 text-center">
+                    <label class="form-control-label">跟进方式</label>
+                  </div>
+                  <div class="col-2 px-2 mb-2">
+                    <div class="form-group mb-1">
+                      <select class="form-control form-control-sm" name="input2" data-toggle="select" required>
+                        <option value=''>请选择...</option>
+                        <option value='电话'>电话</option>
+                        <option value='上门'>上门</option>
+                        <option value='微信'>微信</option>
+                        <option value='短信'>短信</option>
+                        <option value='其它'>其它</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-2 text-center">
+                    <label class="form-control-label">跟进日期</label>
+                  </div>
+                  <div class="col-2 px-2 mb-2">
+                    <div class="form-group mb-1">
+                      <input class="form-control form-control-sm datepicker" name="input3" type="text" autocomplete="off" value="{{ date('Y-m-d') }}" required>
+                    </div>
+                  </div>
+                  <div class="col-1"></div>
+                  <div class="col-3">
+                    <input type="submit" class="btn btn-sm btn-warning btn-block" value="保存">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
           <div class="list-group list-group-flush" style="max-height:990px; overflow:auto;">
             @foreach ($student_records as $student_record)
             <a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-4 px-4">
@@ -340,8 +389,4 @@
 @endsection
 
 @section('sidebar_status')
-<script>
-  linkActive('link-3');
-  navbarActive('navbar-3');
-</script>
 @endsection

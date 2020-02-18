@@ -9,229 +9,6 @@ use Exception;
 
 class StudentController extends Controller
 {
-    /**
-     * 显示所有学生记录
-     * URL: GET /student
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     * @param  $request->input('filter1'): 学生名称
-     * @param  $request->input('filter2'): 学生校区
-     * @param  $request->input('filter3'): 学生年级
-     * @param  $request->input('filter4'): 学生学校
-     */
-    public function index(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-
-        // 获取用户信息
-        $user_level = Session::get('user_level');
-
-        // 获取数据
-        $rows = DB::table('student')
-                  ->join('department', 'student.student_department', '=', 'department.department_id')
-                  ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                  ->join('user', 'student.student_follower', '=', 'user.user_id')
-                  ->join('position', 'user.user_position', '=', 'position.position_id')
-                  ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
-                  ->where('student_customer_status', 1)
-                  ->where('student_status', 1);
-        // 添加筛选条件
-        // 学生名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
-        }
-        // 学生校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter2'));
-        }
-        // 学生年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
-        }
-        // 学生学校
-        if ($request->filled('filter4')) {
-            $rows = $rows->where('student_school', '=', $request->input('filter4'));
-        }
-
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-
-        // 排序并获取数据对象
-        $rows = $rows->orderBy('student_createtime', 'asc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-
-        // 获取校区、年级、学校信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $filter_schools = DB::table('school')->where('school_status', 1)->orderBy('school_createtime', 'asc')->get();
-
-        // 返回列表视图
-        return view('student/index', ['rows' => $rows,
-                                               'currentPage' => $currentPage,
-                                               'totalPage' => $totalPage,
-                                               'startIndex' => $offset,
-                                               'request' => $request,
-                                               'totalNum' => $totalNum,
-                                               'filter_departments' => $filter_departments,
-                                               'filter_grades' => $filter_grades,
-                                               'filter_schools' => $filter_schools]);
-    }
-
-    /**
-     * 显示本校学生记录
-     * URL: GET /departmentStudent
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     * @param  $request->input('filter1'): 学生名称
-     * @param  $request->input('filter2'): 学生校区
-     * @param  $request->input('filter3'): 学生年级
-     * @param  $request->input('filter4'): 学生学校
-     */
-    public function department(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-
-        // 获取用户信息
-        $user_level = Session::get('user_level');
-
-        // 获取数据
-        $rows = DB::table('student')
-                  ->join('department', 'student.student_department', '=', 'department.department_id')
-                  ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                  ->join('user', 'student.student_follower', '=', 'user.user_id')
-                  ->join('position', 'user.user_position', '=', 'position.position_id')
-                  ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
-                  ->where('student_customer_status', 1)
-                  ->where('student_department', Session::get('user_department'))
-                  ->where('student_status', 1);
-        // 添加筛选条件
-        // 学生名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
-        }
-        // 学生校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter2'));
-        }
-        // 学生年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
-        }
-        // 学生学校
-        if ($request->filled('filter4')) {
-            $rows = $rows->where('student_school', '=', $request->input('filter4'));
-        }
-
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-
-        // 排序并获取数据对象
-        $rows = $rows->orderBy('student_createtime', 'asc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-
-        // 获取校区、年级、学校信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $filter_schools = DB::table('school')->where('school_status', 1)->orderBy('school_createtime', 'asc')->get();
-
-        // 返回列表视图
-        return view('student/department', ['rows' => $rows,
-                                          'currentPage' => $currentPage,
-                                          'totalPage' => $totalPage,
-                                          'startIndex' => $offset,
-                                          'request' => $request,
-                                          'totalNum' => $totalNum,
-                                          'filter_departments' => $filter_departments,
-                                          'filter_grades' => $filter_grades,
-                                          'filter_schools' => $filter_schools]);
-    }
-
-    /**
-     * 显示所有学生记录
-     * URL: GET /myStudent
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     * @param  $request->input('filter1'): 学生名称
-     * @param  $request->input('filter2'): 学生校区
-     * @param  $request->input('filter3'): 学生年级
-     * @param  $request->input('filter4'): 学生学校
-     */
-    public function my(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-
-        // 获取用户信息
-        $user_level = Session::get('user_level');
-
-        // 获取数据
-        $rows = DB::table('student')
-                  ->join('department', 'student.student_department', '=', 'department.department_id')
-                  ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                  ->join('user', 'student.student_follower', '=', 'user.user_id')
-                  ->join('position', 'user.user_position', '=', 'position.position_id')
-                  ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
-                  ->where('student_customer_status', 1)
-                  ->where('student_follower', Session::get('user_id'))
-                  ->where('student_status', 1);
-        // 添加筛选条件
-        // 学生名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
-        }
-        // 学生校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter2'));
-        }
-        // 学生年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
-        }
-        // 学生学校
-        if ($request->filled('filter4')) {
-            $rows = $rows->where('student_school', '=', $request->input('filter4'));
-        }
-
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-
-        // 排序并获取数据对象
-        $rows = $rows->orderBy('student_createtime', 'asc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-
-        // 获取校区、年级、学校信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $filter_schools = DB::table('school')->where('school_status', 1)->orderBy('school_createtime', 'asc')->get();
-
-        // 返回列表视图
-        return view('student/my', ['rows' => $rows,
-                                        'currentPage' => $currentPage,
-                                        'totalPage' => $totalPage,
-                                        'startIndex' => $offset,
-                                        'request' => $request,
-                                        'totalNum' => $totalNum,
-                                        'filter_departments' => $filter_departments,
-                                        'filter_grades' => $filter_grades,
-                                        'filter_schools' => $filter_schools]);
-    }
 
     /**
      * 显示单个学生详细信息
@@ -243,12 +20,43 @@ class StudentController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取数据信息
+        if($request->filled('selected')) {
+            $selected = $request->input('selected');
+        }else{
+            $selected = "schedule";
+        }
+        // 获取学生信息
         $student = DB::table('student')
                      ->join('department', 'student.student_department', '=', 'department.department_id')
                      ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                     ->leftJoin('user', 'student.student_follower', '=', 'user.user_id')
+                     ->leftJoin('user AS consultant', 'student.student_consultant', '=', 'consultant.user_id')
+                     ->leftJoin('position AS consultant_position', 'consultant.user_position', '=', 'consultant_position.position_id')
+                     ->leftJoin('user AS class_adviser', 'student.student_class_adviser', '=', 'class_adviser.user_id')
+                     ->leftJoin('position AS class_adviser_position', 'class_adviser.user_position', '=', 'class_adviser_position.position_id')
                      ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
+                     ->select('student.student_id AS student_id',
+                              'student.student_name AS student_name',
+                              'student.student_gender AS student_gender',
+                              'student.student_guardian AS student_guardian',
+                              'student.student_guardian_relationship AS student_guardian_relationship',
+                              'student.student_phone AS student_phone',
+                              'student.student_wechat AS student_wechat',
+                              'student.student_source AS student_source',
+                              'student.student_birthday AS student_birthday',
+                              'student.student_remark AS student_remark',
+                              'student.student_createtime AS student_createtime',
+                              'student.student_follow_level AS student_follow_level',
+                              'student.student_follow_num AS student_follow_num',
+                              'student.student_contract_num AS student_contract_num',
+                              'student.student_last_follow_date AS student_last_follow_date',
+                              'student.student_customer_status AS student_customer_status',
+                              'department.department_name AS department_name',
+                              'grade.grade_name AS grade_name',
+                              'school.school_name AS school_name',
+                              'consultant.user_name AS consultant_name',
+                              'consultant_position.position_name AS consultant_position_name',
+                              'class_adviser.user_name AS class_adviser_name',
+                              'class_adviser_position.position_name AS class_adviser_position_name')
                      ->where('student_id', $student_id)
                      ->get();
         if($student->count()!==1){
@@ -259,7 +67,6 @@ class StudentController extends Controller
                                                 'message' => '客户显示失败，请联系系统管理员']);
         }
         $student = $student[0];
-        $student_department = $student->student_department;
 
         // 获取学生所有班级
         $classes = DB::table('member')
@@ -322,13 +129,8 @@ class StudentController extends Controller
                              ->orderBy('student_record_createtime', 'desc')
                              ->limit(50)
                              ->get();
-        $users = DB::table('user')
-                   ->where('user_department', $student_department)
-                   ->where('user_status', 1)
-                   ->orderBy('user_createtime', 'asc')
-                   ->get();
-        return view('student/show', ['student' => $student,
-                                     'users' => $users,
+        return view('student/show', ['selected' => $selected,
+                                     'student' => $student,
                                      'schedules' => $schedules,
                                      'attended_schedules' => $attended_schedules,
                                      'hours' => $hours,
@@ -370,8 +172,8 @@ class StudentController extends Controller
     }
 
     /**
-     * 修改学生信息
-     * URL: PUT /customer/{id}
+     * 修改学生提交
+     * URL: PUT /student/{student_id}
      * @param  Request  $request
      * @param  $request->input('input1'): 学生姓名
      * @param  $request->input('input2'): 学生性别
@@ -411,10 +213,8 @@ class StudentController extends Controller
         $student_birthday = $request->input('input10');
         //  获取学生信息
         $student = DB::table('student')
-                     ->leftJoin('user', 'student.student_follower', '=', 'user.user_id')
                      ->where('student_id', $student_id)
                      ->first();
-        $student_follower = $student->student_follower;
         $student_name = $student->student_name;
         // 更新数据库
         DB::beginTransaction();
@@ -469,13 +269,6 @@ class StudentController extends Controller
         }
         // 获取表单输入
         $student_remark = $request->input('input1');
-        // 获取数据信息
-        $student = DB::table('student')
-                     ->leftJoin('user', 'student.student_follower', '=', 'user.user_id')
-                     ->where('student_id', $student_id)
-                     ->first();
-        // 获取学生姓名
-        $student_name = $student->student_name;
         // 更新数据
         DB::beginTransaction();
         try{
@@ -504,7 +297,62 @@ class StudentController extends Controller
         return redirect("/student/{$student_id}")->with(['notify' => true,
                                                            'type' => 'success',
                                                            'title' => '修改学生备注成功',
-                                                           'message' => '学生名称: '.$student_name]);
+                                                           'message' => '修改学生备注成功']);
+    }
+
+    /**
+     * 学生跟进动态提交
+     * URL: POST /student/{id}/record
+     * @param  Request  $request
+     * @param  $request->input('input1'): 跟进内容
+     * @param  $request->input('input2'): 跟进方式
+     * @param  $request->input('input3'): 跟进时间
+     * @param  int  $student_id        : 学生id
+     */
+    public function record(Request $request, $student_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取表单输入
+        $student_record_content = "跟进方式：".$request->input('input2')."，跟进日期：".$request->input('input3')."。<br>".$request->input('input1');
+        // 获取数据信息
+        $student_record_student = $student_id;
+        $student_record_type = "跟进记录";
+        $student_record_createuser = Session::get('user_id');
+        // 更新数据
+        DB::beginTransaction();
+        try{
+            // 增加跟进次数
+            DB::table('student')
+              ->where('student_id', $student_id)
+              ->increment('student_follow_num');
+            // 更新跟进时间
+            DB::table('student')
+              ->where('student_id', $student_id)
+              ->update(['student_last_follow_date' =>  $request->input('input3')]);
+            // 添加学生动态
+            DB::table('student_record')->insert(
+                ['student_record_student' => $student_record_student,
+                 'student_record_type' => '跟进记录',
+                 'student_record_content' => $student_record_content,
+                 'student_record_createuser' => $student_record_createuser]
+            );
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return redirect("/student/{$student_id}")->with(['notify' => true,
+                                                               'type' => 'danger',
+                                                               'title' => '添加跟进动态失败',
+                                                               'message' => '添加跟进动态失败，请重新输入信息']);
+        }
+        DB::commit();
+        // 返回客户列表
+        return redirect("/student/{$student_id}")->with(['notify' => true,
+                                                           'type' => 'success',
+                                                           'title' => '添加跟进动态成功',
+                                                           'message' => '添加跟进动态成功']);
     }
 
     /**
@@ -584,37 +432,5 @@ class StudentController extends Controller
                                                            'type' => 'success',
                                                            'title' => '修改学生负责人成功',
                                                            'message' => '学生名称: '.$student_name]);
-    }
-
-    /**
-     * 删除学生
-     * URL: DELETE /student/{id}
-     * @param  int  $student_id
-     */
-    public function destroy($student_id){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取数据信息
-        $student_name = DB::table('student')->where('student_id', $student_id)->value('student_name');
-        // 删除数据
-        try{
-            DB::table('student')->where('student_id', $student_id)->update(['student_status' => 0]);
-        }
-        // 捕获异常
-        catch(Exception $e){
-            return redirect()->action('StudentController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '学生删除失败',
-                                     'message' => '学生删除失败，请联系系统管理员']);
-        }
-        // 返回学生列表
-        return redirect()->action('StudentController@index')
-                         ->with(['notify' => true,
-                                 'type' => 'success',
-                                 'title' => '学生删除成功',
-                                 'message' => '学生名称: '.$student_name]);
     }
 }
