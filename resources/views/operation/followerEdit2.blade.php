@@ -27,7 +27,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/market/follower/store" method="post">
+        <form action="/operation/follower/store" method="post">
           @csrf
           <div class="card-header">
             <h4 class="mb-0">二、选择负责人</h4>

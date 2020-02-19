@@ -154,7 +154,7 @@ class MarketController extends Controller
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/market/department/customer")
+        return redirect("/market/customer/department")
                ->with(['notify' => true,
                       'type' => 'success',
                       'title' => '客户添加成功',
@@ -306,7 +306,7 @@ class MarketController extends Controller
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/market/my/customer")
+        return redirect("/market/customer/my")
                ->with(['notify' => true,
                       'type' => 'success',
                       'title' => '客户添加成功',
@@ -417,7 +417,7 @@ class MarketController extends Controller
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/market/department/customer")
+        return redirect("/market/customer/department")
                ->with(['notify' => true,
                       'type' => 'success',
                       'title' => '负责人修改成功',
@@ -426,11 +426,11 @@ class MarketController extends Controller
 
     /**
      * 部门客户视图
-     * URL: GET /market/all/customer
+     * URL: GET /market/customer/all
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      */
-    public function allCustomer(Request $request){
+    public function customerAll(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -490,7 +490,7 @@ class MarketController extends Controller
         $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         // 返回列表视图
-        return view('market/allCustomer', ['rows' => $rows,
+        return view('market/customerAll', ['rows' => $rows,
                                            'currentPage' => $currentPage,
                                            'totalPage' => $totalPage,
                                            'startIndex' => $offset,
@@ -502,11 +502,11 @@ class MarketController extends Controller
 
     /**
      * 本校客户视图
-     * URL: GET /market/department/customer
+     * URL: GET /market/customer/department
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      */
-    public function departmentCustomer(Request $request){
+    public function customerDepartment(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -566,23 +566,23 @@ class MarketController extends Controller
         $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         // 返回列表视图
-        return view('market/departmentCustomer', ['rows' => $rows,
-                                               'currentPage' => $currentPage,
-                                               'totalPage' => $totalPage,
-                                               'startIndex' => $offset,
-                                               'request' => $request,
-                                               'totalNum' => $totalNum,
-                                               'filter_departments' => $filter_departments,
-                                               'filter_grades' => $filter_grades]);
+        return view('market/customerDepartment', ['rows' => $rows,
+                                                   'currentPage' => $currentPage,
+                                                   'totalPage' => $totalPage,
+                                                   'startIndex' => $offset,
+                                                   'request' => $request,
+                                                   'totalNum' => $totalNum,
+                                                   'filter_departments' => $filter_departments,
+                                                   'filter_grades' => $filter_grades]);
     }
 
     /**
      * 我的客户视图
-     * URL: GET /market/my/customer
+     * URL: GET /market/customer/my
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      */
-    public function myCustomer(Request $request){
+    public function customerMy(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -637,7 +637,7 @@ class MarketController extends Controller
         $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         // 返回列表视图
-        return view('market/myCustomer', ['rows' => $rows,
+        return view('market/customerMy', ['rows' => $rows,
                                            'currentPage' => $currentPage,
                                            'totalPage' => $totalPage,
                                            'startIndex' => $offset,
@@ -649,11 +649,11 @@ class MarketController extends Controller
 
     /**
      * 我的学生视图
-     * URL: GET /market/my/student
+     * URL: GET /market/student/my
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      */
-    public function myStudent(Request $request){
+    public function studentMy(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -708,7 +708,7 @@ class MarketController extends Controller
         $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         // 返回列表视图
-        return view('market/myStudent', ['rows' => $rows,
+        return view('market/studentMy', ['rows' => $rows,
                                            'currentPage' => $currentPage,
                                            'totalPage' => $totalPage,
                                            'startIndex' => $offset,
@@ -979,7 +979,7 @@ class MarketController extends Controller
                           ->where('student_id', $contract_student)
                           ->value('student_name');
         // 返回购课列表
-        return redirect("/market/my/contract")
+        return redirect("/market/contract/my")
                ->with(['notify' => true,
                       'type' => 'success',
                       'title' => '购课添加成功',
@@ -1036,7 +1036,7 @@ class MarketController extends Controller
             catch(Exception $e){
                 DB::rollBack();
                 return $e;
-                return redirect("/market/my/contract")
+                return redirect("/market/contract/my")
                        ->with(['notify' => true,
                                'type' => 'danger',
                                'title' => '购课记录删除失败',
@@ -1044,13 +1044,13 @@ class MarketController extends Controller
             }
             DB::commit();
             // 返回购课列表
-            return redirect("/market/my/contract")
+            return redirect("/market/contract/my")
                    ->with(['notify' => true,
                            'type' => 'success',
                            'title' => '购课记录删除成功',
                            'message' => '购课记录删除成功']);
         }else{
-            return redirect("/market/my/contract")
+            return redirect("/market/contract/my")
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '购课记录删除失败',
@@ -1060,14 +1060,14 @@ class MarketController extends Controller
 
     /**
      * 部门签约视图
-     * URL: GET /market/all/contract
+     * URL: GET /market/contract/all
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 校区
      * @param  $request->input('filter2'): 学生
      * @param  $request->input('filter3'): 年级
      */
-    public function allContract(Request $request){
+    public function contractAll(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -1082,7 +1082,8 @@ class MarketController extends Controller
                   ->join('department', 'student.student_department', '=', 'department.department_id')
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
-                  ->join('position', 'user.user_position', '=', 'position.position_id');
+                  ->join('position', 'user.user_position', '=', 'position.position_id')
+                  ->where('contract_type', '=', 0);
         // 添加筛选条件
         // 购课校区
         if ($request->filled('filter1')) {
@@ -1114,7 +1115,7 @@ class MarketController extends Controller
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('market/allContract', ['rows' => $rows,
+        return view('market/contractAll', ['rows' => $rows,
                                            'currentPage' => $currentPage,
                                            'totalPage' => $totalPage,
                                            'startIndex' => $offset,
@@ -1127,14 +1128,14 @@ class MarketController extends Controller
 
     /**
      * 本校签约视图
-     * URL: GET /market/department/contract
+     * URL: GET /market/contract/department
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 校区
      * @param  $request->input('filter2'): 学生
      * @param  $request->input('filter3'): 年级
      */
-    public function departmentContract(Request $request){
+    public function contractDepartment(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -1150,6 +1151,7 @@ class MarketController extends Controller
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
+                  ->where('contract_type', '=', 0)
                   ->where('contract_department', '=', Session::get('user_department'));
         // 添加筛选条件
         // 购课校区
@@ -1182,34 +1184,31 @@ class MarketController extends Controller
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('market/departmentContract', ['rows' => $rows,
-                                           'currentPage' => $currentPage,
-                                           'totalPage' => $totalPage,
-                                           'startIndex' => $offset,
-                                           'request' => $request,
-                                           'totalNum' => $totalNum,
-                                           'filter_departments' => $filter_departments,
-                                           'filter_students' => $filter_students,
-                                           'filter_grades' => $filter_grades]);
+        return view('market/contractDepartment', ['rows' => $rows,
+                                                   'currentPage' => $currentPage,
+                                                   'totalPage' => $totalPage,
+                                                   'startIndex' => $offset,
+                                                   'request' => $request,
+                                                   'totalNum' => $totalNum,
+                                                   'filter_departments' => $filter_departments,
+                                                   'filter_students' => $filter_students,
+                                                   'filter_grades' => $filter_grades]);
     }
 
     /**
      * 我的签约视图
-     * URL: GET /market/my/contract
+     * URL: GET /market/contract/my
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 校区
      * @param  $request->input('filter2'): 学生
      * @param  $request->input('filter3'): 年级
      */
-    public function myContract(Request $request){
+    public function contractMy(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-
-        // 获取用户信息
-        $user_level = Session::get('user_level');
 
         // 获取数据
         $rows = DB::table('contract')
@@ -1218,6 +1217,7 @@ class MarketController extends Controller
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
+                  ->where('contract_type', '=', 0)
                   ->where('contract_createuser', '=', Session::get('user_id'));
         // 添加筛选条件
         // 购课校区
@@ -1250,7 +1250,7 @@ class MarketController extends Controller
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('market/myContract', ['rows' => $rows,
+        return view('market/contractMy', ['rows' => $rows,
                                            'currentPage' => $currentPage,
                                            'totalPage' => $totalPage,
                                            'startIndex' => $offset,
@@ -1564,7 +1564,7 @@ class MarketController extends Controller
                           ->where('student_id', $refund_student)
                           ->value('student_name');
         // 返回购课列表
-        return redirect("/market/my/refund")
+        return redirect("/market/refund/my")
                ->with(['notify' => true,
                       'type' => 'success',
                       'title' => '退费成功',
@@ -1573,14 +1573,14 @@ class MarketController extends Controller
 
     /**
      * 部门退费视图
-     * URL: GET /market/all/refund
+     * URL: GET /market/refund/all
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 校区
      * @param  $request->input('filter2'): 学生
      * @param  $request->input('filter3'): 年级
      */
-    public function allRefund(Request $request){
+    public function refundAll(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -1594,7 +1594,8 @@ class MarketController extends Controller
                   ->join('user AS createuser', 'refund.refund_createuser', '=', 'createuser.user_id')
                   ->join('position AS createuser_position', 'createuser.user_position', '=', 'createuser_position.position_id')
                   ->leftJoin('user AS checked_user', 'refund.refund_checked_user', '=', 'checked_user.user_id')
-                  ->leftJoin('position AS checked_user_position', 'checked_user.user_position', '=', 'checked_user_position.position_id');
+                  ->leftJoin('position AS checked_user_position', 'checked_user.user_position', '=', 'checked_user_position.position_id')
+                  ->where('refund_type', '=', 0);
         // 添加筛选条件
         // 购课校区
         if ($request->filled('filter1')) {
@@ -1642,7 +1643,7 @@ class MarketController extends Controller
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('market/allRefund', ['rows' => $rows,
+        return view('market/refundAll', ['rows' => $rows,
                                          'currentPage' => $currentPage,
                                          'totalPage' => $totalPage,
                                          'startIndex' => $offset,
@@ -1655,14 +1656,14 @@ class MarketController extends Controller
 
     /**
      * 本校退费视图
-     * URL: GET /market/department/refund
+     * URL: GET /market/refund/department
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 校区
      * @param  $request->input('filter2'): 学生
      * @param  $request->input('filter3'): 年级
      */
-    public function departmentRefund(Request $request){
+    public function refundDepartment(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -1677,6 +1678,7 @@ class MarketController extends Controller
                   ->join('position AS createuser_position', 'createuser.user_position', '=', 'createuser_position.position_id')
                   ->leftJoin('user AS checked_user', 'refund.refund_checked_user', '=', 'checked_user.user_id')
                   ->leftJoin('position AS checked_user_position', 'checked_user.user_position', '=', 'checked_user_position.position_id')
+                  ->where('refund_type', '=', 0)
                   ->where('refund_department', Session::get('user_department'));
         // 添加筛选条件
         // 购课校区
@@ -1725,7 +1727,7 @@ class MarketController extends Controller
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('market/departmentRefund', ['rows' => $rows,
+        return view('market/refundDepartment', ['rows' => $rows,
                                                  'currentPage' => $currentPage,
                                                  'totalPage' => $totalPage,
                                                  'startIndex' => $offset,
@@ -1738,14 +1740,14 @@ class MarketController extends Controller
 
     /**
      * 我的退费视图
-     * URL: GET /market/my/refund
+     * URL: GET /market/refund/my
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 校区
      * @param  $request->input('filter2'): 学生
      * @param  $request->input('filter3'): 年级
      */
-    public function myRefund(Request $request){
+    public function refundMy(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -1760,6 +1762,7 @@ class MarketController extends Controller
                   ->join('position AS createuser_position', 'createuser.user_position', '=', 'createuser_position.position_id')
                   ->leftJoin('user AS checked_user', 'refund.refund_checked_user', '=', 'checked_user.user_id')
                   ->leftJoin('position AS checked_user_position', 'checked_user.user_position', '=', 'checked_user_position.position_id')
+                  ->where('refund_type', '=', 0)
                   ->where('refund_createuser', Session::get('user_id'));
         // 添加筛选条件
         // 购课校区
@@ -1807,7 +1810,7 @@ class MarketController extends Controller
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('market/myRefund', ['rows' => $rows,
+        return view('market/refundMy', ['rows' => $rows,
                                          'currentPage' => $currentPage,
                                          'totalPage' => $totalPage,
                                          'startIndex' => $offset,
@@ -1863,8 +1866,7 @@ class MarketController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
-            return redirect("/market/my/refund")
+            return redirect("/market/refund/my")
                    ->with(['notify' => true,
                           'type' => 'danger',
                           'title' => '退费记录删除失败！',
@@ -1872,7 +1874,7 @@ class MarketController extends Controller
         }
         DB::commit();
         // 返回购课列表
-        return redirect("/market/my/refund")
+        return redirect("/market/refund/my")
                ->with(['notify' => true,
                       'type' => 'success',
                       'title' => '退费记录删除成功！',

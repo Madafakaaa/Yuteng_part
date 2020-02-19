@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">运营中心</li>
-    <li class="breadcrumb-item active">本校上课记录</li>
+    <li class="breadcrumb-item active">我的学生上课记录</li>
 @endsection
 
 @section('content')
@@ -131,6 +131,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationAttendedScheduleDepartment');
+  linkActive('operationAttendedScheduleMy');
 </script>
 @endsection

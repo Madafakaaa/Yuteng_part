@@ -195,8 +195,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-5');
-  navbarActive('navbar-5');
-  linkActive('refundCreate');
+  linkActive('link-market');
+  navbarActive('navbar-market');
+  linkActive('marketRefundCreate');
 </script>
 @endsection

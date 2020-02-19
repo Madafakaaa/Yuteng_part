@@ -4,15 +4,15 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">招生中心</li>
-    <li class="breadcrumb-item active">我的签约</li>
+    <li class="breadcrumb-item active">运营中心</li>
+    <li class="breadcrumb-item active">全部签约</li>
 @endsection
 
 @section('content')
-<div class="container-fluid mt-2">
+<div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-12 card-wrapper ct-example">
-      <div class="card mb-1">
+      <div class="card mb-4">
         <div class="card-header border-0 p-0 mb-1">
           <form action="" method="get" id="filter" name="filter">
             <div class="row m-2">
@@ -98,7 +98,7 @@
                 <td title="{{ $row->user_name }} ({{ $row->position_name }})">{{ $row->user_name }} ({{ $row->position_name }})</td>
                 <td title="{{ $row->contract_date }}">{{ $row->contract_date }}</td>
                 <td>
-                  <form action="/market/contract/{{$row->contract_id}}" method="POST">
+                  <form action="/operation/contract/{{$row->contract_id}}" method="POST">
                     @method('DELETE')
                     @csrf
                     <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
@@ -121,8 +121,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-market');
-  navbarActive('navbar-market');
-  linkActive('marketMyContract');
+  linkActive('link-operation');
+  navbarActive('navbar-operation');
+  linkActive('operationContractAll');
 </script>
 @endsection

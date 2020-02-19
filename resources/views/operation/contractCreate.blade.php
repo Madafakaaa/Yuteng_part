@@ -5,8 +5,8 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">运营中心</li>
-    <li class="breadcrumb-item active">修改负责人</li>
-    <li class="breadcrumb-item active">选择学生</li>
+    <li class="breadcrumb-item active">签约合同</li>
+    <li class="breadcrumb-item active">选择报名学生</li>
 @endsection
 
 @section('content')
@@ -15,11 +15,11 @@
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example mb-4">
       <div class="row justify-content-center">
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-info">选择学生</span>
+          <span class="badge badge-pill badge-info">选择报名学生</span>
         </div>
         <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #fdd1da;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-danger">选择负责人</span>
+          <span class="badge badge-pill badge-danger">选择报名课程</span>
         </div>
       </div>
     </div>
@@ -27,16 +27,16 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/operation/follower/edit2" method="post">
+        <form action="/operation/contract/create2" method="post">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">一、选择学生</h4>
+            <h4 class="mb-0">一、选择报名学生</h4>
           </div>
           <!-- Card body -->
           <div class="card-body">
             <div class="row">
               <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>学生姓名</label>
+                <label class="form-control-label"><span style="color:red">*</span>购课学生</label>
               </div>
               <div class="col-6 px-2 mb-2">
                 <select class="form-control form-control-sm" name="input1" data-toggle="select" required>
@@ -71,6 +71,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationFollowerEdit');
+  linkActive('operationContractCreate');
 </script>
 @endsection

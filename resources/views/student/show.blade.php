@@ -210,7 +210,7 @@
                 </thead>
                 <tbody>
                   @if(count($schedules)==0)
-                    <tr class="text-center"><td colspan="8">当前没有记录</td></tr>
+                    <tr class="text-center"><td colspan="9">当前没有记录</td></tr>
                   @else
                     @foreach ($attended_schedules as $schedule)
                       <tr title="创建时间：{{ $schedule->schedule_createtime }}。">

@@ -4,8 +4,8 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">财务中心</li>
-    <li class="breadcrumb-item"><a href="/refund">退费申请</a></li>
+    <li class="breadcrumb-item active">运营中心</li>
+    <li class="breadcrumb-item active">学生退费</li>
     <li class="breadcrumb-item active">选择退费课程</li>
 @endsection
 
@@ -88,8 +88,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-market');
-  navbarActive('navbar-market');
-  linkActive('marketRefundCreate');
+  linkActive('link-operation');
+  navbarActive('navbar-operation');
+  linkActive('operationRefundCreate');
 </script>
 @endsection

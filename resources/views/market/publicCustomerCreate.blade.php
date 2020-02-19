@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">招生中心</li>
-    <li class="breadcrumb-item active">公共客户录入</li>
+    <li class="breadcrumb-item active">新客户录入</li>
 @endsection
 
 @section('content')
@@ -16,7 +16,7 @@
         <form action="/market/publicCustomer/create" method="post">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">公共客户录入</h4>
+            <h4 class="mb-0">新客户录入</h4>
           </div>
           <div class="card-body">
             <div class="row">
