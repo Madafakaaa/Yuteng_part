@@ -56,11 +56,11 @@
                       <label class="custom-control-label" for="radio{{ $loop->iteration }}_1">正常</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline ml-2 mr-4">
-                      <input type="radio" id="radio{{ $loop->iteration }}_2" name="input{{ $loop->iteration }}_1" class="custom-control-input" value="0" onchange="disableInput({{ $loop->iteration }});">
+                      <input type="radio" id="radio{{ $loop->iteration }}_2" name="input{{ $loop->iteration }}_1" class="custom-control-input" value="2" onchange="disableInput({{ $loop->iteration }});">
                       <label class="custom-control-label" for="radio{{ $loop->iteration }}_2">请假</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline ml-2 mr-4">
-                      <input type="radio" id="radio{{ $loop->iteration }}_3" name="input{{ $loop->iteration }}_1" class="custom-control-input" value="2" onchange="disableInput({{ $loop->iteration }});">
+                      <input type="radio" id="radio{{ $loop->iteration }}_3" name="input{{ $loop->iteration }}_1" class="custom-control-input" value="3" onchange="disableInput({{ $loop->iteration }});">
                       <label class="custom-control-label" for="radio{{ $loop->iteration }}_3">旷课</label>
                     </div>
                   </div>
@@ -123,7 +123,7 @@
   linkActive('educationScheduleMy');
 
   function disableInput(a){
-    if($("input[name='input"+a+"_1']:checked").val()==0){
+    if($("input[name='input"+a+"_1']:checked").val()==2){
       $("#input"+a+"_2").attr("disabled","disabled");
       $("#input"+a+"_3").attr("disabled","disabled");
       // $("#input"+a+"_2 option[index='0']").attr("selected", true);

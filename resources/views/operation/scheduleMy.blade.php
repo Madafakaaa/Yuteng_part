@@ -66,7 +66,6 @@
                 <th style='width:99px;'>校区</th>
                 <th style='width:200px;'>学生</th>
                 <th style='width:200px;'>班级</th>
-                <th style='width:200px;'>课程</th>
                 <th style='width:100px;'>教师</th>
                 <th style='width:70px;'>科目</th>
                 <th style='width:70px;'>年级</th>
@@ -86,7 +85,7 @@
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->student_name }}{{ $row->class_member_name }}</td>
-                <td>{{ $row->course_name }}</td>
+                <td>{{ $row->class_name }}</td>
                 <td>{{ $row->teacher_name }}</td>
                 <td>{{ $row->subject_name }}</td>
                 <td>{{ $row->grade_name }}</td>
@@ -97,7 +96,7 @@
                   <form action="schedule/{{$row->schedule_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>&nbsp;
+                    <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">安排详情</button></a>
                     {{ deleteConfirm($row->schedule_id, ["上课成员：".$row->student_name.", 教师：".$row->teacher_name]) }}
                   </form>
                 </td>

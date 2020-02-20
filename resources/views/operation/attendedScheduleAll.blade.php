@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">运营中心</li>
-    <li class="breadcrumb-item active">本校班级</li>
+    <li class="breadcrumb-item active">本校上课记录</li>
 @endsection
 
 @section('content')
@@ -17,13 +17,18 @@
           <form action="" method="get" id="filter" name="filter">
             <div class="row m-2">
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                <input class="form-control" type="text" name="filter1" placeholder=" 班级名称..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
+                <select class="form-control" name="filter1" data-toggle="select">
+                  <option value=''>全部校区</option>
+                  @foreach ($filter_departments as $filter_department)
+                    <option value="{{ $filter_department->department_id }}" @if($request->input('filter1')==$filter_department->department_id) selected @endif>{{ $filter_department->department_name }}</option>
+                  @endforeach
+                </select>
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <select class="form-control" name="filter2" data-toggle="select">
-                  <option value=''>全部校区</option>
-                  @foreach ($filter_departments as $filter_department)
-                    <option value="{{ $filter_department->department_id }}" @if($request->input('filter2')==$filter_department->department_id) selected @endif>{{ $filter_department->department_name }}</option>
+                  <option value=''>全部学生</option>
+                  @foreach ($filter_classes as $filter_class)
+                    <option value="{{ $filter_class->class_id }}" @if($request->input('filter2')==$filter_class->class_id) selected @endif>班级: {{ $filter_class->class_name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -37,11 +42,14 @@
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <select class="form-control" name="filter4" data-toggle="select">
-                  <option value=''>全部科目</option>
-                  @foreach ($filter_subjects as $filter_subject)
-                    <option value="{{ $filter_subject->subject_id }}" @if($request->input('filter4')==$filter_subject->subject_id) selected @endif>{{ $filter_subject->subject_name }}</option>
+                  <option value=''>全部教师</option>
+                  @foreach ($filter_users as $filter_user)
+                    <option value="{{ $filter_user->user_id }}" @if($request->input('filter4')==$filter_user->user_id) selected @endif>{{ $filter_user->user_name }}</option>
                   @endforeach
                 </select>
+              </div>
+              <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
+                <input class="form-control datepicker" name="filter5" type="text" autocomplete="off" placeholder="全部日期" @if($request->filled('filter5')) value="{{ $request->filter5 }}" @endif>
               </div>
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <div class="row">
@@ -63,43 +71,49 @@
             <thead class="thead-light">
               <tr>
                 <th style='width:70px;'>序号</th>
-                <th style='width:339px;'>班级</th>
-                <th style='width:100px;'>校区</th>
-                <th style='width:120px;'>班号</th>
-                <th style='width:90px;'>年级</th>
-                <th style='width:90px;'>科目</th>
-                <th style='width:110px;'>班级人数</th>
-                <th style='width:210px;'>负责教师</th>
+                <th style='width:114px;'>学生</th>
+                <th style='width:110px;'>班级</th>
+                <th style='width:120px;'>教师</th>
+                <th style='width:65px;'>年级</th>
+                <th style='width:65px;'>科目</th>
+                <th style='width:65px;'>考勤</th>
+                <th style='width:180px;'>扣除课时</th>
+                <th style='width:110px;'>日期</th>
+                <th style='width:110px;'>时间</th>
+                <th style='width:120px;'>复核人</th>
                 <th style='width:188px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="9">当前没有记录</td></tr>
+                <tr class="text-center"><td colspan="12">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr title="班级：{{ $row->class_name }}。创建时间：{{ $row->class_createtime }}。">
+              <tr>
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->department_name }}</td>
+                <td>{{ $row->student_name }}</td>
                 <td>{{ $row->class_name }}</td>
-                <td>{{ $row->class_id }}</td>
+                <td>{{ $row->teacher_name }}</td>
                 <td>{{ $row->grade_name }}</td>
-                <td>@if($row->class_subject==0) 全科目 @else{{ $row->subject_name }}@endif</td>
+                <td>{{ $row->subject_name }}</td>
+                @if($row->participant_attend_status==1)
+                  <td><span style="color:green;">正常</span></td>
+                @elseif($row->participant_attend_status==2)
+                  <td><span style="color:blue;">请假</span></td>
+                @else
+                  <td><span style="color:red;">旷课</span></td>
+                @endif
+                <td>{{ $row->participant_amount }}课时：{{ $row->course_name }}</td>
+                <td>{{ $row->schedule_date }}</td>
+                <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
+                @if($row->participant_checked==1)
+                  <td>{{ $row->checked_user_name }}</td>
+                @else
+                  <td><span style="color:red;">待复核</span></td>
+                @endif
                 <td>
-                  <div class="d-flex align-items-center">
-                    <!-- <div><div class="progress" style="width:70px;"><div class="progress-bar bg-success" style="width: 50%;"></div></div></div> -->
-                    <span class="completion ml-2">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
-                  </div>
-                </td>
-                <td>{{ $row->user_name }} ({{ $row->position_name }})</td>
-                <td>
-                  <form action="class/{{$row->class_id}}" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <a href='/class/{{$row->class_id}}'><button type="button" class="btn btn-primary btn-sm">班级详情</button></a>
-                    {{ deleteConfirm($row->class_id, ["班级名称：".$row->class_name]) }}
-                  </form>
+                  <a href='/attendedSchedule/{{$row->participant_id}}'><button type="button" class="btn btn-primary btn-sm">上课详情</button></a>&nbsp;
                 </td>
               </tr>
               @endforeach
@@ -117,6 +131,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationClassDepartment');
+  linkActive('operationAttendedScheduleDepartment');
 </script>
 @endsection

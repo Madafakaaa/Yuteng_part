@@ -5,7 +5,7 @@
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">教学中心</li>
-    <li class="breadcrumb-item active">本校上课记录</li>
+    <li class="breadcrumb-item active">本校课程安排</li>
 @endsection
 
 @section('content')
@@ -27,8 +27,8 @@
               <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
                 <select class="form-control" name="filter2" data-toggle="select">
                   <option value=''>全部学生</option>
-                  @foreach ($filter_classes as $filter_class)
-                    <option value="{{ $filter_class->class_id }}" @if($request->input('filter2')==$filter_class->class_id) selected @endif>班级: {{ $filter_class->class_name }}</option>
+                  @foreach ($filter_students as $filter_student)
+                    <option value="{{ $filter_student->student_id }}" @if($request->input('filter2')==$filter_student->student_id) selected @endif>学生: {{ $filter_student->student_name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -71,16 +71,15 @@
             <thead class="thead-light">
               <tr>
                 <th style='width:70px;'>序号</th>
-                <th style='width:114px;'>学生</th>
-                <th style='width:110px;'>班级</th>
-                <th style='width:120px;'>教师</th>
-                <th style='width:65px;'>年级</th>
-                <th style='width:65px;'>科目</th>
-                <th style='width:65px;'>考勤</th>
-                <th style='width:180px;'>扣除课时</th>
-                <th style='width:110px;'>日期</th>
+                <th style='width:99px;'>校区</th>
+                <th style='width:200px;'>学生/班级</th>
+                <th style='width:200px;'>课程</th>
+                <th style='width:100px;'>教师</th>
+                <th style='width:70px;'>科目</th>
+                <th style='width:70px;'>年级</th>
+                <th style='width:100px;'>日期</th>
                 <th style='width:110px;'>时间</th>
-                <th style='width:120px;'>复核人</th>
+                <th style='width:110px;'>地点</th>
                 <th style='width:188px;'>操作管理</th>
                 <th></th>
               </tr>
@@ -90,30 +89,24 @@
                 <tr class="text-center"><td colspan="12">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr>
+              <tr title="创建时间：{{ $row->schedule_createtime }}。">
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->student_name }}</td>
-                <td>{{ $row->class_name }}</td>
-                <td>{{ $row->teacher_name }}</td>
-                <td>{{ $row->grade_name }}</td>
+                <td>{{ $row->department_name }}</td>
+                <td>@if($row->schedule_participant_type==0) 学生 @else 班级 @endif - {{ $row->student_name }}{{ $row->class_name }}</td>
+                <td>{{ $row->course_name }}</td>
+                <td>{{ $row->user_name }}</td>
                 <td>{{ $row->subject_name }}</td>
-                @if($row->participant_attend_status==1)
-                  <td><span style="color:green;">正常</span></td>
-                @elseif($row->participant_attend_status==2)
-                  <td><span style="color:yellow;">请假</span></td>
-                @else
-                  <td><span style="color:red;">旷课</span></td>
-                @endif
-                <td>{{ $row->participant_amount }}课时：{{ $row->course_name }}</td>
+                <td>{{ $row->grade_name }}</td>
                 <td>{{ $row->schedule_date }}</td>
                 <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
-                @if($row->participant_checked==1)
-                  <td>{{ $row->checked_user_name }}</td>
-                @else
-                  <td><span style="color:red;">待复核</span></td>
-                @endif
+                <td>{{ $row->classroom_name }}</td>
                 <td>
-                  <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">上课详情</button></a>&nbsp;
+                  <form action="schedule/{{$row->schedule_id}}" method="POST">
+                    @method('DELETE')
+                    @csrf
+                    <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">安排详情</button></a>
+                    {{ deleteConfirm($row->schedule_id, ["上课成员：".$row->student_name.", 教师：".$row->user_name]) }}
+                  </form>
                 </td>
               </tr>
               @endforeach
@@ -131,6 +124,6 @@
 <script>
   linkActive('link-education');
   navbarActive('navbar-education');
-  linkActive('educationAttendedScheduleDepartment');
+  linkActive('educationScheduleDepartment');
 </script>
 @endsection

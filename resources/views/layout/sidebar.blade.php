@@ -77,19 +77,19 @@
           <div class="collapse" id="navbar-market">
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
-                <a href="/market/publicCustomer/create" class="nav-link" id="marketPublicCustomerCreate">新客户录入</a>
-              </li>
-              <li class="nav-item">
-                <a href="/market/myCustomer/create" class="nav-link" id="marketMyCustomerCreate">我的客户录入</a>
+                <a href="/market/publicCustomer/create" class="nav-link" id="marketPublicCustomerCreate">公共客户录入</a>
               </li>
               <li class="nav-item">
                 <a href="/market/follower/edit" class="nav-link" id="marketFollowerEdit">修改负责人</a>
               </li>
               <li class="nav-item">
-                <a href="/market/customer/all" class="nav-link" id="marketCustomerAll">部门客户</a>
+                <a href="/market/customer/all" class="nav-link" id="marketCustomerAll">客户管理</a>
               </li>
               <li class="nav-item">
-                <a href="/market/customer/department" class="nav-link" id="marketCustomerDepartment">本校客户</a>
+                <br>
+              </li>
+              <li class="nav-item">
+                <a href="/market/myCustomer/create" class="nav-link" id="marketMyCustomerCreate">我的客户录入</a>
               </li>
               <li class="nav-item">
                 <a href="/market/customer/my" class="nav-link" id="marketCustomerMy">我的客户</a>
@@ -104,10 +104,7 @@
                 <a href="/market/contract/create" class="nav-link" id="marketContractCreate">签约合同</a>
               </li>
               <li class="nav-item">
-                <a href="/market/contract/all" class="nav-link" id="marketContractAll">部门签约</a>
-              </li>
-              <li class="nav-item">
-                <a href="/market/contract/department" class="nav-link" id="marketContractDepartment">本校签约</a>
+                <a href="/market/contract/all" class="nav-link" id="marketContractAll">签约管理</a>
               </li>
               <li class="nav-item">
                 <a href="/market/contract/my" class="nav-link" id="marketContractMy">我的签约</a>
@@ -119,10 +116,7 @@
                 <a href="/market/refund/create" class="nav-link" id="marketRefundCreate">学生退费</a>
               </li>
               <li class="nav-item">
-                <a href="/market/refund/all" class="nav-link" id="marketRefundAll">部门退费</a>
-              </li>
-              <li class="nav-item">
-                <a href="/market/refund/department" class="nav-link" id="marketRefundDepartment">本校退费</a>
+                <a href="/market/refund/all" class="nav-link" id="marketRefundAll">退费管理</a>
               </li>
               <li class="nav-item">
                 <a href="/market/refund/my" class="nav-link" id="marketRefundMy">我的退费</a>
@@ -141,49 +135,37 @@
                 <a href="/operation/follower/edit" class="nav-link" id="operationFollowerEdit">修改负责人</a>
               </li>
               <li class="nav-item">
-                <a href="/operation/student/all" class="nav-link" id="operationStudentAll">全部学生</a>
-              </li>
-              <li class="nav-item">
-                <a href="/operation/student/department" class="nav-link" id="operationStudentDepartment">本校学生</a>
+                <a href="/operation/student/all" class="nav-link" id="operationStudentAll">学生管理</a>
               </li>
               <li class="nav-item">
                 <a href="/operation/student/my" class="nav-link" id="operationStudentMy">我的学生</a>
               </li>
               <li class="nav-item">
-                <a href="/operation/studentSchedule/create" class="nav-link" id="operationStudentScheduleCreate">安排学生课程</a>
-              </li>
-              <li class="nav-item">
-                <a href="/operation/studentSchedule/department" class="nav-link" id="operationStudentScheduleDepartment">本校学生课程安排</a>
-              </li>
-              <li class="nav-item">
-                <a href="/operation/schedule/my" class="nav-link" id="operationScheduleMy">我的学生课程安排</a>
-              </li>
-              <li class="nav-item">
-                <br>
-              </li>
-              <li class="nav-item">
                 <a href="/operation/class/create" class="nav-link" id="operationClassCreate">新建班级</a>
               </li>
               <li class="nav-item">
-                <a href="/operation/class/all" class="nav-link" id="operationClassAll">全部班级</a>
-              </li>
-              <li class="nav-item">
-                <a href="/operation/class/department" class="nav-link" id="operationClassDepartment">本校班级</a>
+                <a href="/operation/class/all" class="nav-link" id="operationClassAll">班级管理</a>
               </li>
               <li class="nav-item">
                 <br>
               </li>
               <li class="nav-item">
-                <a href="/operation/classSchedule/create" class="nav-link" id="operationClassScheduleCreate">安排班级课程</a>
+                <a href="/operation/studentSchedule/create" class="nav-link" id="operationStudentScheduleCreate">学生排课</a>
               </li>
               <li class="nav-item">
-                <a href="/operation/classSchedule/department" class="nav-link" id="operationClassScheduleDepartment">本校班级课程安排</a>
+                <a href="/operation/studentSchedule/all" class="nav-link" id="operationStudentScheduleAll">学生课程</a>
               </li>
               <li class="nav-item">
-                <br>
+                <a href="/operation/classSchedule/create" class="nav-link" id="operationClassScheduleCreate">班级排课</a>
               </li>
               <li class="nav-item">
-                <a href="/operation/attendedSchedule/department" class="nav-link" id="operationAttendedScheduleDepartment">本校上课记录</a>
+                <a href="/operation/classSchedule/all" class="nav-link" id="operationClassScheduleAll">班级课程</a>
+              </li>
+              <li class="nav-item">
+                <a href="/operation/attendedSchedule/all" class="nav-link" id="operationAttendedScheduleAll">上课记录</a>
+              </li>
+              <li class="nav-item">
+                <a href="/operation/schedule/my" class="nav-link" id="operationScheduleMy">我的学生课程安排</a>
               </li>
               <li class="nav-item">
                 <a href="/operation/attendedSchedule/my" class="nav-link" id="operationAttendedScheduleMy">我的学生上课记录</a>
@@ -195,10 +177,7 @@
                 <a href="/operation/contract/create" class="nav-link" id="operationContractCreate">签约合同</a>
               </li>
               <li class="nav-item">
-                <a href="/operation/contract/all" class="nav-link" id="operationContractAll">部门签约</a>
-              </li>
-              <li class="nav-item">
-                <a href="/operation/contract/department" class="nav-link" id="operationContractDepartment">本校签约</a>
+                <a href="/operation/contract/all" class="nav-link" id="operationContractAll">签约管理</a>
               </li>
               <li class="nav-item">
                 <a href="/operation/contract/my" class="nav-link" id="operationContractMy">我的签约</a>
@@ -210,10 +189,7 @@
                 <a href="/operation/refund/create" class="nav-link" id="operationRefundCreate">学生退费</a>
               </li>
               <li class="nav-item">
-                <a href="/operation/refund/all" class="nav-link" id="operationRefundAll">部门退费</a>
-              </li>
-              <li class="nav-item">
-                <a href="/operation/refund/department" class="nav-link" id="operationRefundDepartment">本校退费</a>
+                <a href="/operation/refund/all" class="nav-link" id="operationRefundAll">退费管理</a>
               </li>
               <li class="nav-item">
                 <a href="/operation/refund/my" class="nav-link" id="operationRefundMy">我的退费</a>
@@ -229,10 +205,7 @@
           <div class="collapse" id="navbar-education">
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
-                <a href="/education/student/all" class="nav-link" id="educationStudentAll">全部学生</a>
-              </li>
-              <li class="nav-item">
-                <a href="/education/student/department" class="nav-link" id="educationStudentDepartment">本校学生</a>
+                <a href="/education/student/all" class="nav-link" id="educationStudentAll">学生管理</a>
               </li>
               <li class="nav-item">
                 <a href="/education/student/my" class="nav-link" id="educationStudentMy">我的学生</a>
@@ -241,10 +214,7 @@
                 <br>
               </li>
               <li class="nav-item">
-                <a href="/education/class/all" class="nav-link" id="educationClassAll">全部班级</a>
-              </li>
-              <li class="nav-item">
-                <a href="/education/class/department" class="nav-link" id="educationClassDepartment">本校班级</a>
+                <a href="/education/class/all" class="nav-link" id="educationClassAll">班级管理</a>
               </li>
               <li class="nav-item">
                 <a href="/education/class/my" class="nav-link" id="educationClassMy">我的班级</a>
@@ -253,7 +223,7 @@
                 <br>
               </li>
               <li class="nav-item">
-                <a href="/education/schedule/department" class="nav-link" id="educationScheduleDepartment">本校课程安排</a>
+                <a href="/education/schedule/all" class="nav-link" id="educationScheduleAll">课程安排管理</a>
               </li>
               <li class="nav-item">
                 <a href="/education/schedule/my" class="nav-link" id="educationScheduleMy">我的课程安排</a>
@@ -262,7 +232,7 @@
                 <br>
               </li>
               <li class="nav-item">
-                <a href="/education/attendedSchedule/department" class="nav-link" id="educationAttendedScheduleDepartment">本校上课记录</a>
+                <a href="/education/attendedSchedule/all" class="nav-link" id="educationAttendedScheduleAll">上课记录管理</a>
               </li>
               <li class="nav-item">
                 <a href="/education/attendedSchedule/my" class="nav-link" id="educationAttendedScheduleMy">我的上课记录</a>

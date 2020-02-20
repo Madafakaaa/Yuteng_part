@@ -31,17 +31,15 @@ Route::resource('/classroom', 'ClassroomController');
 // 公共客户录入
 Route::get('/market/publicCustomer/create', 'MarketController@publicCustomerCreate');
 Route::post('/market/publicCustomer/create', 'MarketController@publicCustomerStore');
-// 我的客户录入
-Route::get('/market/myCustomer/create', 'MarketController@myCustomerCreate');
-Route::post('/market/myCustomer/create', 'MarketController@myCustomerStore');
 // 修改负责人
 Route::get('/market/follower/edit', 'MarketController@followerEdit');
 Route::post('/market/follower/edit2', 'MarketController@followerEdit2');
 Route::post('/market/follower/store', 'MarketController@followerStore');
-// 部门客户
+// 客户管理
 Route::get('/market/customer/all', 'MarketController@customerAll');
-// 本校客户
-Route::get('/market/customer/department', 'MarketController@customerDepartment');
+// 我的客户录入
+Route::get('/market/myCustomer/create', 'MarketController@myCustomerCreate');
+Route::post('/market/myCustomer/create', 'MarketController@myCustomerStore');
 // 我的客户
 Route::get('/market/customer/my', 'MarketController@customerMy');
 // 我的学生
@@ -51,10 +49,8 @@ Route::get('/market/contract/create', 'MarketController@contractCreate');
 Route::post('/market/contract/create2', 'MarketController@contractCreate2');
 Route::post('/market/contract/store', 'MarketController@contractStore');
 Route::delete('/market/contract/{contract_id}', 'MarketController@contractDelete');
-// 部门签约
+// 签约管理
 Route::get('/market/contract/all', 'MarketController@contractAll');
-// 本校签约
-Route::get('/market/contract/department', 'MarketController@contractDepartment');
 // 我的签约
 Route::get('/market/contract/my', 'MarketController@contractMy');
 // 学生退费
@@ -64,10 +60,8 @@ Route::post('/market/refund/create3', 'MarketController@refundCreate3');
 Route::post('/market/refund/create4', 'MarketController@refundCreate4');
 Route::post('/market/refund/store', 'MarketController@refundStore');
 Route::delete('/market/refund/{refund_id}', 'MarketController@refundDelete');
-// 部门退费
+// 部门管理
 Route::get('/market/refund/all', 'MarketController@refundAll');
-// 本校退费
-Route::get('/market/refund/department', 'MarketController@refundDepartment');
 // 我的退费
 Route::get('/market/refund/my', 'MarketController@refundMy');
 
@@ -78,39 +72,39 @@ Route::get('/market/refund/my', 'MarketController@refundMy');
 Route::get('/operation/follower/edit', 'OperationController@followerEdit');
 Route::post('/operation/follower/edit2', 'OperationController@followerEdit2');
 Route::post('/operation/follower/store', 'OperationController@followerStore');
-// 全部学生
+// 学生管理
 Route::get('/operation/student/all', 'OperationController@studentAll');
-// 本校学生
-Route::get('/operation/student/department', 'OperationController@studentDepartment');
 // 我的学生
 Route::get('/operation/student/my', 'OperationController@studentMy');
+// 插入班级
+Route::get('/operation/member/edit', 'OperationController@memberEdit');
+Route::post('/operation/member/edit2', 'OperationController@memberEdit2');
+Route::post('/operation/member/store', 'OperationController@memberStore');
 // 新建班级
 Route::get('/operation/class/create', 'OperationController@classCreate');
 Route::post('/operation/class/store', 'OperationController@classStore');
-// 全部班级
+// 班级管理
 Route::get('/operation/class/all', 'OperationController@classAll');
-// 本校班级
-Route::get('/operation/class/department', 'OperationController@classDepartment');
-// 安排学生课程
+// 学生排课
 Route::get('/operation/studentSchedule/create', 'OperationController@studentScheduleCreate');
 Route::get('/operation/studentSchedule/createIrregular', 'OperationController@studentScheduleCreateIrregular');
 Route::post('/operation/studentSchedule/create2', 'OperationController@studentScheduleCreate2');
 Route::post('/operation/studentSchedule/createIrregular2', 'OperationController@studentScheduleCreateIrregular2');
 Route::post('/operation/studentSchedule/create3', 'OperationController@studentScheduleCreate3');
 Route::post('/operation/studentSchedule/store', 'OperationController@studentScheduleStore');
-// 安排班级课程
+// 学生课程
+Route::get('/operation/studentSchedule/all', 'OperationController@studentScheduleAll');
+// 班级排课
 Route::get('/operation/classSchedule/create', 'OperationController@classScheduleCreate');
 Route::get('/operation/classSchedule/createIrregular', 'OperationController@classScheduleCreateIrregular');
 Route::post('/operation/classSchedule/create2', 'OperationController@classScheduleCreate2');
 Route::post('/operation/classSchedule/createIrregular2', 'OperationController@classScheduleCreateIrregular2');
 Route::post('/operation/classSchedule/create3', 'OperationController@classScheduleCreate3');
 Route::post('/operation/classSchedule/store', 'OperationController@classScheduleStore');
-// 本校学生课程安排
-Route::get('/operation/studentSchedule/department', 'OperationController@studentScheduleDepartment');
-// 本校班级课程安排
-Route::get('/operation/classSchedule/department', 'OperationController@classScheduleDepartment');
-// 本校上课记录
-Route::get('/operation/attendedSchedule/department', 'OperationController@attendedScheduleDepartment');
+// 班级课程
+Route::get('/operation/classSchedule/all', 'OperationController@classScheduleAll');
+// 上课记录
+Route::get('/operation/attendedSchedule/all', 'OperationController@attendedScheduleAll');
 // 我的学生课程安排
 Route::get('/operation/schedule/my', 'OperationController@ScheduleMy');
 // 我的学生上课记录
@@ -120,10 +114,8 @@ Route::get('/operation/contract/create', 'OperationController@contractCreate');
 Route::post('/operation/contract/create2', 'OperationController@contractCreate2');
 Route::post('/operation/contract/store', 'OperationController@contractStore');
 Route::delete('/operation/contract/{contract_id}', 'OperationController@contractDelete');
-// 部门签约
+// 签约管理
 Route::get('/operation/contract/all', 'OperationController@contractAll');
-// 本校签约
-Route::get('/operation/contract/department', 'OperationController@contractDepartment');
 // 我的签约
 Route::get('/operation/contract/my', 'OperationController@contractMy');
 // 学生退费
@@ -133,10 +125,8 @@ Route::post('/operation/refund/create3', 'OperationController@refundCreate3');
 Route::post('/operation/refund/create4', 'OperationController@refundCreate4');
 Route::post('/operation/refund/store', 'OperationController@refundStore');
 Route::delete('/operation/refund/{refund_id}', 'OperationController@refundDelete');
-// 部门退费
+// 退费管理
 Route::get('/operation/refund/all', 'OperationController@refundAll');
-// 本校退费
-Route::get('/operation/refund/department', 'OperationController@refundDepartment');
 // 我的退费
 Route::get('/operation/refund/my', 'OperationController@refundMy');
 
@@ -195,13 +185,9 @@ Route::post('/student/{student_id}/remark', 'StudentController@remark');
 // 学生跟进记录提交
 Route::post('/student/{student_id}/record', 'StudentController@record');
 
-
-
 // 合同
 // 查看合同
 Route::get('/contract/{contract_id}', 'ContractController@show');
-
-
 
 // 班级
 // 查看班级
@@ -210,7 +196,13 @@ Route::get('/class/{class_id}', 'ClassController@show');
 Route::get('/class/{class_id}/edit', 'ClassController@edit');
 Route::put('/class/{class_id}', 'ClassController@update');
 
-
+// 上课
+// 查看上课安排详情
+Route::get('/schedule/{schedule_id}', 'ScheduleController@schedule');
+// 查看上课记录详情
+Route::get('/attendedSchedule/{participant_id}', 'ScheduleController@attendedSchedule');
+// 复核上课记录
+Route::get('/attendedSchedule/{participant_id}/check', 'ScheduleController@attendedScheduleCheck');
 
 // 课程表
 Route::get('/calendar', 'CalendarController@calendar');

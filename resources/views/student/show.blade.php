@@ -135,6 +135,9 @@
             <a class="nav-link mb-3" id="attended-schedule-tab" data-toggle="tab" href="#attended-schedule-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>上课记录</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link mb-3" id="class-tab" data-toggle="tab" href="#class-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>剩余课时</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link mb-3" id="hour-tab" data-toggle="tab" href="#hour-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>剩余课时</a>
           </li>
           <li class="nav-item">
@@ -204,7 +207,6 @@
                     <th style='width:95px;'>日期</th>
                     <th style='width:105px;'>时间</th>
                     <th style='width:100px;'>地点</th>
-                    <th style='width:90px;'>操作</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -226,7 +228,44 @@
                         <td>{{ $schedule->schedule_date }}</td>
                         <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
                         <td>{{ $schedule->classroom_name }}</td>
-                        <td><a href='/document/{{$schedule->schedule_document}}'><button type="button" class="btn btn-primary btn-sm">教案下载</button></a></td>
+                      </tr>
+                    @endforeach
+                  @endif
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="class-card" role="tabpanel">
+          <div class="card main_card mb-4" style="display:none">
+            <div class="table-responsive">
+              <table class="table align-items-center table-hover text-left table-bordered">
+                <thead class="thead-light">
+                  <tr>
+                    <th style='width:60px;'>序号</th>
+                    <th style='width:95px;'>校区</th>
+                    <th style='width:145px;'>班级</th>
+                    <th style='width:151px;'>教师</th>
+                    <th style='width:55px;'>科目</th>
+                    <th style='width:55px;'>年级</th>
+                    <th style='width:95px;'>人数</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if(count($classes)==0)
+                    <tr class="text-center"><td colspan="7">当前没有记录</td></tr>
+                  @else
+                    @foreach ($classes as $class)
+                      <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $class->department_name }}</td>
+                        <td>{{ $class->class_name }}</td>
+                        <td>{{ $class->user_name }}</td>
+                        <td>{{ $class->subject_name }}</td>
+                        <td>{{ $class->grade_name }}</td>
+                        <td>{{ $class->class_current_num }} / {{ $class->class_max_num }} 人</td>
                       </tr>
                     @endforeach
                   @endif

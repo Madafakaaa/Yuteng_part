@@ -209,7 +209,7 @@
               <div class="form-group row">
                 <label class="col-md-4 col-form-label form-control-label">签约类型<span style="color:red">*</span></label>
                 <div class="col-md-8">
-                  <input class="form-control" type="text" value="首次签约" readonly>
+                  <input class="form-control" type="text" value="续费签约" readonly>
                 </div>
               </div>
             </div>

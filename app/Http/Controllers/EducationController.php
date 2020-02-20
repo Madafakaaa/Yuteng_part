@@ -88,84 +88,6 @@ class EducationController extends Controller
     }
 
     /**
-     * 本校学生视图
-     * URL: GET /education/student/department
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     */
-    public function studentDepartment(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取用户信息
-        $user_level = Session::get('user_level');
-        // 获取数据
-        $rows = DB::table('student')
-                  ->join('department', 'student.student_department', '=', 'department.department_id')
-                  ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                  ->leftJoin('user AS consultant', 'student.student_consultant', '=', 'consultant.user_id')
-                  ->leftJoin('position AS consultant_position', 'consultant.user_position', '=', 'consultant_position.position_id')
-                  ->leftJoin('user AS class_adviser', 'student.student_class_adviser', '=', 'class_adviser.user_id')
-                  ->leftJoin('position AS class_adviser_position', 'class_adviser.user_position', '=', 'class_adviser_position.position_id')
-                  ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
-                  ->where('student_department', Session::get('user_department'))
-                  ->where('student_customer_status', 1)
-                  ->where('student_status', 1);
-        // 添加筛选条件
-        // 客户名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
-        }
-        // 客户校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter2'));
-        }
-        // 客户年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
-        }
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-        // 排序并获取数据对象
-        $rows = $rows->select('student.student_id AS student_id',
-                              'student.student_name AS student_name',
-                              'student.student_gender AS student_gender',
-                              'student.student_guardian AS student_guardian',
-                              'student.student_guardian_relationship AS student_guardian_relationship',
-                              'student.student_phone AS student_phone',
-                              'student.student_follow_level AS student_follow_level',
-                              'student.student_last_follow_date AS student_last_follow_date',
-                              'student.student_customer_status AS student_customer_status',
-                              'department.department_name AS department_name',
-                              'grade.grade_name AS grade_name',
-                              'consultant.user_name AS consultant_name',
-                              'consultant_position.position_name AS consultant_position_name',
-                              'class_adviser.user_name AS class_adviser_name',
-                              'class_adviser_position.position_name AS class_adviser_position_name')
-                     ->orderBy('student_department', 'asc')
-                     ->orderBy('student_follow_level', 'desc')
-                     ->orderBy('student_grade', 'desc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-        // 获取校区、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        // 返回列表视图
-        return view('education/studentDepartment', ['rows' => $rows,
-                                                   'currentPage' => $currentPage,
-                                                   'totalPage' => $totalPage,
-                                                   'startIndex' => $offset,
-                                                   'request' => $request,
-                                                   'totalNum' => $totalNum,
-                                                   'filter_departments' => $filter_departments,
-                                                   'filter_grades' => $filter_grades]);
-    }
-
-    /**
      * 我的学生视图
      * URL: GET /education/student/my
      * @param  Request  $request
@@ -314,77 +236,6 @@ class EducationController extends Controller
     }
 
     /**
-     * 本校班级视图
-     * URL: GET /education/class/department
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     */
-    public function classDepartment(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-
-        // 获取用户信息
-        $user_level = Session::get('user_level');
-
-        // 获取数据
-        $rows = DB::table('class')
-                  ->join('department', 'class.class_department', '=', 'department.department_id')
-                  ->join('grade', 'class.class_grade', '=', 'grade.grade_id')
-                  ->leftJoin('subject', 'class.class_subject', '=', 'subject.subject_id')
-                  ->join('user', 'class.class_teacher', '=', 'user.user_id')
-                  ->join('position', 'user.user_position', '=', 'position.position_id')
-                  ->where('class_department', Session::get('user_department'))
-                  ->where('class_status', 1);
-
-        // 添加筛选条件
-        // 班级名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('class_name', 'like', '%'.$request->input('filter1').'%');
-        }
-        // 班级校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('class_department', '=', $request->input('filter2'));
-        }
-        // 班级年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('class_grade', '=', $request->input('filter3'));
-        }
-        // 班级科目
-        if ($request->filled('filter4')) {
-            $rows = $rows->where('class_subject', '=', $request->input('filter4'));
-        }
-
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-
-        // 排序并获取数据对象
-        $rows = $rows->orderBy('class_createtime', 'asc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-
-        // 获取校区、年级、科目信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
-
-        // 返回列表视图
-        return view('education/classDepartment', ['rows' => $rows,
-                                                  'currentPage' => $currentPage,
-                                                  'totalPage' => $totalPage,
-                                                  'startIndex' => $offset,
-                                                  'request' => $request,
-                                                  'totalNum' => $totalNum,
-                                                  'filter_departments' => $filter_departments,
-                                                  'filter_grades' => $filter_grades,
-                                                  'filter_subjects' => $filter_subjects]);
-    }
-
-    /**
      * 我的班级视图
      * URL: GET /education/class/my
      * @param  Request  $request
@@ -456,8 +307,8 @@ class EducationController extends Controller
     }
 
     /**
-     * 本校课程安排视图
-     * URL: GET /education/schedule/department
+     * 课程安排管理视图
+     * URL: GET /education/schedule/all
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 课程安排校区
@@ -466,7 +317,7 @@ class EducationController extends Controller
      * @param  $request->input('filter4'): 课程安排教师
      * @param  $request->input('filter5'): 课程安排日期
      */
-    public function scheduleDepartment(Request $request){
+    public function scheduleAll(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -527,7 +378,7 @@ class EducationController extends Controller
         $filter_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('education/scheduleDepartment', ['rows' => $rows,
+        return view('education/scheduleAll', ['rows' => $rows,
                                                        'currentPage' => $currentPage,
                                                        'totalPage' => $totalPage,
                                                        'startIndex' => $offset,
@@ -878,32 +729,36 @@ class EducationController extends Controller
                               ->first()
                               ->student_name;
             $participant_attend_status = $request->input('input'.$i.'_1');
-            if($participant_attend_status==0){
+            if($participant_attend_status==2){
                 $student_courses[] = array($participant_student, $participant_attend_status, 0, 0, $student_name, "无");
                 continue;
             }
             $participant_hour = $request->input('input'.$i.'_2');
             $participant_amount = $request->input('input'.$i.'_3');
-            // 查询剩余课时
-            $hour = DB::table('hour')
-                      ->join('course', 'hour.hour_course', '=', 'course.course_id')
-                      ->where('hour_id', $participant_hour)
-                      ->first();
-            $hour_remain = $hour->hour_remain+$hour->hour_remain_free;
-            $course_name = $hour->course_name;
-            // 剩余课时不足
-            if($participant_amount>$hour_remain){
-                // 查询学生名称
-                $student_name = DB::table('student')
-                                  ->where('student_id', $participant_student)
-                                  ->first()
-                                  ->student_name;
-                // 返回第一步
-                return redirect("/schedule/attend/{$schedule_id}")->with(['notify' => true,
-                                                                         'type' => 'danger',
-                                                                         'title' => '学生剩余课时不足，请重新选择',
-                                                                         'message' => $student_name.'剩余课时不足，请重新选择']);
+            if($participant_attend_status!=2){
+                // 查询剩余课时
+                $hour = DB::table('hour')
+                          ->join('course', 'hour.hour_course', '=', 'course.course_id')
+                          ->where('hour_id', $participant_hour)
+                          ->first();
+                $hour_remain = $hour->hour_remain+$hour->hour_remain_free;
+                $course_name = $hour->course_name;
+                // 剩余课时不足
+                if($participant_amount>$hour_remain){
+                    // 查询学生名称
+                    $student_name = DB::table('student')
+                                      ->where('student_id', $participant_student)
+                                      ->first()
+                                      ->student_name;
+                    // 返回第一步
+                    return redirect("/schedule/attend/{$schedule_id}")->with(['notify' => true,
+                                                                             'type' => 'danger',
+                                                                             'title' => '学生剩余课时不足，请重新选择',
+                                                                             'message' => $student_name.'剩余课时不足，请重新选择']);
 
+                }
+            }else{
+                $course_name = "无";
             }
             $student_courses[] = array($participant_student, $participant_attend_status, $participant_hour, $participant_amount, $student_name, $course_name);
         }
@@ -959,64 +814,67 @@ class EducationController extends Controller
             for($i=1;$i<=$schedule_student_num;$i++){
                 $participant_student = $request->input('input'.$i.'_0');
                 $participant_attend_status = $request->input('input'.$i.'_1');
-                if($participant_attend_status==0){ // 请假（不计课时）
-                    $participant_hour = 0;
-                    $participant_amount = 0;
-                    $schedule_leave_num = $schedule_leave_num + 1; // 增加请假人数
-                }else if($participant_attend_status==1){ // 正常（计课时）
+                if($participant_attend_status==1){ // 正常（计课时）
                     $participant_hour = $request->input('input'.$i.'_2');
                     $participant_amount = $request->input('input'.$i.'_3');
                     $schedule_attended_num = $schedule_attended_num + 1; // 增加正常上课人数
-                }else{ // 旷课（计课时）
+                }else if($participant_attend_status==2){ // 请假（不计课时）
+                    $participant_hour = 0;
+                    $participant_amount = 0;
+                    $schedule_leave_num = $schedule_leave_num + 1; // 增加请假人数
+                }else { // 旷课（计课时）
                     $participant_hour = $request->input('input'.$i.'_2');
                     $participant_amount = $request->input('input'.$i.'_3');
                     $schedule_absence_num = $schedule_absence_num + 1; // 增加旷课人数
                 }
-                // 获取剩余课时信息
-                $hour = DB::table('hour')
-                          ->where('hour_id', $participant_hour)
-                          ->first();
-                // 有正常课时
-                if($hour->hour_remain>0){
-                    //正常课时足够
-                    if($hour->hour_remain>=$participant_amount){
+                // 扣除剩余课时
+                if($participant_attend_status!=2){
+                    // 获取剩余课时信息
+                    $hour = DB::table('hour')
+                              ->where('hour_id', $participant_hour)
+                              ->first();
+                    // 有正常课时
+                    if($hour->hour_remain>0){
+                        //正常课时足够
+                        if($hour->hour_remain>=$participant_amount){
+                            // 扣除学生正常课时
+                            DB::table('hour')
+                              ->where('hour_id', $participant_hour)
+                              ->decrement('hour_remain', $participant_amount);
+                            // 增加已用正常课时数
+                            DB::table('hour')
+                              ->where('hour_id', $participant_hour)
+                              ->increment('hour_used', $participant_amount);
+                        }else{ //正常课时不足
+                            // 扣除学生正常课时
+                            DB::table('hour')
+                              ->where('hour_id', $participant_hour)
+                              ->decrement('hour_remain', $hour->hour_remain);
+                            // 增加已用正常课时数
+                            DB::table('hour')
+                              ->where('hour_id', $participant_hour)
+                              ->increment('hour_used', $hour->hour_remain);
+                            // 剩余需扣除赠送课时
+                            $participant_free_amount = $participant_amount-$hour->hour_remain;
+                            // 扣除学生赠送课时
+                            DB::table('hour')
+                              ->where('hour_id', $participant_hour)
+                              ->decrement('hour_remain_free', $participant_free_amount);
+                            // 增加已用赠送课时数
+                            DB::table('hour')
+                              ->where('hour_id', $participant_hour)
+                              ->increment('hour_used_free', $participant_free_amount);
+                        }
+                    }else{ // 没有正常课时
                         // 扣除学生正常课时
                         DB::table('hour')
                           ->where('hour_id', $participant_hour)
-                          ->decrement('hour_remain', $participant_amount);
+                          ->decrement('hour_remain_free', $participant_amount);
                         // 增加已用正常课时数
                         DB::table('hour')
                           ->where('hour_id', $participant_hour)
-                          ->increment('hour_used', $participant_amount);
-                    }else{ //正常课时不足
-                        // 扣除学生正常课时
-                        DB::table('hour')
-                          ->where('hour_id', $participant_hour)
-                          ->decrement('hour_remain', $hour->hour_remain);
-                        // 增加已用正常课时数
-                        DB::table('hour')
-                          ->where('hour_id', $participant_hour)
-                          ->increment('hour_used', $hour->hour_remain);
-                        // 剩余需扣除赠送课时
-                        $participant_free_amount = $participant_amount-$hour->hour_remain;
-                        // 扣除学生赠送课时
-                        DB::table('hour')
-                          ->where('hour_id', $participant_hour)
-                          ->decrement('hour_remain_free', $participant_free_amount);
-                        // 增加已用赠送课时数
-                        DB::table('hour')
-                          ->where('hour_id', $participant_hour)
-                          ->increment('hour_used_free', $participant_free_amount);
+                          ->increment('hour_used_free', $participant_amount);
                     }
-                }else{ // 没有正常课时
-                    // 扣除学生正常课时
-                    DB::table('hour')
-                      ->where('hour_id', $participant_hour)
-                      ->decrement('hour_remain_free', $participant_amount);
-                    // 增加已用正常课时数
-                    DB::table('hour')
-                      ->where('hour_id', $participant_hour)
-                      ->increment('hour_used_free', $participant_amount);
                 }
                 // 添加上课成员表
                 DB::table('participant')->insert(
@@ -1042,6 +900,7 @@ class EducationController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
+            return $e;
             // 返回第一步
             return redirect("/education/schedule/attend/{$schedule_id}")
                    ->with(['notify' => true,
@@ -1059,7 +918,7 @@ class EducationController extends Controller
     }
 
     /**
-     * 本校上课记录视图
+     * 上课记录管理视图
      * URL: GET /education/attendedSchedule/my
      * @param  Request  $request
      * @param  $request->input('page'): 页数
@@ -1069,7 +928,7 @@ class EducationController extends Controller
      * @param  $request->input('filter4'): 课程安排教师
      * @param  $request->input('filter5'): 课程安排日期
      */
-    public function attendedScheduleDepartment(Request $request){
+    public function attendedScheduleAll(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -1082,11 +941,12 @@ class EducationController extends Controller
                   ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
-                  ->join('hour', 'participant.participant_hour', '=', 'hour.hour_id')
-                  ->join('course', 'hour.hour_course', '=', 'course.course_id')
+                  ->leftJoin('hour', 'participant.participant_hour', '=', 'hour.hour_id')
+                  ->leftJoin('course', 'hour.hour_course', '=', 'course.course_id')
                   ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
                   ->leftJoin('user AS checked_user', 'participant.participant_checked_user', '=', 'checked_user.user_id')
-                  ->select('student.student_name AS student_name',
+                  ->select('participant.participant_id AS participant_id',
+                           'student.student_name AS student_name',
                            'subject.subject_name AS subject_name',
                            'grade.grade_name AS grade_name',
                            'classroom.classroom_name AS classroom_name',
@@ -1100,8 +960,7 @@ class EducationController extends Controller
                            'schedule.schedule_date AS schedule_date',
                            'schedule.schedule_start AS schedule_start',
                            'schedule.schedule_end AS schedule_end',
-                           'course.course_name AS course_name')
-                  ->where('schedule_department', '=', Session::get('user_department'));
+                           'course.course_name AS course_name');
         // 添加筛选条件
         // 课程安排校区
         if ($request->filled('filter1')) {
@@ -1144,7 +1003,7 @@ class EducationController extends Controller
         $filter_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('education/attendedScheduleDepartment', ['rows' => $rows,
+        return view('education/attendedScheduleAll', ['rows' => $rows,
                                                        'currentPage' => $currentPage,
                                                        'totalPage' => $totalPage,
                                                        'startIndex' => $offset,
@@ -1180,11 +1039,12 @@ class EducationController extends Controller
                   ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
-                  ->join('hour', 'participant.participant_hour', '=', 'hour.hour_id')
-                  ->join('course', 'hour.hour_course', '=', 'course.course_id')
+                  ->leftJoin('hour', 'participant.participant_hour', '=', 'hour.hour_id')
+                  ->leftJoin('course', 'hour.hour_course', '=', 'course.course_id')
                   ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
                   ->leftJoin('user AS checked_user', 'participant.participant_checked_user', '=', 'checked_user.user_id')
-                  ->select('student.student_name AS student_name',
+                  ->select('participant.participant_id AS participant_id',
+                           'student.student_name AS student_name',
                            'subject.subject_name AS subject_name',
                            'grade.grade_name AS grade_name',
                            'classroom.classroom_name AS classroom_name',

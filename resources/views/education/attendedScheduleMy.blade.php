@@ -100,7 +100,7 @@
                 @if($row->participant_attend_status==1)
                   <td><span style="color:green;">正常</span></td>
                 @elseif($row->participant_attend_status==2)
-                  <td><span style="color:yellow;">请假</span></td>
+                  <td><span style="color:blue;">请假</span></td>
                 @else
                   <td><span style="color:red;">旷课</span></td>
                 @endif
@@ -113,7 +113,7 @@
                   <td><span style="color:red;">待复核</span></td>
                 @endif
                 <td>
-                  <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">上课详情</button></a>&nbsp;
+                  <a href='/attendedSchedule/{{$row->participant_id}}'><button type="button" class="btn btn-primary btn-sm">上课详情</button></a>&nbsp;
                 </td>
               </tr>
               @endforeach

@@ -4,7 +4,7 @@
 
 @section('nav')
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">运营中心</li>
+    <li class="breadcrumb-item active">教学中心</li>
     <li class="breadcrumb-item active">本校上课记录</li>
 @endsection
 
@@ -100,7 +100,7 @@
                 @if($row->participant_attend_status==1)
                   <td><span style="color:green;">正常</span></td>
                 @elseif($row->participant_attend_status==2)
-                  <td><span style="color:yellow;">请假</span></td>
+                  <td><span style="color:blue;">请假</span></td>
                 @else
                   <td><span style="color:red;">旷课</span></td>
                 @endif
@@ -113,7 +113,7 @@
                   <td><span style="color:red;">待复核</span></td>
                 @endif
                 <td>
-                  <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">上课详情</button></a>&nbsp;
+                  <a href='/attendedSchedule/{{$row->participant_id}}'><button type="button" class="btn btn-primary btn-sm">上课详情</button></a>&nbsp;
                 </td>
               </tr>
               @endforeach
@@ -129,8 +129,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-operation');
-  navbarActive('navbar-operation');
-  linkActive('operationAttendedScheduleDepartment');
+  linkActive('link-education');
+  navbarActive('navbar-education');
+  linkActive('educationAttendedScheduleDepartment');
 </script>
 @endsection

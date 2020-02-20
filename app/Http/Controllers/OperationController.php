@@ -200,84 +200,6 @@ class OperationController extends Controller
     }
 
     /**
-     * 本校学生视图
-     * URL: GET /operation/student/department
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     */
-    public function studentDepartment(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取用户信息
-        $user_level = Session::get('user_level');
-        // 获取数据
-        $rows = DB::table('student')
-                  ->join('department', 'student.student_department', '=', 'department.department_id')
-                  ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                  ->leftJoin('user AS consultant', 'student.student_consultant', '=', 'consultant.user_id')
-                  ->leftJoin('position AS consultant_position', 'consultant.user_position', '=', 'consultant_position.position_id')
-                  ->leftJoin('user AS class_adviser', 'student.student_class_adviser', '=', 'class_adviser.user_id')
-                  ->leftJoin('position AS class_adviser_position', 'class_adviser.user_position', '=', 'class_adviser_position.position_id')
-                  ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
-                  ->where('student_department', Session::get('user_department'))
-                  ->where('student_customer_status', 1)
-                  ->where('student_status', 1);
-        // 添加筛选条件
-        // 客户名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
-        }
-        // 客户校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter2'));
-        }
-        // 客户年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
-        }
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-        // 排序并获取数据对象
-        $rows = $rows->select('student.student_id AS student_id',
-                              'student.student_name AS student_name',
-                              'student.student_gender AS student_gender',
-                              'student.student_guardian AS student_guardian',
-                              'student.student_guardian_relationship AS student_guardian_relationship',
-                              'student.student_phone AS student_phone',
-                              'student.student_follow_level AS student_follow_level',
-                              'student.student_last_follow_date AS student_last_follow_date',
-                              'student.student_customer_status AS student_customer_status',
-                              'department.department_name AS department_name',
-                              'grade.grade_name AS grade_name',
-                              'consultant.user_name AS consultant_name',
-                              'consultant_position.position_name AS consultant_position_name',
-                              'class_adviser.user_name AS class_adviser_name',
-                              'class_adviser_position.position_name AS class_adviser_position_name')
-                     ->orderBy('student_department', 'asc')
-                     ->orderBy('student_follow_level', 'desc')
-                     ->orderBy('student_grade', 'desc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-        // 获取校区、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        // 返回列表视图
-        return view('operation/studentDepartment', ['rows' => $rows,
-                                                   'currentPage' => $currentPage,
-                                                   'totalPage' => $totalPage,
-                                                   'startIndex' => $offset,
-                                                   'request' => $request,
-                                                   'totalNum' => $totalNum,
-                                                   'filter_departments' => $filter_departments,
-                                                   'filter_grades' => $filter_grades]);
-    }
-
-    /**
      * 我的学生视图
      * URL: GET /operation/student/my
      * @param  Request  $request
@@ -524,77 +446,6 @@ class OperationController extends Controller
                                            'filter_departments' => $filter_departments,
                                            'filter_grades' => $filter_grades,
                                            'filter_subjects' => $filter_subjects]);
-    }
-
-    /**
-     * 本校班级视图
-     * URL: GET /operation/class/department
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     */
-    public function classDepartment(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-
-        // 获取用户信息
-        $user_level = Session::get('user_level');
-
-        // 获取数据
-        $rows = DB::table('class')
-                  ->join('department', 'class.class_department', '=', 'department.department_id')
-                  ->join('grade', 'class.class_grade', '=', 'grade.grade_id')
-                  ->leftJoin('subject', 'class.class_subject', '=', 'subject.subject_id')
-                  ->join('user', 'class.class_teacher', '=', 'user.user_id')
-                  ->join('position', 'user.user_position', '=', 'position.position_id')
-                  ->where('class_department', Session::get('user_department'))
-                  ->where('class_status', 1);
-
-        // 添加筛选条件
-        // 班级名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('class_name', 'like', '%'.$request->input('filter1').'%');
-        }
-        // 班级校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('class_department', '=', $request->input('filter2'));
-        }
-        // 班级年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('class_grade', '=', $request->input('filter3'));
-        }
-        // 班级科目
-        if ($request->filled('filter4')) {
-            $rows = $rows->where('class_subject', '=', $request->input('filter4'));
-        }
-
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-
-        // 排序并获取数据对象
-        $rows = $rows->orderBy('class_createtime', 'asc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-
-        // 获取校区、年级、科目信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
-
-        // 返回列表视图
-        return view('operation/classDepartment', ['rows' => $rows,
-                                                  'currentPage' => $currentPage,
-                                                  'totalPage' => $totalPage,
-                                                  'startIndex' => $offset,
-                                                  'request' => $request,
-                                                  'totalNum' => $totalNum,
-                                                  'filter_departments' => $filter_departments,
-                                                  'filter_grades' => $filter_grades,
-                                                  'filter_subjects' => $filter_subjects]);
     }
 
     /**
@@ -1750,8 +1601,8 @@ class OperationController extends Controller
     }
 
     /**
-     * 本校学生课程安排视图
-     * URL: GET /operation/studentSchedule/department
+     * 学生课程视图
+     * URL: GET /operation/studentSchedule/all
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 课程安排校区
@@ -1760,7 +1611,7 @@ class OperationController extends Controller
      * @param  $request->input('filter4'): 课程安排教师
      * @param  $request->input('filter5'): 课程安排日期
      */
-    public function studentScheduleDepartment(Request $request){
+    public function studentScheduleAll(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -1779,8 +1630,7 @@ class OperationController extends Controller
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                   ->where('schedule_participant_type', '=', 0)
-                  ->where('schedule_attended', '=', 0)
-                  ->where('schedule_department', '=', Session::get('user_department'));
+                  ->where('schedule_attended', '=', 0);
         // 添加筛选条件
         // 课程安排校区
         if ($request->filled('filter1')) {
@@ -1824,7 +1674,7 @@ class OperationController extends Controller
         $filter_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('operation/studentScheduleDepartment', ['rows' => $rows,
+        return view('operation/studentScheduleAll', ['rows' => $rows,
                                                                'currentPage' => $currentPage,
                                                                'totalPage' => $totalPage,
                                                                'startIndex' => $offset,
@@ -1839,7 +1689,7 @@ class OperationController extends Controller
 
     /**
      * 本校班级课程安排视图
-     * URL: GET /operation/classSchedule/department
+     * URL: GET /operation/classSchedule/all
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 课程安排校区
@@ -1848,7 +1698,7 @@ class OperationController extends Controller
      * @param  $request->input('filter4'): 课程安排教师
      * @param  $request->input('filter5'): 课程安排日期
      */
-    public function classScheduleDepartment(Request $request){
+    public function classScheduleAll(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -1867,28 +1717,11 @@ class OperationController extends Controller
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                   ->where('schedule_participant_type', '=', 1)
-                  ->where('schedule_attended', '=', 0)
-                  ->where('schedule_department', '=', Session::get('user_department'));
+                  ->where('schedule_attended', '=', 0);
         // 添加筛选条件
         // 课程安排校区
         if ($request->filled('filter1')) {
             $rows = $rows->where('schedule_department', '=', $request->input('filter1'));
-        }
-        // 课程安排学生/班级
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('schedule_participant', '=', $request->input('filter2'));
-        }
-        // 课程安排年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('schedule_grade', '=', $request->input('filter3'));
-        }
-        // 课程安排教师
-        if ($request->filled('filter4')) {
-            $rows = $rows->where('schedule_teacher', '=', $request->input('filter4'));
-        }
-        // 课程安排日期
-        if ($request->filled('filter5')) {
-            $rows = $rows->where('schedule_date', '=', $request->input('filter5'));
         }
 
         // 保存数据总数
@@ -1911,21 +1744,21 @@ class OperationController extends Controller
         $filter_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('operation/classScheduleDepartment', ['rows' => $rows,
-                                                               'currentPage' => $currentPage,
-                                                               'totalPage' => $totalPage,
-                                                               'startIndex' => $offset,
-                                                               'request' => $request,
-                                                               'totalNum' => $totalNum,
-                                                               'filter_departments' => $filter_departments,
-                                                               'filter_classes' => $filter_classes,
-                                                               'filter_grades' => $filter_grades,
-                                                               'filter_users' => $filter_users]);
+        return view('operation/classScheduleAll', ['rows' => $rows,
+                                                   'currentPage' => $currentPage,
+                                                   'totalPage' => $totalPage,
+                                                   'startIndex' => $offset,
+                                                   'request' => $request,
+                                                   'totalNum' => $totalNum,
+                                                   'filter_departments' => $filter_departments,
+                                                   'filter_classes' => $filter_classes,
+                                                   'filter_grades' => $filter_grades,
+                                                   'filter_users' => $filter_users]);
     }
 
     /**
-     * 本校上课记录视图
-     * URL: GET /operation/attendedSchedule/department
+     * 上课记录视图
+     * URL: GET /operation/attendedSchedule/all
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 课程安排校区
@@ -1934,7 +1767,7 @@ class OperationController extends Controller
      * @param  $request->input('filter4'): 课程安排教师
      * @param  $request->input('filter5'): 课程安排日期
      */
-    public function attendedScheduleDepartment(Request $request){
+    public function attendedScheduleAll(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -1947,11 +1780,12 @@ class OperationController extends Controller
                   ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
-                  ->join('hour', 'participant.participant_hour', '=', 'hour.hour_id')
-                  ->join('course', 'hour.hour_course', '=', 'course.course_id')
+                  ->leftJoin('hour', 'participant.participant_hour', '=', 'hour.hour_id')
+                  ->leftJoin('course', 'hour.hour_course', '=', 'course.course_id')
                   ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
                   ->leftJoin('user AS checked_user', 'participant.participant_checked_user', '=', 'checked_user.user_id')
-                  ->select('student.student_name AS student_name',
+                  ->select('participant.participant_id AS participant_id',
+                           'student.student_name AS student_name',
                            'subject.subject_name AS subject_name',
                            'grade.grade_name AS grade_name',
                            'classroom.classroom_name AS classroom_name',
@@ -2009,16 +1843,16 @@ class OperationController extends Controller
         $filter_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
 
         // 返回列表视图
-        return view('operation/attendedScheduleDepartment', ['rows' => $rows,
-                                                               'currentPage' => $currentPage,
-                                                               'totalPage' => $totalPage,
-                                                               'startIndex' => $offset,
-                                                               'request' => $request,
-                                                               'totalNum' => $totalNum,
-                                                               'filter_departments' => $filter_departments,
-                                                               'filter_classes' => $filter_classes,
-                                                               'filter_grades' => $filter_grades,
-                                                               'filter_users' => $filter_users]);
+        return view('operation/attendedScheduleAll', ['rows' => $rows,
+                                                       'currentPage' => $currentPage,
+                                                       'totalPage' => $totalPage,
+                                                       'startIndex' => $offset,
+                                                       'request' => $request,
+                                                       'totalNum' => $totalNum,
+                                                       'filter_departments' => $filter_departments,
+                                                       'filter_classes' => $filter_classes,
+                                                       'filter_grades' => $filter_grades,
+                                                       'filter_users' => $filter_users]);
     }
 
     /**
@@ -2141,11 +1975,12 @@ class OperationController extends Controller
                   ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
-                  ->join('hour', 'participant.participant_hour', '=', 'hour.hour_id')
-                  ->join('course', 'hour.hour_course', '=', 'course.course_id')
+                  ->leftJoin('hour', 'participant.participant_hour', '=', 'hour.hour_id')
+                  ->leftJoin('course', 'hour.hour_course', '=', 'course.course_id')
                   ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
                   ->leftJoin('user AS checked_user', 'participant.participant_checked_user', '=', 'checked_user.user_id')
-                  ->select('student.student_name AS student_name',
+                  ->select('participant.participant_id AS participant_id',
+                           'student.student_name AS student_name',
                            'subject.subject_name AS subject_name',
                            'grade.grade_name AS grade_name',
                            'classroom.classroom_name AS classroom_name',
@@ -2233,7 +2068,7 @@ class OperationController extends Controller
         // 获取学生信息
         $students = DB::table('student')
                       ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                      ->where('student_consultant', Session::get('user_id'))
+                      ->where('student_class_adviser', Session::get('user_id'))
                       ->where('student_customer_status', 1)
                       ->orderBy('student_grade', 'asc')
                       ->get();
@@ -2624,75 +2459,6 @@ class OperationController extends Controller
     }
 
     /**
-     * 本校签约视图
-     * URL: GET /operation/contract/department
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     * @param  $request->input('filter1'): 校区
-     * @param  $request->input('filter2'): 学生
-     * @param  $request->input('filter3'): 年级
-     */
-    public function contractDepartment(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-
-        // 获取用户信息
-        $user_level = Session::get('user_level');
-
-        // 获取数据
-        $rows = DB::table('contract')
-                  ->join('student', 'contract.contract_student', '=', 'student.student_id')
-                  ->join('department', 'student.student_department', '=', 'department.department_id')
-                  ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                  ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
-                  ->join('position', 'user.user_position', '=', 'position.position_id')
-                  ->where('contract_type', '=', 1)
-                  ->where('contract_department', '=', Session::get('user_department'));
-        // 添加筛选条件
-        // 购课校区
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter1'));
-        }
-        // 购课学生
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('contract_student', '=', $request->input('filter2'));
-        }
-        // 课程年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
-        }
-
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-
-        // 排序并获取数据对象
-        $rows = $rows->orderBy('contract_createtime', 'asc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-
-        // 获取校区、学生、课程、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-
-        // 返回列表视图
-        return view('operation/contractDepartment', ['rows' => $rows,
-                                                   'currentPage' => $currentPage,
-                                                   'totalPage' => $totalPage,
-                                                   'startIndex' => $offset,
-                                                   'request' => $request,
-                                                   'totalNum' => $totalNum,
-                                                   'filter_departments' => $filter_departments,
-                                                   'filter_students' => $filter_students,
-                                                   'filter_grades' => $filter_grades]);
-    }
-
-    /**
      * 我的签约视图
      * URL: GET /operation/contract/my
      * @param  Request  $request
@@ -2770,7 +2536,7 @@ class OperationController extends Controller
         // 获取学生信息
         $students = DB::table('student')
                       ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                      ->where('class_adviser', Session::get('user_id'))
+                      ->where('student_class_adviser', Session::get('user_id'))
                       ->orderBy('student_grade', 'asc')
                       ->get();
         return view('operation/refundCreate', ['students' => $students]);
@@ -3148,90 +2914,6 @@ class OperationController extends Controller
                                          'filter_departments' => $filter_departments,
                                          'filter_students' => $filter_students,
                                          'filter_grades' => $filter_grades]);
-    }
-
-    /**
-     * 本校退费视图
-     * URL: GET /operation/refund/department
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     * @param  $request->input('filter1'): 校区
-     * @param  $request->input('filter2'): 学生
-     * @param  $request->input('filter3'): 年级
-     */
-    public function refundDepartment(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-
-        // 获取数据
-        $rows = DB::table('refund')
-                  ->join('student', 'refund.refund_student', '=', 'student.student_id')
-                  ->join('course', 'refund.refund_course', '=', 'course.course_id')
-                  ->join('department', 'student.student_department', '=', 'department.department_id')
-                  ->join('user AS createuser', 'refund.refund_createuser', '=', 'createuser.user_id')
-                  ->join('position AS createuser_position', 'createuser.user_position', '=', 'createuser_position.position_id')
-                  ->leftJoin('user AS checked_user', 'refund.refund_checked_user', '=', 'checked_user.user_id')
-                  ->leftJoin('position AS checked_user_position', 'checked_user.user_position', '=', 'checked_user_position.position_id')
-                  ->where('refund_type', '=', 1)
-                  ->where('refund_department', Session::get('user_department'));
-        // 添加筛选条件
-        // 购课校区
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter1'));
-        }
-        // 购课学生
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('refund_student', '=', $request->input('filter2'));
-        }
-        // 课程年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
-        }
-
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-
-        // 排序并获取数据对象
-        $rows = $rows->select('refund.refund_id AS refund_id',
-                              'refund.refund_contract AS refund_contract',
-                              'refund.refund_total_hour AS refund_total_hour',
-                              'refund.refund_fine AS refund_fine',
-                              'refund.refund_actual_amount AS refund_actual_amount',
-                              'refund.refund_date AS refund_date',
-                              'refund.refund_checked AS refund_checked',
-                              'refund.refund_createuser AS refund_createuser',
-                              'student.student_id AS student_id',
-                              'student.student_name AS student_name',
-                              'department.department_name AS department_name',
-                              'course.course_name AS course_name',
-                              'createuser.user_name AS createuser_name',
-                              'createuser_position.position_name AS createuser_position_name',
-                              'checked_user.user_name AS checked_user_name',
-                              'checked_user_position.position_name AS checked_user_position_name')
-                     ->orderBy('refund_date', 'desc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-
-        // 获取校区、学生、课程、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-
-        // 返回列表视图
-        return view('operation/refundDepartment', ['rows' => $rows,
-                                                 'currentPage' => $currentPage,
-                                                 'totalPage' => $totalPage,
-                                                 'startIndex' => $offset,
-                                                 'request' => $request,
-                                                 'totalNum' => $totalNum,
-                                                 'filter_departments' => $filter_departments,
-                                                 'filter_students' => $filter_students,
-                                                 'filter_grades' => $filter_grades]);
     }
 
     /**

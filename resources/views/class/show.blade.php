@@ -76,24 +76,6 @@
               </form>
             </li>
             @endforeach
-            <li class="list-group-item px-0">
-            <form action="/member/{{ $class->class_id }}" method="post">
-              @csrf
-              <div class="row align-items-center">
-                <div class="col ml-2">
-                  <select class="form-control" name="input1" data-toggle="select" required>
-                    <option value=''>请选择学生...</option>
-                    @foreach ($students as $student)
-                      <option value="{{ $student->student_id }}">{{ $student->student_name }}</option>
-                    @endforeach
-                  </select>
-                </div>
-                <div class="col-auto">
-                  <input type="submit" class="btn btn-warning" value="添加">
-                </div>
-              </div>
-            </form>
-            </li>
           </ul>
         </div>
       </div>

@@ -425,7 +425,7 @@ class MarketController extends Controller
     }
 
     /**
-     * 部门客户视图
+     * 客户管理视图
      * URL: GET /market/customer/all
      * @param  Request  $request
      * @param  $request->input('page'): 页数
@@ -498,82 +498,6 @@ class MarketController extends Controller
                                            'totalNum' => $totalNum,
                                            'filter_departments' => $filter_departments,
                                            'filter_grades' => $filter_grades]);
-    }
-
-    /**
-     * 本校客户视图
-     * URL: GET /market/customer/department
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     */
-    public function customerDepartment(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取用户信息
-        $user_level = Session::get('user_level');
-        // 获取数据
-        $rows = DB::table('student')
-                  ->join('department', 'student.student_department', '=', 'department.department_id')
-                  ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                  ->leftJoin('user AS consultant', 'student.student_consultant', '=', 'consultant.user_id')
-                  ->leftJoin('position AS consultant_position', 'consultant.user_position', '=', 'consultant_position.position_id')
-                  ->leftJoin('user AS class_adviser', 'student.student_class_adviser', '=', 'class_adviser.user_id')
-                  ->leftJoin('position AS class_adviser_position', 'class_adviser.user_position', '=', 'class_adviser_position.position_id')
-                  ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
-                  ->where('student_department', Session::get('user_department'))
-                  ->where('student_status', 1);
-        // 添加筛选条件
-        // 客户名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
-        }
-        // 客户校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter2'));
-        }
-        // 客户年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
-        }
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-        // 排序并获取数据对象
-        $rows = $rows->select('student.student_id AS student_id',
-                              'student.student_name AS student_name',
-                              'student.student_gender AS student_gender',
-                              'student.student_guardian AS student_guardian',
-                              'student.student_guardian_relationship AS student_guardian_relationship',
-                              'student.student_phone AS student_phone',
-                              'student.student_follow_level AS student_follow_level',
-                              'student.student_last_follow_date AS student_last_follow_date',
-                              'student.student_customer_status AS student_customer_status',
-                              'department.department_name AS department_name',
-                              'grade.grade_name AS grade_name',
-                              'consultant.user_name AS consultant_name',
-                              'consultant_position.position_name AS consultant_position_name',
-                              'class_adviser.user_name AS class_adviser_name',
-                              'class_adviser_position.position_name AS class_adviser_position_name')->orderBy('student_department', 'asc')
-                     ->orderBy('student_follow_level', 'desc')
-                     ->orderBy('student_grade', 'desc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-        // 获取校区、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        // 返回列表视图
-        return view('market/customerDepartment', ['rows' => $rows,
-                                                   'currentPage' => $currentPage,
-                                                   'totalPage' => $totalPage,
-                                                   'startIndex' => $offset,
-                                                   'request' => $request,
-                                                   'totalNum' => $totalNum,
-                                                   'filter_departments' => $filter_departments,
-                                                   'filter_grades' => $filter_grades]);
     }
 
     /**
@@ -1059,7 +983,7 @@ class MarketController extends Controller
     }
 
     /**
-     * 部门签约视图
+     * 签约管理视图
      * URL: GET /market/contract/all
      * @param  Request  $request
      * @param  $request->input('page'): 页数
@@ -1124,75 +1048,6 @@ class MarketController extends Controller
                                            'filter_departments' => $filter_departments,
                                            'filter_students' => $filter_students,
                                            'filter_grades' => $filter_grades]);
-    }
-
-    /**
-     * 本校签约视图
-     * URL: GET /market/contract/department
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     * @param  $request->input('filter1'): 校区
-     * @param  $request->input('filter2'): 学生
-     * @param  $request->input('filter3'): 年级
-     */
-    public function contractDepartment(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-
-        // 获取用户信息
-        $user_level = Session::get('user_level');
-
-        // 获取数据
-        $rows = DB::table('contract')
-                  ->join('student', 'contract.contract_student', '=', 'student.student_id')
-                  ->join('department', 'student.student_department', '=', 'department.department_id')
-                  ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                  ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
-                  ->join('position', 'user.user_position', '=', 'position.position_id')
-                  ->where('contract_type', '=', 0)
-                  ->where('contract_department', '=', Session::get('user_department'));
-        // 添加筛选条件
-        // 购课校区
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter1'));
-        }
-        // 购课学生
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('contract_student', '=', $request->input('filter2'));
-        }
-        // 课程年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
-        }
-
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-
-        // 排序并获取数据对象
-        $rows = $rows->orderBy('contract_createtime', 'asc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-
-        // 获取校区、学生、课程、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-
-        // 返回列表视图
-        return view('market/contractDepartment', ['rows' => $rows,
-                                                   'currentPage' => $currentPage,
-                                                   'totalPage' => $totalPage,
-                                                   'startIndex' => $offset,
-                                                   'request' => $request,
-                                                   'totalNum' => $totalNum,
-                                                   'filter_departments' => $filter_departments,
-                                                   'filter_students' => $filter_students,
-                                                   'filter_grades' => $filter_grades]);
     }
 
     /**
@@ -1572,7 +1427,7 @@ class MarketController extends Controller
     }
 
     /**
-     * 部门退费视图
+     * 退费管理视图
      * URL: GET /market/refund/all
      * @param  Request  $request
      * @param  $request->input('page'): 页数
@@ -1652,90 +1507,6 @@ class MarketController extends Controller
                                          'filter_departments' => $filter_departments,
                                          'filter_students' => $filter_students,
                                          'filter_grades' => $filter_grades]);
-    }
-
-    /**
-     * 本校退费视图
-     * URL: GET /market/refund/department
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     * @param  $request->input('filter1'): 校区
-     * @param  $request->input('filter2'): 学生
-     * @param  $request->input('filter3'): 年级
-     */
-    public function refundDepartment(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-
-        // 获取数据
-        $rows = DB::table('refund')
-                  ->join('student', 'refund.refund_student', '=', 'student.student_id')
-                  ->join('course', 'refund.refund_course', '=', 'course.course_id')
-                  ->join('department', 'student.student_department', '=', 'department.department_id')
-                  ->join('user AS createuser', 'refund.refund_createuser', '=', 'createuser.user_id')
-                  ->join('position AS createuser_position', 'createuser.user_position', '=', 'createuser_position.position_id')
-                  ->leftJoin('user AS checked_user', 'refund.refund_checked_user', '=', 'checked_user.user_id')
-                  ->leftJoin('position AS checked_user_position', 'checked_user.user_position', '=', 'checked_user_position.position_id')
-                  ->where('refund_type', '=', 0)
-                  ->where('refund_department', Session::get('user_department'));
-        // 添加筛选条件
-        // 购课校区
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter1'));
-        }
-        // 购课学生
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('refund_student', '=', $request->input('filter2'));
-        }
-        // 课程年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
-        }
-
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-
-        // 排序并获取数据对象
-        $rows = $rows->select('refund.refund_id AS refund_id',
-                              'refund.refund_contract AS refund_contract',
-                              'refund.refund_total_hour AS refund_total_hour',
-                              'refund.refund_fine AS refund_fine',
-                              'refund.refund_actual_amount AS refund_actual_amount',
-                              'refund.refund_date AS refund_date',
-                              'refund.refund_checked AS refund_checked',
-                              'refund.refund_createuser AS refund_createuser',
-                              'student.student_id AS student_id',
-                              'student.student_name AS student_name',
-                              'department.department_name AS department_name',
-                              'course.course_name AS course_name',
-                              'createuser.user_name AS createuser_name',
-                              'createuser_position.position_name AS createuser_position_name',
-                              'checked_user.user_name AS checked_user_name',
-                              'checked_user_position.position_name AS checked_user_position_name')
-                     ->orderBy('refund_date', 'desc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-
-        // 获取校区、学生、课程、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-
-        // 返回列表视图
-        return view('market/refundDepartment', ['rows' => $rows,
-                                                 'currentPage' => $currentPage,
-                                                 'totalPage' => $totalPage,
-                                                 'startIndex' => $offset,
-                                                 'request' => $request,
-                                                 'totalNum' => $totalNum,
-                                                 'filter_departments' => $filter_departments,
-                                                 'filter_students' => $filter_students,
-                                                 'filter_grades' => $filter_grades]);
     }
 
     /**
