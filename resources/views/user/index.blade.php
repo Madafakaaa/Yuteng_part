@@ -110,7 +110,8 @@
                   <form action="/user/{{ $row->user_id }}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/user/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">查看详情</button></a>
+                    <a href='/user/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">用户详情</button></a>
+                    <a href='/user/access/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">用户权限</button></a>
                     {{ deleteConfirm($row->user_id, ["用户名称：".$row->user_name]) }}
                   </form>
                 </td>

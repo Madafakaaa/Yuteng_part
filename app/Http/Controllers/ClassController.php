@@ -230,6 +230,48 @@ class ClassController extends Controller
                                                        'message' => '修改班级备注成功！']);
     }
 
+    /**
+     * 班级成员删除
+     * URL: DELETE/class/{class_id}
+     */
+    public function memberDelete(Request $request, $class_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $student_id = $request->input('input1');
+        // 插入数据库
+        DB::beginTransaction();
+        try{
+            // 添加班级成员
+            DB::table('member')
+              ->where('member_class', $class_id)
+              ->where('member_student', $student_id)
+              ->delete();
+            // 更新班级人数
+            DB::table('class')
+              ->where('class_id', $class_id)
+              ->decrement('class_current_num');
+            // 插入学生动态
+            //
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return redirect("/class/{$class_id}")
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '删除成员失败',
+                           'message' => '删除成员失败，请联系系统管理员']);
+        }
+        DB::commit();
+        // 返回客户列表
+        return redirect("/class/{$class_id}")
+               ->with(['notify' => true,
+                      'type' => 'success',
+                      'title' => '删除成员成功',
+                      'message' => '删除成员成功']);
+    }
 
     /**
      * 删除班级

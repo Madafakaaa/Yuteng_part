@@ -15,6 +15,8 @@ Route::resource('/department', 'DepartmentController');
 Route::resource('/course', 'CourseController');
 // 用户管理
 Route::resource('/user', 'UserController');
+Route::get('/user/access/{user_id}', 'UserController@access');
+Route::post('/user/access/{user_id}', 'UserController@accessUpdate');
 // 员工档案
 Route::resource('/archive', 'ArchiveController');
 // 部门架构
@@ -76,6 +78,10 @@ Route::post('/operation/follower/store', 'OperationController@followerStore');
 Route::get('/operation/student/all', 'OperationController@studentAll');
 // 我的学生
 Route::get('/operation/student/my', 'OperationController@studentMy');
+// 插入班级
+Route::get('/operation/member/add', 'OperationController@memberAdd');
+Route::post('/operation/member/add2', 'OperationController@memberAdd2');
+Route::post('/operation/member/store', 'OperationController@memberStore');
 // 插入班级
 Route::get('/operation/member/edit', 'OperationController@memberEdit');
 Route::post('/operation/member/edit2', 'OperationController@memberEdit2');
@@ -195,6 +201,8 @@ Route::get('/class/{class_id}', 'ClassController@show');
 // 修改班级
 Route::get('/class/{class_id}/edit', 'ClassController@edit');
 Route::put('/class/{class_id}', 'ClassController@update');
+// 删除成员
+Route::delete('/member/{class_id}', 'ClassController@memberDelete');
 
 // 上课
 // 查看上课安排详情

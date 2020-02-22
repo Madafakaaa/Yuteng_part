@@ -35,16 +35,16 @@
           </a>
           <div class="collapse" id="navbar-company">
             <ul class="nav nav-sm flex-column">
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('department', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/department" class="nav-link" id="department">校区设置</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('course', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/course" class="nav-link" id="course">课程设置</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('school', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/school" class="nav-link" id="school">公立学校</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('classroom', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/classroom" class="nav-link" id="classroom">教室设置</a>
               </li>
             </ul>
@@ -57,13 +57,13 @@
           </a>
           <div class="collapse" id="navbar-human">
             <ul class="nav nav-sm flex-column">
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('user', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/user" class="nav-link" id="user">用户管理</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('archive', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/archive" class="nav-link" id="archive">员工档案</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('section', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/section" class="nav-link" id="section">部门架构</a>
               </li>
             </ul>
@@ -76,49 +76,40 @@
           </a>
           <div class="collapse" id="navbar-market">
             <ul class="nav nav-sm flex-column">
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('marketPublicCustomerCreate', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/publicCustomer/create" class="nav-link" id="marketPublicCustomerCreate">公共客户录入</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('marketFollowerEdit', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/follower/edit" class="nav-link" id="marketFollowerEdit">修改负责人</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('marketCustomerAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/customer/all" class="nav-link" id="marketCustomerAll">客户管理</a>
               </li>
-              <li class="nav-item">
-                <br>
-              </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('marketMyCustomerCreate', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/myCustomer/create" class="nav-link" id="marketMyCustomerCreate">我的客户录入</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('marketCustomerMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/customer/my" class="nav-link" id="marketCustomerMy">我的客户</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('marketStudentMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/student/my" class="nav-link" id="marketStudentMy">我的学生</a>
               </li>
-              <li class="nav-item">
-                <br>
-              </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('marketContractCreate', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/contract/create" class="nav-link" id="marketContractCreate">签约合同</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('marketContractAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/contract/all" class="nav-link" id="marketContractAll">签约管理</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('marketContractMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/contract/my" class="nav-link" id="marketContractMy">我的签约</a>
               </li>
-              <li class="nav-item">
-                <br>
-              </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('marketRefundCreate', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/refund/create" class="nav-link" id="marketRefundCreate">学生退费</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('marketRefundAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/refund/all" class="nav-link" id="marketRefundAll">退费管理</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('marketRefundMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/refund/my" class="nav-link" id="marketRefundMy">我的退费</a>
               </li>
             </ul>
@@ -131,67 +122,58 @@
           </a>
           <div class="collapse" id="navbar-operation">
             <ul class="nav nav-sm flex-column">
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationFollowerEdit', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/follower/edit" class="nav-link" id="operationFollowerEdit">修改负责人</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationStudentAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/student/all" class="nav-link" id="operationStudentAll">学生管理</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationStudentMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/student/my" class="nav-link" id="operationStudentMy">我的学生</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationClassCreate', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/class/create" class="nav-link" id="operationClassCreate">新建班级</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationClassAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/class/all" class="nav-link" id="operationClassAll">班级管理</a>
               </li>
-              <li class="nav-item">
-                <br>
-              </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationStudentScheduleCreate', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/studentSchedule/create" class="nav-link" id="operationStudentScheduleCreate">学生排课</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationStudentScheduleAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/studentSchedule/all" class="nav-link" id="operationStudentScheduleAll">学生课程</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationClassScheduleCreate', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/classSchedule/create" class="nav-link" id="operationClassScheduleCreate">班级排课</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationClassScheduleAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/classSchedule/all" class="nav-link" id="operationClassScheduleAll">班级课程</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationAttendedScheduleAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/attendedSchedule/all" class="nav-link" id="operationAttendedScheduleAll">上课记录</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationScheduleMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/schedule/my" class="nav-link" id="operationScheduleMy">我的学生课程安排</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationAttendedScheduleMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/attendedSchedule/my" class="nav-link" id="operationAttendedScheduleMy">我的学生上课记录</a>
               </li>
-              <li class="nav-item">
-                <br>
-              </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationContractCreate', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/contract/create" class="nav-link" id="operationContractCreate">签约合同</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationContractAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/contract/all" class="nav-link" id="operationContractAll">签约管理</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationContractMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/contract/my" class="nav-link" id="operationContractMy">我的签约</a>
               </li>
-              <li class="nav-item">
-                <br>
-              </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationRefundCreate', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/refund/create" class="nav-link" id="operationRefundCreate">学生退费</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationRefundAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/refund/all" class="nav-link" id="operationRefundAll">退费管理</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('operationRefundMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/refund/my" class="nav-link" id="operationRefundMy">我的退费</a>
               </li>
             </ul>
@@ -204,49 +186,37 @@
           </a>
           <div class="collapse" id="navbar-education">
             <ul class="nav nav-sm flex-column">
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('educationStudentAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/student/all" class="nav-link" id="educationStudentAll">学生管理</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('educationStudentMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/student/my" class="nav-link" id="educationStudentMy">我的学生</a>
               </li>
-              <li class="nav-item">
-                <br>
-              </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('educationClassAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/class/all" class="nav-link" id="educationClassAll">班级管理</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('educationClassMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/class/my" class="nav-link" id="educationClassMy">我的班级</a>
               </li>
-              <li class="nav-item">
-                <br>
-              </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('educationScheduleAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/schedule/all" class="nav-link" id="educationScheduleAll">课程安排管理</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('educationScheduleMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/schedule/my" class="nav-link" id="educationScheduleMy">我的课程安排</a>
               </li>
-              <li class="nav-item">
-                <br>
-              </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('educationAttendedScheduleAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/attendedSchedule/all" class="nav-link" id="educationAttendedScheduleAll">上课记录管理</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('educationAttendedScheduleMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/attendedSchedule/my" class="nav-link" id="educationAttendedScheduleMy">我的上课记录</a>
               </li>
-              <li class="nav-item">
-                <br>
-              </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('educationDocumentCreate', Session::get('page_access'))) style="display:none;" @endif>
                 <a class="nav-link" href="/education/document/create" id="educationDocumentCreate">
                   <i class="ni ni-archive-2 text-red"></i>
                   <span class="nav-link-text">上传教案</span>
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('educationDocument', Session::get('page_access'))) style="display:none;" @endif>
                 <a class="nav-link" href="/education/document" id="educationDocument">
                   <i class="ni ni-archive-2 text-red"></i>
                   <span class="nav-link-text">教案中心</span>

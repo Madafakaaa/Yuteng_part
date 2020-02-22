@@ -299,6 +299,117 @@ class UserController extends Controller
     }
 
     /**
+     * 用户权限视图
+     * URL: GET /user/access/{user_id}
+     * @param  int  $user_id
+     */
+    public function access($user_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取全部校区
+        $user = DB::table('user')
+                  ->join('department', 'user.user_department', '=', 'department.department_id')
+                  ->join('position', 'user.user_position', '=', 'position.position_id')
+                  ->join('section', 'position.position_section', '=', 'section.section_id')
+                  ->where('user_id', $user_id)
+                  ->first();
+        // 获取全部校区
+        $departments = DB::table('department')
+                          ->where('department_status', 1)
+                          ->get();
+        $department_array = array();
+        foreach($departments AS $department){
+            $department_array[$department->department_id] = array($department->department_id, $department->department_name, 0);
+        }
+        // 获取用户校区权限
+        $user_departments = DB::table('user_department')
+                              ->where('user_department_user', $user_id)
+                              ->get();
+        foreach($user_departments AS $user_department){
+            $department_array[$user_department->user_department_department][2]=1;
+        }
+        // 获取全部页面
+        $pages = DB::table('page')->get();
+        $page_array = array();
+        foreach($pages AS $page){
+            $page_array[$page->page_id] = array($page->page_id, $page->page_name, 0);
+        }
+        // 获取用户页面权限
+        $user_pages = DB::table('user_page')
+                        ->where('user_page_user', $user_id)
+                        ->get();
+        foreach($user_pages AS $user_page){
+            $page_array[$user_page->user_page_page][2] = 1;
+        }
+        return view('user/access', ['user' => $user,
+                                    'department_array' => $department_array,
+                                    'page_array' => $page_array]);
+    }
+
+    /**
+     * 修改用户权限提交
+     * URL: POST /user/access/{user_id}
+     * @param  Request  $request
+     * @param  $request->input('departments'): 校区权限
+     * @param  $request->input('pages'): 页面权限
+     * @param  int  $user_id: 用户id
+     */
+    public function accessUpdate(Request $request, $user_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取表单输入
+        $departments = $request->input('departments');
+        $pages = $request->input('pages');
+        // 更新数据库
+        DB::beginTransaction();
+        try{
+            // 删除原有权限
+            DB::table('user_department')
+              ->where('user_department_user', $user_id)
+              ->delete();
+            DB::table('user_page')
+              ->where('user_page_user', $user_id)
+              ->delete();
+            if($departments!=NULL){
+                // 添加校区权限
+                foreach($departments as $department){
+                    DB::table('user_department')->insert(
+                        ['user_department_user' => $user_id,
+                         'user_department_department' => $department]
+                    );
+                }
+            }
+            if($pages!=NULL){
+                // 添加页面权限
+                foreach($pages as $page){
+                    DB::table('user_page')->insert(
+                        ['user_page_user' => $user_id,
+                         'user_page_page' => $page]
+                    );
+                }
+            }
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return $e;
+            return redirect("/user/access/{$user_id}")->with(['notify' => true,
+                                                            'type' => 'danger',
+                                                            'title' => '用户权限修改失败',
+                                                            'message' => '用户权限修改失败！']);
+        }
+        DB::commit();
+        return redirect("/user/access/{$user_id}")->with(['notify' => true,
+                                       'type' => 'success',
+                                       'title' => '用户权限修改成功',
+                                       'message' => '用户权限修改成功！']);
+    }
+
+    /**
      * 删除用户
      * URL: DELETE /user/{id}
      * @param  int  $user_id

@@ -106,6 +106,7 @@
                 @endif
                 <td>
                   <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">客户详情</button></a>
+                  <a href='/market/follower/edit?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">修改负责人</button></a>
                 </td>
               </tr>
               @endforeach

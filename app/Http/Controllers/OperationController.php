@@ -106,7 +106,6 @@ class OperationController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
             return redirect("/operation/follower/edit")
                    ->with(['notify' => true,
                            'type' => 'danger',
@@ -115,11 +114,110 @@ class OperationController extends Controller
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/operation/student/department")
+        return redirect("/operation/student/all")
                ->with(['notify' => true,
                       'type' => 'success',
                       'title' => '负责人修改成功',
                       'message' => '负责人修改成功']);
+    }
+
+    /**
+     * 插入班级视图
+     * URL: GET /operation/member/add
+     */
+    public function memberAdd(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取表单输入
+        if($request->filled('student_id')) {
+            $student_id = $request->input('student_id');
+        }else{
+            $student_id = '';
+        }
+        // 获取本班主任学生信息
+        $students = DB::table('student')
+                      ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
+                      ->where('student_class_adviser', Session::get('user_id'))
+                      ->where('student_customer_status', 1)
+                      ->orderBy('student_grade', 'asc')
+                      ->get();
+        return view('operation/memberAdd', ['students' => $students, 'student_id' => $student_id]);
+    }
+
+    /**
+     * 插入班级视图2
+     * URL: GET /operation/member/add2
+     */
+    public function memberAdd2(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $student_id = $request->input('input1');
+        // 获取学生信息
+        $student = DB::table('student')
+                      ->join('grade', 'grade.grade_id', '=', 'student.student_grade')
+                      ->where('student_id', $student_id)
+                      ->first();
+
+        // 获取班级信息
+        $classes = DB::table('class')
+                      ->join('subject', 'subject.subject_id', '=', 'class.class_subject')
+                      ->join('user', 'user.user_id', '=', 'class.class_teacher')
+                      ->join('position', 'user.user_position', '=', 'position.position_id')
+                      ->where('class_department', '=', $student->student_department)
+                      ->where('class_grade', '=', $student->student_grade)
+                      ->whereColumn('class_current_num', '<', 'class_max_num')
+                      ->where('class_status', 1)
+                      ->get();
+        return view('operation/memberAdd2', ['student' => $student, 'classes' => $classes]);
+    }
+
+    /**
+     * 插入班级提交
+     * URL: GET /operation/member/store
+     */
+    public function memberStore(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $student_id = $request->input('input1');
+        $class_id = $request->input('input2');
+        // 插入数据库
+        DB::beginTransaction();
+        try{
+            // 添加班级成员
+            DB::table('member')->insert(
+                ['member_class' => $class_id,
+                 'member_student' => $student_id,
+                 'member_createuser' => Session::get('user_id')]
+            );
+            // 更新班级人数
+            DB::table('class')
+              ->where('class_id', $class_id)
+              ->increment('class_current_num');
+            // 插入学生动态
+            //
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return redirect("/operation/member/add")
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '插入班级失败',
+                           'message' => '插入班级失败，请重新输入信息']);
+        }
+        DB::commit();
+        // 返回客户列表
+        return redirect("/operation/student/my")
+               ->with(['notify' => true,
+                      'type' => 'success',
+                      'title' => '插入班级成功',
+                      'message' => '插入班级成功']);
     }
 
     /**
@@ -371,7 +469,7 @@ class OperationController extends Controller
                            'message' => '班级添加失败，请重新输入信息']);
         }
         // 返回班级列表
-        return redirect("/operation/class/department")
+        return redirect("/operation/class/all")
                ->with(['notify' => true,
                        'type' => 'success',
                        'title' => '班级添加成功',

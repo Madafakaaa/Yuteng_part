@@ -87,7 +87,7 @@
             </div>
             <div class="row">
               <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>可选学生/班级</label>
+                <label class="form-control-label"><span style="color:red">*</span>可选班级</label>
               </div>
               <div class="col-10">
                 <div class="form-group mb-1">

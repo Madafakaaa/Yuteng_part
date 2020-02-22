@@ -154,7 +154,7 @@ class MarketController extends Controller
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/market/customer/department")
+        return redirect("/market/customer/all")
                ->with(['notify' => true,
                       'type' => 'success',
                       'title' => '客户添加成功',
@@ -417,7 +417,7 @@ class MarketController extends Controller
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/market/customer/department")
+        return redirect("/market/customer/all")
                ->with(['notify' => true,
                       'type' => 'success',
                       'title' => '负责人修改成功',

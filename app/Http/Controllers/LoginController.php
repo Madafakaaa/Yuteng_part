@@ -62,6 +62,23 @@ class LoginController extends Controller
                                          'title' => '登录系统失败',
                                          'message' => '您的用户名或密码有误，请重新输入']);
         }
+
+        // 获取用户校区权限
+        $department_access = array();
+        $user_departments = DB::table('user_department')
+                              ->where('user_department_user', $request_user_id)
+                              ->get();
+        foreach($user_departments AS $user_department){
+            $department_access[] = $user_department->user_department_department;
+        }
+        // 获取用户页面权限
+        $page_access = array();
+        $user_pages = DB::table('user_page')
+                        ->where('user_page_user', $request_user_id)
+                        ->get();
+        foreach($user_pages AS $user_page){
+            $page_access[] = $user_page->user_page_page;
+        }
         // 注册信息到Session中
         Session::put('login', true);
         Session::put('user_id', $db_user->user_id);
@@ -72,6 +89,8 @@ class LoginController extends Controller
         Session::put('user_gender', $db_user->user_gender);
         Session::put('user_department', $db_user->user_department);
         Session::put('user_department_name', $db_user->department_name);
+        Session::put('department_access', $department_access);
+        Session::put('page_access', $page_access);
         // 返回主界面视图
         return redirect('/home')->with(['notify' => true,
                                         'type' => 'success',
