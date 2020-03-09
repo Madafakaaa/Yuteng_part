@@ -435,8 +435,8 @@ class MarketController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取数据
         $rows = DB::table('student')
                   ->join('department', 'student.student_department', '=', 'department.department_id')
@@ -446,6 +446,7 @@ class MarketController extends Controller
                   ->leftJoin('user AS class_adviser', 'student.student_class_adviser', '=', 'class_adviser.user_id')
                   ->leftJoin('position AS class_adviser_position', 'class_adviser.user_position', '=', 'class_adviser_position.position_id')
                   ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
+                  ->whereIn('student_department', $department_access)
                   ->where('student_status', 1);
         // 添加筛选条件
         // 客户名称
@@ -997,8 +998,8 @@ class MarketController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
 
         // 获取数据
         $rows = DB::table('contract')
@@ -1007,6 +1008,7 @@ class MarketController extends Controller
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
+                  ->whereIn('contract_department', $department_access)
                   ->where('contract_type', '=', 0);
         // 添加筛选条件
         // 购课校区
@@ -1441,6 +1443,8 @@ class MarketController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取数据
         $rows = DB::table('refund')
                   ->join('student', 'refund.refund_student', '=', 'student.student_id')
@@ -1450,6 +1454,7 @@ class MarketController extends Controller
                   ->join('position AS createuser_position', 'createuser.user_position', '=', 'createuser_position.position_id')
                   ->leftJoin('user AS checked_user', 'refund.refund_checked_user', '=', 'checked_user.user_id')
                   ->leftJoin('position AS checked_user_position', 'checked_user.user_position', '=', 'checked_user_position.position_id')
+                  ->whereIn('refund_department', $department_access)
                   ->where('refund_type', '=', 0);
         // 添加筛选条件
         // 购课校区

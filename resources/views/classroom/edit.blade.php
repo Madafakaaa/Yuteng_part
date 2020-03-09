@@ -87,8 +87,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-1');
-  navbarActive('navbar-1');
+  linkActive('link-company');
+  navbarActive('navbar-company');
   linkActive('classroom');
 </script>
 @endsection

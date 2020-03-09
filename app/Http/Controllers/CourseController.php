@@ -25,16 +25,16 @@ class CourseController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-
-        // 获取用户信息
-        $user_level = Session::get('user_level');
-
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
+        $department_access[]=0;
         // 获取数据
         $rows = DB::table('course')
                   ->join('course_type', 'course.course_type', '=', 'course_type.course_type_name')
                   ->leftJoin('department', 'course.course_department', '=', 'department.department_id')
                   ->leftJoin('grade', 'course.course_grade', '=', 'grade.grade_id')
                   ->leftJoin('subject', 'course.course_subject', '=', 'subject.subject_id')
+                  ->whereIn('course_department', $department_access)
                   ->where('course_status', 1);
 
         // 添加筛选条件

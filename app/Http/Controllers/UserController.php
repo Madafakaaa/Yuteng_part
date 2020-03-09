@@ -25,14 +25,15 @@ class UserController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
 
         // 获取数据
         $rows = DB::table('user')
                   ->join('department', 'user.user_department', '=', 'department.department_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
                   ->join('section', 'position.position_section', '=', 'section.section_id')
+                  ->whereIn('user_department', $department_access)
                   ->where('user_status', 1);
         // 添加筛选条件
         // 用户姓名

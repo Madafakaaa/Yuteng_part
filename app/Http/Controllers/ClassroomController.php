@@ -24,12 +24,13 @@ class ClassroomController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
 
         // 获取数据
         $rows = DB::table('classroom')
                   ->join('department', 'classroom.classroom_department', '=', 'department.department_id')
+                  ->whereIn('classroom_department', $department_access)
                   ->where('classroom_status', 1);
 
         // 添加筛选条件

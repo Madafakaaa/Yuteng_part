@@ -22,15 +22,13 @@ class SchoolController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取用户信息
-        $user_level = Session::get('user_level');
-        // 获取数据库信息
-        // 获取总数据数
-        $totalRecord = DB::table('school')->where('school_status', 1);
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
 
         // 获取数据
         $rows = DB::table('school')
                   ->join('department', 'school.school_department', '=', 'department.department_id')
+                  ->whereIn('school_department', $department_access)
                   ->where('school_status', 1);
 
         // 添加筛选条件
@@ -60,12 +58,12 @@ class SchoolController extends Controller
 
         // 返回列表视图
         return view('school/index', ['rows' => $rows,
-                                            'currentPage' => $currentPage,
-                                            'totalPage' => $totalPage,
-                                            'startIndex' => $offset,
-                                            'request' => $request,
-                                            'totalNum' => $totalNum,
-                                            'filter_departments' => $filter_departments]);
+                                    'currentPage' => $currentPage,
+                                    'totalPage' => $totalPage,
+                                    'startIndex' => $offset,
+                                    'request' => $request,
+                                    'totalNum' => $totalNum,
+                                    'filter_departments' => $filter_departments]);
     }
 
     /**

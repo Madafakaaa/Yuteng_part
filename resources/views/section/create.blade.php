@@ -45,8 +45,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-1');
-  navbarActive('navbar-1');
+  linkActive('link-human');
+  navbarActive('navbar-human');
   linkActive('section');
 </script>
 @endsection

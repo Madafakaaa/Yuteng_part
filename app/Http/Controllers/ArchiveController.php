@@ -24,13 +24,14 @@ class ArchiveController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
 
         // 获取数据
         $rows = DB::table('archive')
                   ->join('user', 'archive.archive_user', '=', 'user.user_id')
-                  ->join('department', 'user.user_department', '=', 'department.department_id');
+                  ->join('department', 'user.user_department', '=', 'department.department_id')
+                  ->whereIn('user_department', $department_access);
 
         // 添加筛选条件
         // 用户姓名

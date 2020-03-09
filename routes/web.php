@@ -212,10 +212,10 @@ Route::get('/attendedSchedule/{participant_id}', 'ScheduleController@attendedSch
 // 复核上课记录
 Route::get('/attendedSchedule/{participant_id}/check', 'ScheduleController@attendedScheduleCheck');
 
+// 个人信息
+Route::get('/profile', 'ProfileController@show');
+Route::post('/user/{user_id}/password', 'ProfileController@password');
+
+
 // 课程表
 Route::get('/calendar', 'CalendarController@calendar');
-
-
-
-// 个人信息
-Route::resource('/profile', 'ProfileController');

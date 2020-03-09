@@ -231,8 +231,8 @@ class OperationController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取数据
         $rows = DB::table('student')
                   ->join('department', 'student.student_department', '=', 'department.department_id')
@@ -242,6 +242,7 @@ class OperationController extends Controller
                   ->leftJoin('user AS class_adviser', 'student.student_class_adviser', '=', 'class_adviser.user_id')
                   ->leftJoin('position AS class_adviser_position', 'class_adviser.user_position', '=', 'class_adviser_position.position_id')
                   ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
+                  ->whereIn('student_department', $department_access)
                   ->where('student_customer_status', 1)
                   ->where('student_status', 1);
         // 添加筛选条件
@@ -488,8 +489,8 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
 
         // 获取数据
         $rows = DB::table('class')
@@ -498,6 +499,7 @@ class OperationController extends Controller
                   ->leftJoin('subject', 'class.class_subject', '=', 'subject.subject_id')
                   ->join('user', 'class.class_teacher', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
+                  ->whereIn('class_department', $department_access)
                   ->where('class_status', 1);
 
         // 添加筛选条件
@@ -1715,8 +1717,8 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
 
         // 获取数据
         $rows = DB::table('schedule')
@@ -1727,6 +1729,7 @@ class OperationController extends Controller
                   ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                  ->whereIn('schedule_department', $department_access)
                   ->where('schedule_participant_type', '=', 0)
                   ->where('schedule_attended', '=', 0);
         // 添加筛选条件
@@ -1802,8 +1805,8 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
 
         // 获取数据
         $rows = DB::table('schedule')
@@ -1814,6 +1817,7 @@ class OperationController extends Controller
                   ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                  ->whereIn('schedule_department', $department_access)
                   ->where('schedule_participant_type', '=', 1)
                   ->where('schedule_attended', '=', 0);
         // 添加筛选条件
@@ -1870,6 +1874,8 @@ class OperationController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取数据
         $rows = DB::table('participant')
                   ->join('student', 'participant.participant_student', '=', 'student.student_id')
@@ -1898,7 +1904,7 @@ class OperationController extends Controller
                            'schedule.schedule_start AS schedule_start',
                            'schedule.schedule_end AS schedule_end',
                            'course.course_name AS course_name')
-                  ->where('schedule_department', '=', Session::get('user_department'));
+                  ->whereIn('schedule_department', $department_access);
         // 添加筛选条件
         // 课程安排校区
         if ($request->filled('filter1')) {
@@ -2503,16 +2509,17 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
 
         // 获取数据
         $rows = DB::table('contract')
                   ->join('student', 'contract.contract_student', '=', 'student.student_id')
-                  ->join('department', 'student.student_department', '=', 'department.department_id')
+                  ->join('department', 'contract.contract_department', '=', 'department.department_id')
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
+                  ->whereIn('contract_department', $department_access)
                   ->where('contract_type', '=', 1);
         // 添加筛选条件
         // 购课校区
@@ -2946,6 +2953,8 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取数据
         $rows = DB::table('refund')
                   ->join('student', 'refund.refund_student', '=', 'student.student_id')
@@ -2955,6 +2964,7 @@ class OperationController extends Controller
                   ->join('position AS createuser_position', 'createuser.user_position', '=', 'createuser_position.position_id')
                   ->leftJoin('user AS checked_user', 'refund.refund_checked_user', '=', 'checked_user.user_id')
                   ->leftJoin('position AS checked_user_position', 'checked_user.user_position', '=', 'checked_user_position.position_id')
+                  ->whereIn('refund_department', $department_access)
                   ->where('refund_type', '=', 1);
         // 添加筛选条件
         // 购课校区
