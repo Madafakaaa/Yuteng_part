@@ -4,12 +4,11 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
 
-      <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+      <nav aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
           <!-- Nav -->
           @section('nav')
-            <li class="breadcrumb-item"><a href="home"><i class="fas fa-home"></i></a></li>
-            <li class="breadcrumb-item active" aria-current="page">主页</li>
+            <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
           @show
         </ol>
       </nav>

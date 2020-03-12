@@ -3,14 +3,29 @@
 @include('layout.php_functions')
 
 @section('nav')
-    <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">学校管理</li>
-    <li class="breadcrumb-item active">校区管理</li>
-    <li class="breadcrumb-item"><a href="/classroom">教室设置</a></li>
-    <li class="breadcrumb-item active">修改教室</li>
+    <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
 
 @section('content')
+<div class="header bg-primary">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-6">
+          <h6 class="h2 text-white d-inline-block mb-0">修改教室</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item active">公司管理</li>
+              <li class="breadcrumb-item"><a href="/classroom">教室设置</a></li>
+              <li class="breadcrumb-item active">修改教室</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
@@ -18,9 +33,6 @@
         <form action="/classroom/{{ $classroom->classroom_id }}" method="post" id="form1" name="form1">
           @method('PUT')
           @csrf
-          <div class="card-header">
-            <h4 class="mb-0">修改教室</h4>
-          </div>
           <!-- Card body -->
           <div class="card-body">
             <div class="row">
@@ -71,9 +83,13 @@
                 </div>
               </div>
             </div>
+            <hr class="my-3">
             <div class="row">
-              <div class="col-2"></div>
-              <div class="col-8">
+              <div class="col-lg-4 col-md-5 col-sm-12">
+                <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
+              </div>
+              <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
+              <div class="col-lg-4 col-md-5 col-sm-12">
                 <input type="submit" class="btn btn-warning btn-block" value="修改">
               </div>
             </div>

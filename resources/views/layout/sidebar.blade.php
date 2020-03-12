@@ -199,13 +199,13 @@
                 <a href="/education/class/my" class="nav-link" id="educationClassMy">我的班级</a>
               </li>
               <li class="nav-item" @if(!in_array('educationScheduleAll', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/education/schedule/all" class="nav-link" id="educationScheduleAll">课程安排管理</a>
+                <a href="/education/schedule/all" class="nav-link" id="educationScheduleAll">课程安排</a>
               </li>
               <li class="nav-item" @if(!in_array('educationScheduleMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/schedule/my" class="nav-link" id="educationScheduleMy">我的课程安排</a>
               </li>
               <li class="nav-item" @if(!in_array('educationAttendedScheduleAll', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/education/attendedSchedule/all" class="nav-link" id="educationAttendedScheduleAll">上课记录管理</a>
+                <a href="/education/attendedSchedule/all" class="nav-link" id="educationAttendedScheduleAll">上课记录</a>
               </li>
               <li class="nav-item" @if(!in_array('educationAttendedScheduleMy', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/attendedSchedule/my" class="nav-link" id="educationAttendedScheduleMy">我的上课记录</a>
@@ -275,12 +275,14 @@
       <!-- <h6 class="navbar-heading p-0 text-muted">Documentation</h6> -->
       <!-- Navigation -->
       <ul class="navbar-nav mb-md-3">
+        <!--
         <li class="nav-item">
           <a class="nav-link" href="#">
             <i class="ni ni-notification-70"></i>
             <span class="nav-link-text">站内通知</span>
           </a>
         </li>
+        -->
         <li class="nav-item">
           <a class="nav-link" href="/profile" id="profile">
             <i class="ni ni-circle-08"></i>

@@ -3,13 +3,34 @@
 @include('layout.php_functions')
 
 @section('nav')
-    <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">教学中心</li>
-    <li class="breadcrumb-item active">课程考勤</li>
-    <li class="breadcrumb-item active">填写考勤信息</li>
+    <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
 
 @section('content')
+<div class="header bg-primary">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-6">
+          <h6 class="h2 text-white d-inline-block mb-0">课程考勤</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item active">教学中心</li>
+              <li class="breadcrumb-item active">课程考勤</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-6 text-right">
+          <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
+            <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
+            <span class="btn-inner--text">搜索</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">

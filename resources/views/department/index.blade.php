@@ -3,46 +3,65 @@
 @include('layout.php_functions')
 
 @section('nav')
-    <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">校区设置</li>
+    <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
 
 @section('content')
-<div class="container-fluid mt-2">
+<div class="header bg-primary">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-6">
+          <h6 class="h2 text-white d-inline-block mb-0">校区设置</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item active">公司管理</li>
+              <li class="breadcrumb-item active">校区设置</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-6 text-right">
+          <a href="department/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加校区">
+            <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
+            <span class="btn-inner--text">添加校区</span>
+          </a>
+          <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
+            <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
+            <span class="btn-inner--text">搜索</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-12 card-wrapper ct-example">
-      <div class="card mb-1">
-        <div class="card-header border-0 p-0 mb-1">
-          <form action="" method="get" id="filter" name="filter">
-            <div class="row m-2">
-              <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                <input class="form-control" type="text" name="filter1" placeholder="校区名称..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
-              </div>
-              <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                <div class="row">
-                  <div class="col-6">
-                    <input type="submit" class="btn btn-primary btn-block" value="查询">
-                  </div>
-                  <div class="col-6">
-                    <a href="?"><button type="button" class="form-control btn btn-outline-primary btn-block" style="white-space:nowrap; overflow:hidden;">重置</button></a>
+    <div class="col-12">
+      <div class="collapse" id="filter">
+        <div class="card mb-1">
+          <div class="card-header border-0 p-0 mb-1">
+            <form action="" method="get" id="filter" name="filter">
+              <div class="row m-2">
+                <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
+                  <input class="form-control" type="text" name="filter1" placeholder="校区名称..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
+                  <div class="row">
+                    <div class="col-6">
+                      <input type="submit" class="btn btn-primary btn-block" value="查询">
+                    </div>
+                    <div class="col-6">
+                      <a href="?"><button type="button" class="form-control btn btn-outline-primary btn-block" style="white-space:nowrap; overflow:hidden;">重置</button></a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="card-header table-top">
-          <div class="row">
-            <div class="col-6">
-              <a href="department/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加校区">
-                <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">添加校区</span>
-              </a>
-            </div>
-          </div>
-        </div>
         <div class="table-responsive">
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
