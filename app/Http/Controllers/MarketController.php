@@ -448,18 +448,34 @@ class MarketController extends Controller
                   ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
                   ->whereIn('student_department', $department_access)
                   ->where('student_status', 1);
-        // 添加筛选条件
+
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
         // 客户名称
         if ($request->filled('filter1')) {
             $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
         // 客户校区
         if ($request->filled('filter2')) {
             $rows = $rows->where('student_department', '=', $request->input('filter2'));
+            $filter_status = 1;
         }
         // 客户年级
         if ($request->filled('filter3')) {
             $rows = $rows->where('student_grade', '=', $request->input('filter3'));
+            $filter_status = 1;
+        }
+        // 客户优先级
+        if ($request->filled('filter4')) {
+            $rows = $rows->where('student_follow_level', '=', $request->input('filter4'));
+            $filter_status = 1;
+        }
+        // 客户签约状态
+        if ($request->filled('filter5')) {
+            $rows = $rows->where('student_customer_status', '=', $request->input('filter5'));
+            $filter_status = 1;
         }
         // 保存数据总数
         $totalNum = $rows->count();
@@ -488,7 +504,7 @@ class MarketController extends Controller
                      ->limit($rowPerPage)
                      ->get();
         // 获取校区、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         // 返回列表视图
         return view('market/customerAll', ['rows' => $rows,
@@ -497,6 +513,7 @@ class MarketController extends Controller
                                            'startIndex' => $offset,
                                            'request' => $request,
                                            'totalNum' => $totalNum,
+                                           'filter_status' => $filter_status,
                                            'filter_departments' => $filter_departments,
                                            'filter_grades' => $filter_grades]);
     }
@@ -512,8 +529,8 @@ class MarketController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取数据
         $rows = DB::table('student')
                   ->join('department', 'student.student_department', '=', 'department.department_id')
@@ -527,10 +544,28 @@ class MarketController extends Controller
                   ->where('student_customer_status', 0)
                   ->where('student_status', 1);
 
-        // 添加筛选条件
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
         // 客户名称
         if ($request->filled('filter1')) {
             $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
+        }
+        // 客户校区
+        if ($request->filled('filter2')) {
+            $rows = $rows->where('student_department', '=', $request->input('filter2'));
+            $filter_status = 1;
+        }
+        // 客户年级
+        if ($request->filled('filter3')) {
+            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
+            $filter_status = 1;
+        }
+        // 客户优先级
+        if ($request->filled('filter4')) {
+            $rows = $rows->where('student_follow_level', '=', $request->input('filter4'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -559,7 +594,7 @@ class MarketController extends Controller
                      ->limit($rowPerPage)
                      ->get();
         // 获取校区、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         // 返回列表视图
         return view('market/customerMy', ['rows' => $rows,
@@ -568,6 +603,7 @@ class MarketController extends Controller
                                            'startIndex' => $offset,
                                            'request' => $request,
                                            'totalNum' => $totalNum,
+                                           'filter_status' => $filter_status,
                                            'filter_departments' => $filter_departments,
                                            'filter_grades' => $filter_grades]);
     }
@@ -583,8 +619,8 @@ class MarketController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取数据
         $rows = DB::table('student')
                   ->join('department', 'student.student_department', '=', 'department.department_id')
@@ -598,10 +634,23 @@ class MarketController extends Controller
                   ->where('student_customer_status', 1)
                   ->where('student_status', 1);
 
-        // 添加筛选条件
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
         // 客户名称
         if ($request->filled('filter1')) {
             $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
+        }
+        // 客户校区
+        if ($request->filled('filter2')) {
+            $rows = $rows->where('student_department', '=', $request->input('filter2'));
+            $filter_status = 1;
+        }
+        // 客户年级
+        if ($request->filled('filter3')) {
+            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -630,7 +679,7 @@ class MarketController extends Controller
                      ->limit($rowPerPage)
                      ->get();
         // 获取校区、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         // 返回列表视图
         return view('market/studentMy', ['rows' => $rows,
@@ -639,6 +688,7 @@ class MarketController extends Controller
                                            'startIndex' => $offset,
                                            'request' => $request,
                                            'totalNum' => $totalNum,
+                                           'filter_status' => $filter_status,
                                            'filter_departments' => $filter_departments,
                                            'filter_grades' => $filter_grades]);
     }
@@ -1010,18 +1060,24 @@ class MarketController extends Controller
                   ->join('position', 'user.user_position', '=', 'position.position_id')
                   ->whereIn('contract_department', $department_access)
                   ->where('contract_type', '=', 0);
-        // 添加筛选条件
-        // 购课校区
+
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
+        // 客户名称
         if ($request->filled('filter1')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter1'));
+            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
-        // 购课学生
+        // 客户校区
         if ($request->filled('filter2')) {
-            $rows = $rows->where('contract_student', '=', $request->input('filter2'));
+            $rows = $rows->where('student_department', '=', $request->input('filter2'));
+            $filter_status = 1;
         }
-        // 课程年级
+        // 客户年级
         if ($request->filled('filter3')) {
             $rows = $rows->where('student_grade', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -1036,7 +1092,7 @@ class MarketController extends Controller
                      ->get();
 
         // 获取校区、学生、课程、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
 
@@ -1047,6 +1103,7 @@ class MarketController extends Controller
                                            'startIndex' => $offset,
                                            'request' => $request,
                                            'totalNum' => $totalNum,
+                                           'filter_status' => $filter_status,
                                            'filter_departments' => $filter_departments,
                                            'filter_students' => $filter_students,
                                            'filter_grades' => $filter_grades]);
@@ -1067,6 +1124,9 @@ class MarketController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
+
         // 获取数据
         $rows = DB::table('contract')
                   ->join('student', 'contract.contract_student', '=', 'student.student_id')
@@ -1076,18 +1136,24 @@ class MarketController extends Controller
                   ->join('position', 'user.user_position', '=', 'position.position_id')
                   ->where('contract_type', '=', 0)
                   ->where('contract_createuser', '=', Session::get('user_id'));
-        // 添加筛选条件
-        // 购课校区
+
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
+        // 客户名称
         if ($request->filled('filter1')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter1'));
+            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
-        // 购课学生
+        // 客户校区
         if ($request->filled('filter2')) {
-            $rows = $rows->where('contract_student', '=', $request->input('filter2'));
+            $rows = $rows->where('student_department', '=', $request->input('filter2'));
+            $filter_status = 1;
         }
-        // 课程年级
+        // 客户年级
         if ($request->filled('filter3')) {
             $rows = $rows->where('student_grade', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -1102,7 +1168,7 @@ class MarketController extends Controller
                      ->get();
 
         // 获取校区、学生、课程、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
 
@@ -1113,6 +1179,7 @@ class MarketController extends Controller
                                            'startIndex' => $offset,
                                            'request' => $request,
                                            'totalNum' => $totalNum,
+                                           'filter_status' => $filter_status,
                                            'filter_departments' => $filter_departments,
                                            'filter_students' => $filter_students,
                                            'filter_grades' => $filter_grades]);
@@ -1445,6 +1512,7 @@ class MarketController extends Controller
 
         // 获取用户校区权限
         $department_access = Session::get('department_access');
+
         // 获取数据
         $rows = DB::table('refund')
                   ->join('student', 'refund.refund_student', '=', 'student.student_id')
@@ -1456,18 +1524,24 @@ class MarketController extends Controller
                   ->leftJoin('position AS checked_user_position', 'checked_user.user_position', '=', 'checked_user_position.position_id')
                   ->whereIn('refund_department', $department_access)
                   ->where('refund_type', '=', 0);
-        // 添加筛选条件
-        // 购课校区
+
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
+        // 客户名称
         if ($request->filled('filter1')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter1'));
+            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
-        // 购课学生
+        // 客户校区
         if ($request->filled('filter2')) {
-            $rows = $rows->where('refund_student', '=', $request->input('filter2'));
+            $rows = $rows->where('student_department', '=', $request->input('filter2'));
+            $filter_status = 1;
         }
-        // 课程年级
+        // 客户年级
         if ($request->filled('filter3')) {
             $rows = $rows->where('student_grade', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -1498,7 +1572,7 @@ class MarketController extends Controller
                      ->get();
 
         // 获取校区、学生、课程、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
 
@@ -1509,6 +1583,7 @@ class MarketController extends Controller
                                          'startIndex' => $offset,
                                          'request' => $request,
                                          'totalNum' => $totalNum,
+                                         'filter_status' => $filter_status,
                                          'filter_departments' => $filter_departments,
                                          'filter_students' => $filter_students,
                                          'filter_grades' => $filter_grades]);
@@ -1529,6 +1604,9 @@ class MarketController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
+
         // 获取数据
         $rows = DB::table('refund')
                   ->join('student', 'refund.refund_student', '=', 'student.student_id')
@@ -1540,18 +1618,24 @@ class MarketController extends Controller
                   ->leftJoin('position AS checked_user_position', 'checked_user.user_position', '=', 'checked_user_position.position_id')
                   ->where('refund_type', '=', 0)
                   ->where('refund_createuser', Session::get('user_id'));
-        // 添加筛选条件
-        // 购课校区
+
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
+        // 客户名称
         if ($request->filled('filter1')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter1'));
+            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
-        // 购课学生
+        // 客户校区
         if ($request->filled('filter2')) {
-            $rows = $rows->where('refund_student', '=', $request->input('filter2'));
+            $rows = $rows->where('student_department', '=', $request->input('filter2'));
+            $filter_status = 1;
         }
-        // 课程年级
+        // 客户年级
         if ($request->filled('filter3')) {
             $rows = $rows->where('student_grade', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -1581,7 +1665,7 @@ class MarketController extends Controller
                      ->get();
 
         // 获取校区、学生、课程、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
 
@@ -1592,6 +1676,7 @@ class MarketController extends Controller
                                          'startIndex' => $offset,
                                          'request' => $request,
                                          'totalNum' => $totalNum,
+                                         'filter_status' => $filter_status,
                                          'filter_departments' => $filter_departments,
                                          'filter_students' => $filter_students,
                                          'filter_grades' => $filter_grades]);

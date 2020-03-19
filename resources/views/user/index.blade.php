@@ -38,20 +38,69 @@
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-12">
-      <div class="collapse" id="filter">
-        <div class="card mb-1">
-          <div class="card-header border-0 p-0 mb-1">
-            <form action="" method="get" id="filter" name="filter">
+      <div class="collapse @if($filter_status==1) show @endif" id="filter">
+        <div class="card mb-4">
+          <div class="card-body border-1 p-0 my-1">
+            <form action="" method="get">
               <div class="row m-2">
-                <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                  <input class="form-control" type="text" name="filter1" placeholder="校区名称..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
+                <div class="col-lg-8 col-md-8 col-sm-12 mb-1">
                   <div class="row">
-                    <div class="col-6">
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                      <input class="form-control" type="text" name="filter1" placeholder="用户姓名..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                      <select class="form-control" name="filter2" data-toggle="select">
+                        <option value=''>全部校区</option>
+                        @foreach ($filter_departments as $filter_department)
+                          <option value="{{ $filter_department->department_id }}" @if($request->input('filter2')==$filter_department->department_id) selected @endif>{{ $filter_department->department_name }}</option>
+                        @endforeach
+                      </select>
+	                </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                      <select class="form-control" name="filter3" data-toggle="select">
+                        <option value=''>全部部门</option>
+                        @foreach ($filter_sections as $filter_section)
+                          <option value="{{ $filter_section->section_id }}" @if($request->input('filter3')==$filter_section->section_id) selected @endif>{{ $filter_section->section_name }}</option>
+                        @endforeach
+                      </select>
+	                </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                      <select class="form-control" name="filter4" data-toggle="select">
+                        <option value=''>全部岗位</option>
+                        @foreach ($filter_positions as $filter_position)
+                          <option value="{{ $filter_position->position_id }}" @if($request->input('filter4')==$filter_position->position_id) selected @endif>{{ $filter_position->position_name }}</option>
+                        @endforeach
+                      </select>
+	                </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                      <select class="form-control" name="filter5" data-toggle="select">
+                        <option value=''>全部等级</option>
+                        <option value='1' @if($request->input('filter5')==1) selected @endif>等级1</option>
+                        <option value='2' @if($request->input('filter5')==2) selected @endif>等级2</option>
+                        <option value='3' @if($request->input('filter5')==3) selected @endif>等级3</option>
+                        <option value='4' @if($request->input('filter5')==4) selected @endif>等级4</option>
+                        <option value='5' @if($request->input('filter5')==5) selected @endif>等级5</option>
+                        <option value='6' @if($request->input('filter5')==6) selected @endif>等级6</option>
+                        <option value='7' @if($request->input('filter5')==7) selected @endif>等级7</option>
+                        <option value='8' @if($request->input('filter5')==8) selected @endif>等级8</option>
+                        <option value='9' @if($request->input('filter5')==9) selected @endif>等级9</option>
+                      </select>
+	                </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                      <select class="form-control" name="filter6" data-toggle="select">
+                        <option value=''>跨校区教学</option>
+                        <option value='1' @if($request->input('filter6')==1) selected @endif>是</option>
+                        <option value='0' @if($request->input('filter6')==0) selected @endif>否</option>
+                      </select>
+	                </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-1">
+                  <div class="row">
+                    <div class="col-lg-6 col-md-12 col-sm-12 mb-1">
                       <input type="submit" class="btn btn-primary btn-block" value="查询">
                     </div>
-                    <div class="col-6">
+                    <div class="col-lg-6 col-md-12 col-sm-12 mb-1">
                       <a href="?"><button type="button" class="form-control btn btn-outline-primary btn-block" style="white-space:nowrap; overflow:hidden;">重置</button></a>
                     </div>
                   </div>

@@ -14,11 +14,10 @@ class CourseController extends Controller
      * URL: GET /course
      * @param  Request  $request
      * @param  $request->input('page'): 页数
-     * @param  $request->input('filter1'): 课程名称
-     * @param  $request->input('filter2'): 开课校区
-     * @param  $request->input('filter3'): 课程季度
-     * @param  $request->input('filter4'): 课程年级
-     * @param  $request->input('filter5'): 课程科目
+     * @param  $request->input('filter1'): 名称
+     * @param  $request->input('filter2'): 校区
+     * @param  $request->input('filter3'): 年级
+     * @param  $request->input('filter4'): 科目
      */
     public function index(Request $request){
         // 检查登录状态
@@ -37,26 +36,28 @@ class CourseController extends Controller
                   ->whereIn('course_department', $department_access)
                   ->where('course_status', 1);
 
-        // 添加筛选条件
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
         // 课程名称
         if ($request->filled('filter1')) {
             $rows = $rows->where('course_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
         // 开课校区
         if($request->filled('filter2')){
             $rows = $rows->where('course_department', '=', $request->input('filter2'));
-        }
-        // 课程季度
-        if($request->filled('filter3')){
-            $rows = $rows->where('course_quarter', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
         // 课程年级
-        if($request->filled('filter4')){
-            $rows = $rows->where('course_grade', '=', $request->input('filter4'));
+        if($request->filled('filter3')){
+            $rows = $rows->where('course_grade', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
         // 课程科目
-        if($request->filled('filter5')){
-            $rows = $rows->where('course_subject', '=', $request->input('filter5'));
+        if($request->filled('filter4')){
+            $rows = $rows->where('course_subject', '=', $request->input('filter4'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -71,20 +72,21 @@ class CourseController extends Controller
                      ->get();
 
         // 获取校区、年级、科目信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
+        $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
 
         // 返回列表视图
         return view('course/index', ['rows' => $rows,
-                                            'currentPage' => $currentPage,
-                                            'totalPage' => $totalPage,
-                                            'startIndex' => $offset,
-                                            'request' => $request,
-                                            'totalNum' => $totalNum,
-                                            'filter_departments' => $filter_departments,
-                                            'filter_grades' => $filter_grades,
-                                            'filter_subjects' => $filter_subjects]);
+                                    'currentPage' => $currentPage,
+                                    'totalPage' => $totalPage,
+                                    'startIndex' => $offset,
+                                    'request' => $request,
+                                    'totalNum' => $totalNum,
+                                    'filter_status' => $filter_status,
+                                    'filter_departments' => $filter_departments,
+                                    'filter_grades' => $filter_grades,
+                                    'filter_subjects' => $filter_subjects]);
     }
 
     /**

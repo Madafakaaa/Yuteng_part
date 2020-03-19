@@ -33,18 +33,23 @@ class ClassroomController extends Controller
                   ->whereIn('classroom_department', $department_access)
                   ->where('classroom_status', 1);
 
-        // 添加筛选条件
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
         // 教室名称
         if ($request->filled('filter1')) {
             $rows = $rows->where('classroom_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
         // 所属校区
         if($request->filled('filter2')){
             $rows = $rows->where('classroom_department', '=', $request->input('filter2'));
+            $filter_status = 1;
         }
         // 教室类型
         if($request->filled('filter3')){
             $rows = $rows->where('classroom_type', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -60,16 +65,17 @@ class ClassroomController extends Controller
                      ->get();
 
         // 获取校区信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
 
         // 返回列表视图
         return view('classroom/index', ['rows' => $rows,
-                                               'currentPage' => $currentPage,
-                                               'totalPage' => $totalPage,
-                                               'startIndex' => $offset,
-                                               'request' => $request,
-                                               'totalNum' => $totalNum,
-                                               'filter_departments' => $filter_departments]);
+                                       'currentPage' => $currentPage,
+                                       'totalPage' => $totalPage,
+                                       'startIndex' => $offset,
+                                       'request' => $request,
+                                       'totalNum' => $totalNum,
+                                       'filter_status' => $filter_status,
+                                       'filter_departments' => $filter_departments]);
     }
 
     /**

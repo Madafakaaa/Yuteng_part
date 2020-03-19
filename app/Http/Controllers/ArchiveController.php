@@ -33,18 +33,23 @@ class ArchiveController extends Controller
                   ->join('department', 'user.user_department', '=', 'department.department_id')
                   ->whereIn('user_department', $department_access);
 
-        // 添加筛选条件
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
         // 用户姓名
         if ($request->filled('filter1')) {
             $rows = $rows->where('user_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
         // 用户校区
         if ($request->filled('filter2')) {
             $rows = $rows->where('user_department', $request->input('filter2'));
+            $filter_status = 1;
         }
         // 档案名称
         if ($request->filled('filter3')) {
             $rows = $rows->where('archive_name', 'like', '%'.$request->input('filter3').'%');
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -68,6 +73,7 @@ class ArchiveController extends Controller
                                       'startIndex' => $offset,
                                       'request' => $request,
                                       'totalNum' => $totalNum,
+                                      'filter_status' => $filter_status,
                                       'filter_departments' => $filter_departments]);
     }
 

@@ -38,20 +38,48 @@
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-12">
-      <div class="collapse" id="filter">
-        <div class="card mb-1">
-          <div class="card-header border-0 p-0 mb-1">
-            <form action="" method="get" id="filter" name="filter">
+      <div class="collapse @if($filter_status==1) show @endif" id="filter">
+        <div class="card mb-4">
+          <div class="card-body border-1 p-0 my-1">
+            <form action="" method="get">
               <div class="row m-2">
-                <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                  <input class="form-control" type="text" name="filter1" placeholder="校区名称..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
+                <div class="col-lg-8 col-md-8 col-sm-12 mb-1">
                   <div class="row">
-                    <div class="col-6">
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                      <input class="form-control" type="text" name="filter1" placeholder="课程名称..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                      <select class="form-control" name="filter2" data-toggle="select">
+                        <option value='0'>全部校区</option>
+                        @foreach ($filter_departments as $filter_department)
+                          <option value="{{ $filter_department->department_id }}" @if($request->input('filter2')==$filter_department->department_id) selected @endif>{{ $filter_department->department_name }}</option>
+                        @endforeach
+                      </select>
+	                </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                      <select class="form-control" name="filter3" data-toggle="select">
+                        <option value=''>全部年级</option>
+                        @foreach ($filter_grades as $filter_grade)
+                          <option value="{{ $filter_grade->grade_id }}" @if($request->input('filter3')==$filter_grade->grade_id) selected @endif>{{ $filter_grade->grade_name }}</option>
+                        @endforeach
+                      </select>
+	                </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                      <select class="form-control" name="filter4" data-toggle="select">
+                        <option value=''>全部科目</option>
+                        @foreach ($filter_subjects as $filter_subject)
+                          <option value="{{ $filter_subject->subject_id }}" @if($request->input('filter4')==$filter_subject->subject_id) selected @endif>{{ $filter_subject->subject_name }}</option>
+                        @endforeach
+                      </select>
+	                </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-1">
+                  <div class="row">
+                    <div class="col-lg-6 col-md-12 col-sm-12 mb-1">
                       <input type="submit" class="btn btn-primary btn-block" value="查询">
                     </div>
-                    <div class="col-6">
+                    <div class="col-lg-6 col-md-12 col-sm-12 mb-1">
                       <a href="?"><button type="button" class="form-control btn btn-outline-primary btn-block" style="white-space:nowrap; overflow:hidden;">重置</button></a>
                     </div>
                   </div>

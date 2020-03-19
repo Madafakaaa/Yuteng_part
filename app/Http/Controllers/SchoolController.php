@@ -31,14 +31,18 @@ class SchoolController extends Controller
                   ->whereIn('school_department', $department_access)
                   ->where('school_status', 1);
 
-        // 添加筛选条件
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
         // 学校名称
         if ($request->filled('filter1')) {
             $rows = $rows->where('school_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
         // 所属校区
         if($request->filled('filter2')){
             $rows = $rows->where('school_department', '=', $request->input('filter2'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -54,7 +58,7 @@ class SchoolController extends Controller
                      ->get();
 
         // 获取校区信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
 
         // 返回列表视图
         return view('school/index', ['rows' => $rows,
@@ -63,6 +67,7 @@ class SchoolController extends Controller
                                     'startIndex' => $offset,
                                     'request' => $request,
                                     'totalNum' => $totalNum,
+                                    'filter_status' => $filter_status,
                                     'filter_departments' => $filter_departments]);
     }
 

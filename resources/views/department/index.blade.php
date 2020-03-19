@@ -26,10 +26,6 @@
             <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
             <span class="btn-inner--text">添加校区</span>
           </a>
-          <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
-            <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
-            <span class="btn-inner--text">搜索</span>
-          </a>
         </div>
       </div>
     </div>
@@ -38,29 +34,6 @@
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-12">
-      <div class="collapse" id="filter">
-        <div class="card mb-1">
-          <div class="card-header border-0 p-0 mb-1">
-            <form action="" method="get" id="filter" name="filter">
-              <div class="row m-2">
-                <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                  <input class="form-control" type="text" name="filter1" placeholder="校区名称..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-4 mb-1">
-                  <div class="row">
-                    <div class="col-6">
-                      <input type="submit" class="btn btn-primary btn-block" value="查询">
-                    </div>
-                    <div class="col-6">
-                      <a href="?"><button type="button" class="form-control btn btn-outline-primary btn-block" style="white-space:nowrap; overflow:hidden;">重置</button></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
       <div class="card main_card mb-4" style="display:none">
         <div class="table-responsive">
           <table class="table align-items-center table-hover text-left table-bordered">

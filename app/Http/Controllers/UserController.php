@@ -35,22 +35,39 @@ class UserController extends Controller
                   ->join('section', 'position.position_section', '=', 'section.section_id')
                   ->whereIn('user_department', $department_access)
                   ->where('user_status', 1);
-        // 添加筛选条件
+
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
         // 用户姓名
         if ($request->filled('filter1')) {
             $rows = $rows->where('user_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
         // 用户校区
         if ($request->filled('filter2')) {
             $rows = $rows->where('user_department', $request->input('filter2'));
+            $filter_status = 1;
         }
         // 用户部门
         if ($request->filled('filter3')) {
             $rows = $rows->where('position_section', $request->input('filter3'));
+            $filter_status = 1;
         }
         // 用户岗位
         if ($request->filled('filter4')) {
             $rows = $rows->where('user_position', $request->input('filter4'));
+            $filter_status = 1;
+        }
+        // 用户等级
+        if ($request->filled('filter5')) {
+            $rows = $rows->where('position_level', $request->input('filter5'));
+            $filter_status = 1;
+        }
+        // 跨校区教学
+        if ($request->filled('filter6')) {
+            $rows = $rows->where('user_cross_teaching', $request->input('filter6'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -65,20 +82,21 @@ class UserController extends Controller
                      ->get();
 
         // 获取校区、岗位、等级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_sections = DB::table('section')->where('section_status', 1)->orderBy('section_createtime', 'asc')->get();
         $filter_positions = DB::table('position')->where('position_status', 1)->orderBy('position_createtime', 'asc')->get();
 
         // 返回列表视图
         return view('user/index', ['rows' => $rows,
-                                          'currentPage' => $currentPage,
-                                          'totalPage' => $totalPage,
-                                          'startIndex' => $offset,
-                                          'request' => $request,
-                                          'totalNum' => $totalNum,
-                                          'filter_departments' => $filter_departments,
-                                          'filter_sections' => $filter_sections,
-                                          'filter_positions' => $filter_positions]);
+                                  'currentPage' => $currentPage,
+                                  'totalPage' => $totalPage,
+                                  'startIndex' => $offset,
+                                  'request' => $request,
+                                  'totalNum' => $totalNum,
+                                  'filter_status' => $filter_status,
+                                  'filter_departments' => $filter_departments,
+                                  'filter_sections' => $filter_sections,
+                                  'filter_positions' => $filter_positions]);
     }
 
     /**

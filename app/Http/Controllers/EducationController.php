@@ -35,18 +35,24 @@ class EducationController extends Controller
                   ->whereIn('student_department', $department_access)
                   ->where('student_customer_status', 1)
                   ->where('student_status', 1);
-        // 添加筛选条件
-        // 客户名称
+
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
+        // 学生姓名
         if ($request->filled('filter1')) {
             $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
-        // 客户校区
+        // 学生校区
         if ($request->filled('filter2')) {
             $rows = $rows->where('student_department', '=', $request->input('filter2'));
+            $filter_status = 1;
         }
-        // 客户年级
+        // 学生年级
         if ($request->filled('filter3')) {
             $rows = $rows->where('student_grade', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
         // 保存数据总数
         $totalNum = $rows->count();
@@ -75,7 +81,7 @@ class EducationController extends Controller
                      ->limit($rowPerPage)
                      ->get();
         // 获取校区、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         // 返回列表视图
         return view('education/studentAll', ['rows' => $rows,
@@ -84,6 +90,7 @@ class EducationController extends Controller
                                            'startIndex' => $offset,
                                            'request' => $request,
                                            'totalNum' => $totalNum,
+                                           'filter_status' => $filter_status,
                                            'filter_departments' => $filter_departments,
                                            'filter_grades' => $filter_grades]);
     }
@@ -99,8 +106,8 @@ class EducationController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取数据
         $rows = DB::table('student')
                   ->join('department', 'student.student_department', '=', 'department.department_id')
@@ -113,18 +120,24 @@ class EducationController extends Controller
                   ->where('student_class_adviser', Session::get('user_id'))
                   ->where('student_customer_status', 1)
                   ->where('student_status', 1);
-        // 添加筛选条件
-        // 客户名称
+
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
+        // 学生姓名
         if ($request->filled('filter1')) {
             $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
-        // 客户校区
+        // 学生校区
         if ($request->filled('filter2')) {
             $rows = $rows->where('student_department', '=', $request->input('filter2'));
+            $filter_status = 1;
         }
-        // 客户年级
+        // 学生年级
         if ($request->filled('filter3')) {
             $rows = $rows->where('student_grade', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
         // 保存数据总数
         $totalNum = $rows->count();
@@ -153,7 +166,7 @@ class EducationController extends Controller
                      ->limit($rowPerPage)
                      ->get();
         // 获取校区、年级信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         // 返回列表视图
         return view('education/studentMy', ['rows' => $rows,
@@ -162,6 +175,7 @@ class EducationController extends Controller
                                            'startIndex' => $offset,
                                            'request' => $request,
                                            'totalNum' => $totalNum,
+                                           'filter_status' => $filter_status,
                                            'filter_departments' => $filter_departments,
                                            'filter_grades' => $filter_grades]);
     }
@@ -191,22 +205,28 @@ class EducationController extends Controller
                   ->whereIn('class_department', $department_access)
                   ->where('class_status', 1);
 
-        // 添加筛选条件
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
         // 班级名称
         if ($request->filled('filter1')) {
             $rows = $rows->where('class_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
         // 班级校区
         if ($request->filled('filter2')) {
             $rows = $rows->where('class_department', '=', $request->input('filter2'));
+            $filter_status = 1;
         }
         // 班级年级
         if ($request->filled('filter3')) {
             $rows = $rows->where('class_grade', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
         // 班级科目
         if ($request->filled('filter4')) {
             $rows = $rows->where('class_subject', '=', $request->input('filter4'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -221,7 +241,7 @@ class EducationController extends Controller
                      ->get();
 
         // 获取校区、年级、科目信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
 
@@ -232,6 +252,7 @@ class EducationController extends Controller
                                            'startIndex' => $offset,
                                            'request' => $request,
                                            'totalNum' => $totalNum,
+                                           'filter_status' => $filter_status,
                                            'filter_departments' => $filter_departments,
                                            'filter_grades' => $filter_grades,
                                            'filter_subjects' => $filter_subjects]);
@@ -249,8 +270,8 @@ class EducationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
 
         // 获取数据
         $rows = DB::table('class')
@@ -262,22 +283,28 @@ class EducationController extends Controller
                   ->where('class_teacher', Session::get('user_id'))
                   ->where('class_status', 1);
 
-        // 添加筛选条件
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
         // 班级名称
         if ($request->filled('filter1')) {
             $rows = $rows->where('class_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
         // 班级校区
         if ($request->filled('filter2')) {
             $rows = $rows->where('class_department', '=', $request->input('filter2'));
+            $filter_status = 1;
         }
         // 班级年级
         if ($request->filled('filter3')) {
             $rows = $rows->where('class_grade', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
         // 班级科目
         if ($request->filled('filter4')) {
             $rows = $rows->where('class_subject', '=', $request->input('filter4'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -292,7 +319,7 @@ class EducationController extends Controller
                      ->get();
 
         // 获取校区、年级、科目信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
 
@@ -303,6 +330,7 @@ class EducationController extends Controller
                                           'startIndex' => $offset,
                                           'request' => $request,
                                           'totalNum' => $totalNum,
+                                          'filter_status' => $filter_status,
                                           'filter_departments' => $filter_departments,
                                           'filter_grades' => $filter_grades,
                                           'filter_subjects' => $filter_subjects]);
@@ -339,26 +367,33 @@ class EducationController extends Controller
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                   ->whereIn('schedule_department', $department_access)
                   ->where('schedule_attended', '=', 0);
-        // 添加筛选条件
-        // 课程安排校区
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
+        // 学生姓名
         if ($request->filled('filter1')) {
-            $rows = $rows->where('schedule_department', '=', $request->input('filter1'));
+            $rows = $rows->where('student.student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
-        // 课程安排学生/班级
+        // 班级名称
         if ($request->filled('filter2')) {
-            $rows = $rows->where('schedule_participant', '=', $request->input('filter2'));
+            $rows = $rows->where('class.class_name', 'like', '%'.$request->input('filter2').'%');
+            $filter_status = 1;
         }
-        // 课程安排年级
+        // 学生校区
         if ($request->filled('filter3')) {
-            $rows = $rows->where('schedule_grade', '=', $request->input('filter3'));
+            $rows = $rows->where('schedule_department', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
-        // 课程安排教师
+        // 学生年级
         if ($request->filled('filter4')) {
-            $rows = $rows->where('schedule_teacher', '=', $request->input('filter4'));
+            $rows = $rows->where('schedule_grade', '=', $request->input('filter4'));
+            $filter_status = 1;
         }
-        // 课程安排日期
+        // 学生科目
         if ($request->filled('filter5')) {
-            $rows = $rows->where('schedule_date', '=', $request->input('filter5'));
+            $rows = $rows->where('schedule_subject', '=', $request->input('filter5'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -375,24 +410,21 @@ class EducationController extends Controller
                      ->get();
 
         // 获取校区、学生、班级、年级、科目信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        $filter_classes = DB::table('class')->where('class_status', 1)->orderBy('class_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $filter_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
+        $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
 
         // 返回列表视图
         return view('education/scheduleAll', ['rows' => $rows,
-                                                       'currentPage' => $currentPage,
-                                                       'totalPage' => $totalPage,
-                                                       'startIndex' => $offset,
-                                                       'request' => $request,
-                                                       'totalNum' => $totalNum,
-                                                       'filter_departments' => $filter_departments,
-                                                       'filter_students' => $filter_students,
-                                                       'filter_classes' => $filter_classes,
-                                                       'filter_grades' => $filter_grades,
-                                                       'filter_users' => $filter_users]);
+                                               'currentPage' => $currentPage,
+                                               'totalPage' => $totalPage,
+                                               'startIndex' => $offset,
+                                               'request' => $request,
+                                               'totalNum' => $totalNum,
+                                               'filter_status' => $filter_status,
+                                               'filter_departments' => $filter_departments,
+                                               'filter_subjects' => $filter_subjects,
+                                               'filter_grades' => $filter_grades]);
     }
 
     /**
@@ -412,6 +444,8 @@ class EducationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取数据
         $rows = DB::table('schedule')
                   ->leftJoin('student', 'schedule.schedule_participant', '=', 'student.student_id')
@@ -424,26 +458,33 @@ class EducationController extends Controller
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                   ->where('schedule_attended', '=', 0)
                   ->where('schedule_teacher', '=', Session::get('user_id'));
-        // 添加筛选条件
-        // 课程安排校区
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
+        // 学生姓名
         if ($request->filled('filter1')) {
-            $rows = $rows->where('schedule_department', '=', $request->input('filter1'));
+            $rows = $rows->where('student.student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
-        // 课程安排学生/班级
+        // 班级名称
         if ($request->filled('filter2')) {
-            $rows = $rows->where('schedule_participant', '=', $request->input('filter2'));
+            $rows = $rows->where('class.class_name', 'like', '%'.$request->input('filter2').'%');
+            $filter_status = 1;
         }
-        // 课程安排年级
+        // 学生校区
         if ($request->filled('filter3')) {
-            $rows = $rows->where('schedule_grade', '=', $request->input('filter3'));
+            $rows = $rows->where('schedule_department', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
-        // 课程安排教师
+        // 学生年级
         if ($request->filled('filter4')) {
-            $rows = $rows->where('schedule_teacher', '=', $request->input('filter4'));
+            $rows = $rows->where('schedule_grade', '=', $request->input('filter4'));
+            $filter_status = 1;
         }
-        // 课程安排日期
+        // 学生科目
         if ($request->filled('filter5')) {
-            $rows = $rows->where('schedule_date', '=', $request->input('filter5'));
+            $rows = $rows->where('schedule_subject', '=', $request->input('filter5'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -460,11 +501,9 @@ class EducationController extends Controller
                      ->get();
 
         // 获取校区、学生、班级、年级、科目信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        $filter_classes = DB::table('class')->where('class_status', 1)->orderBy('class_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $filter_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
+        $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
 
         // 返回列表视图
         return view('education/scheduleMy', ['rows' => $rows,
@@ -473,11 +512,10 @@ class EducationController extends Controller
                                                'startIndex' => $offset,
                                                'request' => $request,
                                                'totalNum' => $totalNum,
+                                               'filter_status' => $filter_status,
                                                'filter_departments' => $filter_departments,
-                                               'filter_students' => $filter_students,
-                                               'filter_classes' => $filter_classes,
-                                               'filter_grades' => $filter_grades,
-                                               'filter_users' => $filter_users]);
+                                               'filter_subjects' => $filter_subjects,
+                                               'filter_grades' => $filter_grades]);
     }
 
     /**
@@ -904,7 +942,6 @@ class EducationController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
             // 返回第一步
             return redirect("/education/schedule/attend/{$schedule_id}")
                    ->with(['notify' => true,
@@ -937,6 +974,8 @@ class EducationController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取数据
         $rows = DB::table('participant')
                   ->join('student', 'participant.participant_student', '=', 'student.student_id')
@@ -964,27 +1003,35 @@ class EducationController extends Controller
                            'schedule.schedule_date AS schedule_date',
                            'schedule.schedule_start AS schedule_start',
                            'schedule.schedule_end AS schedule_end',
-                           'course.course_name AS course_name');
-        // 添加筛选条件
-        // 课程安排校区
+                           'course.course_name AS course_name')
+                  ->whereIn('schedule_department', $department_access);
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
+        // 学生姓名
         if ($request->filled('filter1')) {
-            $rows = $rows->where('schedule_department', '=', $request->input('filter1'));
+            $rows = $rows->where('student.student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
-        // 课程安排学生/班级
+        // 班级名称
         if ($request->filled('filter2')) {
-            $rows = $rows->where('schedule_participant', '=', $request->input('filter2'));
+            $rows = $rows->where('class.class_name', 'like', '%'.$request->input('filter2').'%');
+            $filter_status = 1;
         }
-        // 课程安排年级
+        // 学生校区
         if ($request->filled('filter3')) {
-            $rows = $rows->where('schedule_grade', '=', $request->input('filter3'));
+            $rows = $rows->where('schedule_department', '=', $request->input('filter3'));
+            $filter_status = 1;
         }
-        // 课程安排教师
+        // 学生年级
         if ($request->filled('filter4')) {
-            $rows = $rows->where('schedule_teacher', '=', $request->input('filter4'));
+            $rows = $rows->where('schedule_grade', '=', $request->input('filter4'));
+            $filter_status = 1;
         }
-        // 课程安排日期
+        // 学生科目
         if ($request->filled('filter5')) {
-            $rows = $rows->where('schedule_date', '=', $request->input('filter5'));
+            $rows = $rows->where('schedule_subject', '=', $request->input('filter5'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -1001,10 +1048,9 @@ class EducationController extends Controller
                      ->get();
 
         // 获取校区、学生、班级、年级、科目信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_classes = DB::table('class')->where('class_status', 1)->orderBy('class_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $filter_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
+        $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
 
         // 返回列表视图
         return view('education/attendedScheduleAll', ['rows' => $rows,
@@ -1013,10 +1059,10 @@ class EducationController extends Controller
                                                        'startIndex' => $offset,
                                                        'request' => $request,
                                                        'totalNum' => $totalNum,
+                                                       'filter_status' => $filter_status,
                                                        'filter_departments' => $filter_departments,
-                                                       'filter_classes' => $filter_classes,
-                                                       'filter_grades' => $filter_grades,
-                                                       'filter_users' => $filter_users]);
+                                                       'filter_subjects' => $filter_subjects,
+                                                       'filter_grades' => $filter_grades]);
     }
 
     /**
@@ -1035,6 +1081,8 @@ class EducationController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取数据
         $rows = DB::table('participant')
                   ->join('student', 'participant.participant_student', '=', 'student.student_id')
@@ -1064,10 +1112,33 @@ class EducationController extends Controller
                            'schedule.schedule_end AS schedule_end',
                            'course.course_name AS course_name')
                   ->where('schedule_teacher', '=', Session::get('user_id'));
-        // 添加筛选条件
-        // 课程安排校区
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
+        // 学生姓名
         if ($request->filled('filter1')) {
-            $rows = $rows->where('schedule_department', '=', $request->input('filter1'));
+            $rows = $rows->where('student.student_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
+        }
+        // 班级名称
+        if ($request->filled('filter2')) {
+            $rows = $rows->where('class.class_name', 'like', '%'.$request->input('filter2').'%');
+            $filter_status = 1;
+        }
+        // 学生校区
+        if ($request->filled('filter3')) {
+            $rows = $rows->where('schedule_department', '=', $request->input('filter3'));
+            $filter_status = 1;
+        }
+        // 学生年级
+        if ($request->filled('filter4')) {
+            $rows = $rows->where('schedule_grade', '=', $request->input('filter4'));
+            $filter_status = 1;
+        }
+        // 学生科目
+        if ($request->filled('filter5')) {
+            $rows = $rows->where('schedule_subject', '=', $request->input('filter5'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -1084,10 +1155,9 @@ class EducationController extends Controller
                      ->get();
 
         // 获取校区、学生、班级、年级、科目信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $filter_classes = DB::table('class')->where('class_status', 1)->orderBy('class_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $filter_users = DB::table('user')->where('user_status', 1)->orderBy('user_createtime', 'asc')->get();
+        $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
         // 返回列表视图
         return view('education/attendedScheduleMy', ['rows' => $rows,
                                                        'currentPage' => $currentPage,
@@ -1095,10 +1165,10 @@ class EducationController extends Controller
                                                        'startIndex' => $offset,
                                                        'request' => $request,
                                                        'totalNum' => $totalNum,
+                                                       'filter_status' => $filter_status,
                                                        'filter_departments' => $filter_departments,
-                                                       'filter_classes' => $filter_classes,
-                                                       'filter_grades' => $filter_grades,
-                                                       'filter_users' => $filter_users]);
+                                                       'filter_subjects' => $filter_subjects,
+                                                       'filter_grades' => $filter_grades]);
     }
 
     /**
@@ -1201,8 +1271,8 @@ class EducationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
 
-        // 获取用户信息
-        $user_level = Session::get('user_level');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
 
         // 获取数据document
         $rows = DB::table('document')
@@ -1211,15 +1281,28 @@ class EducationController extends Controller
                   ->join('grade', 'document.document_grade', '=', 'grade.grade_id')
                   ->join('user', 'document.document_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id');
-
-        // 添加筛选条件
-        // 用户姓名
+        // 搜索条件
+        // 判断是否有搜索条件
+        $filter_status = 0;
+        // 教案名称
         if ($request->filled('filter1')) {
-            $rows = $rows->where('user_name', 'like', '%'.$request->input('filter1').'%');
+            $rows = $rows->where('document_name', 'like', '%'.$request->input('filter1').'%');
+            $filter_status = 1;
         }
-        // 用户校区
+        // 年级
         if ($request->filled('filter2')) {
-            $rows = $rows->where('user_department', $request->input('filter2'));
+            $rows = $rows->where('document_grade', '=', $request->input('filter2'));
+            $filter_status = 1;
+        }
+        // 科目
+        if ($request->filled('filter3')) {
+            $rows = $rows->where('document_subject', '=', $request->input('filter3'));
+            $filter_status = 1;
+        }
+        // 科目
+        if ($request->filled('filter4')) {
+            $rows = $rows->where('document_semester', '=', $request->input('filter4'));
+            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -1235,7 +1318,9 @@ class EducationController extends Controller
                      ->get();
 
         // 获取校区信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
+        $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
 
         // 返回列表视图
         return view('education/document', ['rows' => $rows,
@@ -1244,7 +1329,10 @@ class EducationController extends Controller
                                           'startIndex' => $offset,
                                           'request' => $request,
                                           'totalNum' => $totalNum,
-                                          'filter_departments' => $filter_departments]);
+                                           'filter_status' => $filter_status,
+                                           'filter_departments' => $filter_departments,
+                                           'filter_subjects' => $filter_subjects,
+                                           'filter_grades' => $filter_grades]);
     }
 
     /**
