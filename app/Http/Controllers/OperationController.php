@@ -19,6 +19,8 @@ class OperationController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取表单输入
         if($request->filled('student_id')) {
             $student_id = $request->input('student_id');
@@ -28,7 +30,7 @@ class OperationController extends Controller
         // 获取学生信息
         $students = DB::table('student')
                       ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                      ->where('student_department', Session::get('user_department'))
+                      ->whereIn('student_department', $department_access)
                       ->where('student_customer_status', 1)
                       ->orderBy('student_grade', 'asc')
                       ->get();

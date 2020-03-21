@@ -43,20 +43,29 @@
               </div>
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">学生性别<span style="color:red">*</span></label>
+                  <label class="form-control-label">学生校区<span style="color:red">*</span></label>
                   <select class="form-control" name="input2" data-toggle="select" required>
+                    <option value=''>请选择校区...</option>
+                    @foreach ($departments as $department)
+                      <option value="{{ $department->department_id }}" @if($student->student_department==$department->department_id) selected @endif>{{ $department->department_name }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label class="form-control-label">学生性别<span style="color:red">*</span></label>
+                  <select class="form-control" name="input3" data-toggle="select" required>
                     <option value=''>请选择性别...</option>
                     <option value='男' @if($student->student_gender=="男") selected @endif>男</option>
                     <option value='女' @if($student->student_gender=="女") selected @endif>女</option>
                   </select>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">学生年级<span style="color:red">*</span></label>
-                  <select class="form-control" name="input3" data-toggle="select" required>
+                  <select class="form-control" name="input4" data-toggle="select" required>
                     <option value=''>请选择学生年级...</option>
                     @foreach ($grades as $grade)
                       <option value="{{ $grade->grade_id }}" @if($student->student_grade==$grade->grade_id) selected @endif>{{ $grade->grade_name }}</option>
@@ -67,7 +76,7 @@
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">公立学校</label>
-                  <select class="form-control" name="input4" data-toggle="select">
+                  <select class="form-control" name="input5" data-toggle="select">
                     <option value='0'>请选择公立学校...</option>
                     @foreach ($schools as $school)
                       <option value="{{ $school->school_id }}" @if($student->student_school==$school->school_id) selected @endif>{{ $school->school_name }}</option>
@@ -75,18 +84,16 @@
                   </select>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">监护人姓名<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" name="input5" value="{{ $student->student_guardian }}" autocomplete='off' required maxlength="5">
+                  <input class="form-control" type="text" name="input6" value="{{ $student->student_guardian }}" autocomplete='off' required maxlength="5">
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">监护人关系<span style="color:red">*</span></label>
-                  <select class="form-control" name="input6" data-toggle="select" required>
+                  <select class="form-control" name="input7" data-toggle="select" required>
                     <option value=''>请选择监护人关系...</option>
                     <option value='爸爸' @if($student->student_guardian_relationship=="爸爸") selected @endif>爸爸</option>
                     <option value='妈妈' @if($student->student_guardian_relationship=="妈妈") selected @endif>妈妈</option>
@@ -98,26 +105,22 @@
                   </select>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">联系电话<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" name="input7" value="{{ $student->student_phone }}" autocomplete='off' required maxlength="11">
+                  <input class="form-control" type="text" name="input8" value="{{ $student->student_phone }}" autocomplete='off' required maxlength="11">
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">微信号</label>
-                  <input class="form-control" type="text" name="input8" value="{{ $student->student_wechat }}" autocomplete='off' maxlength="20">
+                  <input class="form-control" type="text" name="input9" value="{{ $student->student_wechat }}" autocomplete='off' maxlength="20">
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">来源类型<span style="color:red">*</span></label>
-                  <select class="form-control" name="input9" data-toggle="select" required>
+                  <select class="form-control" name="input10" data-toggle="select" required>
                     <option value=''>请选择来源...</option>
                     @foreach ($sources as $source)
                       <option value="{{ $source->source_name }}" @if($student->student_source==$source->source_name) selected @endif>{{ $source->source_name }}</option>
@@ -128,7 +131,7 @@
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">学生生日<span style="color:red">*</span></label>
-                  <input class="form-control datepicker" name="input10" type="text" value="{{ $student->student_birthday }}" required>
+                  <input class="form-control datepicker" name="input11" type="text" value="{{ $student->student_birthday }}" required>
                 </div>
               </div>
             </div>

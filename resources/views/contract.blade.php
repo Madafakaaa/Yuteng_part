@@ -6,9 +6,9 @@
     <div class="card m-4">
       <div class="card-header m-1 p-2">
         <div class="row m-0 p-0">
-          <div class="col-3"><h2 class="m-0">育藤教育</h2></div>
-          <div class="col-6 text-center"><span style="font-family: 华文中宋; font-weight:normal;">快乐学习的第三课堂</span></div>
-          <div class="col-3 text-right"><h3 class="m-0">合同号：<span style="color:red;">{{ $contract->contract_id }}</span></h3></div>
+          <div class="col-4"><img style="height:58px;" src='{{ asset(_ASSETS_.'/img/brand/contract_top.png') }}'></div>
+          <div class="col-4"></div>
+          <div class="col-4 text-right"><span style="font-family: 华文楷体; font-weight:normal; font-size:36px;">考名校 来育藤</span></div>
         </div>
       </div>
       <div class="card-body m-1 p-2">
@@ -22,38 +22,42 @@
           </div>
         </div>
         <div class="row m-1 px-2">
-          <div class="col-4">
-            <h3 class="m-0">
+          <div class="col-12">
+            <h2 class="m-0">
               <span style="font-family: 华文中宋; font-weight:normal;">
                 甲方：上海育藤培训学校有限公司{{ $contract->department_name }}
               </span>
-            </h3>
-          </div>
-          <div class="col-6">
-            <h3 class="m-0">
-              <span style="font-family: 华文中宋; font-weight:normal;">
-                甲方地址：{{ $contract->department_location }}
-              </span>
-            </h3>
+            </h2>
           </div>
         </div>
         <div class="row m-1 px-2">
-          <div class="col-4">
-            <h3 class="m-0">
+          <div class="col-12">
+            <h2 class="m-0">
+              <span style="font-family: 华文中宋; font-weight:normal;">
+                甲方地址：{{ $contract->department_location }}
+              </span>
+            </h2>
+          </div>
+        </div>
+        <div class="row m-1 px-2">
+          <div class="col-12">
+            <h2 class="m-0">
               <span style="font-family: 华文中宋; font-weight:normal;">
                 乙方：{{ $contract->student_name }}
               </span>
-            </h3>
+            </h2>
           </div>
-          <div class="col-6">
-            <h3 class="m-0">
+        </div>
+        <div class="row m-1 px-2">
+          <div class="col-12">
+            <h2 class="m-0">
               <span style="font-family: 华文中宋; font-weight:normal;">
                 乙方法定监护人：{{ $contract->student_guardian }}
               </span>
-            </h3>
+            </h2>
           </div>
         </div>
-        <hr>
+        <hr class="mt-4">
         <div class="row m-1 px-2 pt-2">
           <div class="col-12 mb-2">
             <h3 class="m-0">
@@ -103,7 +107,7 @@
                   <td style="border:1px solid #32325d;" colspan="3"><strong>合计</strong></td>
                   <td style="border:1px solid #32325d;"><strong>{{ number_format($contract->contract_original_hour) }} 课时</strong></td>
                   <td style="border:1px solid #32325d;"><strong>{{ number_format($contract->contract_total_price, 1) }} 元</strong></td>
-                  <td style="border:1px solid #32325d;"><strong>综合手续费：{{ number_format($contract->contract_extra_fee, 1) }} 元.</strong></td>
+                  <td style="border:1px solid #32325d;">@if($contract->contract_extra_fee!=0) <strong>综合手续费：{{ number_format($contract->contract_extra_fee, 1) }} 元.</strong> @endif</td>
                 </tr>
               </tbody>
             </table>
@@ -227,9 +231,9 @@
     <div class="card m-4">
       <div class="card-header m-1 p-2">
         <div class="row m-0 p-0">
-          <div class="col-3"><h2 class="m-0">育藤教育</h2></div>
-          <div class="col-6 text-center"><span style="font-family: 华文中宋; font-weight:normal;">快乐学习的第三课堂</span></div>
-          <div class="col-3 text-right"><h3 class="m-0">合同号：<span style="color:red;">{{ $contract->contract_id }}</span></h3></div>
+          <div class="col-4"><img style="height:58px;" src='{{ asset(_ASSETS_.'/img/brand/contract_top.png') }}'></div>
+          <div class="col-4"></div>
+          <div class="col-4 text-right"><span style="font-family: 华文楷体; font-weight:normal; font-size:36px;">考名校 来育藤</span></div>
         </div>
       </div>
       <div class="card-body m-1 p-2">
@@ -304,24 +308,26 @@
               </span>
             </h4>
           </div>
-          <div class="col-12">
+          <div class="col-12 mb-4">
             <h4 class="mb-1 mx-4">
               <span style="font-family: 华文中宋; font-weight:normal;">
                 三、对本协议的未尽事宜，经双方协商，在此说明：
               </span>
             </h4>
           </div>
-          <div class="col-12">
-            <hr class="mt-4 mx-4" style="border-top:1px solid #32325d;">
+          <div class="col-12 mb-2">
+            <h3 class="m-0">
+              <span style="font-family: 华文中宋;">
+                第六条、合同备注
+              </span>
+            </h3>
           </div>
           <div class="col-12">
-            <hr class="mt-3 mx-4" style="border-top:1px solid #32325d;">
-          </div>
-          <div class="col-12">
-            <hr class="mt-3 mx-4" style="border-top:1px solid #32325d;">
-          </div>
-          <div class="col-12 mb-6">
-            <hr class="mt-3 mx-4" style="border-top:1px solid #32325d;">
+            <h4 class="mb-1 mx-4">
+              <span style="font-family: 华文中宋; font-weight:normal;">
+                {{ $contract->contract_remark }}
+              </span>
+            </h4>
           </div>
         </div>
         <div class="row mx-1 my-6 px-2">
@@ -368,6 +374,12 @@
                 签订
               </span>
             </h3>
+          </div>
+        </div>
+        <div class="row mx-1 my-3 px-2">
+          <div class="col-7"></div>
+          <div class="col-5">
+            <img style="height:240px;" src='{{ asset(_ASSETS_.'/img/brand/seal.png') }}'>
           </div>
         </div>
       </div>

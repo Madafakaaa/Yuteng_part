@@ -17,8 +17,8 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">公司管理</li>
-              <li class="breadcrumb-item"><a href="/school">公立学校</a></li>
-              <li class="breadcrumb-item active">修改学校</li>
+              <li class="breadcrumb-item"><a href="/school">大区修改</a></li>
+              <li class="breadcrumb-item active">修改大区</li>
             </ol>
           </nav>
         </div>

@@ -163,8 +163,14 @@ class StudentController extends Controller
                                      'message' => '客户显示失败，请联系系统管理员']);
         }
         $student = $student[0];
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取校区、来源、课程、用户、年级信息
-        $departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $departments = DB::table('department')
+                         ->where('department_status', 1)
+                         ->whereIn('department_id', $department_access)
+                         ->orderBy('department_id', 'asc')
+                         ->get();
         $sources = DB::table('source')->where('source_status', 1)->orderBy('source_createtime', 'asc')->get();
         $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
         $schools = DB::table('school')->where('school_status', 1)->orderBy('school_createtime', 'asc')->get();
@@ -198,23 +204,24 @@ class StudentController extends Controller
         }
         // 获取表单输入
         $student_name = $request->input('input1');
-        $student_gender = $request->input('input2');
-        $student_grade = $request->input('input3');
-        if($request->filled('input4')) {
-            $student_school = $request->input('input4');
+        $student_department = $request->input('input2');
+        $student_gender = $request->input('input3');
+        $student_grade = $request->input('input4');
+        if($request->filled('input5')) {
+            $student_school = $request->input('input5');
         }else{
             $student_school = 0;
         }
-        $student_guardian = $request->input('input5');
-        $student_guardian_relationship = $request->input('input6');
-        $student_phone = $request->input('input7');
-        if($request->filled('input8')) {
-            $student_wechat = $request->input('input8');
+        $student_guardian = $request->input('input6');
+        $student_guardian_relationship = $request->input('input7');
+        $student_phone = $request->input('input8');
+        if($request->filled('input9')) {
+            $student_wechat = $request->input('input9');
         }else{
             $student_wechat = '无';
         }
-        $student_source = $request->input('input9');
-        $student_birthday = $request->input('input10');
+        $student_source = $request->input('input10');
+        $student_birthday = $request->input('input11');
         //  获取学生信息
         $student = DB::table('student')
                      ->where('student_id', $student_id)
@@ -227,6 +234,7 @@ class StudentController extends Controller
             DB::table('student')
               ->where('student_id', $student_id)
               ->update(['student_name' => $student_name,
+                        'student_department' => $student_department,
                         'student_gender' => $student_gender,
                         'student_grade' => $student_grade,
                         'student_school' => $student_school,
@@ -247,6 +255,7 @@ class StudentController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
+            return $e;
             return redirect("/student/{$student_id}/edit")->with(['notify' => true,
                                                                     'type' => 'danger',
                                                                     'title' => '学生修改失败',

@@ -151,19 +151,7 @@
                   <input class="form-control form-control-sm" type="number" readonly value="{{ $selected_course->course_unit_price }}" name="input_{{ $loop->iteration }}_3" id="input_{{ $loop->iteration }}_3">
                 </td>
                 <td>
-                  <select class="form-control form-control-sm" data-toggle="select" required name="input_{{ $loop->iteration }}_4" id="input_{{ $loop->iteration }}_4" onchange="update({{ $selected_course_num }})">
-                    <option value='1' selected>无折扣</option>
-                    <option value='0.95'>95折</option>
-                    <option value='0.9'>9折</option>
-                    <option value='0.85'>85折</option>
-                    <option value='0.8'>8折</option>
-                    <option value='0.75'>75折</option>
-                    <option value='0.7'>7折</option>
-                    <option value='0.65'>65折</option>
-                    <option value='0.6'>6折</option>
-                    <option value='0.55'>55折</option>
-                    <option value='0.5'>5折</option>
-                  </select>
+                  <input class="form-control form-control-sm" type="number" value="1" autocomplete='off' required min="0" step="0.01" name="input_{{ $loop->iteration }}_4" id="input_{{ $loop->iteration }}_4" onchange="update({{ $selected_course_num }})">
                 </td>
                 <td>
                   <input class="form-control form-control-sm" type="number" value="0" autocomplete='off' required min="0.00" step="0.01" name="input_{{ $loop->iteration }}_5" id="input_{{ $loop->iteration }}_5" oninput="update({{ $selected_course_num }})">
@@ -178,7 +166,7 @@
                   <input class="form-control form-control-sm" type="number" value="{{ $selected_course->course_unit_price }}" readonly name="input_{{ $loop->iteration }}_8" id="input_{{ $loop->iteration }}_8">
                 </td>
                 <td class="text-center">
-                  <form action="/contract/create/step2" method="post" id="course_{{ $loop->iteration }}" name="course_{{ $loop->iteration }}">
+                  <form action="/market/contract/create2" method="post" id="course_{{ $loop->iteration }}" name="course_{{ $loop->iteration }}">
                     @csrf
                     <input type="hidden" name="input1" value="{{ $student->student_id }}">
                     <input type="hidden" name="selected_course_num" value="{{ $selected_course_num }}">

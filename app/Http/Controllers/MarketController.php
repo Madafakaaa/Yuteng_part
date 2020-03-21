@@ -18,7 +18,14 @@ class MarketController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取来源、用户、年级信息
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
+        // 获取校区、来源、用户、年级信息
+        $departments = DB::table('department')
+                         ->where('department_status', 1)
+                         ->whereIn('department_id', $department_access)
+                         ->orderBy('department_id', 'asc')
+                         ->get();
         $sources = DB::table('source')
                      ->where('source_status', 1)
                      ->orderBy('source_id', 'asc')
@@ -37,7 +44,8 @@ class MarketController extends Controller
                      ->where('school_status', 1)
                      ->orderBy('school_id', 'asc')
                      ->get();
-        return view('market/publicCustomerCreate', ['sources' => $sources,
+        return view('market/publicCustomerCreate', ['departments' => $departments,
+                                                    'sources' => $sources,
                                                     'users' => $users,
                                                     'schools' => $schools,
                                                     'grades' => $grades]);
@@ -47,6 +55,7 @@ class MarketController extends Controller
      * 公共客户录入提交
      * URL: POST /market/publicCustomer/create
      * @param  Request  $request
+     * @param  $request->input('input0'): 校区
      * @param  $request->input('input1'): 负责人
      * @param  $request->input('input2'): 学生姓名
      * @param  $request->input('input3'): 学生性别
@@ -67,6 +76,7 @@ class MarketController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取表单输入
+        $student_department = $request->input('input0');
         if($request->filled('input1')) {
             $student_consultant = $request->input('input1');
         }else{
@@ -100,11 +110,11 @@ class MarketController extends Controller
         $student_createuser = Session::get('user_id');
         // 生成新学生ID
         $student_num = DB::table('student')
-                         ->where('student_department', Session::get('user_department'))
+                         ->where('student_department', $student_department)
                          ->whereYear('student_createtime', date('Y'))
                          ->whereMonth('student_createtime', date('m'))
                          ->count()+1;
-        $student_id = "S".substr(date('Ym'),2).sprintf("%02d", Session::get('user_department')).sprintf("%03d", $student_num);
+        $student_id = "S".substr(date('Ym'),2).sprintf("%02d", $student_department).sprintf("%03d", $student_num);
         // 获取课程顾问姓名
         $consultant_name = "无 (公共)";
         if($student_consultant!=''){
@@ -118,7 +128,7 @@ class MarketController extends Controller
             DB::table('student')->insert(
                 ['student_id' => $student_id,
                  'student_name' => $student_name,
-                 'student_department' => Session::get('user_department'),
+                 'student_department' => $student_department,
                  'student_grade' => $student_grade,
                  'student_gender' => $student_gender,
                  'student_birthday' => $student_birthday,
@@ -146,6 +156,7 @@ class MarketController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
+            return $e;
             return redirect("/market/publicCustomer/create")
                    ->with(['notify' => true,
                            'type' => 'danger',
@@ -170,7 +181,14 @@ class MarketController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取来源、用户、年级信息
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
+        // 获取校区、来源、用户、年级信息
+        $departments = DB::table('department')
+                         ->where('department_status', 1)
+                         ->whereIn('department_id', $department_access)
+                         ->orderBy('department_id', 'asc')
+                         ->get();
         $sources = DB::table('source')
                      ->where('source_status', 1)
                      ->orderBy('source_id', 'asc')
@@ -189,16 +207,18 @@ class MarketController extends Controller
                      ->where('school_status', 1)
                      ->orderBy('school_id', 'asc')
                      ->get();
-        return view('market/myCustomerCreate', ['sources' => $sources,
-                                              'users' => $users,
-                                              'schools' => $schools,
-                                              'grades' => $grades]);
+        return view('market/myCustomerCreate', ['departments' => $departments,
+                                                'sources' => $sources,
+                                                'users' => $users,
+                                                'schools' => $schools,
+                                                'grades' => $grades]);
     }
 
     /**
      * 我的客户录入提交
      * URL: POST /market/myCustomer/create
      * @param  Request  $request
+     * @param  $request->input('input0'): 校区
      * @param  $request->input('input1'): 负责人
      * @param  $request->input('input2'): 学生姓名
      * @param  $request->input('input3'): 学生性别
@@ -219,6 +239,7 @@ class MarketController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取表单输入
+        $student_department = $request->input('input0');
         if($request->filled('input1')) {
             $student_consultant = $request->input('input1');
         }else{
@@ -252,11 +273,11 @@ class MarketController extends Controller
         $student_createuser = Session::get('user_id');
         // 生成新学生ID
         $student_num = DB::table('student')
-                         ->where('student_department', Session::get('user_department'))
+                         ->where('student_department', $student_department)
                          ->whereYear('student_createtime', date('Y'))
                          ->whereMonth('student_createtime', date('m'))
                          ->count()+1;
-        $student_id = "S".substr(date('Ym'),2).sprintf("%02d", Session::get('user_department')).sprintf("%03d", $student_num);
+        $student_id = "S".substr(date('Ym'),2).sprintf("%02d", $student_department).sprintf("%03d", $student_num);
         // 获取课程顾问姓名
         $consultant_name = "无 (公共)";
         if($student_consultant!=''){
@@ -270,7 +291,7 @@ class MarketController extends Controller
             DB::table('student')->insert(
                 ['student_id' => $student_id,
                  'student_name' => $student_name,
-                 'student_department' => Session::get('user_department'),
+                 'student_department' => $student_department,
                  'student_grade' => $student_grade,
                  'student_gender' => $student_gender,
                  'student_birthday' => $student_birthday,
@@ -322,6 +343,8 @@ class MarketController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取表单输入
         if($request->filled('student_id')) {
             $student_id = $request->input('student_id');
@@ -331,7 +354,7 @@ class MarketController extends Controller
         // 获取学生信息
         $students = DB::table('student')
                       ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                      ->where('student_department', Session::get('user_department'))
+                      ->whereIn('student_department', $department_access)
                       ->orderBy('student_grade', 'asc')
                       ->get();
         return view('market/followerEdit', ['students' => $students, 'student_id' => $student_id]);
@@ -971,10 +994,11 @@ class MarketController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取Contract信息
-        $contract = DB::table('contract')
-                      ->where('contract_id', $contract_id)
-                      ->first();
+        // 获取学生信息
+        $contract_student = DB::table('contract')
+                              ->where('contract_id', $contract_id)
+                              ->first()
+                              ->contract_student;
         // 获取课程包中已使用Hour信息数量
         $invalid_hour_num = DB::table('hour')
                               ->where([
@@ -1006,6 +1030,22 @@ class MarketController extends Controller
                 DB::table('contract')
                   ->where('contract_id', $contract_id)
                   ->delete();
+                // 减少学生签约次数
+                DB::table('student')
+                  ->where('student_id', $contract_student)
+                  ->decrement('student_contract_num');
+                $student_contract_num = DB::table('student')
+                                          ->where('student_id', $contract_student)
+                                          ->first()
+                                          ->student_contract_num;
+                // 更新学生状态
+                if($student_contract_num==0){
+                    // 更新客户状态、最后签约时间
+                    DB::table('student')
+                      ->where('student_id', $contract_student)
+                      ->update(['student_customer_status' =>  0,
+                                'student_last_contract_date' => '2000-01-01']);
+                }
             }
             // 捕获异常
             catch(Exception $e){

@@ -36,7 +36,12 @@
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">客户校区<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" value="{{ Session::get('user_department_name') }}" readonly>
+                  <select class="form-control" name="input0" data-toggle="select" required>
+                    <option value=''>请选择客户校区...</option>
+                    @foreach ($departments as $department)
+                      <option value="{{ $department->department_id }}">{{ $department->department_name }}</option>
+                    @endforeach
+                  </select>
                 </div>
               </div>
               <div class="col-6">
