@@ -119,7 +119,7 @@
                 <th style='width:120px;'>单价</th>
                 <th style='width:90px;'>数量</th>
                 <th style='width:130px;'>总金额</th>
-                <th style='width:110px;'>折扣优惠</th>
+                <th style='width:110px;'>折扣优惠%</th>
                 <th style='width:110px;'>金额优惠</th>
                 <th style='width:90px;'>赠送课时</th>
                 <th style='width:90px;'>总课时</th>
@@ -151,7 +151,7 @@
                   <input class="form-control form-control-sm" type="number" readonly value="{{ $selected_course->course_unit_price }}" name="input_{{ $loop->iteration }}_3" id="input_{{ $loop->iteration }}_3">
                 </td>
                 <td>
-                  <input class="form-control form-control-sm" type="number" value="1" autocomplete='off' required min="0" step="0.01" name="input_{{ $loop->iteration }}_4" id="input_{{ $loop->iteration }}_4" onchange="update({{ $selected_course_num }})">
+                  <input class="form-control form-control-sm" type="number" value="100" autocomplete='off' required max="100" min="0" step="1" name="input_{{ $loop->iteration }}_4" id="input_{{ $loop->iteration }}_4" oninput="update({{ $selected_course_num }})">
                 </td>
                 <td>
                   <input class="form-control form-control-sm" type="number" value="0" autocomplete='off' required min="0.00" step="0.01" name="input_{{ $loop->iteration }}_5" id="input_{{ $loop->iteration }}_5" oninput="update({{ $selected_course_num }})">
@@ -212,7 +212,13 @@
               <div class="form-group row">
                 <label class="col-md-4 col-form-label form-control-label">签约类型<span style="color:red">*</span></label>
                 <div class="col-md-8">
-                  <input class="form-control" type="text" value="首次签约" readonly>
+                  @if($student->student_customer_status==0)
+                    <input class="form-control" type="text" value="首次签约" readonly>
+                    <input type="hidden" value="0" name="contract_type">
+                  @else
+                    <input class="form-control" type="text" value="续签签约" readonly>
+                    <input type="hidden" value="1" name="contract_type">
+                  @endif
                 </div>
               </div>
             </div>
@@ -330,7 +336,7 @@ function update(course_num){
         var unit_price = Math.floor( parseFloat($("#input_"+i+"_"+1).val()) * 100) / 100 ;
         var original_hour = parseInt($("#input_"+i+"_"+2).val());
         // var price = parseInt($("#input_"+i+"_"+3).val());
-        var discount_rate = Math.floor( parseFloat($("#input_"+i+"_"+4).val()) * 100) / 100 ;
+        var discount_rate = Math.floor( parseFloat($("#input_"+i+"_"+4).val())) / 100 ;
         var discount_amount = Math.floor( parseFloat($("#input_"+i+"_"+5).val()) * 100) / 100 ;
         var free_hour = parseInt($("#input_"+i+"_"+6).val());
         // 判断输入是否合法

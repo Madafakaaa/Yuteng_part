@@ -138,7 +138,7 @@
                 <td>
                   <a href='/attendedSchedule/{{$row->participant_id}}'><button type="button" class="btn btn-primary btn-sm">上课详情</button></a>&nbsp;
                   @if($row->participant_checked==0)
-                    <a href='/attendedSchedule/{{$row->schedule_id}}/check'><button type="button" class="btn btn-warning btn-sm">复核</button></a>&nbsp;
+                    <a href='/attendedSchedule/{{$row->participant_id}}/check'><button type="button" class="btn btn-warning btn-sm">复核</button></a>&nbsp;
                   @endif
                 </td>
               </tr>

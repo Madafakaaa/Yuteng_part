@@ -42,7 +42,7 @@
                 <a href="/course" class="nav-link" id="course">课程设置</a>
               </li>
               <li class="nav-item" @if(!in_array('school', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/school" class="nav-link" id="school">大区修改</a>
+                <a href="/school" class="nav-link" id="school">大区管理</a>
               </li>
               <li class="nav-item" @if(!in_array('classroom', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/classroom" class="nav-link" id="classroom">教室设置</a>

@@ -363,7 +363,9 @@
           </div>
         </div>
         <div class="row mx-1 my-3 px-2">
-          <div class="col-6"></div>
+          <div class="col-6">
+            <img style="height:200px; float:left;" src='{{ asset(_ASSETS_.'/img/brand/seal.png') }}'>
+          </div>
           <div class="col-6">
             <h3 class="m-0">
               <span style="font-family: 华文中宋; font-weight:normal;">
@@ -374,12 +376,6 @@
                 签订
               </span>
             </h3>
-          </div>
-        </div>
-        <div class="row mx-1 my-3 px-2">
-          <div class="col-7"></div>
-          <div class="col-5">
-            <img style="height:240px;" src='{{ asset(_ASSETS_.'/img/brand/seal.png') }}'>
           </div>
         </div>
       </div>

@@ -14,7 +14,7 @@ class SectionController extends Controller
      * URL: GET /section
      * @param  Request  $request
      * @param  $request->input('page'): 页数
-     * @param  $request->input('filter1'): 部门名称
+     * @param  $request->input('section'): 部门
      */
     public function index(Request $request){
         // 检查登录状态
@@ -29,9 +29,9 @@ class SectionController extends Controller
                   ->join('section', 'position.position_section', '=', 'section.section_id')
                   ->where('position_status', 1);
         // 添加筛选条件
-        // 岗位名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('position_name', 'like', '%'.$request->input('filter1').'%');
+        // 部门ID
+        if ($request->filled('section')) {
+            $rows = $rows->where('position.position_section', '=', $request->input('section'));
         }
 
         // 保存数据总数
@@ -54,12 +54,12 @@ class SectionController extends Controller
 
         // 返回列表视图
         return view('section/index', ['rows' => $rows,
-                                             'sections' => $sections,
-                                             'currentPage' => $currentPage,
-                                             'totalPage' => $totalPage,
-                                             'startIndex' => $offset,
-                                             'request' => $request,
-                                             'totalNum' => $totalNum]);
+                                      'sections' => $sections,
+                                      'currentPage' => $currentPage,
+                                      'totalPage' => $totalPage,
+                                      'startIndex' => $offset,
+                                      'request' => $request,
+                                      'totalNum' => $totalNum]);
     }
 
     /**

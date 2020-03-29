@@ -121,15 +121,15 @@ class SchoolController extends Controller
             return redirect()->action('SchoolController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
-                                     'title' => '学校添加失败',
-                                     'message' => '学校添加失败，请重新输入信息']);
+                                     'title' => '大区添加失败',
+                                     'message' => '大区添加失败，请重新输入信息']);
         }
         // 返回学校列表
         return redirect()->action('SchoolController@index')
                          ->with(['notify' => true,
                                  'type' => 'success',
-                                 'title' => '学校添加成功',
-                                 'message' => '学校名称: '.$school_name]);
+                                 'title' => '大区添加成功',
+                                 'message' => '大区名称: '.$school_name]);
     }
 
     /**
@@ -153,8 +153,8 @@ class SchoolController extends Controller
             return redirect()->action('School\SchoolController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
-                                     'title' => '学校显示失败',
-                                     'message' => '学校显示失败，请联系系统管理员']);
+                                     'title' => '大区显示失败',
+                                     'message' => '大区显示失败，请联系系统管理员']);
         }
         // 获取数据对象
         $school = $school[0];
@@ -181,8 +181,8 @@ class SchoolController extends Controller
             return redirect()->action('SchoolController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
-                                     'title' => '学校显示失败',
-                                     'message' => '学校显示失败，请联系系统管理员']);
+                                     'title' => '大区显示失败',
+                                     'message' => '大区显示失败，请联系系统管理员']);
         }
         // 获取数据对象
         $school = $school[0];
@@ -224,13 +224,13 @@ class SchoolController extends Controller
         catch(Exception $e){
             return redirect("/school/{$school_id}/edit")->with(['notify' => true,
                                                                         'type' => 'danger',
-                                                                        'title' => '学校修改失败',
-                                                                        'message' => '学校修改失败，请重新输入信息']);
+                                                                        'title' => '大区修改失败',
+                                                                        'message' => '大区修改失败，请重新输入信息']);
         }
         return redirect("/school")->with(['notify' => true,
                                           'type' => 'success',
-                                          'title' => '学校修改成功',
-                                          'message' => '学校修改成功，学校名称: '.$school_name]);
+                                          'title' => '大区修改成功',
+                                          'message' => '大区修改成功，学校名称: '.$school_name]);
     }
 
     /**
@@ -258,14 +258,14 @@ class SchoolController extends Controller
             return redirect()->action('SchoolController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',
-                                     'title' => '学校删除失败',
-                                     'message' => '学校删除失败，请联系系统管理员']);
+                                     'title' => '大区删除失败',
+                                     'message' => '大区删除失败，请联系系统管理员']);
         }
         // 返回学校列表
         return redirect()->action('SchoolController@index')
                          ->with(['notify' => true,
                                  'type' => 'success',
-                                 'title' => '学校删除成功',
-                                 'message' => '学校名称: '.$school_name]);
+                                 'title' => '大区删除成功',
+                                 'message' => '大区名称: '.$school_name]);
     }
 }

@@ -64,10 +64,10 @@
           <h5 class="h3 mb-0">班级成员 ( {{ $class->class_current_num }} / {{ $class->class_max_num }} 人 )</h5>
         </div>
         <div class="card-body">
-          <ul class="list-group list-group-flush list my--3">
+          <ul class="list-group list-group-flush list my--1">
             @foreach ($members as $member)
             <li class="list-group-item px-0">
-              <form action="/member/{{ $class->class_id }}" method="POST">
+              <form action="/class/{{ $class->class_id }}" method="POST">
                 @method('DELETE')
                 @csrf
                 <div class="row align-items-center">
@@ -92,6 +92,26 @@
             </li>
             @endforeach
           </ul>
+            <form action="/class/{{ $class->class_id }}/add" method="post">
+              @csrf
+              <div class="card-body p-3">
+                <div class="row">
+                  <div class="col-8">
+                    <div class="form-group mb-2">
+                      <select class="form-control" name="input1" data-toggle="select" required>
+                        <option value=''>添加新学生</option>
+                        @foreach ($students as $student)
+                          <option value="{{ $student->student_id }}">{{ $student->student_name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <input type="submit" class="btn btn-warning btn-block" value="添加">
+                  </div>
+                </div>
+              </div>
+            </form>
         </div>
       </div>
       <div class="card">

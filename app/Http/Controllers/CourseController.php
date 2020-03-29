@@ -316,10 +316,11 @@ class CourseController extends Controller
         $course_name = DB::table('course')->where('course_id', $course_id)->value('course_name');
         // 删除数据
         try{
-            DB::table('course')->where('course_id', $class_id)->update(['course_status' => 0]);
+            DB::table('course')->where('course_id', $course_id)->update(['course_status' => 0]);
         }
         // 捕获异常
         catch(Exception $e){
+
             return redirect()->action('CourseController@index')
                              ->with(['notify' => true,
                                      'type' => 'danger',

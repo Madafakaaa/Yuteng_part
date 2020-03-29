@@ -91,6 +91,8 @@ Route::get('/operation/class/create', 'OperationController@classCreate');
 Route::post('/operation/class/store', 'OperationController@classStore');
 // 班级管理
 Route::get('/operation/class/all', 'OperationController@classAll');
+// 删除班级
+Route::delete('/operation/class/all/{class_id}', 'OperationController@classDelete');
 // 学生排课
 Route::get('/operation/studentSchedule/create', 'OperationController@studentScheduleCreate');
 Route::get('/operation/studentSchedule/createIrregular', 'OperationController@studentScheduleCreateIrregular');
@@ -100,6 +102,8 @@ Route::post('/operation/studentSchedule/create3', 'OperationController@studentSc
 Route::post('/operation/studentSchedule/store', 'OperationController@studentScheduleStore');
 // 学生课程
 Route::get('/operation/studentSchedule/all', 'OperationController@studentScheduleAll');
+// 学生课程删除
+Route::delete('/operation/studentSchedule/{schedule_id}', 'OperationController@studentScheduleDelete');
 // 班级排课
 Route::get('/operation/classSchedule/create', 'OperationController@classScheduleCreate');
 Route::get('/operation/classSchedule/createIrregular', 'OperationController@classScheduleCreateIrregular');
@@ -109,12 +113,18 @@ Route::post('/operation/classSchedule/create3', 'OperationController@classSchedu
 Route::post('/operation/classSchedule/store', 'OperationController@classScheduleStore');
 // 班级课程
 Route::get('/operation/classSchedule/all', 'OperationController@classScheduleAll');
+// 班级课程删除
+Route::delete('/operation/classSchedule/{schedule_id}', 'OperationController@classScheduleDelete');
 // 上课记录
 Route::get('/operation/attendedSchedule/all', 'OperationController@attendedScheduleAll');
 // 我的学生课程安排
 Route::get('/operation/schedule/my', 'OperationController@ScheduleMy');
+// 班级课程删除
+Route::delete('/operation/schedule/my/{schedule_id}', 'OperationController@myScheduleDelete');
 // 我的学生上课记录
 Route::get('/operation/attendedSchedule/my', 'OperationController@attendedScheduleMy');
+// 复核上课记录
+Route::get('/attendedSchedule/{participant_id}/check', 'OperationController@attendedScheduleCheck');
 // 签约合同
 Route::get('/operation/contract/create', 'OperationController@contractCreate');
 Route::post('/operation/contract/create2', 'OperationController@contractCreate2');
@@ -147,6 +157,8 @@ Route::get('/education/student/department', 'EducationController@studentDepartme
 Route::get('/education/student/my', 'EducationController@studentMy');
 // 全部班级
 Route::get('/education/class/all', 'EducationController@classAll');
+// 删除班级
+Route::delete('/education/class/all/{class_id}', 'EducationController@classDelete');
 // 本校班级
 Route::get('/education/class/department', 'EducationController@classDepartment');
 // 我的班级
@@ -202,15 +214,15 @@ Route::get('/class/{class_id}', 'ClassController@show');
 Route::get('/class/{class_id}/edit', 'ClassController@edit');
 Route::put('/class/{class_id}', 'ClassController@update');
 // 删除成员
-Route::delete('/member/{class_id}', 'ClassController@memberDelete');
+Route::post('/class/{class_id}/add', 'ClassController@memberAdd');
+// 删除成员
+Route::delete('/class/{class_id}', 'ClassController@memberDelete');
 
 // 上课
 // 查看上课安排详情
 Route::get('/schedule/{schedule_id}', 'ScheduleController@schedule');
 // 查看上课记录详情
 Route::get('/attendedSchedule/{participant_id}', 'ScheduleController@attendedSchedule');
-// 复核上课记录
-Route::get('/attendedSchedule/{participant_id}/check', 'ScheduleController@attendedScheduleCheck');
 
 // 个人信息
 Route::get('/profile', 'ProfileController@show');

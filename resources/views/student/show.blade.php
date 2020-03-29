@@ -59,7 +59,7 @@
                 <div class="h4">年级 - {{ $student->grade_name }}</div>
               </div>
               <div class="col-6">
-                <div class="h4">学校 - @if($student->school_name=="") 无 @else {{ $student->school_name }} @endif</div>
+                <div class="h4">大区 - @if($student->school_name=="") 无 @else {{ $student->school_name }} @endif</div>
               </div>
               <div class="col-6">
                 <div class="h4">家长 - {{ $student->student_guardian_relationship }} {{ $student->student_guardian }}</div>
@@ -151,7 +151,7 @@
             <a class="nav-link mb-3" id="attended-schedule-tab" data-toggle="tab" href="#attended-schedule-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>上课记录</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mb-3" id="class-tab" data-toggle="tab" href="#class-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>剩余课时</a>
+            <a class="nav-link mb-3" id="class-tab" data-toggle="tab" href="#class-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>所在班级</a>
           </li>
           <li class="nav-item">
             <a class="nav-link mb-3" id="hour-tab" data-toggle="tab" href="#hour-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>剩余课时</a>

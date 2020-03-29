@@ -124,11 +124,11 @@
                 <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
                 <td>{{ $row->classroom_name }}</td>
                 <td>
-                  <form action="schedule/{{$row->schedule_id}}" method="POST">
+                  <form action="/operation/schedule/my/{{$row->schedule_id}}" method="POST">
                     @method('DELETE')
                     @csrf
                     <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">安排详情</button></a>
-                    {{ deleteConfirm($row->schedule_id, ["上课成员：".$row->student_name.", 教师：".$row->teacher_name]) }}
+                    {{ deleteConfirm($row->schedule_id, ["确认删除本课程安排？"]) }}
                   </form>
                 </td>
               </tr>

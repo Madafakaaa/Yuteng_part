@@ -119,11 +119,11 @@
                 </td>
                 <td>{{ $row->user_name }} ({{ $row->position_name }})</td>
                 <td>
-                  <form action="class/{{$row->class_id}}" method="POST">
+                  <form action="/education/class/all/{{$row->class_id}}" method="POST">
                     @method('DELETE')
                     @csrf
                     <a href='/class/{{$row->class_id}}'><button type="button" class="btn btn-primary btn-sm">班级详情</button></a>
-                    {{ deleteConfirm($row->class_id, ["班级名称：".$row->class_name]) }}
+                    {{ deleteConfirm($row->class_id, ["删除班级将删除所有上课安排，保留已上课记录。"]) }}
                   </form>
                 </td>
               </tr>

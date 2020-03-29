@@ -688,6 +688,7 @@ class MarketController extends Controller
                               'student.student_guardian_relationship AS student_guardian_relationship',
                               'student.student_phone AS student_phone',
                               'student.student_follow_level AS student_follow_level',
+                              'student.student_first_contract_date AS student_first_contract_date',
                               'student.student_last_follow_date AS student_last_follow_date',
                               'student.student_customer_status AS student_customer_status',
                               'department.department_name AS department_name',
@@ -704,16 +705,20 @@ class MarketController extends Controller
         // 获取校区、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
+        // 获取一个月前日期
+        $date = date('Y-m-d');
+        $date_month_ago = date('Y-m-d', strtotime ("-1 month", strtotime($date)));
         // 返回列表视图
         return view('market/studentMy', ['rows' => $rows,
-                                           'currentPage' => $currentPage,
-                                           'totalPage' => $totalPage,
-                                           'startIndex' => $offset,
-                                           'request' => $request,
-                                           'totalNum' => $totalNum,
-                                           'filter_status' => $filter_status,
-                                           'filter_departments' => $filter_departments,
-                                           'filter_grades' => $filter_grades]);
+                                         'date_month_ago' => $date_month_ago,
+                                         'currentPage' => $currentPage,
+                                         'totalPage' => $totalPage,
+                                         'startIndex' => $offset,
+                                         'request' => $request,
+                                         'totalNum' => $totalNum,
+                                         'filter_status' => $filter_status,
+                                         'filter_departments' => $filter_departments,
+                                         'filter_grades' => $filter_grades]);
     }
 
     /**
@@ -731,11 +736,20 @@ class MarketController extends Controller
         }else{
             $student_id = '';
         }
-        // 获取学生信息
+        // 获取一个月前日期
+        $date = date('Y-m-d');
+        $date_month_ago = date('Y-m-d', strtotime ("-1 month", strtotime($date)));
+        // 获取学生信息(未签约或一个月之内新签约)
         $students = DB::table('student')
                       ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                      ->where('student_consultant', Session::get('user_id'))
-                      ->where('student_customer_status', 0)
+                      ->where([
+                                 ['student_consultant', Session::get('user_id')],
+                                 ['student_customer_status', 0],
+                              ])
+                      ->orWhere([
+                                 ['student_consultant', Session::get('user_id')],
+                                 ['student_first_contract_date', '>=', $date_month_ago],
+                              ])
                       ->orderBy('student_grade', 'asc')
                       ->get();
         return view('market/contractCreate', ['students' => $students, 'student_id' => $student_id]);
@@ -840,7 +854,7 @@ class MarketController extends Controller
         }else{
             $request_contract_remark = "";
         }
-        $request_contract_type = 0;
+        $request_contract_type = $request->input('contract_type');
         $request_contract_extra_fee = round((float)$request->input("extra_fee"), 2);
         $request_courses = array();
         // 生成新合同号
@@ -855,7 +869,7 @@ class MarketController extends Controller
             $temp[] = round((float)$request->input("course_{$i}_1"), 2);
             $temp[] = (int)$request->input("course_{$i}_2");
             $temp[] = round((float)$request->input("course_{$i}_3"), 2);
-            $temp[] = round((float)$request->input("course_{$i}_4"), 2);
+            $temp[] = round((float)$request->input("course_{$i}_4")/100, 2);
             $temp[] = round((float)$request->input("course_{$i}_5"), 2);
             $temp[] = (int)$request->input("course_{$i}_6");
             $temp[] = (int)$request->input("course_{$i}_7");
@@ -910,6 +924,7 @@ class MarketController extends Controller
                  'contract_payment_method' => $contract_payment_method,
                  'contract_remark' => $contract_remark,
                  'contract_type' => $request_contract_type,
+                 'contract_section' => 0,
                  'contract_extra_fee' => $request_contract_extra_fee,
                  'contract_createuser' => $contract_createuser]
             );
@@ -954,6 +969,12 @@ class MarketController extends Controller
               ->where('student_id', $request_student_id)
               ->update(['student_customer_status' =>  1,
                         'student_last_contract_date' =>  date('Y-m-d')]);
+            // 更新学生首次签约时间
+            if($request->input('contract_type')==0){
+                DB::table('student')
+                  ->where('student_id', $request_student_id)
+                  ->update(['student_first_contract_date' =>  date('Y-m-d')]);
+            }
             // 添加学生动态
             DB::table('student_record')->insert(
                 ['student_record_student' => $request_student_id,
@@ -1099,7 +1120,7 @@ class MarketController extends Controller
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
                   ->whereIn('contract_department', $department_access)
-                  ->where('contract_type', '=', 0);
+                  ->where('contract_section', '=', 0);
 
         // 搜索条件
         // 判断是否有搜索条件
@@ -1174,7 +1195,7 @@ class MarketController extends Controller
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
-                  ->where('contract_type', '=', 0)
+                  ->where('contract_section', '=', 0)
                   ->where('contract_createuser', '=', Session::get('user_id'));
 
         // 搜索条件

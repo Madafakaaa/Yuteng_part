@@ -259,6 +259,44 @@ class EducationController extends Controller
     }
 
     /**
+     * 删除班级
+     * URL: DELETE /operation/class/all/{class_id}
+     * @param  int  $class_id
+     */
+    public function classDelete($class_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取数据信息
+        $class_name = DB::table('class')->where('class_id', $class_id)->value('class_name');
+        // 删除数据
+        DB::beginTransaction();
+        try{
+            DB::table('class')->where('class_id', $class_id)->update(['class_status' => 0]);
+            //删除上课安排
+            DB::table('schedule')
+              ->where('schedule_participant', $class_id)
+              ->where('schedule_attended', 0)
+              ->delete();
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return redirect("/education/class/all")->with(['notify' => true,
+                                                             'type' => 'danger',
+                                                             'title' => '班级删除失败',
+                                                             'message' => '班级删除失败，请联系系统管理员']);
+        }
+        DB::commit();
+        // 返回班级列表
+        return redirect("/education/class/all")->with(['notify' => true,
+                                                         'type' => 'success',
+                                                         'title' => '班级删除成功',
+                                                         'message' => '班级名称: '.$class_name]);
+    }
+
+    /**
      * 我的班级视图
      * URL: GET /education/class/my
      * @param  Request  $request
@@ -793,7 +831,7 @@ class EducationController extends Controller
                                       ->first()
                                       ->student_name;
                     // 返回第一步
-                    return redirect("/schedule/attend/{$schedule_id}")->with(['notify' => true,
+                    return redirect("/education/schedule/attend/{$schedule_id}")->with(['notify' => true,
                                                                              'type' => 'danger',
                                                                              'title' => '学生剩余课时不足，请重新选择',
                                                                              'message' => $student_name.'剩余课时不足，请重新选择']);

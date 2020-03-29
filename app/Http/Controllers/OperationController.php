@@ -401,7 +401,11 @@ class OperationController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
         // 获取年级、科目、用户信息
+        $departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
         $users = DB::table('user')
@@ -420,7 +424,8 @@ class OperationController extends Controller
                    ->orderBy('position_level', 'desc')
                    ->union($users)
                    ->get();
-        return view('operation/classCreate', ['grades' => $grades,
+        return view('operation/classCreate', ['departments' => $departments,
+                                              'grades' => $grades,
                                               'subjects' => $subjects,
                                               'users' => $users]);
     }
@@ -572,6 +577,44 @@ class OperationController extends Controller
     }
 
     /**
+     * 删除班级
+     * URL: DELETE /operation/class/all/{class_id}
+     * @param  int  $class_id
+     */
+    public function classDelete($class_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取数据信息
+        $class_name = DB::table('class')->where('class_id', $class_id)->value('class_name');
+        // 删除数据
+        DB::beginTransaction();
+        try{
+            DB::table('class')->where('class_id', $class_id)->update(['class_status' => 0]);
+            //删除上课安排
+            DB::table('schedule')
+              ->where('schedule_participant', $class_id)
+              ->where('schedule_attended', 0)
+              ->delete();
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return redirect("/operation/class/all")->with(['notify' => true,
+                                                             'type' => 'danger',
+                                                             'title' => '班级删除失败',
+                                                             'message' => '班级删除失败，请联系系统管理员']);
+        }
+        DB::commit();
+        // 返回班级列表
+        return redirect("/operation/class/all")->with(['notify' => true,
+                                                         'type' => 'success',
+                                                         'title' => '班级删除成功',
+                                                         'message' => '班级名称: '.$class_name]);
+    }
+
+    /**
      * 安排学生课程视图
      * URL: GET /operation/studentSchedule/create
      */
@@ -646,14 +689,14 @@ class OperationController extends Controller
         // 获取所选日期数量
         $schedule_date_num = count($schedule_dates);
         if($schedule_date_num>50){
-            return redirect("/schedule/create")->with(['notify' => true,
+            return redirect("/operation/studentSchedule/create")->with(['notify' => true,
                                                        'type' => 'danger',
                                                        'title' => '请选择重新上课日期',
                                                        'message' => '上课日期数量过多，超过最大上限50！']);
         }
         for($i=0; $i<$schedule_date_num; $i++){
             if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $schedule_dates[$i])){
-                return redirect("/schedule/create")->with(['notify' => true,
+                return redirect("/operation/studentSchedule/create")->with(['notify' => true,
                                                            'type' => 'danger',
                                                            'title' => '请选择重新上课日期',
                                                            'message' => '上课日期格式有误！']);
@@ -663,7 +706,7 @@ class OperationController extends Controller
         $time_start = date('H:i', strtotime($schedule_start));
         $time_end = date('H:i', strtotime($schedule_end));
         if($time_start>=$time_end){
-            return redirect("/schedule/create")->with(['notify' => true,
+            return redirect("/operation/studentSchedule/create")->with(['notify' => true,
                                                        'type' => 'danger',
                                                        'title' => '请重新选择上课、下课时间',
                                                        'message' => '上课时间须在下课时间前！']);
@@ -1708,7 +1751,7 @@ class OperationController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return redirect("/operation/schedule/my")
+            return redirect("/operation/classSchedule/create")
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '班级课程安排添加失败',
@@ -1716,7 +1759,7 @@ class OperationController extends Controller
         }
         DB::commit();
         // 返回本校课程安排列表
-        return redirect("/operation/schedule/my")
+        return redirect("/operation/classSchedule/all")
                ->with(['notify' => true,
                        'type' => 'success',
                        'title' => '班级课程安排成功',
@@ -1811,6 +1854,37 @@ class OperationController extends Controller
                                                        'filter_subjects' => $filter_subjects]);
     }
 
+
+    /**
+     * 学生课程删除
+     * URL: DELETE /operation/studentSchedule/{schedule_id}
+     * @param  int  $class_id
+     */
+    public function studentScheduleDelete($schedule_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 更新数据库
+        try{
+            DB::table('schedule')
+              ->where('schedule_id', $schedule_id)
+              ->delete();
+        }
+        // 捕获异常
+        catch(Exception $e){
+            return redirect("/operation/studentSchedule/all")->with(['notify' => true,
+                                                                    'type' => 'danger',
+                                                                    'title' => '课程安排删除失败',
+                                                                    'message' => '课程安排删除失败！']);
+        }
+        // 返回
+        return redirect("/operation/studentSchedule/all")->with(['notify' => true,
+                                                                'type' => 'success',
+                                                                'title' => '课程安排删除成功',
+                                                                'message' => '课程安排删除成功！']);
+    }
+
     /**
      * 本校班级课程安排视图
      * URL: GET /operation/classSchedule/all
@@ -1897,6 +1971,36 @@ class OperationController extends Controller
                                                    'filter_departments' => $filter_departments,
                                                    'filter_grades' => $filter_grades,
                                                    'filter_subjects' => $filter_subjects]);
+    }
+
+    /**
+     * 班级课程删除
+     * URL: DELETE /operation/classSchedule/{schedule_id}
+     * @param  int  $schedule_id
+     */
+    public function classScheduleDelete($schedule_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 更新数据库
+        try{
+            DB::table('schedule')
+              ->where('schedule_id', $schedule_id)
+              ->delete();
+        }
+        // 捕获异常
+        catch(Exception $e){
+            return redirect("/operation/classSchedule/all")->with(['notify' => true,
+                                                                    'type' => 'danger',
+                                                                    'title' => '课程安排删除失败',
+                                                                    'message' => '课程安排删除失败！']);
+        }
+        // 返回
+        return redirect("/operation/classSchedule/all")->with(['notify' => true,
+                                                                'type' => 'success',
+                                                                'title' => '课程安排删除成功',
+                                                                'message' => '课程安排删除成功！']);
     }
 
     /**
@@ -2126,6 +2230,36 @@ class OperationController extends Controller
     }
 
     /**
+     * 我的学生课程安排删除
+     * URL: DELETE /operation/schedule/my/{schedule_id}
+     * @param  int  $schedule_id
+     */
+    public function myScheduleDelete($schedule_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 更新数据库
+        try{
+            DB::table('schedule')
+              ->where('schedule_id', $schedule_id)
+              ->delete();
+        }
+        // 捕获异常
+        catch(Exception $e){
+            return redirect("/operation/schedule/my")->with(['notify' => true,
+                                                                    'type' => 'danger',
+                                                                    'title' => '课程安排删除失败',
+                                                                    'message' => '课程安排删除失败！']);
+        }
+        // 返回
+        return redirect("/operation/schedule/my")->with(['notify' => true,
+                                                                'type' => 'success',
+                                                                'title' => '课程安排删除成功',
+                                                                'message' => '课程安排删除成功！']);
+    }
+
+    /**
      * 我的学生上课记录视图
      * URL: GET /operation/attendedSchedule/my
      * @param  Request  $request
@@ -2230,6 +2364,55 @@ class OperationController extends Controller
                                                        'filter_departments' => $filter_departments,
                                                        'filter_grades' => $filter_grades,
                                                        'filter_subjects' => $filter_subjects]);
+    }
+
+    /**
+     * 上课记录复核
+     * URL: GET /attendedSchedule/{participant_id}/check
+     * @param  int  $participant_id
+     */
+    public function attendedScheduleCheck($participant_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取上课成员数据信息
+        $participants = DB::table('participant')
+                          ->join('student', 'participant.participant_student', '=', 'student.student_id')
+                          ->where('participant.participant_id', $participant_id)
+                          ->first();
+        if($participants->student_class_adviser!=Session::get('user_id')){
+            return redirect("/operation/attendedSchedule/my")
+                   ->with(['notify' => true,
+                          'type' => 'danger',
+                          'title' => '上课记录复核失败',
+                          'message' => '非学生班主任操作，上课记录复核失败！']);
+        }
+        DB::beginTransaction();
+        // 插入数据库
+        try{
+            DB::table('participant')
+              ->where('participant.participant_id', $participant_id)
+              ->update(['participant_checked' => 1,
+                        'participant_checked_user' => Session::get('user_id')]);
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return $e;
+            // 返回我的学生上课记录
+            return redirect("/operation/attendedSchedule/my")
+                   ->with(['notify' => true,
+                          'type' => 'danger',
+                          'title' => '上课记录复核失败',
+                          'message' => '上课记录复核失败，请联系系统管理员！']);
+        }
+        DB::commit();
+        return redirect("/operation/attendedSchedule/my")
+               ->with(['notify' => true,
+                      'type' => 'success',
+                      'title' => '上课记录复核成功',
+                      'message' => '上课记录复核成功！']);
     }
 
     /**
@@ -2371,7 +2554,7 @@ class OperationController extends Controller
             $temp[] = round((float)$request->input("course_{$i}_1"), 2);
             $temp[] = (int)$request->input("course_{$i}_2");
             $temp[] = round((float)$request->input("course_{$i}_3"), 2);
-            $temp[] = round((float)$request->input("course_{$i}_4"), 2);
+            $temp[] = round((float)$request->input("course_{$i}_4")/100, 2);
             $temp[] = round((float)$request->input("course_{$i}_5"), 2);
             $temp[] = (int)$request->input("course_{$i}_6");
             $temp[] = (int)$request->input("course_{$i}_7");
@@ -2426,6 +2609,7 @@ class OperationController extends Controller
                  'contract_payment_method' => $contract_payment_method,
                  'contract_remark' => $contract_remark,
                  'contract_type' => $request_contract_type,
+                 'contract_section' => 1,
                  'contract_extra_fee' => $request_contract_extra_fee,
                  'contract_createuser' => $contract_createuser]
             );
@@ -2598,7 +2782,7 @@ class OperationController extends Controller
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
                   ->whereIn('contract_department', $department_access)
-                  ->where('contract_type', '=', 1);
+                  ->where('contract_section', '=', 1);
 
         // 搜索条件
         // 判断是否有搜索条件
@@ -2673,7 +2857,7 @@ class OperationController extends Controller
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
-                  ->where('contract_type', '=', 1)
+                  ->where('contract_section', '=', 1)
                   ->where('contract_createuser', '=', Session::get('user_id'));
 
         // 搜索条件

@@ -72,15 +72,17 @@ class StudentController extends Controller
         $classes = DB::table('member')
                      ->join('student', 'member.member_student', '=', 'student.student_id')
                      ->join('class', 'member.member_class', '=', 'class.class_id')
+                     ->join('user', 'class.class_teacher', '=', 'user.user_id')
                      ->join('department', 'class.class_department', '=', 'department.department_id')
                      ->join('grade', 'grade.grade_id', '=', 'class.class_grade')
                      ->join('subject', 'subject.subject_id', '=', 'class.class_subject')
                      ->where('member.member_student', '=', $student_id)
                      ->get();
+
         // 班级id和学生id数组
         $class_ids = array($student_id);
-        foreach($classes as $classes){
-            $class_ids[] = $classes->class_id;
+        foreach($classes as $class){
+            $class_ids[] = $class->class_id;
         }
         // 获取所有课程安排
         $schedules = DB::table('schedule')

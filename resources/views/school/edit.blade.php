@@ -12,12 +12,12 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">修改学校</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">修改大区</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">公司管理</li>
-              <li class="breadcrumb-item"><a href="/school">大区修改</a></li>
+              <li class="breadcrumb-item"><a href="/school">大区管理</a></li>
               <li class="breadcrumb-item active">修改大区</li>
             </ol>
           </nav>
@@ -33,9 +33,6 @@
         <form action="/school/{{ $school->school_id }}" method="post" id="form1" name="form1">
           @method('PUT')
           @csrf
-          <div class="card-header">
-            <h4 class="mb-0">修改学校</h4>
-          </div>
           <!-- Card body -->
           <div class="card-body">
             <div class="row">

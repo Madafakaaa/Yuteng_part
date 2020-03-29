@@ -75,9 +75,9 @@
               </div>
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">公立学校</label>
+                  <label class="form-control-label">所属大区</label>
                   <select class="form-control" name="input5" data-toggle="select">
-                    <option value='0'>请选择公立学校...</option>
+                    <option value='0'>请选择大区...</option>
                     @foreach ($schools as $school)
                       <option value="{{ $school->school_id }}" @if($student->student_school==$school->school_id) selected @endif>{{ $school->school_name }}</option>
                     @endforeach

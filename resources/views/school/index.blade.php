@@ -12,19 +12,19 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">大区修改</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">大区管理</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">公司管理</li>
-              <li class="breadcrumb-item active">大区修改</li>
+              <li class="breadcrumb-item active">大区管理</li>
             </ol>
           </nav>
         </div>
         <div class="col-6 text-right">
           <a href="school/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加学校">
             <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-            <span class="btn-inner--text">添加学校</span>
+            <span class="btn-inner--text">添加大区</span>
           </a>
           <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
             <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
@@ -46,7 +46,7 @@
                 <div class="col-lg-8 col-md-8 col-sm-12 mb-1">
                   <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
-                      <input class="form-control" type="text" name="filter1" placeholder="学校名称..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
+                      <input class="form-control" type="text" name="filter1" placeholder="大区名称..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
                       <select class="form-control" name="filter2" data-toggle="select">

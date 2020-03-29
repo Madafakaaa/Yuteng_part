@@ -121,7 +121,7 @@
                 <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
                 <td>{{ $row->classroom_name }}</td>
                 <td>
-                  <form action="schedule/{{$row->schedule_id}}" method="POST">
+                  <form action="/operation/classSchedule/{{$row->schedule_id}}" method="POST">
                     @method('DELETE')
                     @csrf
                     <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">安排详情</button></a>

@@ -134,6 +134,9 @@
                 @endif
                 <td>
                   <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
+                  @if($row->student_first_contract_date>=$date_month_ago)
+                    <a href='/market/contract/create?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">签约合同</button></a>
+                  @endif
                 </td>
               </tr>
               @endforeach
