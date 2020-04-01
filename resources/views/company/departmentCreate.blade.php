@@ -12,13 +12,13 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">添加大区</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">添加校区</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">公司管理</li>
-              <li class="breadcrumb-item"><a href="/school">大区管理</a></li>
-              <li class="breadcrumb-item active">添加大区</li>
+              <li class="breadcrumb-item"><a href="/company/department">校区设置</a></li>
+              <li class="breadcrumb-item active">添加校区</li>
             </ol>
           </nav>
         </div>
@@ -30,7 +30,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/school" method="post" id="form1" name="form1">
+        <form action="/company/department/create" method="post" id="form1" name="form1">
           @csrf
           <!-- Card body -->
           <div class="card-body">
@@ -38,38 +38,27 @@
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">名称<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" name="input1" placeholder="请输入名称..." autocomplete='off' required maxlength="10">
+                  <input class="form-control" type="text" name="input1" placeholder="请输入名称..." autocomplete='off' required maxlength="5">
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">所属校区<span style="color:red">*</span></label>
-                  <select class="form-control" name="input2" data-toggle="select" required>
-                    <option value=''>请选择校区...</option>
-                    @foreach ($departments as $department)
-                      <option value="{{ $department->department_id }}">{{ $department->department_name }}</option>
-                    @endforeach
-                  </select>
+                  <label class="form-control-label">地址<span style="color:red">*</span></label>
+                  <input class="form-control" type="text" name="input2" placeholder="请输入地址..." autocomplete='off' required maxlength="30">
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">类型<span style="color:red">*</span></label>
-                  <select class="form-control" name="input3" data-toggle="select" required>
-                    <option value=''>请选择类型...</option>
-                    <option value='小学'>小学</option>
-                    <option value='初中'>初中</option>
-                    <option value='高中'>高中</option>
-                    <option value='其它'>其它</option>
-                  </select>
+                  <label class="form-control-label">电话1<span style="color:red">*</span></label>
+                  <input class="form-control" type="text" name="input3" placeholder="请输入电话..." autocomplete='off' required maxlength="11">
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">地址<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" name="input4" placeholder="请输入学校地址..." autocomplete='off' required maxlength="40">
+                  <label class="form-control-label">电话2</label>
+                  <input class="form-control" type="text" name="input4" placeholder="请输入电话..." autocomplete='off' maxlength="11">
                 </div>
               </div>
             </div>
@@ -95,6 +84,6 @@
 <script>
   linkActive('link-company');
   navbarActive('navbar-company');
-  linkActive('school');
+  linkActive('companyDepartment');
 </script>
 @endsection

@@ -11,12 +11,12 @@ class SectionController extends Controller
 {
     /**
      * 显示所有部门记录
-     * URL: GET /section
+     * URL: GET /company/section
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('section'): 部门
      */
-    public function index(Request $request){
+    public function section(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -53,7 +53,7 @@ class SectionController extends Controller
                    ->get();
 
         // 返回列表视图
-        return view('section/index', ['rows' => $rows,
+        return view('company/section', ['rows' => $rows,
                                       'sections' => $sections,
                                       'currentPage' => $currentPage,
                                       'totalPage' => $totalPage,
@@ -64,23 +64,23 @@ class SectionController extends Controller
 
     /**
      * 创建新部门页面
-     * URL: GET /section/create
+     * URL: GET /company/section/create
      */
-    public function create(){
+    public function sectionCreate(){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        return view('section/create');
+        return view('company/sectionCreate');
     }
 
     /**
      * 创建新部门提交数据库
-     * URL: POST
+     * URL: POST /company/section/create
      * @param  Request  $request
      * @param  $request->input('input1'): 部门名称
      */
-    public function store(Request $request){
+    public function sectionStore(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -98,52 +98,43 @@ class SectionController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect()->action('SectionController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '部门添加失败',
-                                     'message' => '部门添加失败，请重新输入信息']);
+            return redirect("/company/section/create")
+                     ->with(['notify' => true,
+                             'type' => 'danger',
+                             'title' => '部门添加失败',
+                             'message' => '部门添加失败，请重新输入信息']);
         }
         // 返回部门列表
-        return redirect()->action('SectionController@index')
-                         ->with(['notify' => true,
-                                 'type' => 'success',
-                                 'title' => '部门添加成功',
-                                 'message' => '部门名称: '.$section_name]);
+        return redirect("/company/section")
+                 ->with(['notify' => true,
+                         'type' => 'success',
+                         'title' => '部门添加成功',
+                         'message' => '部门名称: '.$section_name]);
     }
 
     /**
      * 修改单个部门
-     * URL: GET /section/{id}/edit
+     * URL: GET /company/section/{id}/
      * @param  int  $section_id
      */
-    public function edit($section_id){
+    public function sectionEdit($section_id){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取数据信息
-        $section = DB::table('section')->where('section_id', $section_id)->get();
-        if($section->count()!==1){
-            // 未获取到数据
-            return redirect()->action('SectionController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '部门显示失败',
-                                     'message' => '部门显示失败，请联系系统管理员']);
-        }
-        $section = $section[0];
+        $section = DB::table('section')->where('section_id', $section_id)->first();
         return view('section/edit', ['section' => $section]);
     }
 
     /**
      * 修改新部门提交数据库
-     * URL: PUT /section/{id}
+     * URL: PUT /company/section/{id}
      * @param  Request  $request
      * @param  $request->input('input1'): 部门名称
      * @param  int  $section_id
      */
-    public function update(Request $request, $section_id){
+    public function sectionUpdate(Request $request, $section_id){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -158,23 +149,25 @@ class SectionController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("/section/{$section_id}/edit")->with(['notify' => true,
-                                                                  'type' => 'danger',
-                                                                  'title' => '部门修改失败',
-                                                                  'message' => '部门修改失败，请重新输入信息']);
+            return redirect("/company/section/{$section_id}")
+                   ->with(['notify' => true,
+                          'type' => 'danger',
+                          'title' => '部门修改失败',
+                          'message' => '部门修改失败，请重新输入信息']);
         }
-        return redirect("/section")->with(['notify' => true,
-                                           'type' => 'success',
-                                           'title' => '部门修改成功',
-                                           'message' => '部门修改成功，部门名称: '.$section_name]);
+        return redirect("/company/section")
+               ->with(['notify' => true,
+                       'type' => 'success',
+                       'title' => '部门修改成功',
+                       'message' => '部门修改成功，部门名称: '.$section_name]);
     }
 
     /**
      * 删除部门
-     * URL: DELETE /section/{id}
+     * URL: DELETE /company/section/{id}
      * @param  int  $section_id
      */
-    public function destroy($section_id){
+    public function sectionDelete($section_id){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -187,17 +180,17 @@ class SectionController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect()->action('SectionController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '部门删除失败',
-                                     'message' => '部门删除失败，请联系系统管理员']);
+            return redirect("/company/section")
+                     ->with(['notify' => true,
+                             'type' => 'danger',
+                             'title' => '部门删除失败',
+                             'message' => '部门删除失败，请联系系统管理员']);
         }
         // 返回部门列表
-        return redirect()->action('SectionController@index')
-                         ->with(['notify' => true,
-                                 'type' => 'success',
-                                 'title' => '部门删除成功',
-                                 'message' => '部门名称: '.$section_name]);
+        return redirect("/company/section")
+                 ->with(['notify' => true,
+                         'type' => 'success',
+                         'title' => '部门删除成功',
+                         'message' => '部门名称: '.$section_name]);
     }
 }

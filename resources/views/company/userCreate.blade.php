@@ -17,7 +17,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">人事管理</li>
-              <li class="breadcrumb-item"><a href="/user">用户管理</a></li>
+              <li class="breadcrumb-item"><a href="/company/user">用户管理</a></li>
               <li class="breadcrumb-item active">添加用户</li>
             </ol>
           </nav>
@@ -30,7 +30,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/user" method="post" id="form1" name="form1">
+        <form action="/company/user/create" method="post" id="form1" name="form1">
           @csrf
           <!-- Card body -->
           <div class="card-body">
@@ -128,8 +128,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-human');
-  navbarActive('navbar-human');
-  linkActive('user');
+  linkActive('link-company');
+  navbarActive('navbar-company');
+  linkActive('companyUser');
 </script>
 @endsection

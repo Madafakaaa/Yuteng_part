@@ -22,7 +22,7 @@
           </nav>
         </div>
         <div class="col-6 text-right">
-          <a href="department/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加校区">
+          <a href="/company/department/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加校区">
             <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
             <span class="btn-inner--text">添加校区</span>
           </a>
@@ -60,10 +60,10 @@
                 <td title="电话2：{{ $row->department_phone2 }}">{{ $row->department_phone2 }}</td>
                 <td title="地址：{{ $row->department_location }}">{{ $row->department_location }}</td>
                 <td>
-                  <form action="department/{{$row->department_id}}" method="POST">
+                  <form action="/company/department/{{$row->department_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/department/{{$row->department_id}}/edit'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
+                    <a href='/company/department/{{$row->department_id}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
                     {{ deleteConfirm($row->department_id, ["校区名称：".$row->department_name]) }}
                   </form>
                 </td>
@@ -83,6 +83,6 @@
 <script>
   linkActive('link-company');
   navbarActive('navbar-company');
-  linkActive('department');
+  linkActive('companyDepartment');
 </script>
 @endsection

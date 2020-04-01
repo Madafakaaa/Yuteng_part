@@ -167,42 +167,37 @@
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="schedule-card" role="tabpanel">
           <div class="card main_card mb-4" style="display:none">
-            <div class="table-responsive">
-              <table class="table align-items-center table-hover text-left table-bordered">
+            <div class="table-responsive py-4">
+              <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th style='width:65px;'>序号</th>
-                    <th style='width:185px;'>班级</th>
-                    <th style='width:176px;'>教师</th>
-                    <th style='width:55px;'>科目</th>
-                    <th style='width:55px;'>年级</th>
-                    <th style='width:95px;'>日期</th>
-                    <th style='width:105px;'>时间</th>
-                    <th style='width:120px;'>地点</th>
-                    <th></th>
+                    <th>序号</th>
+                    <th>班级</th>
+                    <th>教师</th>
+                    <th>科目</th>
+                    <th>年级</th>
+                    <th>日期</th>
+                    <th>时间</th>
+                    <th>地点</th>
                   </tr>
                 </thead>
                 <tbody>
-                  @if(count($schedules)==0)
-                    <tr class="text-center"><td colspan="8">当前没有记录</td></tr>
-                  @else
-                    @foreach ($schedules as $schedule)
-                      <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
-                        <td>{{ $loop->iteration }}</td>
-                        @if($schedule->schedule_participant_type==0)
-                          <td><span style="color:green;">一对一</span></td>
-                        @else
-                          <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
-                        @endif
-                        <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
-                        <td>{{ $schedule->subject_name }}</td>
-                        <td>{{ $schedule->grade_name }}</td>
-                        <td>{{ $schedule->schedule_date }}</td>
-                        <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
-                        <td>{{ $schedule->classroom_name }}</td>
-                      </tr>
-                    @endforeach
-                  @endif
+                  @foreach ($schedules as $schedule)
+                    <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
+                      <td>{{ $loop->iteration }}</td>
+                      @if($schedule->schedule_participant_type==0)
+                        <td><span style="color:green;">一对一</span></td>
+                      @else
+                        <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
+                      @endif
+                      <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                      <td>{{ $schedule->subject_name }}</td>
+                      <td>{{ $schedule->grade_name }}</td>
+                      <td>{{ $schedule->schedule_date }}</td>
+                      <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
+                      <td>{{ $schedule->classroom_name }}</td>
+                    </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>
@@ -211,42 +206,37 @@
 
         <div class="tab-pane fade" id="attended-schedule-card" role="tabpanel">
           <div class="card main_card mb-4" style="display:none">
-            <div class="table-responsive">
-              <table class="table align-items-center table-hover text-left table-bordered">
+            <div class="table-responsive py-4">
+              <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th style='width:60px;'>序号</th>
-                    <th style='width:145px;'>班级</th>
-                    <th style='width:151px;'>教师</th>
-                    <th style='width:55px;'>科目</th>
-                    <th style='width:55px;'>年级</th>
-                    <th style='width:95px;'>日期</th>
-                    <th style='width:105px;'>时间</th>
-                    <th style='width:100px;'>地点</th>
-                    <th></th>
+                    <th>序号</th>
+                    <th>班级</th>
+                    <th>教师</th>
+                    <th>科目</th>
+                    <th>年级</th>
+                    <th>日期</th>
+                    <th>时间</th>
+                    <th>地点</th>
                   </tr>
                 </thead>
                 <tbody>
-                  @if(count($schedules)==0)
-                    <tr class="text-center"><td colspan="9">当前没有记录</td></tr>
-                  @else
-                    @foreach ($attended_schedules as $schedule)
-                      <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
-                        <td>{{ $loop->iteration }}</td>
-                        @if($schedule->schedule_participant_type==0)
-                          <td><span style="color:green;">一对一</span></td>
-                        @else
-                          <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
-                        @endif
-                        <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
-                        <td>{{ $schedule->subject_name }}</td>
-                        <td>{{ $schedule->grade_name }}</td>
-                        <td>{{ $schedule->schedule_date }}</td>
-                        <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
-                        <td>{{ $schedule->classroom_name }}</td>
-                      </tr>
-                    @endforeach
-                  @endif
+                  @foreach ($attended_schedules as $schedule)
+                    <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
+                      <td>{{ $loop->iteration }}</td>
+                      @if($schedule->schedule_participant_type==0)
+                        <td><span style="color:green;">一对一</span></td>
+                      @else
+                        <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
+                      @endif
+                      <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                      <td>{{ $schedule->subject_name }}</td>
+                      <td>{{ $schedule->grade_name }}</td>
+                      <td>{{ $schedule->schedule_date }}</td>
+                      <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
+                      <td>{{ $schedule->classroom_name }}</td>
+                    </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>
@@ -255,18 +245,17 @@
 
         <div class="tab-pane fade" id="class-card" role="tabpanel">
           <div class="card main_card mb-4" style="display:none">
-            <div class="table-responsive">
-              <table class="table align-items-center table-hover text-left table-bordered">
+            <div class="table-responsive py-4">
+              <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th style='width:60px;'>序号</th>
-                    <th style='width:95px;'>校区</th>
-                    <th style='width:145px;'>班级</th>
-                    <th style='width:151px;'>教师</th>
-                    <th style='width:55px;'>科目</th>
-                    <th style='width:55px;'>年级</th>
-                    <th style='width:95px;'>人数</th>
-                    <th></th>
+                    <th>序号</th>
+                    <th>校区</th>
+                    <th>班级</th>
+                    <th>教师</th>
+                    <th>科目</th>
+                    <th>年级</th>
+                    <th>人数</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -293,34 +282,29 @@
 
         <div class="tab-pane fade" id="hour-card" role="tabpanel">
           <div class="card main_card mb-4" style="display:none">
-            <div class="table-responsive">
-              <table class="table align-items-center table-hover text-left table-bordered">
+            <div class="table-responsive py-4">
+              <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th style='width:60px;'>序号</th>
-                    <th style='width:196px;'>课程</th>
-                    <th style='width:150px;'>已用正常课时</th>
-                    <th style='width:150px;'>已用赠送课时</th>
-                    <th style='width:150px;'>剩余正常课时</th>
-                    <th style='width:150px;'>剩余赠送课时</th>
-                    <th></th>
+                    <th>序号</th>
+                    <th>课程</th>
+                    <th>已用正常课时</th>
+                    <th>已用赠送课时</th>
+                    <th>剩余正常课时</th>
+                    <th>剩余赠送课时</th>
                   </tr>
                 </thead>
                 <tbody>
-                  @if(count($hours)==0)
-                    <tr class="text-center"><td colspan="6">当前没有记录</td></tr>
-                  @else
-                    @foreach ($hours as $hour)
-                      <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $hour->course_name }}</td>
-                        <td>{{ $hour->hour_used }} 课时</td>
-                        <td>{{ $hour->hour_used_free }} 课时</td>
-                        <td>{{ $hour->hour_remain }} 课时</td>
-                        <td>{{ $hour->hour_remain_free }} 课时</td>
-                      </tr>
-                    @endforeach
-                  @endif
+                  @foreach ($hours as $hour)
+                    <tr>
+                      <td>{{ $loop->iteration }}</td>
+                      <td>{{ $hour->course_name }}</td>
+                      <td>{{ $hour->hour_used }} 课时</td>
+                      <td>{{ $hour->hour_used_free }} 课时</td>
+                      <td>{{ $hour->hour_remain }} 课时</td>
+                      <td>{{ $hour->hour_remain_free }} 课时</td>
+                    </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>
@@ -329,42 +313,37 @@
 
         <div class="tab-pane fade" id="contract-card" role="tabpanel">
           <div class="card main_card mb-4" style="display:none">
-            <div class="table-responsive">
-              <table class="table align-items-center table-hover text-left table-bordered">
+            <div class="table-responsive py-4">
+              <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th style='width:70px;'>序号</th>
-                    <th style='width:70px;'>类型</th>
-                    <th style='width:120px;' class="text-right">合计课时</th>
-                    <th style='width:120px;' class="text-right">实付金额</th>
-                    <th style='width:150px;'>签约人</th>
-                    <th style='width:100px;'>支付方式</th>
-                    <th style='width:100px;'>购课日期</th>
-                    <th style='width:126px;'>操作</th>
-                    <th></th>
+                    <th>序号</th>
+                    <th>类型</th>
+                    <th>合计课时</th>
+                    <th>实付金额</th>
+                    <th>签约人</th>
+                    <th>支付方式</th>
+                    <th>购课日期</th>
+                    <th>操作</th>
                   </tr>
                 </thead>
                 <tbody>
-                  @if(count($contracts)==0)
-                    <tr class="text-center"><td colspan="8">当前没有记录</td></tr>
-                  @else
-                    @foreach ($contracts as $contract)
-                      <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        @if($contract->contract_type==0)
-                          <td><span style="color:red;">首签</span></td>
-                        @else
-                          <td><span style="color:green;">续签</span></td>
-                        @endif
-                        <td class="text-right" title="{{ $contract->contract_total_hour }} 课时"><strong>{{ $contract->contract_total_hour }} 课时</strong></td>
-                        <td class="text-right" title="{{ number_format($contract->contract_total_price, 1) }} 元"><strong>{{ number_format($contract->contract_total_price, 1) }} 元</strong></td>
-                        <td title="{{ $contract->user_name }} ({{ $contract->position_name }})">{{ $contract->user_name }} ({{ $contract->position_name }})</td>
-                        <td title="{{ $contract->contract_payment_method }}">{{ $contract->contract_payment_method }}</td>
-                        <td title="{{ $contract->contract_date }}">{{ $contract->contract_date }}</td>
-                        <td><a href='/contract/{{$contract->contract_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a></td>
-                      </tr>
-                    @endforeach
-                  @endif
+                  @foreach ($contracts as $contract)
+                    <tr>
+                      <td>{{ $loop->iteration }}</td>
+                      @if($contract->contract_type==0)
+                        <td><span style="color:red;">首签</span></td>
+                      @else
+                        <td><span style="color:green;">续签</span></td>
+                      @endif
+                      <td title="{{ $contract->contract_total_hour }} 课时"><strong>{{ $contract->contract_total_hour }} 课时</strong></td>
+                      <td title="{{ number_format($contract->contract_total_price, 1) }} 元"><strong>{{ number_format($contract->contract_total_price, 1) }} 元</strong></td>
+                      <td title="{{ $contract->user_name }} ({{ $contract->position_name }})">{{ $contract->user_name }} ({{ $contract->position_name }})</td>
+                      <td title="{{ $contract->contract_payment_method }}">{{ $contract->contract_payment_method }}</td>
+                      <td title="{{ $contract->contract_date }}">{{ $contract->contract_date }}</td>
+                      <td><a href='/contract/{{$contract->contract_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a></td>
+                    </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>

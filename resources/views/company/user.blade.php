@@ -22,7 +22,7 @@
           </nav>
         </div>
         <div class="col-6 text-right">
-          <a href="user/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加校区">
+          <a href="/company/user/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加校区">
             <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
             <span class="btn-inner--text">添加用户</span>
           </a>
@@ -151,11 +151,11 @@
                 <td title="手机：{{ $row->user_phone }}">{{ $row->user_phone }}</td>
                 <td title="微信：{{ $row->user_wechat }}">{{ $row->user_wechat }}</td>
                 <td>
-                  <form action="/user/{{ $row->user_id }}" method="POST">
+                  <form action="/company/user/{{ $row->user_id }}" method="POST">
                     @method('DELETE')
                     @csrf
                     <a href='/user/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">用户详情</button></a>
-                    <a href='/user/access/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">用户权限</button></a>
+                    <a href='/company/user/access/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">用户权限</button></a>
                     {{ deleteConfirm($row->user_id, ["用户名称：".$row->user_name]) }}
                   </form>
                 </td>
@@ -173,8 +173,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-human');
-  navbarActive('navbar-human');
-  linkActive('user');
+  linkActive('link-company');
+  navbarActive('navbar-company');
+  linkActive('companyUser');
 </script>
 @endsection

@@ -17,7 +17,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">人事管理</li>
-              <li class="breadcrumb-item"><a href="/user">用户管理</a></li>
+              <li class="breadcrumb-item"><a href="/company/user">用户管理</a></li>
               <li class="breadcrumb-item active">用户权限</li>
             </ol>
           </nav>
@@ -30,7 +30,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/user/access/{{ $user->user_id }}" method="post">
+        <form action="/company/user/access/{{ $user->user_id }}" method="post">
           @csrf
           <!-- Card body -->
           <div class="card-body">
@@ -99,11 +99,21 @@
                     <div class="row">
                       @foreach($department_array as $department)
                         <div class="col-3 pl-2 pr-2 mb-2">
-                          <input type="checkbox" class="custom-control-input checkbox" id="department_{{ $department[0] }}" name="departments[]" value="{{ $department[0] }}" @if($department[2]==1) checked @endif>
-                          <label class="custom-control-label" for="department_{{ $department[0] }}">{{ $department[1] }}</label>
+                          <input type="checkbox" class="custom-control-input department" id="department_{{ $loop->iteration }}" name="departments[]" value="{{ $department[0] }}" @if($department[2]==1) checked @endif>
+                          <label class="custom-control-label" for="department_{{ $loop->iteration }}">{{ $department[1] }}</label>
                         </div>
                       @endforeach
                     </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-2 px-4 mb-2">
+                <div class="row">
+                  <div class="col-12 mb-2">
+                    <button type="button" class="btn btn-primary btn-block btn-sm" style="white-space:nowrap; overflow:hidden;" onclick="checkAll('department');">全选</button>
+                  </div>
+                  <div class="col-12 mb-2">
+                    <button type="button" class="btn btn-outline-primary btn-block btn-sm" style="white-space:nowrap; overflow:hidden;" onclick="uncheckAll('department');">全不选</button>
                   </div>
                 </div>
               </div>
@@ -116,14 +126,28 @@
               <div class="col-8 px-4 mb-2">
                 <div class="form-group mb-1">
                   <div class="custom-control custom-checkbox">
-                    <div class="row">
-                      @foreach($page_array as $page)
-                        <div class="col-6 pl-2 pr-2 mb-2">
-                          <input type="checkbox" class="custom-control-input checkbox" id="page_{{ $page[0] }}" name="pages[]" value="{{ $page[0] }}" @if($page[2]==1) checked @endif>
-                          <label class="custom-control-label" for="page_{{ $page[0] }}">{{ $page[1] }}</label>
+                    @foreach($categories as $category)
+                      <div class="row">
+                        <div class="col-4 mb-2">
+                          {{ $category[0] }}
                         </div>
-                      @endforeach
-                    </div>
+                        <div class="col-2 mb-2">
+                          <button type="button" class="btn btn-primary btn-block btn-sm" style="white-space:nowrap; overflow:hidden;" onclick="checkAll('{{ $category[0] }}');">全选</button>
+                        </div>
+                        <div class="col-2 mb-2">
+                          <button type="button" class="btn btn-outline-primary btn-block btn-sm" style="white-space:nowrap; overflow:hidden;" onclick="uncheckAll('{{ $category[0] }}');">全不选</button>
+                        </div>
+                      </div>
+                      <div class="row">
+                        @foreach($category[1] as $page)
+                          <div class="col-6 mb-2">
+                            <input type="checkbox" class="custom-control-input {{ $category[0] }}" id="{{$category[0]}}__{{ $loop->iteration }}" name="pages[]" value="{{ $page[0] }}" @if($pages[$page[0]][2]==1) checked @endif>
+                            <label class="custom-control-label" for="{{$category[0]}}__{{ $loop->iteration }}">{{ $page[1] }}</label>
+                          </div>
+                        @endforeach
+                      </div>
+                      <hr>
+                    @endforeach
                   </div>
                 </div>
               </div>
@@ -148,8 +172,20 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-human');
-  navbarActive('navbar-human');
-  linkActive('user');
+  linkActive('link-company');
+  navbarActive('navbar-company');
+  linkActive('companyUser');
+
+  function checkAll(id){
+      $("."+id).each(function(){
+          $(this).prop('checked',true);
+      });
+  }
+
+  function uncheckAll(id){
+      $("."+id).each(function(){
+          $(this).prop('checked',false);
+      });
+  }
 </script>
 @endsection

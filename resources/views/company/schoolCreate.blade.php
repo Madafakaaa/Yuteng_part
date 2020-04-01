@@ -12,13 +12,13 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">修改岗位</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">添加大区</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-              <li class="breadcrumb-item active">人事管理</li>
-              <li class="breadcrumb-item"><a href="/section">部门架构</a></li>
-              <li class="breadcrumb-item active">修改岗位</li>
+              <li class="breadcrumb-item active">公司管理</li>
+              <li class="breadcrumb-item"><a href="/company/school">大区管理</a></li>
+              <li class="breadcrumb-item active">添加大区</li>
             </ol>
           </nav>
         </div>
@@ -30,25 +30,24 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/position/{{ $position->position_id }}" method="post" id="form1" name="form1">
-          @method('PUT')
+        <form action="/company/school/create" method="post" id="form1" name="form1">
           @csrf
           <!-- Card body -->
           <div class="card-body">
             <div class="row">
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">岗位名称<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" name="input1" value="{{ $position->position_name }}" autocomplete='off' required maxlength="10">
+                  <label class="form-control-label">名称<span style="color:red">*</span></label>
+                  <input class="form-control" type="text" name="input1" placeholder="请输入名称..." autocomplete='off' required maxlength="10">
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">所属部门<span style="color:red">*</span></label>
+                  <label class="form-control-label">所属校区<span style="color:red">*</span></label>
                   <select class="form-control" name="input2" data-toggle="select" required>
-                    <option value=''>请选择部门...</option>
-                    @foreach ($sections as $section)
-                      <option value="{{ $section->section_id }}" @if($position->position_section==$section->section_id) selected @endif>{{ $section->section_name }}</option>
+                    <option value=''>请选择校区...</option>
+                    @foreach ($departments as $department)
+                      <option value="{{ $department->department_id }}">{{ $department->department_name }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -57,18 +56,20 @@
             <div class="row">
               <div class="col-6">
                 <div class="form-group">
-                  <label class="form-control-label">岗位等级<span style="color:red">*</span></label>
+                  <label class="form-control-label">类型<span style="color:red">*</span></label>
                   <select class="form-control" name="input3" data-toggle="select" required>
-                    <option value=''>请选择等级...</option>
-                    <option value='1' @if($position->position_level==1) selected @endif>1</option>
-                    <option value='2' @if($position->position_level==2) selected @endif>2</option>
-                    <option value='3' @if($position->position_level==3) selected @endif>3</option>
-                    <option value='4' @if($position->position_level==4) selected @endif>4</option>
-                    <option value='5' @if($position->position_level==5) selected @endif>5</option>
-                    <option value='6' @if($position->position_level==6) selected @endif>6</option>
-                    <option value='7' @if($position->position_level==7) selected @endif>7</option>
-                    <option value='8' @if($position->position_level==8) selected @endif>8</option>
+                    <option value=''>请选择类型...</option>
+                    <option value='小学'>小学</option>
+                    <option value='初中'>初中</option>
+                    <option value='高中'>高中</option>
+                    <option value='其它'>其它</option>
                   </select>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label class="form-control-label">地址<span style="color:red">*</span></label>
+                  <input class="form-control" type="text" name="input4" placeholder="请输入学校地址..." autocomplete='off' required maxlength="40">
                 </div>
               </div>
             </div>
@@ -79,11 +80,11 @@
               </div>
               <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-4 col-md-5 col-sm-12">
-            	<input type="submit" class="btn btn-warning btn-block" value="修改">
+                <input type="submit" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>
           </div>
-        </form>
+        <form>
       </div>
     </div>
   </div>
@@ -92,8 +93,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-1');
-  navbarActive('navbar-1');
-  linkActive('section');
+  linkActive('link-company');
+  navbarActive('navbar-company');
+  linkActive('companySchool');
 </script>
 @endsection

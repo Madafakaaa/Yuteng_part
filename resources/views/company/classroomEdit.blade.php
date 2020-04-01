@@ -17,7 +17,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">公司管理</li>
-              <li class="breadcrumb-item"><a href="/classroom">教室设置</a></li>
+              <li class="breadcrumb-item"><a href="/company/classroom">教室设置</a></li>
               <li class="breadcrumb-item active">修改教室</li>
             </ol>
           </nav>
@@ -30,7 +30,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/classroom/{{ $classroom->classroom_id }}" method="post" id="form1" name="form1">
+        <form action="/company/classroom/{{ $classroom->classroom_id }}" method="post" id="form1" name="form1">
           @method('PUT')
           @csrf
           <!-- Card body -->
@@ -68,7 +68,7 @@
                     <option value=''>请选择教室类型...</option>
                     <option value="一对一教室" @if($classroom->classroom_type=="一对一教室") selected @endif>一对一教室</option>
                     <option value="小教室" @if($classroom->classroom_type=="小教室") selected @endif>小教室</option>
-                    <option value="中教室" @if($classroom->classroom_type=="小教室") selected @endif>中教室</option>
+                    <option value="中教室" @if($classroom->classroom_type=="中教室") selected @endif>中教室</option>
                     <option value="大教室" @if($classroom->classroom_type=="大教室") selected @endif>大教室</option>
                     <option value="多媒体教室" @if($classroom->classroom_type=="多媒体教室") selected @endif>多媒体教室</option>
                   </select>
@@ -105,6 +105,6 @@
 <script>
   linkActive('link-company');
   navbarActive('navbar-company');
-  linkActive('classroom');
+  linkActive('companyClassroom');
 </script>
 @endsection

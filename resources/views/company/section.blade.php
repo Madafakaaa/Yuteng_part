@@ -35,7 +35,7 @@
               <h5 class="h3 mb-0">部门列表</h5>
             </div>
             <div class="col-6 text-right">
-              <a href="/section/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加部门">
+              <a href="/company/section/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加部门">
                 <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
                 <span class="btn-inner--text">添加部门</span>
               </a>
@@ -44,12 +44,12 @@
         </div>
         <div class="card-body">
           <ul class="list-group list-group-flush list my--3">
-            @if(count($rows)==0)
+            @if($request->filled('section'))
             <li class="list-group-item px-0">
               <div class="row align-items-center">
                 <div class="col ml-2">
                   <h4 class="mb-0">
-                    <a href="#!">无</a>
+                    <a href="?">查看全部</a>
                   </h4>
                 </div>
               </div>
@@ -69,10 +69,10 @@
                   </h4>
                 </div>
                 <div class="col-auto">
-                  <form action="section/{{$section->section_id}}" method="POST">
+                  <form action="/company/section/{{$section->section_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/section/{{$section->section_id}}/edit'><button type="button" class="btn btn-sm btn-primary">修改</button></a>
+                    <a href='/company/section/{{$section->section_id}}'><button type="button" class="btn btn-sm btn-primary">修改</button></a>
                     {{ deleteConfirm($section->section_id, ["部门名称：".$section->section_name]) }}
                   </form>
                 </div>
@@ -92,7 +92,7 @@
               <h5 class="h3 mb-0">岗位列表</h5>
             </div>
             <div class="col-6 text-right">
-              <a href="/position/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加岗位">
+              <a href="/company/position/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加岗位">
                 <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
                 <span class="btn-inner--text">添加岗位</span>
               </a>
@@ -122,10 +122,10 @@
                 <td>{{ $row->section_name }}</td>
                 <td>等级 {{ $row->position_level }}</td>
                 <td>
-                  <form action="position/{{$row->position_id}}" method="POST">
+                  <form action="/company/position/{{$row->position_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/position/{{$row->position_id}}/edit'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
+                    <a href='/company/position/{{$row->position_id}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
                     {{ deleteConfirm($row->position_id, ["岗位名称：".$row->position_name]) }}
                   </form>
                 </td>
@@ -143,8 +143,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-human');
-  navbarActive('navbar-human');
-  linkActive('section');
+  linkActive('link-company');
+  navbarActive('navbar-company');
+  linkActive('companySection');
 </script>
 @endsection

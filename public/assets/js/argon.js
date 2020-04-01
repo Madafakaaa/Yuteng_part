@@ -1546,7 +1546,7 @@ var DatatableBasic = (function() {
 
 	// Variables
 
-	var $dtBasic = $('#datatable-basic');
+	var $dtBasic = $('.datatable-basic');
 
 
 	// Methods
@@ -1567,6 +1567,10 @@ var DatatableBasic = (function() {
 					next: "<i class='fas fa-angle-right'>"
 				}
 			},
+            lengthMenu: [
+                [20, 50, 100, -1],
+                [20, 50, 100, "全部"]
+            ],
 		};
 
 		// Init the datatable
@@ -1596,7 +1600,6 @@ var DatatableButtons = (function() {
 	// Variables
 
 	var $dtButtons = $('#datatable-buttons');
-
 
 	// Methods
 

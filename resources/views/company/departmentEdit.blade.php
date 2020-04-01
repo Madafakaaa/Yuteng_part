@@ -17,7 +17,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">公司管理</li>
-              <li class="breadcrumb-item"><a href="/department">校区设置</a></li>
+              <li class="breadcrumb-item"><a href="/company/department">校区设置</a></li>
               <li class="breadcrumb-item active">修改校区</li>
             </ol>
           </nav>
@@ -30,7 +30,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/department/{{ $department->department_id }}" method="post" id="form1" name="form1">
+        <form action="/company/department/{{ $department->department_id }}" method="post" id="form1" name="form1">
           @method('PUT')
           @csrf
           <!-- Card body -->
@@ -93,6 +93,6 @@
 <script>
   linkActive('link-company');
   navbarActive('navbar-company');
-  linkActive('department');
+  linkActive('companyDepartment');
 </script>
 @endsection

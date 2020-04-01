@@ -137,40 +137,35 @@
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
           <div class="card main_card mb-4" style="display:none">
-            <div class="table-responsive">
-              <table class="table align-items-center table-hover text-left table-bordered">
+            <div class="table-responsive py-4">
+              <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th style='width:60px;'>序号</th>
-                    <th style='width:90px;'>校区</th>
-                    <th style='width:120px;'>课程</th>
-                    <th style='width:136px;'>教师</th>
-                    <th style='width:60px;'>科目</th>
-                    <th style='width:60px;'>年级</th>
-                    <th style='width:100px;'>日期</th>
-                    <th style='width:120px;'>时间</th>
-                    <th style='width:110px;'>地点</th>
-                    <th></th>
+                    <th>序号</th>
+                    <th>校区</th>
+                    <th>课程</th>
+                    <th>教师</th>
+                    <th>科目</th>
+                    <th>年级</th>
+                    <th>日期</th>
+                    <th>时间</th>
+                    <th>地点</th>
                   </tr>
                 </thead>
                 <tbody>
-                  @if(count($schedules)==0)
-                    <tr class="text-center"><td colspan="9">当前没有记录</td></tr>
-                  @else
-                    @foreach ($schedules as $schedule)
-                      <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $schedule->department_name }}</td>
-                        <td>{{ $schedule->course_name }}</td>
-                        <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
-                        <td>{{ $schedule->subject_name }}</td>
-                        <td>{{ $schedule->grade_name }}</td>
-                        <td>{{ $schedule->schedule_date }}</td>
-                        <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
-                        <td>{{ $schedule->classroom_name }}</td>
-                      </tr>
-                    @endforeach
-                  @endif
+                  @foreach ($schedules as $schedule)
+                    <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
+                      <td>{{ $loop->iteration }}</td>
+                      <td>{{ $schedule->department_name }}</td>
+                      <td>{{ $schedule->course_name }}</td>
+                      <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                      <td>{{ $schedule->subject_name }}</td>
+                      <td>{{ $schedule->grade_name }}</td>
+                      <td>{{ $schedule->schedule_date }}</td>
+                      <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
+                      <td>{{ $schedule->classroom_name }}</td>
+                    </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>
@@ -179,40 +174,35 @@
 
         <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
           <div class="card main_card mb-4" style="display:none">
-            <div class="table-responsive">
-              <table class="table align-items-center table-hover text-left table-bordered">
+            <div class="table-responsive py-4">
+              <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th style='width:60px;'>序号</th>
-                    <th style='width:90px;'>校区</th>
-                    <th style='width:120px;'>课程</th>
-                    <th style='width:136px;'>教师</th>
-                    <th style='width:60px;'>科目</th>
-                    <th style='width:60px;'>年级</th>
-                    <th style='width:100px;'>日期</th>
-                    <th style='width:120px;'>时间</th>
-                    <th style='width:110px;'>地点</th>
-                    <th></th>
+                    <th>序号</th>
+                    <th>校区</th>
+                    <th>课程</th>
+                    <th>教师</th>
+                    <th>科目</th>
+                    <th>年级</th>
+                    <th>日期</th>
+                    <th>时间</th>
+                    <th>地点</th>
                   </tr>
                 </thead>
                 <tbody>
-                  @if(count($attended_schedules)==0)
-                    <tr class="text-center"><td colspan="9">当前没有记录</td></tr>
-                  @else
-                    @foreach ($attended_schedules as $schedule)
-                      <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $schedule->department_name }}</td>
-                        <td>{{ $schedule->course_name }}</td>
-                        <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
-                        <td>{{ $schedule->subject_name }}</td>
-                        <td>{{ $schedule->grade_name }}</td>
-                        <td>{{ $schedule->schedule_date }}</td>
-                        <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
-                        <td>{{ $schedule->classroom_name }}</td>
-                      </tr>
-                    @endforeach
-                  @endif
+                  @foreach ($attended_schedules as $schedule)
+                    <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
+                      <td>{{ $loop->iteration }}</td>
+                      <td>{{ $schedule->department_name }}</td>
+                      <td>{{ $schedule->course_name }}</td>
+                      <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                      <td>{{ $schedule->subject_name }}</td>
+                      <td>{{ $schedule->grade_name }}</td>
+                      <td>{{ $schedule->schedule_date }}</td>
+                      <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
+                      <td>{{ $schedule->classroom_name }}</td>
+                    </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>

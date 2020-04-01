@@ -22,7 +22,7 @@
           </nav>
         </div>
         <div class="col-6 text-right">
-          <a href="classroom/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加教室">
+          <a href="/company/classroom/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加教室">
             <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
             <span class="btn-inner--text">添加教室</span>
           </a>
@@ -108,10 +108,10 @@
                 <td>{{ $row->classroom_student_num }}人</td>
                 <td>{{ $row->classroom_type }}</td>
                 <td>
-                  <form action="classroom/{{$row->classroom_id}}" method="POST">
+                  <form action="/company/classroom/{{$row->classroom_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/classroom/{{$row->classroom_id}}/edit'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
+                    <a href='/company/classroom/{{$row->classroom_id}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
                     {{ deleteConfirm($row->classroom_id, ["教室名称：".$row->classroom_name]) }}
                   </form>
                 </td>
@@ -131,6 +131,6 @@
 <script>
   linkActive('link-company');
   navbarActive('navbar-company');
-  linkActive('classroom');
+  linkActive('companyClassroom');
 </script>
 @endsection

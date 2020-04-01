@@ -17,7 +17,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">公司管理</li>
-              <li class="breadcrumb-item"><a href="/classroom">教室设置</a></li>
+              <li class="breadcrumb-item"><a href="/company/classroom">教室设置</a></li>
               <li class="breadcrumb-item active">添加教室</li>
             </ol>
           </nav>
@@ -30,7 +30,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/classroom" method="post" id="form1" name="form1">
+        <form action="/company/classroom/create" method="post" id="form1" name="form1">
           @csrf
           <!-- Card body -->
           <div class="card-body">
@@ -96,6 +96,6 @@
 <script>
   linkActive('link-company');
   navbarActive('navbar-company');
-  linkActive('classroom');
+  linkActive('companyClassroom');
 </script>
 @endsection

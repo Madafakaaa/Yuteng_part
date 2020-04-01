@@ -12,27 +12,27 @@ class PositionController extends Controller
 
     /**
      * 创建新岗位页面
-     * URL: GET /position/create
+     * URL: GET /company/position/create
      */
-    public function create(){
+    public function positionCreate(){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取部门信息
         $sections = DB::table('section')->where('section_status', 1)->get();
-        return view('position/create', ['sections' => $sections]);
+        return view('company/positionCreate', ['sections' => $sections]);
     }
 
     /**
      * 创建新岗位提交数据库
-     * URL: POST
+     * URL: POST /company/position/create
      * @param  Request  $request
      * @param  $request->input('input1'): 名称
      * @param  $request->input('input2'): 部门
      * @param  $request->input('input3'): 等级
      */
-    public function store(Request $request){
+    public function positionStore(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -54,57 +54,47 @@ class PositionController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect()->action('SectionController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '岗位添加失败',
-                                     'message' => '岗位添加失败，请重新输入信息']);
+            return redirect("/company/position/create")
+                     ->with(['notify' => true,
+                             'type' => 'danger',
+                             'title' => '岗位添加失败',
+                             'message' => '岗位添加失败，请重新输入信息']);
         }
         // 返回岗位列表
-        return redirect()->action('SectionController@index')
-                         ->with(['notify' => true,
-                                 'type' => 'success',
-                                 'title' => '岗位添加成功',
-                                 'message' => '岗位名称: '.$position_name]);
+        return redirect("/company/section")
+               ->with(['notify' => true,
+                       'type' => 'success',
+                       'title' => '岗位添加成功',
+                       'message' => '岗位名称: '.$position_name]);
     }
 
     /**
      * 修改单个岗位
-     * URL: GET /position/{id}/edit
+     * URL: GET /company/position/{id}/edit
      * @param  int  $position_id
      */
-    public function edit($position_id){
+    public function positionEdit($position_id){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取数据信息
-        $position = DB::table('position')->where('position_id', $position_id)->get();
-        if($position->count()!==1){
-            // 未获取到数据
-            return redirect()->action('SectionController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '岗位显示失败',
-                                     'message' => '岗位显示失败，请联系系统管理员']);
-        }
-        $position = $position[0];
+        $position = DB::table('position')->where('position_id', $position_id)->first();
         // 获取部门信息
         $sections = DB::table('section')->where('section_status', 1)->get();
-        return view('position/edit', ['sections' => $sections,
-                                      'position' => $position]);
+        return view('company/positionEdit', ['sections' => $sections, 'position' => $position]);
     }
 
     /**
      * 修改新岗位提交数据库
-     * URL: PUT /position/{id}
+     * URL: PUT /company/position/{id}
      * @param  Request  $request
      * @param  $request->input('input1'): 名称
      * @param  $request->input('input2'): 部门
      * @param  $request->input('input3'): 等级
      * @param  int  $position_id
      */
-    public function update(Request $request, $position_id){
+    public function positionUpdate(Request $request, $position_id){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -123,23 +113,25 @@ class PositionController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("/position/{$position_id}/edit")->with(['notify' => true,
-                                                                   'type' => 'danger',
-                                                                   'title' => '岗位修改失败',
-                                                                   'message' => '岗位修改失败，请重新输入信息']);
+            return redirect("/company/position/{$position_id}")
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '岗位修改失败',
+                           'message' => '岗位修改失败，请重新输入信息']);
         }
-        return redirect("/section")->with(['notify' => true,
-                                            'type' => 'success',
-                                            'title' => '岗位修改成功',
-                                            'message' => '岗位修改成功，岗位名称: '.$position_name]);
+        return redirect("/company/section")
+               ->with(['notify' => true,
+                       'type' => 'success',
+                       'title' => '岗位修改成功',
+                       'message' => '岗位修改成功，岗位名称: '.$position_name]);
     }
 
     /**
      * 删除岗位
-     * URL: DELETE /position/{id}
+     * URL: DELETE /company/position/{id}
      * @param  int  $position_id
      */
-    public function destroy($position_id){
+    public function positionDelete($position_id){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -152,17 +144,17 @@ class PositionController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect()->action('SectionController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '岗位删除失败',
-                                     'message' => '岗位删除失败，请联系系统管理员']);
+            return redirect("/company/section")
+                     ->with(['notify' => true,
+                             'type' => 'danger',
+                             'title' => '岗位删除失败',
+                             'message' => '岗位删除失败，请联系系统管理员']);
         }
         // 返回岗位列表
-        return redirect()->action('SectionController@index')
-                         ->with(['notify' => true,
-                                 'type' => 'success',
-                                 'title' => '岗位删除成功',
-                                 'message' => '岗位名称: '.$position_name]);
+        return redirect("/company/section")
+                 ->with(['notify' => true,
+                         'type' => 'success',
+                         'title' => '岗位删除成功',
+                         'message' => '岗位名称: '.$position_name]);
     }
 }
