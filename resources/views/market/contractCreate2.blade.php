@@ -333,11 +333,11 @@ function update(course_num){
     var total_price_sum = 0;
     for(var i=1; i<=course_num; i++){
         // 获取输入
-        var unit_price = Math.floor( parseFloat($("#input_"+i+"_"+1).val()) * 100) / 100 ;
+        var unit_price = Math.round(parseFloat($("#input_"+i+"_"+1).val()) * 100) / 100;
         var original_hour = parseInt($("#input_"+i+"_"+2).val());
         // var price = parseInt($("#input_"+i+"_"+3).val());
-        var discount_rate = Math.floor( parseFloat($("#input_"+i+"_"+4).val())) / 100 ;
-        var discount_amount = Math.floor( parseFloat($("#input_"+i+"_"+5).val()) * 100) / 100 ;
+        var discount_rate = Math.round(parseFloat($("#input_"+i+"_"+4).val())) / 100;
+        var discount_amount = Math.round(parseFloat($("#input_"+i+"_"+5).val()) * 100) / 100;
         var free_hour = parseInt($("#input_"+i+"_"+6).val());
         // 判断输入是否合法
         if(isNaN(original_hour)||original_hour<=0){
@@ -349,44 +349,40 @@ function update(course_num){
         if(isNaN(free_hour)||free_hour<0){
             $('#submit_button').attr("disabled", true);
         }
-        // 计算原金额
-        var original_price = floatObj.multiply(unit_price, original_hour);
-        original_price = Math.floor(original_price * 10) / 10;
+        // 计算原总金额
+        var original_price = Math.round((unit_price*original_hour) * 100) / 100;
         $("#input_"+i+"_"+3).val(original_price);
         // 计算合计课时
-        var total_hour = floatObj.add(original_hour, free_hour);
+        var total_hour = (original_hour+free_hour);
         $("#input_"+i+"_"+7).val(total_hour);
         // 计算应付金额
-        var total_price = Math.floor( floatObj.multiply(original_price, discount_rate) * 10 ) / 10 ;
-        total_price = Math.floor( floatObj.subtract(total_price, discount_amount) * 10 ) / 10 ;
-        total_price = Math.floor(total_price * 10) / 10;
+        var total_price = Math.round((original_price * discount_rate - discount_amount) * 100) / 100;
         $("#input_"+i+"_"+8).val(total_price);
         // 赋值给hidden input
         for(var j=1; j<=8; j++){
             $("#course_"+i+"_"+j).val($("#input_"+i+"_"+j).val());
         }
         // 统计合计
-        original_hour_sum = floatObj.add(original_hour_sum, original_hour);
-        free_hour_sum = floatObj.add(free_hour_sum, free_hour);
-        total_hour_sum = floatObj.add(total_hour_sum, total_hour);
-        original_price_sum = floatObj.add(original_price_sum, original_price);
-        total_price_sum = floatObj.add(total_price_sum, total_price);
-        console.log(total_price_sum);
+        original_hour_sum += original_hour;
+        free_hour_sum += free_hour;
+        total_hour_sum += total_hour;
+        original_price_sum += original_price;
+        total_price_sum += total_price;
 
         // 判断计算结果是否合法
         if(total_price<=0){
             $('#submit_button').attr("disabled", true);
         }
     }
-    var extra_fee = Math.floor( parseFloat($("#extra_fee").val()) * 100) / 100 ;
+    var extra_fee = Math.round(parseFloat($("#extra_fee").val()) * 100) / 100;
     // 判断输入是否合法
     if(isNaN(extra_fee)||extra_fee<0){
         $('#submit_button').attr("disabled", true);
     }
     // 保留两位小数
-    var original_price_sum = Math.floor(original_price_sum * 10) / 10;
-    var discount_sum = Math.floor( (original_price_sum * 10 - total_price_sum * 10) ) / 10;
-    var total_price_sum = Math.ceil( total_price_sum * 10 + extra_fee * 10) / 10;
+    var original_price_sum = Math.round(original_price_sum * 100) / 100;
+    var discount_sum = Math.round( (original_price_sum - total_price_sum)*100 ) / 100;
+    var total_price_sum = Math.round( (total_price_sum + extra_fee)*100 ) / 100;
     // 显示统计合计
     if(isNaN(original_hour_sum)||original_hour_sum<=0||original_hour_sum>10000){
         $("#original_hour").text(0);

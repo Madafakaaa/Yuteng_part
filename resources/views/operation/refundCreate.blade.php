@@ -50,7 +50,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/market/refund/create2" method="post" id="form1" name="form1">
+        <form action="/operation/refund/create2" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
             <h4 class="mb-0">一、选择退费学生</h4>
@@ -61,13 +61,13 @@
               <div class="col-2 text-right">
                 <label class="form-control-label"><span style="color:red">*</span>退费学生</label>
               </div>
-              <div class="col-4 px-2 mb-2">
+              <div class="col-5 px-2 mb-2">
                 <div class="form-group mb-1">
                   <select class="form-control form-control-sm" name="input1" data-toggle="select" required>
                     <option value=''>请选择学生...</option>
                     @foreach ($students as $student)
                       <option value="{{ $student->student_id }}">
-                        @if($student->student_customer_status==0) 客户 @else 学生 @endif{{ $student->grade_name }} - {{ $student->student_name }}
+                        {{ $student->student_name }} ({{ $student->student_id }})
                       </option>
                     @endforeach
                   </select>

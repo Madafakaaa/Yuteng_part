@@ -1558,9 +1558,6 @@ var DatatableBasic = (function() {
 
 		var options = {
 			keys: !0,
-			select: {
-				style: "multi"
-			},
 			language: {
 				paginate: {
 					previous: "<i class='fas fa-angle-left'>",
@@ -1577,7 +1574,6 @@ var DatatableBasic = (function() {
 
 		var table = $this.on( 'init.dt', function () {
 			$('div.dataTables_length select').removeClass('custom-select custom-select-sm');
-
 	    }).DataTable(options);
 	}
 

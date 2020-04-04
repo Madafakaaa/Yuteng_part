@@ -58,7 +58,7 @@
                   <option value=''>请选择学生...</option>
                   @foreach ($students as $student)
                     <option value="{{ $student->student_id }}" @if($student_id==$student->student_id) selected @endif>
-                      {{ $student->grade_name }} - {{ $student->student_name }}
+                      @if($student->student_customer_status==0) 未签约 @else 已签约 @endif - {{ $student->student_name }} ({{ $student->student_id }})
                     </option>
                   @endforeach
                 </select>

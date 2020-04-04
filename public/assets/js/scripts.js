@@ -145,3 +145,44 @@ var floatObj = function () {
         divide: divide
     }
 }();
+
+function barChart(id,label,labels,data) {
+    var barChart = new Chart($("#" + id), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: label,
+                data: data,
+                backgroundColor: ['rgba(153, 102, 255, 0.6)']
+            }]
+        },
+        options: {
+            hover: {
+                animationDuration: 0  // 防止鼠标移上去，数字闪烁
+            },
+            animation: {           // 这部分是数值显示的功能实现
+                onComplete: function () {
+                    var chartInstance = this.chart,
+
+                        ctx = chartInstance.ctx;
+                    // 以下属于canvas的属性（font、fillStyle、textAlign...）
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.fillStyle = "black";
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            if(data!=0){
+                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                            }
+                        });
+                    });
+                }
+            }
+        }
+    });
+}

@@ -130,10 +130,12 @@ Route::post('/market/refund/create3', 'MarketController@refundCreate3');
 Route::post('/market/refund/create4', 'MarketController@refundCreate4');
 Route::post('/market/refund/store', 'MarketController@refundStore');
 Route::delete('/market/refund/{refund_id}', 'MarketController@refundDelete');
-// 部门管理
+// 退费管理
 Route::get('/market/refund/all', 'MarketController@refundAll');
+Route::get('/market/refund/{refund_id}', 'MarketController@refundCheck');
 // 我的退费
 Route::get('/market/refund/my', 'MarketController@refundMy');
+
 
 // 运营中心
 // 修改负责人
@@ -209,10 +211,9 @@ Route::post('/operation/refund/store', 'OperationController@refundStore');
 Route::delete('/operation/refund/{refund_id}', 'OperationController@refundDelete');
 // 退费管理
 Route::get('/operation/refund/all', 'OperationController@refundAll');
+Route::get('/operation/refund/{refund_id}', 'OperationController@refundCheck');
 // 我的退费
 Route::get('/operation/refund/my', 'OperationController@refundMy');
-
-
 
 // 教学中心
 // 全部学生
@@ -255,6 +256,14 @@ Route::get('/education/document', 'EducationController@document');
 Route::get('/education/document/{document_id}', 'EducationController@documentDownload');
 // 删除教案
 Route::delete('/education/document/{document_id}', 'EducationController@documentDelete');
+
+// 数据中心
+// 签约统计
+Route::any('/finance/contract', 'FinanceController@contract');
+// 课时消耗
+Route::any('/finance/consumption', 'FinanceController@consumption');
+// 退费统计
+Route::any('/finance/refund', 'FinanceController@refund');
 
 // 用户
 // 查看用户

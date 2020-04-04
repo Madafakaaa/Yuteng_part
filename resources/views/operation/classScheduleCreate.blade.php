@@ -59,7 +59,12 @@
               </div>
               <div class="col-4 pl-2 pr-2 mb-2">
                 <div class="form-group mb-1">
-                  <input class="form-control form-control-sm" value="{{ Session::get('user_department_name') }}" readonly>
+                  <select class="form-control form-control-sm" name="input0" data-toggle="select" required>
+                    <option value=''>请选择上课校区...</option>
+                    @foreach ($departments as $department)
+                      <option value="{{ $department->department_id }}">{{ $department->department_name }}</option>
+                    @endforeach
+                  </select>
                 </div>
               </div>
             </div>
@@ -216,7 +221,7 @@
             <hr>
             <div class="row">
               <div class="col-lg-3 col-md-5 col-sm-12">
-                <a href="/operation/schedule/createIrregular" ><button type="button" class="btn btn-outline-default btn-block">非规律排课</button></a>
+                <a href="/operation/classSchedule/createIrregular" ><button type="button" class="btn btn-outline-default btn-block">非规律排课</button></a>
               </div>
               <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-3 col-md-5 col-sm-12">

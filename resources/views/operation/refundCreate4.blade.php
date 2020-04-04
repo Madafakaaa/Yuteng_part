@@ -50,7 +50,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/market/refund/store" method="post" id="form1" name="form1">
+        <form action="/operation/refund/store" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
             <h4 class="mb-0">四、退费信息确认</h4>

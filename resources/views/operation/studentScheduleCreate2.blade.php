@@ -61,7 +61,7 @@
                 <div class="form-group mb-1">
                   <div class="row">
                     <div class="col-6 pl-2 pr-2 mb-2">
-                      <input class="form-control form-control-sm" value="{{ Session::get('user_department_name') }}" readonly>
+                      <input class="form-control form-control-sm" value="{{ $schedule_department_name }}" readonly>
                     </div>
                   </div>
                 </div>
@@ -208,6 +208,7 @@
               </div>
               <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-3 col-md-5 col-sm-12">
+                <input type="hidden" name="input0" value="{{ $schedule_department }}">
                 <input type="hidden" name="input6" value="{{ $schedule_dates_str }}">
                 <input type="hidden" name="input7" value="{{ $schedule_start }}">
                 <input type="hidden" name="input8" value="{{ $schedule_end }}">

@@ -61,7 +61,12 @@
                 <div class="form-group mb-1">
                   <div class="row">
                     <div class="col-6 pl-2 pr-2 mb-2">
-                      <input class="form-control form-control-sm" value="{{ Session::get('user_department_name') }}" readonly>
+                      <select class="form-control form-control-sm" name="input0" data-toggle="select" required>
+                        <option value=''>请选择上课校区...</option>
+                        @foreach ($departments as $department)
+                          <option value="{{ $department->department_id }}">{{ $department->department_name }}</option>
+                        @endforeach
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -175,7 +180,7 @@
             <hr>
             <div class="row">
               <div class="col-3">
-                <a href="/operation/schedule/create" ><button type="button" class="btn btn-outline-default btn-block">规律排课</button></a>
+                <a href="/operation/classSchedule/create" ><button type="button" class="btn btn-outline-default btn-block">规律排课</button></a>
               </div>
               <div class="col-6"></div>
               <div class="col-3">

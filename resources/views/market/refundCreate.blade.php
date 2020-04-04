@@ -61,13 +61,13 @@
               <div class="col-2 text-right">
                 <label class="form-control-label"><span style="color:red">*</span>退费学生</label>
               </div>
-              <div class="col-4 px-2 mb-2">
+              <div class="col-5 px-2 mb-2">
                 <div class="form-group mb-1">
                   <select class="form-control form-control-sm" name="input1" data-toggle="select" required>
                     <option value=''>请选择学生...</option>
                     @foreach ($students as $student)
                       <option value="{{ $student->student_id }}">
-                        @if($student->student_customer_status==0) 客户 @else 学生 @endif{{ $student->grade_name }} - {{ $student->student_name }}
+                        {{ $student->student_name }} ({{ $student->student_id }})
                       </option>
                     @endforeach
                   </select>

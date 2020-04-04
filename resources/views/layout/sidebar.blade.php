@@ -344,44 +344,35 @@
             </ul>
           </div>
         </li>
-        <!-- <li class="nav-item">
+        <li class="nav-item">
           <a class="nav-link" href="#navbar-finance" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-finance" id="link-finance">
-            <i class="ni ni-align-left-2 text-default"></i>
-            <span class="nav-link-text">财务中心</span>
+            <i class="ni ni-chart-pie-35 text-default"></i>
+            <span class="nav-link-text">数据中心</span>
           </a>
           <div class="collapse" id="navbar-finance">
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
-                <a href="/contract/create" class="nav-link" id="contractCreate">签约统计</a>
+                <a href="/finance/contract" class="nav-link" id="financeContract">
+                  <i class="ni ni-money-coins text-default"></i>
+                  <span class="nav-link-text">签约统计</span>
+                </a>
               </li>
               <li class="nav-item">
-                <a href="/contract/create" class="nav-link" id="contractCreate">退费统计</a>
+                <a href="/finance/consumption" class="nav-link" id="financeConsumption">
+                  <i class="ni ni-book-bookmark text-default"></i>
+                  <span class="nav-link-text">课时消耗</span>
+                </a>
               </li>
               <li class="nav-item">
-                <a href="/contract" class="nav-link" id="contract">公司签约记录</a>
-              </li>
-              <li class="nav-item">
-                <a href="/refund" class="nav-link" id="refund">公司退费记录</a>
-              </li>
-              <li class="nav-item">
-                <a href="/refund/create" class="nav-link" id="refundCreate">课时退费</a>
-              </li>
-              <li class="nav-item">
-                <a href="/departmentContract" class="nav-link" id="departmentContract">本校签约记录</a>
-              </li>
-              <li class="nav-item">
-                <a href="/departmentRefund" class="nav-link" id="departmentRefund">本校退费记录</a>
-              </li>
-              <li class="nav-item">
-                <a href="/myContract" class="nav-link" id="myContract">我的签约记录</a>
-              </li>
-              <li class="nav-item">
-                <a href="/myRefund" class="nav-link" id="myRefund">我的退费记录</a>
+                <a href="/finance/refund" class="nav-link" id="financeRefund">
+                  <i class="ni ni-scissors text-default"></i>
+                  <span class="nav-link-text">退费统计</span>
+                </a>
               </li>
             </ul>
           </div>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a href="/calendar" class="nav-link" id="calendar">
             <i class="ni ni-calendar-grid-58 text-info"></i>
             <span class="nav-link-text">课程表</span>

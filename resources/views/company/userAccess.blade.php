@@ -16,7 +16,7 @@
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-              <li class="breadcrumb-item active">人事管理</li>
+              <li class="breadcrumb-item active">公司管理</li>
               <li class="breadcrumb-item"><a href="/company/user">用户管理</a></li>
               <li class="breadcrumb-item active">用户权限</li>
             </ol>
@@ -131,10 +131,10 @@
                         <div class="col-4 mb-2">
                           {{ $category[0] }}
                         </div>
-                        <div class="col-2 mb-2">
+                        <div class="col-3 mb-2">
                           <button type="button" class="btn btn-primary btn-block btn-sm" style="white-space:nowrap; overflow:hidden;" onclick="checkAll('{{ $category[0] }}');">全选</button>
                         </div>
-                        <div class="col-2 mb-2">
+                        <div class="col-3 mb-2">
                           <button type="button" class="btn btn-outline-primary btn-block btn-sm" style="white-space:nowrap; overflow:hidden;" onclick="uncheckAll('{{ $category[0] }}');">全不选</button>
                         </div>
                       </div>

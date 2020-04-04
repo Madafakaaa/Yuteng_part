@@ -857,11 +857,18 @@ class MarketController extends Controller
         $request_contract_type = $request->input('contract_type');
         $request_contract_extra_fee = round((float)$request->input("extra_fee"), 2);
         $request_courses = array();
-        // 生成新合同号
+        // 生成新合同号(上一个合同号加一或新合同号001)
         $sub_student_id = substr($request_student_id , 1 , 10);
-        $new_contract_num = DB::table('contract')
-                              ->where('contract_student', $request_student_id)
-                              ->count()+1;
+        if(DB::table('contract')->where('contract_student', $request_student_id)->exists()){
+            $pre_contract_num = DB::table('contract')
+                                  ->where('contract_student', $request_student_id)
+                                  ->orderBy('contract_createtime', 'desc')
+                                  ->limit(1)
+                                  ->first();
+            $new_contract_num = intval(substr($pre_contract_num->contract_id , 10 , 12))+1;
+        }else{
+            $new_contract_num = 1;
+        }
         $contract_id = "H".$sub_student_id.sprintf("%02d", $new_contract_num);
         for($i=1; $i<=$request_selected_course_num; $i++){
             $temp = array();
@@ -877,7 +884,6 @@ class MarketController extends Controller
             $request_courses[] = $temp;
         }
         // 计算合同总信息
-        $contract_department = Session::get('user_department');
         $contract_student = $request_student_id;
         $contract_course_num = $request_selected_course_num;
         $contract_original_hour = 0;
@@ -900,6 +906,11 @@ class MarketController extends Controller
         $contract_original_price = round($contract_original_price, 2);
         $contract_discount_price = round($contract_discount_price, 2);
         $contract_total_price = round($contract_total_price+$request_contract_extra_fee, 2);
+        // 获取学生校区
+        $student_department = DB::table('student')
+                                ->where('student_id', $request_student_id)
+                                ->first()
+                                ->student_department;
         // 获取学生签约状态
         $student_customer_status = DB::table('student')
                                      ->where('student_id', $request_student_id)
@@ -911,7 +922,7 @@ class MarketController extends Controller
             // 插入Contract表
             DB::table('contract')->insert(
                 ['contract_id' => $contract_id,
-                 'contract_department' => $contract_department,
+                 'contract_department' => $student_department,
                  'contract_student' => $contract_student,
                  'contract_course_num' => $contract_course_num,
                  'contract_original_hour' => $contract_original_hour,
@@ -1259,7 +1270,7 @@ class MarketController extends Controller
         $students = DB::table('student')
                       ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                       ->where('student_consultant', Session::get('user_id'))
-                      ->orderBy('student_customer_status', 'asc')
+                      ->where('student_customer_status', 1)
                       ->orderBy('student_grade', 'asc')
                       ->get();
         return view('market/refundCreate', ['students' => $students]);
@@ -1741,6 +1752,42 @@ class MarketController extends Controller
                                          'filter_departments' => $filter_departments,
                                          'filter_students' => $filter_students,
                                          'filter_grades' => $filter_grades]);
+    }
+
+    /**
+     * 审核退课
+     * URL: GET /market/refund/{refund_id}
+     * @param  int  $refund_id
+     */
+    public function refundCheck($refund_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        DB::beginTransaction();
+        try{
+            // 删除Refund表
+            DB::table('refund')
+              ->where('refund_id', $refund_id)
+              ->update(['refund_checked' => 1,
+                        'refund_checked_user' => Session::get('user_id')]);
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return redirect("/market/refund/my")
+                   ->with(['notify' => true,
+                          'type' => 'danger',
+                          'title' => '退费记录审核失败！',
+                          'message' => '退费记录审核失败，请联系系统管理员']);
+        }
+        DB::commit();
+        // 返回购课列表
+        return redirect("/market/refund/all")
+               ->with(['notify' => true,
+                      'type' => 'success',
+                      'title' => '退费记录审核成功！',
+                      'message' => '退费记录审核成功！']);
     }
 
     /**

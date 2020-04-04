@@ -114,9 +114,9 @@
                   <td title="续费"><span style="color:green;">续费</span></td>
                 @endif
                 <td class="text-right" title="{{ $row->contract_total_hour }} 课时"><strong>{{ $row->contract_total_hour }} 课时</strong></td>
-                <td class="text-right" title="- {{ number_format($row->contract_discount_price, 1) }} 元"><span style="color:red;">- {{ number_format($row->contract_discount_price, 1) }} 元</span></td>
-                <td class="text-right" title="{{ number_format($row->contract_extra_fee, 1) }} 元">{{ number_format($row->contract_extra_fee, 1) }} 元</td>
-                <td class="text-right" title="{{ number_format($row->contract_total_price, 1) }} 元"><strong>{{ number_format($row->contract_total_price, 1) }} 元</strong></td>
+                <td class="text-right" title="- {{ number_format($row->contract_discount_price, 2) }} 元"><span style="color:red;">- {{ number_format($row->contract_discount_price, 2) }} 元</span></td>
+                <td class="text-right" title="{{ number_format($row->contract_extra_fee, 2) }} 元">{{ number_format($row->contract_extra_fee, 2) }} 元</td>
+                <td class="text-right" title="{{ number_format($row->contract_total_price, 2) }} 元"><strong>{{ number_format($row->contract_total_price, 2) }} 元</strong></td>
                 <td title="{{ $row->contract_payment_method }}">{{ $row->contract_payment_method }}</td>
                 <td title="{{ $row->user_name }} ({{ $row->position_name }})">{{ $row->user_name }} ({{ $row->position_name }})</td>
                 <td title="{{ $row->contract_date }}">{{ $row->contract_date }}</td>

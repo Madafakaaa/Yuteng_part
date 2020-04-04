@@ -107,8 +107,8 @@
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->course_name }}</td>
                 <td class="text-right">{{ $row->refund_total_hour }} 课时</td>
-                <td class="text-right"><span style="color:red;">- {{ number_format($row->refund_fine, 1) }} 元</span></td>
-                <td class="text-right"><strong>{{ number_format($row->refund_actual_amount, 1) }} 元</strong></td>
+                <td class="text-right"><span style="color:red;">- {{ number_format($row->refund_fine, 2) }} 元</span></td>
+                <td class="text-right"><strong>{{ number_format($row->refund_actual_amount, 2) }} 元</strong></td>
                 <td>{{ $row->refund_date }}</td>
                 <td>{{ $row->createuser_name }} ({{ $row->createuser_position_name }})</td>
                 @if($row->refund_checked==0)
@@ -123,13 +123,9 @@
                     <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>&nbsp;
                     <a href='/contract/{{$row->refund_contract}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a>&nbsp;
                     @if($row->refund_checked==0&&$row->refund_createuser!=Session::get('user_id'))
-                      <a href='/refund/{{$row->refund_id}}/edit'><button type="button" class="btn btn-warning btn-sm">审核</button></a>&nbsp;
-                    @else
-                      <a href='#'><button type="button" class="btn btn-warning btn-sm" disabled>审核</button></a>&nbsp;
+                      <a href='/market/refund/{{$row->refund_id}}'><button type="button" class="btn btn-warning btn-sm">审核</button></a>&nbsp;
                     @endif
-                    @if($row->refund_checked==1)
-                      <a href='#'><button type="button" class="btn btn-outline-danger btn-sm" disabled>删除</button></a>&nbsp;
-                    @else
+                    @if($row->refund_checked==0)
                       {{ deleteConfirm($row->refund_id, ["退费学生：".$row->student_name]) }}
                     @endif
                   </form>

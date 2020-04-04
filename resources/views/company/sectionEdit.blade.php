@@ -16,7 +16,7 @@
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-              <li class="breadcrumb-item active">人事管理</li>
+              <li class="breadcrumb-item active">公司管理</li>
               <li class="breadcrumb-item"><a href="/company/section">部门架构</a></li>
               <li class="breadcrumb-item active">修改部门</li>
             </ol>

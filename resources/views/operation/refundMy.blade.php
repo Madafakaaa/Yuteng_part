@@ -107,8 +107,8 @@
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->course_name }}</td>
                 <td class="text-right">{{ $row->refund_total_hour }} 课时</td>
-                <td class="text-right"><span style="color:red;">- {{ number_format($row->refund_fine, 1) }} 元</span></td>
-                <td class="text-right"><strong>{{ number_format($row->refund_actual_amount, 1) }} 元</strong></td>
+                <td class="text-right"><span style="color:red;">- {{ number_format($row->refund_fine, 2) }} 元</span></td>
+                <td class="text-right"><strong>{{ number_format($row->refund_actual_amount, 2) }} 元</strong></td>
                 <td>{{ $row->refund_date }}</td>
                 <td>{{ $row->createuser_name }} ({{ $row->createuser_position_name }})</td>
                 @if($row->refund_checked==0)

@@ -623,7 +623,11 @@ class OperationController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        return view('operation/studentScheduleCreate');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
+        // 获取年级、科目、用户信息
+        $departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
+        return view('operation/studentScheduleCreate', ['departments' => $departments]);
     }
 
     /**
@@ -635,7 +639,11 @@ class OperationController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        return view('operation/studentScheduleCreateIrregular');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
+        // 获取年级、科目、用户信息
+        $departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
+        return view('operation/studentScheduleCreateIrregular', ['departments' => $departments]);
     }
 
     /**
@@ -652,6 +660,7 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取表单输入
+        $schedule_department = $request->input('input0');
         $schedule_date_start = $request->input('input1');
         $schedule_date_end = $request->input('input2');
         $schedule_days = $request->input('input3');
@@ -716,8 +725,9 @@ class OperationController extends Controller
         // 获取所有本校学生名单
         $db_students = DB::table('student')
                          ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                         ->where('student_department', Session::get('user_department'))
+                         ->where('student_department', $schedule_department)
                          ->where('student_status', 1)
+                         ->where('student_customer_status', 1)
                          ->orderBy('student_grade', 'asc')
                          ->orderBy('student_name', 'asc')
                          ->get();
@@ -731,14 +741,14 @@ class OperationController extends Controller
                       ->join('position', 'user.user_position', '=', 'position.position_id')
                       ->join('department', 'user.user_department', '=', 'department.department_id')
                       ->where('user_cross_teaching', '=', 1)
-                      ->where('user_department', '<>', Session::get('user_department'))
+                      ->where('user_department', '<>', $schedule_department)
                       ->where('user_status', 1)
                       ->orderBy('user_department', 'asc')
                       ->orderBy('position_level', 'desc');
         $db_users = DB::table('user')
                       ->join('position', 'user.user_position', '=', 'position.position_id')
                       ->join('department', 'user.user_department', '=', 'department.department_id')
-                      ->where('user_department', '=', Session::get('user_department'))
+                      ->where('user_department', '=', $schedule_department)
                       ->where('user_status', 1)
                       ->orderBy('position_level', 'desc')
                       ->union($db_users)
@@ -750,7 +760,7 @@ class OperationController extends Controller
         }
         // 获取所有本校教室名单
         $db_classrooms = DB::table('classroom')
-                           ->where('classroom_department', Session::get('user_department'))
+                           ->where('classroom_department', $schedule_department)
                            ->where('classroom_status', 1)
                            ->orderBy('classroom_createtime', 'asc')
                            ->get();
@@ -767,7 +777,7 @@ class OperationController extends Controller
                       ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                       ->select('student.student_id', 'user.user_id', 'classroom.classroom_id')
                       ->where([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '<', $schedule_start],
                                   ['schedule_end', '>', $schedule_start],
@@ -776,7 +786,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                               ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '<', $schedule_end],
                                   ['schedule_end', '>', $schedule_end],
@@ -785,7 +795,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                                 ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '>', $schedule_start],
                                   ['schedule_end', '<', $schedule_end],
@@ -794,7 +804,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                                 ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '=', $schedule_start],
                                   ['student_status', '=', 1],
@@ -802,7 +812,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                                 ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_end', '=', $schedule_end],
                                   ['student_status', '=', 1],
@@ -822,6 +832,7 @@ class OperationController extends Controller
             }
         }
 
+        $schedule_department_name = DB::table('department')->where('department_id', $schedule_department)->first()->department_name;
         $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
         $courses = DB::table('course')->where('course_status', 1)->orderBy('course_createtime', 'asc')->get();
         return view('operation/studentScheduleCreate2', ['schedule_dates_str' => $schedule_dates_str,
@@ -829,6 +840,8 @@ class OperationController extends Controller
                                                          'schedule_start' => $schedule_start,
                                                          'schedule_end' => $schedule_end,
                                                          'schedule_time' => $schedule_time,
+                                                         'schedule_department' => $schedule_department,
+                                                         'schedule_department_name' => $schedule_department_name,
                                                          'students' => $students,
                                                          'users' => $users,
                                                          'classrooms' => $classrooms,
@@ -850,6 +863,7 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取表单输入
+        $schedule_department = $request->input('input0');
         $schedule_dates_str = $request->input('input1');
         $schedule_start = $request->input('input2');
         $schedule_end = $request->input('input3');
@@ -889,8 +903,9 @@ class OperationController extends Controller
         // 获取所有本校学生名单
         $db_students = DB::table('student')
                          ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                         ->where('student_department', Session::get('user_department'))
+                         ->where('student_department', $schedule_department)
                          ->where('student_status', 1)
+                         ->where('student_customer_status', 1)
                          ->orderBy('student_grade', 'asc')
                          ->orderBy('student_name', 'asc')
                          ->get();
@@ -901,7 +916,7 @@ class OperationController extends Controller
         }
         // 获取所有本校班级名单
         $db_classes = DB::table('class')
-                        ->where('class_department', Session::get('user_department'))
+                        ->where('class_department', $schedule_department)
                         ->where('class_status', 1)
                         ->orderBy('class_createtime', 'asc')
                         ->get();
@@ -915,14 +930,14 @@ class OperationController extends Controller
                       ->join('position', 'user.user_position', '=', 'position.position_id')
                       ->join('department', 'user.user_department', '=', 'department.department_id')
                       ->where('user_cross_teaching', '=', 1)
-                      ->where('user_department', '<>', Session::get('user_department'))
+                      ->where('user_department', '<>', $schedule_department)
                       ->where('user_status', 1)
                       ->orderBy('user_department', 'asc')
                       ->orderBy('position_level', 'desc');
         $db_users = DB::table('user')
                       ->join('position', 'user.user_position', '=', 'position.position_id')
                       ->join('department', 'user.user_department', '=', 'department.department_id')
-                      ->where('user_department', '=', Session::get('user_department'))
+                      ->where('user_department', '=', $schedule_department)
                       ->where('user_status', 1)
                       ->orderBy('position_level', 'desc')
                       ->union($db_users)
@@ -934,7 +949,7 @@ class OperationController extends Controller
         }
         // 获取所有本校教室名单
         $db_classrooms = DB::table('classroom')
-                           ->where('classroom_department', Session::get('user_department'))
+                           ->where('classroom_department', $schedule_department)
                            ->where('classroom_status', 1)
                            ->orderBy('classroom_createtime', 'asc')
                            ->get();
@@ -951,7 +966,7 @@ class OperationController extends Controller
                       ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                       ->select('student.student_id', 'user.user_id', 'classroom.classroom_id')
                       ->where([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '<', $schedule_start],
                                   ['schedule_end', '>', $schedule_start],
@@ -960,7 +975,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                               ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '<', $schedule_end],
                                   ['schedule_end', '>', $schedule_end],
@@ -969,7 +984,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                                 ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '>', $schedule_start],
                                   ['schedule_end', '<', $schedule_end],
@@ -978,7 +993,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                                 ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '=', $schedule_start],
                                   ['student_status', '=', 1],
@@ -986,7 +1001,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                                 ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_end', '=', $schedule_end],
                                   ['student_status', '=', 1],
@@ -1006,6 +1021,7 @@ class OperationController extends Controller
             }
         }
 
+        $schedule_department_name = DB::table('department')->where('department_id', $schedule_department)->first()->department_name;
         $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
         $courses = DB::table('course')->where('course_status', 1)->orderBy('course_createtime', 'asc')->get();
         return view('operation/studentScheduleCreate2', ['schedule_dates_str' => $schedule_dates_str,
@@ -1013,6 +1029,8 @@ class OperationController extends Controller
                                                          'schedule_start' => $schedule_start,
                                                          'schedule_end' => $schedule_end,
                                                          'schedule_time' => $schedule_time,
+                                                         'schedule_department' => $schedule_department,
+                                                         'schedule_department_name' => $schedule_department_name,
                                                          'students' => $students,
                                                          'users' => $users,
                                                          'classrooms' => $classrooms,
@@ -1040,6 +1058,7 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取表单输入
+        $schedule_department = $request->input('input0');
         $schedule_participant = $request->input('input1');
         $schedule_teacher = $request->input('input2');
         $schedule_classroom = $request->input('input3');
@@ -1051,6 +1070,8 @@ class OperationController extends Controller
         $schedule_time = $request->input('input9');
         // 拆分上课日期字符串
         $schedule_dates = explode(',', $schedule_dates_str);
+        // 获取分校名称
+        $schedule_department_name = DB::table('department')->where('department_id', $schedule_department)->first()->department_name;
         // 获取学生或班级名称
         $student_name = DB::table('student')
                           ->select('student_name')
@@ -1091,6 +1112,8 @@ class OperationController extends Controller
                                      ->classroom_name;
         return view('operation/studentScheduleCreate3', ['schedule_participant' => $schedule_participant,
                                                          'schedule_participant_name' => $schedule_participant_name,
+                                                         'schedule_department' => $schedule_department,
+                                                         'schedule_department_name' => $schedule_department_name,
                                                          'schedule_teacher' => $schedule_teacher,
                                                          'schedule_teacher_name' => $schedule_teacher_name,
                                                          'schedule_course' => $schedule_course,
@@ -1129,6 +1152,7 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取表单输入
+        $schedule_department = $request->input('input0');
         $schedule_participant = $request->input('input1');
         $schedule_teacher = $request->input('input2');
         $schedule_classroom = $request->input('input3');
@@ -1139,8 +1163,6 @@ class OperationController extends Controller
         $schedule_time = $request->input('input8');
         $schedule_grade = $request->input('input9');
         $schedule_course = $request->input('input10');
-        // 获取当前用户校区ID
-        $schedule_department = Session::get('user_department');
         // 获取当前用户ID
         $schedule_createuser = Session::get('user_id');
         // 拆分上课日期字符串
@@ -1197,7 +1219,11 @@ class OperationController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        return view('operation/classScheduleCreate');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
+        // 获取年级、科目、用户信息
+        $departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
+        return view('operation/classScheduleCreate', ['departments' => $departments]);
     }
 
     /**
@@ -1209,7 +1235,11 @@ class OperationController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        return view('operation/classScheduleCreateIrregular');
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
+        // 获取年级、科目、用户信息
+        $departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
+        return view('operation/classScheduleCreateIrregular', ['departments' => $departments]);
     }
 
     /**
@@ -1226,6 +1256,7 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取表单输入
+        $schedule_department = $request->input('input0');
         $schedule_date_start = $request->input('input1');
         $schedule_date_end = $request->input('input2');
         $schedule_days = $request->input('input3');
@@ -1293,7 +1324,7 @@ class OperationController extends Controller
         // 获取所有本校班级名单
         $db_classes = DB::table('class')
                         ->join('grade', 'class.class_grade', '=', 'grade.grade_id')
-                        ->where('class_department', Session::get('user_department'))
+                        ->where('class_department', $schedule_department)
                         ->where('class_status', 1)
                         ->orderBy('class_grade', 'asc')
                         ->orderBy('class_name', 'asc')
@@ -1308,14 +1339,14 @@ class OperationController extends Controller
                       ->join('position', 'user.user_position', '=', 'position.position_id')
                       ->join('department', 'user.user_department', '=', 'department.department_id')
                       ->where('user_cross_teaching', '=', 1)
-                      ->where('user_department', '<>', Session::get('user_department'))
+                      ->where('user_department', '<>', $schedule_department)
                       ->where('user_status', 1)
                       ->orderBy('user_department', 'asc')
                       ->orderBy('position_level', 'desc');
         $db_users = DB::table('user')
                       ->join('position', 'user.user_position', '=', 'position.position_id')
                       ->join('department', 'user.user_department', '=', 'department.department_id')
-                      ->where('user_department', '=', Session::get('user_department'))
+                      ->where('user_department', '=', $schedule_department)
                       ->where('user_status', 1)
                       ->orderBy('position_level', 'desc')
                       ->union($db_users)
@@ -1327,7 +1358,7 @@ class OperationController extends Controller
         }
         // 获取所有本校教室名单
         $db_classrooms = DB::table('classroom')
-                           ->where('classroom_department', Session::get('user_department'))
+                           ->where('classroom_department', $schedule_department)
                            ->where('classroom_status', 1)
                            ->orderBy('classroom_createtime', 'asc')
                            ->get();
@@ -1346,7 +1377,7 @@ class OperationController extends Controller
                       ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                       ->select('class.class_id', 'student.student_id', 'user.user_id', 'classroom.classroom_id')
                       ->where([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '<', $schedule_start],
                                   ['schedule_end', '>', $schedule_start],
@@ -1356,7 +1387,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                               ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '<', $schedule_end],
                                   ['schedule_end', '>', $schedule_end],
@@ -1366,7 +1397,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                                 ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '>', $schedule_start],
                                   ['schedule_end', '<', $schedule_end],
@@ -1376,7 +1407,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                                 ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '=', $schedule_start],
                                   ['class_status', '=', 1],
@@ -1385,7 +1416,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                                 ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_end', '=', $schedule_end],
                                   ['class_status', '=', 1],
@@ -1405,6 +1436,7 @@ class OperationController extends Controller
                 $classrooms[$rows[$j]->classroom_id][2]=$classrooms[$rows[$j]->classroom_id][2]+1;
             }
         }
+        $schedule_department_name = DB::table('department')->where('department_id', $schedule_department)->first()->department_name;
         $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
         $courses = DB::table('course')->where('course_status', 1)->orderBy('course_createtime', 'asc')->get();
         return view('operation/classScheduleCreate2', ['schedule_dates_str' => $schedule_dates_str,
@@ -1412,6 +1444,8 @@ class OperationController extends Controller
                                                          'schedule_start' => $schedule_start,
                                                          'schedule_end' => $schedule_end,
                                                          'schedule_time' => $schedule_time,
+                                                         'schedule_department' => $schedule_department,
+                                                         'schedule_department_name' => $schedule_department_name,
                                                          'classes' => $classes,
                                                          'users' => $users,
                                                          'classrooms' => $classrooms,
@@ -1433,6 +1467,7 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取表单输入
+        $schedule_department = $request->input('input0');
         $schedule_dates_str = $request->input('input1');
         $schedule_start = $request->input('input2');
         $schedule_end = $request->input('input3');
@@ -1472,7 +1507,7 @@ class OperationController extends Controller
         // 获取所有本校班级名单
         $db_classes = DB::table('class')
                         ->join('grade', 'class.class_grade', '=', 'grade.grade_id')
-                        ->where('class_department', Session::get('user_department'))
+                        ->where('class_department', $schedule_department)
                         ->where('class_status', 1)
                         ->orderBy('class_grade', 'asc')
                         ->orderBy('class_name', 'asc')
@@ -1487,14 +1522,14 @@ class OperationController extends Controller
                       ->join('position', 'user.user_position', '=', 'position.position_id')
                       ->join('department', 'user.user_department', '=', 'department.department_id')
                       ->where('user_cross_teaching', '=', 1)
-                      ->where('user_department', '<>', Session::get('user_department'))
+                      ->where('user_department', '<>', $schedule_department)
                       ->where('user_status', 1)
                       ->orderBy('user_department', 'asc')
                       ->orderBy('position_level', 'desc');
         $db_users = DB::table('user')
                       ->join('position', 'user.user_position', '=', 'position.position_id')
                       ->join('department', 'user.user_department', '=', 'department.department_id')
-                      ->where('user_department', '=', Session::get('user_department'))
+                      ->where('user_department', '=', $schedule_department)
                       ->where('user_status', 1)
                       ->orderBy('position_level', 'desc')
                       ->union($db_users)
@@ -1506,7 +1541,7 @@ class OperationController extends Controller
         }
         // 获取所有本校教室名单
         $db_classrooms = DB::table('classroom')
-                           ->where('classroom_department', Session::get('user_department'))
+                           ->where('classroom_department', $schedule_department)
                            ->where('classroom_status', 1)
                            ->orderBy('classroom_createtime', 'asc')
                            ->get();
@@ -1525,7 +1560,7 @@ class OperationController extends Controller
                       ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                       ->select('class.class_id', 'student.student_id', 'user.user_id', 'classroom.classroom_id')
                       ->where([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '<', $schedule_start],
                                   ['schedule_end', '>', $schedule_start],
@@ -1535,7 +1570,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                               ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '<', $schedule_end],
                                   ['schedule_end', '>', $schedule_end],
@@ -1545,7 +1580,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                                 ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '>', $schedule_start],
                                   ['schedule_end', '<', $schedule_end],
@@ -1555,7 +1590,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                                 ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_start', '=', $schedule_start],
                                   ['class_status', '=', 1],
@@ -1564,7 +1599,7 @@ class OperationController extends Controller
                                   ['classroom_status', '=', 1]
                                 ])
                       ->orWhere([
-                                  ['schedule_department', '=', Session::get('user_department')],
+                                  ['schedule_department', '=', $schedule_department],
                                   ['schedule_date', '=', $schedule_dates[$i]],
                                   ['schedule_end', '=', $schedule_end],
                                   ['class_status', '=', 1],
@@ -1584,13 +1619,16 @@ class OperationController extends Controller
                 $classrooms[$rows[$j]->classroom_id][2]=$classrooms[$rows[$j]->classroom_id][2]+1;
             }
         }
+        $schedule_department_name = DB::table('department')->where('department_id', $schedule_department)->first()->department_name;
         $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
         $courses = DB::table('course')->where('course_status', 1)->orderBy('course_createtime', 'asc')->get();
-        return view('operation/classScheduleCreate', ['schedule_dates_str' => $schedule_dates_str,
+        return view('operation/classScheduleCreate2', ['schedule_dates_str' => $schedule_dates_str,
                                                          'schedule_dates' => $schedule_dates,
                                                          'schedule_start' => $schedule_start,
                                                          'schedule_end' => $schedule_end,
                                                          'schedule_time' => $schedule_time,
+                                                         'schedule_department' => $schedule_department,
+                                                         'schedule_department_name' => $schedule_department_name,
                                                          'classes' => $classes,
                                                          'users' => $users,
                                                          'classrooms' => $classrooms,
@@ -1618,6 +1656,7 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取表单输入
+        $schedule_department = $request->input('input0');
         $schedule_participant = $request->input('input1');
         $schedule_teacher = $request->input('input2');
         $schedule_classroom = $request->input('input3');
@@ -1629,6 +1668,8 @@ class OperationController extends Controller
         $schedule_time = $request->input('input9');
         // 拆分上课日期字符串
         $schedule_dates = explode(',', $schedule_dates_str);
+        // 获取分校名称
+        $schedule_department_name = DB::table('department')->where('department_id', $schedule_department)->first()->department_name;
         // 获取班级名称
         $class = DB::table('class')
                    ->select('class_name')
@@ -1669,6 +1710,8 @@ class OperationController extends Controller
                                      ->classroom_name;
         return view('operation/classScheduleCreate3', ['schedule_participant' => $schedule_participant,
                                                          'schedule_participant_name' => $schedule_participant_name,
+                                                         'schedule_department' => $schedule_department,
+                                                         'schedule_department_name' => $schedule_department_name,
                                                          'schedule_teacher' => $schedule_teacher,
                                                          'schedule_teacher_name' => $schedule_teacher_name,
                                                          'schedule_course' => $schedule_course,
@@ -1707,6 +1750,7 @@ class OperationController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取表单输入
+        $schedule_department = $request->input('input0');
         $schedule_participant = $request->input('input1');
         $schedule_teacher = $request->input('input2');
         $schedule_classroom = $request->input('input3');
@@ -1718,7 +1762,7 @@ class OperationController extends Controller
         $schedule_grade = $request->input('input9');
         $schedule_course = $request->input('input10');
         // 获取当前用户校区ID
-        $schedule_department = Session::get('user_department');
+        $schedule_department = $schedule_department;
         // 获取当前用户ID
         $schedule_createuser = Session::get('user_id');
         // 拆分上课日期字符串
@@ -2542,11 +2586,18 @@ class OperationController extends Controller
         $request_contract_type = 1;
         $request_contract_extra_fee = round((float)$request->input("extra_fee"), 2);
         $request_courses = array();
-        // 生成新合同号
+        // 生成新合同号(上一个合同号加一或新合同号001)
         $sub_student_id = substr($request_student_id , 1 , 10);
-        $new_contract_num = DB::table('contract')
-                              ->where('contract_student', $request_student_id)
-                              ->count()+1;
+        if(DB::table('contract')->where('contract_student', $request_student_id)->exists()){
+            $pre_contract_num = DB::table('contract')
+                                  ->where('contract_student', $request_student_id)
+                                  ->orderBy('contract_createtime', 'desc')
+                                  ->limit(1)
+                                  ->first();
+            $new_contract_num = intval(substr($pre_contract_num->contract_id , 10 , 12))+1;
+        }else{
+            $new_contract_num = 1;
+        }
         $contract_id = "H".$sub_student_id.sprintf("%02d", $new_contract_num);
         for($i=1; $i<=$request_selected_course_num; $i++){
             $temp = array();
@@ -2562,7 +2613,6 @@ class OperationController extends Controller
             $request_courses[] = $temp;
         }
         // 计算合同总信息
-        $contract_department = Session::get('user_department');
         $contract_student = $request_student_id;
         $contract_course_num = $request_selected_course_num;
         $contract_original_hour = 0;
@@ -2585,6 +2635,11 @@ class OperationController extends Controller
         $contract_original_price = round($contract_original_price, 2);
         $contract_discount_price = round($contract_discount_price, 2);
         $contract_total_price = round($contract_total_price+$request_contract_extra_fee, 2);
+        // 获取学生校区
+        $student_department = DB::table('student')
+                                ->where('student_id', $request_student_id)
+                                ->first()
+                                ->student_department;
         // 获取学生签约状态
         $student_customer_status = DB::table('student')
                                      ->where('student_id', $request_student_id)
@@ -2596,7 +2651,7 @@ class OperationController extends Controller
             // 插入Contract表
             DB::table('contract')->insert(
                 ['contract_id' => $contract_id,
-                 'contract_department' => $contract_department,
+                 'contract_department' => $student_department,
                  'contract_student' => $contract_student,
                  'contract_course_num' => $contract_course_num,
                  'contract_original_hour' => $contract_original_hour,
@@ -3402,6 +3457,42 @@ class OperationController extends Controller
                                          'filter_departments' => $filter_departments,
                                          'filter_students' => $filter_students,
                                          'filter_grades' => $filter_grades]);
+    }
+
+    /**
+     * 审核退课
+     * URL: GET /operation/refund/{refund_id}
+     * @param  int  $refund_id
+     */
+    public function refundCheck($refund_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        DB::beginTransaction();
+        try{
+            // 删除Refund表
+            DB::table('refund')
+              ->where('refund_id', $refund_id)
+              ->update(['refund_checked' => 1,
+                        'refund_checked_user' => Session::get('user_id')]);
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return redirect("/operation/refund/my")
+                   ->with(['notify' => true,
+                          'type' => 'danger',
+                          'title' => '退费记录审核失败！',
+                          'message' => '退费记录审核失败，请联系系统管理员']);
+        }
+        DB::commit();
+        // 返回购课列表
+        return redirect("/operation/refund/all")
+               ->with(['notify' => true,
+                      'type' => 'success',
+                      'title' => '退费记录审核成功！',
+                      'message' => '退费记录审核成功！']);
     }
 
     /**

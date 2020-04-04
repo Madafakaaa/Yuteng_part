@@ -259,21 +259,17 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @if(count($classes)==0)
-                    <tr class="text-center"><td colspan="7">当前没有记录</td></tr>
-                  @else
-                    @foreach ($classes as $class)
-                      <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $class->department_name }}</td>
-                        <td>{{ $class->class_name }}</td>
-                        <td>{{ $class->user_name }}</td>
-                        <td>{{ $class->subject_name }}</td>
-                        <td>{{ $class->grade_name }}</td>
-                        <td>{{ $class->class_current_num }} / {{ $class->class_max_num }} 人</td>
-                      </tr>
-                    @endforeach
-                  @endif
+                  @foreach ($classes as $class)
+                    <tr>
+                      <td>{{ $loop->iteration }}</td>
+                      <td>{{ $class->department_name }}</td>
+                      <td>{{ $class->class_name }}</td>
+                      <td>{{ $class->user_name }}</td>
+                      <td>{{ $class->subject_name }}</td>
+                      <td>{{ $class->grade_name }}</td>
+                      <td>{{ $class->class_current_num }} / {{ $class->class_max_num }} 人</td>
+                    </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>

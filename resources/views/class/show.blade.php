@@ -101,7 +101,7 @@
                       <select class="form-control" name="input1" data-toggle="select" required>
                         <option value=''>添加新学生</option>
                         @foreach ($students as $student)
-                          <option value="{{ $student->student_id }}">{{ $student->student_name }}</option>
+                          <option value="{{ $student->student_id }}">{{ $student->student_name }} ({{ $student->student_id }})</option>
                         @endforeach
                       </select>
                     </div>
