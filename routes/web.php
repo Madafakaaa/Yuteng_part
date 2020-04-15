@@ -119,6 +119,8 @@ Route::get('/market/contract/create', 'MarketController@contractCreate');
 Route::post('/market/contract/create2', 'MarketController@contractCreate2');
 Route::post('/market/contract/store', 'MarketController@contractStore');
 Route::delete('/market/contract/{contract_id}', 'MarketController@contractDelete');
+Route::get('/market/contract/edit/{contract_id}', 'MarketController@contractEdit');
+Route::post('/market/contract/edit/{contract_id}', 'MarketController@contractUpdate');
 // 签约管理
 Route::get('/market/contract/all', 'MarketController@contractAll');
 // 我的签约
@@ -198,6 +200,8 @@ Route::get('/operation/contract/create', 'OperationController@contractCreate');
 Route::post('/operation/contract/create2', 'OperationController@contractCreate2');
 Route::post('/operation/contract/store', 'OperationController@contractStore');
 Route::delete('/operation/contract/{contract_id}', 'OperationController@contractDelete');
+Route::get('/operation/contract/edit/{contract_id}', 'OperationController@contractEdit');
+Route::post('/operation/contract/edit/{contract_id}', 'OperationController@contractUpdate');
 // 签约管理
 Route::get('/operation/contract/all', 'OperationController@contractAll');
 // 我的签约

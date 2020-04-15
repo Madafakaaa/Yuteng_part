@@ -85,7 +85,7 @@
                   <td style="border:1px solid #32325d;">{{ $contract_course->course_name }}</td>
                   <td style="border:1px solid #32325d;">{{ $contract_course->course_type }}</td>
                   <td style="border:1px solid #32325d;">{{ number_format($contract_course->contract_course_original_unit_price, 1) }} 元</td>
-                  <td style="border:1px solid #32325d;">{{ number_format($contract_course->contract_course_original_hour) }} 课时</td>
+                  <td style="border:1px solid #32325d;">{{ number_format($contract_course->contract_course_original_hour,1) }} 课时</td>
                   <td style="border:1px solid #32325d;">{{ number_format($contract_course->contract_course_total_price, 1) }} 元</td>
                   <td style="border:1px solid #32325d;">
                     @if($contract_course->contract_course_discount_rate!=1)

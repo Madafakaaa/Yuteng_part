@@ -2501,6 +2501,12 @@ class OperationController extends Controller
                      ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                      ->where('student_id', $student_id)
                      ->first();
+        // 获取已购课程
+        $hours = DB::table('hour')
+                   ->join('course', 'course.course_id', '=', 'hour.hour_course')
+                   ->join('contract', 'contract.contract_id', '=', 'hour.hour_contract')
+                   ->where('hour_student', $student_id)
+                   ->get();
         // 获取已选课程数
         if($request->filled('selected_course_num')){
             $selected_course_num = $request->input('selected_course_num');
@@ -2514,8 +2520,10 @@ class OperationController extends Controller
         }
         // 获取新选课程
         if($request->filled('input2')){
-            $selected_course_num = $selected_course_num + 1;
-            $selected_course_ids[]=$request->input('input2');
+            foreach($request->input('input2') as $new_course){
+                $selected_course_num = $selected_course_num + 1;
+                $selected_course_ids[]=$new_course;
+            }
         }
         // 获取删除课程
         if($request->filled('input3')){
@@ -2534,6 +2542,7 @@ class OperationController extends Controller
         }
         // 获取课程信息
         $courses = DB::table('course')
+                     ->join('course_type', 'course.course_type', '=', 'course_type.course_type_name')
                      ->join('grade', 'course.course_grade', '=', 'grade.grade_id')
                      ->leftJoin('subject', 'course.course_subject', '=', 'subject.subject_id')
                      ->where('course_grade', $student->student_grade)
@@ -2552,11 +2561,12 @@ class OperationController extends Controller
                              ->where('payment_method_status', 1)
                              ->get();
         return view('operation/contractCreate2', ['student' => $student,
-                                             'courses' => $courses,
-                                             'payment_methods' => $payment_methods,
-                                             'selected_course_ids' => $selected_course_ids,
-                                             'selected_course_num' => $selected_course_num,
-                                             'selected_courses' => $selected_courses]);
+                                                 'hours' => $hours,
+                                                 'courses' => $courses,
+                                                 'payment_methods' => $payment_methods,
+                                                 'selected_course_ids' => $selected_course_ids,
+                                                 'selected_course_num' => $selected_course_num,
+                                                 'selected_courses' => $selected_courses]);
     }
 
     /**
@@ -2578,6 +2588,7 @@ class OperationController extends Controller
         $request_selected_course_num = $request->input('selected_course_num');
         $request_contract_payment_method = $request->input('payment_method');
         $request_contract_date = $request->input('contract_date');
+        $request_contract_paid_price = $request->input('contract_paid_price');
         if($request->filled('remark')) {
             $request_contract_remark = $request->input('remark');
         }else{
@@ -2603,12 +2614,12 @@ class OperationController extends Controller
             $temp = array();
             $temp[] = (int)$request->input("course_{$i}_0");
             $temp[] = round((float)$request->input("course_{$i}_1"), 2);
-            $temp[] = (int)$request->input("course_{$i}_2");
+            $temp[] = round((float)$request->input("course_{$i}_2"), 1);
             $temp[] = round((float)$request->input("course_{$i}_3"), 2);
             $temp[] = round((float)$request->input("course_{$i}_4")/100, 2);
             $temp[] = round((float)$request->input("course_{$i}_5"), 2);
-            $temp[] = (int)$request->input("course_{$i}_6");
-            $temp[] = (int)$request->input("course_{$i}_7");
+            $temp[] = round((float)$request->input("course_{$i}_6"), 1);
+            $temp[] = round((float)$request->input("course_{$i}_7"), 1);
             $temp[] = round((float)$request->input("course_{$i}_8"), 2);
             $request_courses[] = $temp;
         }
@@ -2621,6 +2632,7 @@ class OperationController extends Controller
         $contract_original_price = 0;
         $contract_discount_price = 0;
         $contract_total_price = 0;
+        $contract_paid_price = $request_contract_paid_price;
         $contract_date = $request_contract_date;
         $contract_remark = $request_contract_remark;
         $contract_payment_method = $request_contract_payment_method;
@@ -2660,6 +2672,7 @@ class OperationController extends Controller
                  'contract_original_price' => $contract_original_price,
                  'contract_discount_price' => $contract_discount_price,
                  'contract_total_price' => $contract_total_price,
+                 'contract_paid_price' => $contract_paid_price,
                  'contract_date' => $contract_date,
                  'contract_payment_method' => $contract_payment_method,
                  'contract_remark' => $contract_remark,
@@ -2788,7 +2801,6 @@ class OperationController extends Controller
             // 捕获异常
             catch(Exception $e){
                 DB::rollBack();
-                return $e;
                 return redirect("/operation/contract/my")
                        ->with(['notify' => true,
                                'type' => 'danger',
@@ -2809,6 +2821,68 @@ class OperationController extends Controller
                            'title' => '购课记录删除失败',
                            'message' => '学生剩余课时不足，购课记录删除失败。']);
         }
+    }
+
+    /**
+     * 补缴费用
+     * URL: GET /operation/contract/{contract_id}
+     * @param  int  $contract_id
+     */
+    public function contractEdit($contract_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取数据
+        $contract = DB::table('contract')
+                      ->join('student', 'contract.contract_student', '=', 'student.student_id')
+                      ->join('department', 'student.student_department', '=', 'department.department_id')
+                      ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
+                      ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
+                      ->join('position', 'user.user_position', '=', 'position.position_id')
+                      ->where('contract_id', '=', $contract_id)
+                      ->first();
+        // 返回列表视图
+        return view('operation/contractEdit', ['contract' => $contract]);
+    }
+
+    /**
+     * 更新费用
+     * URL: POST /operation/contract/{contract_id}
+     * @param  int  $contract_id
+     */
+    public function contractUpdate(Request $request, $contract_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        if ($request->filled('input2')) {
+            $contract_remark = $request->input('input2');
+        }else{
+            $contract_remark = "";
+        }
+        DB::beginTransaction();
+        try{
+            DB::table('contract')
+              ->where('contract_id', $contract_id)
+              ->update(['contract_paid_price' =>  $request->input('input1'),
+                        'contract_remark' => $contract_remark]);
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return redirect("/operation/contract/my")
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '缴费提交失败',
+                           'message' => '缴费提交失败，请联系系统管理员']);
+        }
+        DB::commit();
+        return redirect("/operation/contract/my")
+               ->with(['notify' => true,
+                       'type' => 'success',
+                       'title' => '缴费提交成功',
+                       'message' => '缴费提交成功，请联系系统管理员']);
     }
 
     /**

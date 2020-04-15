@@ -40,11 +40,14 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-6">
+    <div class="col-4">
       <div class="card">
+        <div class="card-header">
+          <h2 class="mb-0">学生信息</h2>
+        </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-4">
+            <div class="col-12">
               <div class="form-group row mb-0">
                 <label class="col-md-4 col-form-label form-control-label">姓名</label>
                 <div class="col-md-8 px-2 mb-2">
@@ -53,15 +56,15 @@
                 </div>
               </div>
             </div>
-            <div class="col-4">
+            <div class="col-12">
               <div class="form-group row mb-0">
-                <label class="col-md-4 col-form-label form-control-label">状态</label>
+                <label class="col-md-4 col-form-label form-control-label">校区</label>
                 <div class="col-md-8 px-2 mb-2">
-                  <input class="form-control" type="text" value="@if($student->student_customer_status==0) 客户 @else 学生 @endif" readonly>
+                  <input class="form-control" type="text" value="{{ $student->department_name }}" readonly>
                 </div>
               </div>
             </div>
-            <div class="col-4">
+            <div class="col-12">
               <div class="form-group row mb-0">
                 <label class="col-md-4 col-form-label form-control-label">年级</label>
                 <div class="col-md-8 px-2 mb-2">
@@ -73,9 +76,61 @@
         </div>
       </div>
     </div>
-    <div class="col-6">
+    <div class="col-8">
       <div class="card">
-        <div class="card-body">
+        <div class="card-header">
+          <h2 class="mb-0">已购课时</h2>
+        </div>
+        <div class="card-body" style="height:201px; overflow:auto;">
+          <ul class="list-group list-group-flush list my--3">
+            @foreach ($hours as $hour)
+            <li class="list-group-item px-0">
+              <div class="row align-items-center">
+                <div class="col">
+                  <small>课程:</small>
+                  <h5 class="mb-0">{{ $hour->course_name }}</h5>
+                </div>
+                <div class="col">
+                  <small>合同</small>
+                  <h5 class="mb-0">
+                    <a href='/contract/{{$hour->hour_contract}}' target="_blank">{{ $hour->hour_contract }}</a>
+                  </h5>
+                </div>
+                <div class="col">
+                  <small>剩余</small>
+                  <h5 class="mb-0">{{ $hour->hour_remain+$hour->hour_remain_free }} 课时</h5>
+                </div>
+                <div class="col">
+                  <small>日期</small>
+                  <h5 class="mb-0">{{ $hour->contract_date }}</h5>
+                </div>
+                <div class="col">
+                  <a href='/contract/{{$hour->hour_contract}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a>
+                </div>
+              </div>
+            </li>
+            @endforeach
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h2 class="mb-0">购买课程</h2>
+            </div>
+            <div class="col-4 text-right">
+              <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#inputBox">
+                添加课程
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="inputBox" tabindex="-1" role="dialog" aria-labelledby="inputBoxLabel" aria-hidden="true">
           <form action="/operation/contract/create2" method="post" id="form1" name="form1">
             @csrf
             <input type="hidden" name="input1" value="{{ $student->student_id }}">
@@ -83,32 +138,34 @@
             @for($i=0; $i<$selected_course_num; $i++)
               <input type="hidden" name="course{{ $i }}" value="{{ $selected_course_ids[$i] }}">
             @endfor
-            <div class="row">
-              <div class="col-12">
-                <div class="form-group row mb-0">
-                  <label class="col-3 col-form-label form-control-label">添加课程<span style="color:red">*</span></label>
-                  <div class="col-9">
-                    <select class="form-control" name="input2" id="input2" data-toggle="select" onChange="form_submit('form1')" required>
-                      <option value=''>请选择课程...</option>
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 class="modal-title" id="inputBoxLabel">添加课程</h3>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body" style="border-bottom:1px solid #DDD;border-top:1px solid #DDD;">
+                  <div class="custom-control custom-checkbox">
+                    <div class="row pl-3" style="max-height:160px; overflow:auto;">
                       @foreach ($courses as $course)
-                        <option value="{{ $course->course_id }}">
-                          {{ $course->course_type }}: {{ $course->course_name }}，{{ $course->grade_name }}，{{ $course->course_unit_price }}元/课时
-                        </option>
+                        <div class="col-12 mb-2">
+                          <input type="checkbox" class="custom-control-input" id="{{ $course->course_id }}" name="input2[]" value="{{ $course->course_id }}">
+                          <label class="custom-control-label" for="{{ $course->course_id }}"><img src="{{ asset(_ASSETS_.$course->course_type_icon_path) }}" /> {{ $course->course_name }}，{{ $course->course_unit_price }}元/课时</label>
+                        </div>
                       @endforeach
-                    </select>
+                    </div>
                   </div>
-                  <!-- <div class="col-3"><input type="submit" class="btn btn-warning btn-block" value="添加"></div> -->
+                </div>
+                <div class="modal-footer p-3">
+                  <button type="button" class="btn btn-outline-danger" data-dismiss="modal">关闭</button>
+                  <button class="btn btn-warning">添加</button>
                 </div>
               </div>
             </div>
           </form>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <div class="card main_card mb-4" style="display:none">
         <div class="table-responsive">
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
@@ -145,7 +202,7 @@
                   <input class="form-control form-control-sm" type="number" readonly value="{{ $selected_course->course_unit_price }}" name="input_{{ $loop->iteration }}_1" id="input_{{ $loop->iteration }}_1">
                 </td>
                 <td>
-                  <input class="form-control form-control-sm" type="number" value="1" autocomplete='off' required min="1" name="input_{{ $loop->iteration }}_2" id="input_{{ $loop->iteration }}_2" oninput="update({{ $selected_course_num }})">
+                  <input class="form-control form-control-sm" type="number" value="1" autocomplete='off' required min="0" name="input_{{ $loop->iteration }}_2" id="input_{{ $loop->iteration }}_2" oninput="update({{ $selected_course_num }})">
                 </td>
                 <td>
                   <input class="form-control form-control-sm" type="number" readonly value="{{ $selected_course->course_unit_price }}" name="input_{{ $loop->iteration }}_3" id="input_{{ $loop->iteration }}_3">
@@ -212,7 +269,13 @@
               <div class="form-group row">
                 <label class="col-md-4 col-form-label form-control-label">签约类型<span style="color:red">*</span></label>
                 <div class="col-md-8">
-                  <input class="form-control" type="text" value="续费签约" readonly>
+                  @if($student->student_customer_status==0)
+                    <input class="form-control" type="text" value="首次签约" readonly>
+                    <input type="hidden" value="0" name="contract_type">
+                  @else
+                    <input class="form-control" type="text" value="续签签约" readonly>
+                    <input type="hidden" value="1" name="contract_type">
+                  @endif
                 </div>
               </div>
             </div>
@@ -245,11 +308,27 @@
                 </div>
               </div>
             </div>
+            <div class="col-6">
+              <div class="form-group row">
+                <label class="col-md-4 col-form-label form-control-label">应收金额</label>
+                <div class="col-md-8">
+                  <input class="form-control" type="number" value="0" id="total_price_sum_input" disabled>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group row">
+                <label class="col-md-4 col-form-label form-control-label">实收金额<span style="color:red">*</span></label>
+                <div class="col-md-8">
+                  <input class="form-control" type="number" value="0" autocomplete='off' required min="0.00" step="0.01" name="contract_paid_price" id="contract_paid_price">
+                </div>
+              </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-12">
               <div class="form-group">
-                <textarea class="form-control" name="remark" rows="6" resize="none" placeholder="合同备注..." maxlength="140"></textarea>
+                <textarea class="form-control" name="remark" rows="3" resize="none" placeholder="合同备注..." maxlength="140"></textarea>
               </div>
             </div>
           </div>
@@ -328,13 +407,13 @@ function update(course_num){
     for(var i=1; i<=course_num; i++){
         // 获取输入
         var unit_price = Math.round(parseFloat($("#input_"+i+"_"+1).val()) * 100) / 100;
-        var original_hour = parseInt($("#input_"+i+"_"+2).val());
+        var original_hour = Math.round(parseFloat($("#input_"+i+"_"+2).val()) * 10) / 10;
         // var price = parseInt($("#input_"+i+"_"+3).val());
         var discount_rate = Math.round(parseFloat($("#input_"+i+"_"+4).val())) / 100;
         var discount_amount = Math.round(parseFloat($("#input_"+i+"_"+5).val()) * 100) / 100;
-        var free_hour = parseInt($("#input_"+i+"_"+6).val());
+        var free_hour = Math.round(parseFloat($("#input_"+i+"_"+6).val()) * 10) / 10;
         // 判断输入是否合法
-        if(isNaN(original_hour)||original_hour<=0){
+        if(isNaN(original_hour)||original_hour<0){
             $('#submit_button').attr("disabled", true);
         }
         if(isNaN(discount_amount)||discount_amount<0){
@@ -349,6 +428,9 @@ function update(course_num){
         // 计算合计课时
         var total_hour = (original_hour+free_hour);
         $("#input_"+i+"_"+7).val(total_hour);
+        if(isNaN(total_hour)||total_hour<=0){
+            $('#submit_button').attr("disabled", true);
+        }
         // 计算应付金额
         var total_price = Math.round((original_price * discount_rate - discount_amount) * 100) / 100;
         $("#input_"+i+"_"+8).val(total_price);
@@ -364,7 +446,7 @@ function update(course_num){
         total_price_sum += total_price;
 
         // 判断计算结果是否合法
-        if(total_price<=0){
+        if(total_price<0){
             $('#submit_button').attr("disabled", true);
         }
     }
@@ -378,7 +460,7 @@ function update(course_num){
     var discount_sum = Math.round( (original_price_sum - total_price_sum)*100 ) / 100;
     var total_price_sum = Math.round( (total_price_sum + extra_fee)*100 ) / 100;
     // 显示统计合计
-    if(isNaN(original_hour_sum)||original_hour_sum<=0||original_hour_sum>10000){
+    if(isNaN(original_hour_sum)||original_hour_sum<0||original_hour_sum>10000){
         $("#original_hour").text(0);
         $('#submit_button').attr("disabled", true);
     }else{
@@ -390,13 +472,13 @@ function update(course_num){
     }else{
         $("#free_hour_sum").text(free_hour_sum);
     }
-    if(isNaN(total_hour_sum)||total_hour_sum<0||total_hour_sum>10000){
+    if(isNaN(total_hour_sum)||total_hour_sum<=0||total_hour_sum>10000){
         $("#total_hour_sum").text(0);
         $('#submit_button').attr("disabled", true);
     }else{
         $("#total_hour_sum").text(total_hour_sum);
     }
-    if(isNaN(original_price_sum)||original_price_sum<=0||original_price_sum>1000000){
+    if(isNaN(original_price_sum)||original_price_sum<0||original_price_sum>1000000){
         $("#original_price_sum").text(0);
         $('#submit_button').attr("disabled", true);
     }else{
@@ -413,6 +495,8 @@ function update(course_num){
         $('#submit_button').attr("disabled", true);
     }else{
         $("#total_price_sum").text(total_price_sum);
+        $("#total_price_sum_input").val(total_price_sum);
+        $("#contract_paid_price").val(total_price_sum);
     }
     if(isNaN(extra_fee)||extra_fee<0||extra_fee>1000000){
         $("#contract_extra_fee").text(0);

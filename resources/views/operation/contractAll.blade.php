@@ -88,8 +88,8 @@
                 <th style='width:65px;'>年级</th>
                 <th style='width:65px;'>类型</th>
                 <th style='width:90px;' class="text-right">合计课时</th>
-                <th style='width:101px;' class="text-right">优惠金额</th>
                 <th style='width:101px;' class="text-right">服务费</th>
+                <th style='width:110px;' class="text-right">应付金额</th>
                 <th style='width:110px;' class="text-right">实付金额</th>
                 <th style='width:80px;'>支付方式</th>
                 <th style='width:140px;'>签约人</th>
@@ -114,9 +114,13 @@
                   <td title="续费"><span style="color:green;">续费</span></td>
                 @endif
                 <td class="text-right" title="{{ $row->contract_total_hour }} 课时"><strong>{{ $row->contract_total_hour }} 课时</strong></td>
-                <td class="text-right" title="- {{ number_format($row->contract_discount_price, 2) }} 元"><span style="color:red;">- {{ number_format($row->contract_discount_price, 2) }} 元</span></td>
                 <td class="text-right" title="{{ number_format($row->contract_extra_fee, 2) }} 元">{{ number_format($row->contract_extra_fee, 2) }} 元</td>
                 <td class="text-right" title="{{ number_format($row->contract_total_price, 2) }} 元"><strong>{{ number_format($row->contract_total_price, 2) }} 元</strong></td>
+                @if($row->contract_total_price==$row->contract_paid_price)
+                  <td class="text-right" title="{{ number_format($row->contract_paid_price, 2) }} 元"><span style="color:green;"><strong>{{ number_format($row->contract_paid_price, 2) }} 元</strong></span></td>
+                @else
+                  <td class="text-right" title="{{ number_format($row->contract_paid_price, 2) }} 元"><span style="color:red;"><strong>{{ number_format($row->contract_paid_price, 2) }} 元</strong></span></td>
+                @endif
                 <td title="{{ $row->contract_payment_method }}">{{ $row->contract_payment_method }}</td>
                 <td title="{{ $row->user_name }} ({{ $row->position_name }})">{{ $row->user_name }} ({{ $row->position_name }})</td>
                 <td title="{{ $row->contract_date }}">{{ $row->contract_date }}</td>
@@ -124,6 +128,9 @@
                   <form action="/operation/contract/{{$row->contract_id}}" method="POST">
                     @method('DELETE')
                     @csrf
+                    @if($row->contract_total_price!=$row->contract_paid_price)
+                      <a href='/operation/contract/edit/{{$row->contract_id}}'><button type="button" class="btn btn-info btn-sm">补缴</button></a>
+                    @endif
                     <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
                     <a href='/contract/{{$row->contract_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">合同</button></a>
                     {{ deleteConfirm($row->contract_id, ["购课学生：".$row->student_name."，<br> 购买课程：".$row->contract_course_num."课程，
