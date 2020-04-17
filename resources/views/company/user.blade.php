@@ -126,7 +126,7 @@
                 <th style='width:100px;'>跨校区教学</th>
                 <th style='width:140px;'>手机</th>
                 <th style='width:149px;'>微信</th>
-                <th style='width:208px;'>操作管理</th>
+                <th style='width:300px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>
@@ -156,6 +156,7 @@
                     @csrf
                     <a href='/user/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">用户详情</button></a>
                     <a href='/company/user/access/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">用户权限</button></a>
+                    <a href='/company/user/password/restore/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">密码恢复</button></a>
                     {{ deleteConfirm($row->user_id, ["用户名称：".$row->user_name]) }}
                   </form>
                 </td>

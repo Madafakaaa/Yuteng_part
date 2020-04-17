@@ -12,12 +12,13 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">公共客户录入</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">添加客户</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">招生中心</li>
-              <li class="breadcrumb-item active">公共客户录入</li>
+              <li class="breadcrumb-item active"><a href="/market/customer/all">客户管理</a></li>
+              <li class="breadcrumb-item active">添加客户</li>
             </ol>
           </nav>
         </div>
@@ -196,6 +197,6 @@
 <script>
   linkActive('link-market');
   navbarActive('navbar-market');
-  linkActive('marketPublicCustomerCreate');
+  linkActive('marketCustomerAll');
 </script>
 @endsection

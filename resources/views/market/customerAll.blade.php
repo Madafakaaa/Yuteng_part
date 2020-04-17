@@ -22,6 +22,10 @@
           </nav>
         </div>
         <div class="col-6 text-right">
+          <a href="/market/publicCustomer/create" class="btn btn-sm btn-neutral">
+            <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
+            <span class="btn-inner--text">添加客户</span>
+          </a>
           <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
             <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
             <span class="btn-inner--text">搜索</span>
@@ -97,7 +101,7 @@
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:139px;'>学生</th>
+                <th style='width:139px;'>客户</th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:60px;'>年级</th>
                 <th style='width:60px;'>性别</th>
@@ -105,10 +109,8 @@
                 <th style='width:110px;'>电话</th>
                 <th style='width:80px;'>优先级</th>
                 <th style='width:100px;'>上次跟进</th>
-                <th style='width:70px;'>状态</th>
                 <th style='width:145px;'>课程顾问</th>
-                <th style='width:145px;'>班主任</th>
-                <th style='width:188px;'>操作管理</th>
+                <th style='width:300px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>
@@ -132,24 +134,19 @@
                   <td><span style="color:#FF0000;">高</span></td>
                 @endif
                 <td>{{ $row->student_last_follow_date }}</td>
-                @if($row->student_customer_status==0)
-                  <td><span style="color:red;">未签约</span></td>
-                @else
-                  <td><span style="color:green;">已签约</span></td>
-                @endif
                 @if($row->consultant_name=="")
                   <td><span style="color:red;">无</span></td>
                 @else
                   <td>{{ $row->consultant_name }} ({{ $row->consultant_position_name }})</td>
                 @endif
-                @if($row->class_adviser_name=="")
-                  <td><span style="color:red;">无</span></td>
-                @else
-                  <td>{{ $row->class_adviser_name }} ({{ $row->class_adviser_position_name }})</td>
-                @endif
                 <td>
-                  <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">客户详情</button></a>
-                  <a href='/market/follower/edit?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">修改负责人</button></a>
+                  <form action="/market/customer/all/{{$row->student_id}}" method="POST">
+                    @method('DELETE')
+                    @csrf
+                    <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">客户详情</button></a>
+                    <a href='/market/customer/consultant/edit?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">修改课程顾问</button></a>
+                    {{ deleteConfirm($row->student_id, ["删除将无法恢复本记录，<br>客户姓名：".$row->student_name]) }}
+                  </form>
                 </td>
               </tr>
               @endforeach

@@ -4,6 +4,22 @@ $(document).ready(function(){
     //$("#main_card").fadeIn("3000");
 });
 
+
+$(".freeze-table-1").freezeTable({
+    'columnNum' : 1,
+    'shadow': true,
+});
+
+$(".freeze-table-2").freezeTable({
+    'columnNum' : 2,
+    'shadow': true,
+});
+
+$(".freeze-table-3").freezeTable({
+    'columnNum' : 3,
+    'shadow': true,
+});
+
 //Notify function
 function notify(title, message, type){
     $.notify({
@@ -186,3 +202,4 @@ function barChart(id,label,labels,data) {
         }
     });
 }
+

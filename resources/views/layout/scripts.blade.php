@@ -20,6 +20,7 @@
 <script src="{{ asset(_ASSETS_.'/vendor/select2/dist/js/select2.min.js') }}"></script>
 <script src="{{ asset(_ASSETS_.'/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset(_ASSETS_.'/vendor/sweetalert2/dist/sweetalert2.min.js') }}"></script>
+<script src="{{ asset(_ASSETS_.'/vendor/freeze-table/freeze-table.min.js') }}"></script>
 <!-- <script src="{{ asset(_ASSETS_.'/vendor/dropzone/dist/min/dropzone.min.js') }}"></script> -->
 <!-- <script src="{{ asset(_ASSETS_.'/vendor/jquery-validate/jquery.validate.min.js') }}"></script> -->
 <!-- Argon JS -->

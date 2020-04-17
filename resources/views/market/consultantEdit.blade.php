@@ -12,12 +12,13 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">修改负责人</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">修改课程顾问</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-              <li class="breadcrumb-item active">运营中心</li>
-              <li class="breadcrumb-item active">修改负责人</li>
+              <li class="breadcrumb-item active">招生中心</li>
+              <li class="breadcrumb-item active"><a href="/market/customer/all">客户管理</a></li>
+              <li class="breadcrumb-item active">修改课程顾问</li>
             </ol>
           </nav>
         </div>
@@ -42,29 +43,31 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/operation/follower/store" method="post">
+        <form action="/market/customer/consultant/store" method="post">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">二、选择负责人</h4>
+            <h4 class="mb-0">修改课程顾问</h4>
           </div>
           <!-- Card body -->
           <div class="card-body">
             <div class="row">
               <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>学生姓名</label>
+                <label class="form-control-label">学生姓名</label>
               </div>
               <div class="col-4 px-2 mb-2">
-                <input class="form-control form-control-sm" value="{{ $student->student_name }}" readonly>
+                <label class="form-control-label">{{ $student->student_name }}</label>
                 <input type="hidden" name="input1" value="{{ $student->student_id }}">
               </div>
+            </div>
+            <div class="row">
               <div class="col-2 text-right">
                 <label class="form-control-label">签约状态</label>
               </div>
               <div class="col-4 px-2 mb-2">
                 @if($student->student_customer_status==0)
-                  <input class="form-control form-control-sm" value="未签约" readonly>
+                  <label class="form-control-label"><span style="color:red;">未签约</span></label>
                 @else
-                  <input class="form-control form-control-sm" value="已签约" readonly>
+                  <label class="form-control-label"><span style="color:green;">已签约</span></label>
                 @endif
               </div>
             </div>
@@ -73,7 +76,6 @@
                 <label class="form-control-label"><span style="color:red">*</span>课程顾问</label>
               </div>
               <div class="col-6 px-2 mb-2">
-                @if($student->student_customer_status==0)
                 <select class="form-control form-control-sm" name="input2" data-toggle="select" required>
                   <option value=''>请选择用户...</option>
                   @foreach ($users as $user)
@@ -82,30 +84,6 @@
                     </option>
                   @endforeach
                 </select>
-                @else
-                  <input class="form-control form-control-sm" value="{{ $student->consultant_name }}" readonly>
-                  <input type="hidden" name="input2" value="{{ $student->student_consultant }}">
-                @endif
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>班主任</label>
-              </div>
-              <div class="col-6 px-2 mb-2">
-                @if($student->student_customer_status==1)
-                <select class="form-control form-control-sm" name="input3" data-toggle="select" required>
-                  <option value=''>请选择用户...</option>
-                  @foreach ($users as $user)
-                    <option value="{{ $user->user_id }}" @if($student->student_class_adviser==$user->user_id) selected @endif>
-                      {{ $user->user_name }} ({{ $user->position_name }})
-                    </option>
-                  @endforeach
-                </select>
-                @else
-                  <input class="form-control form-control-sm" value="{{ $student->class_adviser_name }}" readonly>
-                  <input type="hidden" name="input3" value="{{ $student->student_class_adviser }}">
-                @endif
               </div>
             </div>
             <hr class="my-3">
@@ -115,7 +93,7 @@
               </div>
               <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-3 col-md-5 col-sm-12">
-                <input type="submit" class="btn btn-primary btn-block" value="下一步">
+                <input type="submit" class="btn btn-warning btn-block" value="修改">
               </div>
             </div>
           </div>
@@ -128,8 +106,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-operation');
-  navbarActive('navbar-operation');
-  linkActive('operationFollowerEdit');
+  linkActive('link-market');
+  navbarActive('navbar-market');
+  linkActive('marketCustomerAll');
 </script>
 @endsection

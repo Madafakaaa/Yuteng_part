@@ -1276,6 +1276,42 @@ class CompanyController extends Controller
     }
 
     /**
+     * 恢复用户默认密码
+     * URL: GET /company/user/password/restore/{user_id}
+     * @param  Request  $request
+     * @param  $request->input('departments'): 校区权限
+     * @param  $request->input('pages'): 页面权限
+     * @param  int  $user_id: 用户id
+     */
+    public function userPasswordRestore($user_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 更新数据库
+        DB::beginTransaction();
+        try{
+            // 更改密码为000000
+            DB::table('user')->where('user_id', $user_id)->update(['user_password' => '000000']);
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return redirect("/company/user")
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '恢复用户默认密码失败',
+                           'message' => '恢复用户默认密码失败！']);
+        }
+        DB::commit();
+        return redirect("/company/user")
+               ->with(['notify' => true,
+                       'type' => 'success',
+                       'title' => '恢复用户默认密码成功',
+                       'message' => '恢复用户默认密码成功！']);
+    }
+
+    /**
      * 删除用户
      * URL: DELETE /company/user/{id}
      * @param  int  $user_id

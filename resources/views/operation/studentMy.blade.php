@@ -12,7 +12,7 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">学生管理</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">我的学生</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
@@ -88,12 +88,9 @@
                 <th style='width:60px;'>性别</th>
                 <th style='width:130px;'>监护人</th>
                 <th style='width:110px;'>电话</th>
-                <th style='width:80px;'>优先级</th>
-                <th style='width:100px;'>上次跟进</th>
-                <th style='width:70px;'>状态</th>
                 <th style='width:145px;'>课程顾问</th>
                 <th style='width:145px;'>班主任</th>
-                <th style='width:188px;'>操作管理</th>
+                <th style='width:300px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>
@@ -109,19 +106,6 @@
                 <td>{{ $row->student_gender }}</td>
                 <td>{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
                 <td>{{ $row->student_phone }}</td>
-                @if($row->student_follow_level==1)
-                  <td><span style="color:#8B4513;">低</span></td>
-                @elseif($row->student_follow_level==2)
-                  <td><span style="color:#FF4500;">中</span></td>
-                @elseif($row->student_follow_level==3)
-                  <td><span style="color:#FF0000;">高</span></td>
-                @endif
-                <td>{{ $row->student_last_follow_date }}</td>
-                @if($row->student_customer_status==0)
-                  <td><span style="color:red;">未签约</span></td>
-                @else
-                  <td><span style="color:green;">已签约</span></td>
-                @endif
                 @if($row->consultant_name=="")
                   <td><span style="color:red;">无</span></td>
                 @else
@@ -135,6 +119,7 @@
                 <td>
                   <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
                   <a href='/operation/member/add?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">插入班级</button></a>
+                  <a href='/operation/contract/create2?input1={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">签约合同</button></a>
                 </td>
               </tr>
               @endforeach

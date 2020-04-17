@@ -12,20 +12,16 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">我的客户</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">客户管理</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">招生中心</li>
-              <li class="breadcrumb-item active">我的客户</li>
+              <li class="breadcrumb-item active">学生管理</li>
             </ol>
           </nav>
         </div>
         <div class="col-6 text-right">
-          <a href="/market/myCustomer/create" class="btn btn-sm btn-neutral">
-            <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
-            <span class="btn-inner--text">添加客户</span>
-          </a>
           <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
             <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
             <span class="btn-inner--text">搜索</span>
@@ -64,14 +60,6 @@
                         @endforeach
                       </select>
 	                </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
-                      <select class="form-control" name="filter4" data-toggle="select">
-                        <option value=''>优先级</option>
-                        <option value='1' @if($request->input('filter4')==1) selected @endif>低</option>
-                        <option value='2' @if($request->input('filter4')==2) selected @endif>中</option>
-                        <option value='3' @if($request->input('filter4')==3) selected @endif>高</option>
-                      </select>
-	                </div>
                   </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-1">
@@ -100,9 +88,8 @@
                 <th style='width:60px;'>性别</th>
                 <th style='width:130px;'>监护人</th>
                 <th style='width:110px;'>电话</th>
-                <th style='width:80px;'>优先级</th>
-                <th style='width:100px;'>上次跟进</th>
                 <th style='width:145px;'>课程顾问</th>
+                <th style='width:145px;'>班主任</th>
                 <th style='width:300px;'>操作管理</th>
                 <th></th>
               </tr>
@@ -119,26 +106,23 @@
                 <td>{{ $row->student_gender }}</td>
                 <td>{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
                 <td>{{ $row->student_phone }}</td>
-                @if($row->student_follow_level==1)
-                  <td><span style="color:#8B4513;">低</span></td>
-                @elseif($row->student_follow_level==2)
-                  <td><span style="color:#FF4500;">中</span></td>
-                @elseif($row->student_follow_level==3)
-                  <td><span style="color:#FF0000;">高</span></td>
-                @endif
-                <td>{{ $row->student_last_follow_date }}</td>
                 @if($row->consultant_name=="")
                   <td><span style="color:red;">无</span></td>
                 @else
                   <td>{{ $row->consultant_name }} ({{ $row->consultant_position_name }})</td>
                 @endif
+                @if($row->class_adviser_name=="")
+                  <td><span style="color:red;">无</span></td>
+                @else
+                  <td>{{ $row->class_adviser_name }} ({{ $row->class_adviser_position_name }})</td>
+                @endif
                 <td>
-                  <form action="/market/customer/my/{{$row->student_id}}" method="POST">
+                  <form action="/market/student/all/{{$row->student_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">客户详情</button></a>
-                    <a href='/market/contract/create2?input1={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">签约合同</button></a>
-                    {{ deleteConfirm($row->student_id, ["删除将无法恢复本记录，<br>客户姓名：".$row->student_name]) }}
+                    <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
+                    <a href='/market/student/follower/edit?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">修改负责人</button></a>
+                    {{ deleteConfirm($row->student_id, ["学生删除后将转为离校学生，<br>学生姓名：".$row->student_name]) }}
                   </form>
                 </td>
               </tr>
@@ -157,6 +141,6 @@
 <script>
   linkActive('link-market');
   navbarActive('navbar-market');
-  linkActive('marketCustomerMy');
+  linkActive('marketStudentAll');
 </script>
 @endsection

@@ -81,24 +81,6 @@
           </a>
           <div class="collapse" id="navbar-market">
             <ul class="nav nav-sm flex-column">
-              <li class="nav-item" @if(!in_array('marketPublicCustomerCreate', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/market/publicCustomer/create" class="nav-link" id="marketPublicCustomerCreate">
-                  <i class="ni ni-fat-add text-orange"></i>
-                  <span class="nav-link-text">公共客户录入</span>
-                </a>
-              </li>
-              <li class="nav-item" @if(!in_array('marketMyCustomerCreate', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/market/myCustomer/create" class="nav-link" id="marketMyCustomerCreate">
-                  <i class="ni ni-fat-add text-orange"></i>
-                  <span class="nav-link-text">我的客户录入</span>
-                </a>
-              </li>
-              <li class="nav-item" @if(!in_array('marketFollowerEdit', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/market/follower/edit" class="nav-link" id="marketFollowerEdit">
-                  <i class="ni ni-badge text-orange"></i>
-                  <span class="nav-link-text">修改负责人</span>
-                </a>
-              </li>
               <li class="nav-item" @if(!in_array('marketCustomerAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/customer/all" class="nav-link" id="marketCustomerAll">
                   <i class="ni ni-single-02 text-orange"></i>
@@ -109,6 +91,18 @@
                 <a href="/market/customer/my" class="nav-link" id="marketCustomerMy">
                   <i class="ni ni-single-02 text-orange"></i>
                   <span class="nav-link-text">我的客户</span>
+                </a>
+              </li>
+              <li class="nav-item" @if(!in_array('marketStudentAll', Session::get('page_access'))) style="display:none;" @endif>
+                <a href="/market/student/all" class="nav-link" id="marketStudentAll">
+                  <i class="ni ni-single-02 text-orange"></i>
+                  <span class="nav-link-text">学生管理</span>
+                </a>
+              </li>
+              <li class="nav-item" @if(!in_array('marketStudentDeleted', Session::get('page_access'))) style="display:none;" @endif>
+                <a href="/market/student/deleted" class="nav-link" id="marketStudentDeleted">
+                  <i class="ni ni-fat-remove text-orange"></i>
+                  <span class="nav-link-text">离校学生</span>
                 </a>
               </li>
               <li class="nav-item" @if(!in_array('marketStudentMy', Session::get('page_access'))) style="display:none;" @endif>
@@ -163,16 +157,16 @@
           </a>
           <div class="collapse" id="navbar-operation">
             <ul class="nav nav-sm flex-column">
-              <li class="nav-item" @if(!in_array('operationFollowerEdit', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/operation/follower/edit" class="nav-link" id="operationFollowerEdit">
-                  <i class="ni ni-badge text-info"></i>
-                  <span class="nav-link-text">修改负责人</span>
-                </a>
-              </li>
               <li class="nav-item" @if(!in_array('operationStudentAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/student/all" class="nav-link" id="operationStudentAll">
                   <i class="ni ni-single-02 text-info"></i>
                   <span class="nav-link-text">学生管理</span>
+                </a>
+              </li>
+              <li class="nav-item" @if(!in_array('operationStudentDeleted', Session::get('page_access'))) style="display:none;" @endif>
+                <a href="/operation/student/deleted" class="nav-link" id="operationStudentDeleted">
+                  <i class="ni ni-fat-remove text-info"></i>
+                  <span class="nav-link-text">离校学生</span>
                 </a>
               </li>
               <li class="nav-item" @if(!in_array('operationStudentMy', Session::get('page_access'))) style="display:none;" @endif>
