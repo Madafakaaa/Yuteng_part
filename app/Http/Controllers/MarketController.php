@@ -109,12 +109,26 @@ class MarketController extends Controller
         // 获取当前用户ID
         $student_createuser = Session::get('user_id');
         // 生成新学生ID
+        // 获取本校区本月学生数量
         $student_num = DB::table('student')
                          ->where('student_department', $student_department)
                          ->whereYear('student_createtime', date('Y'))
                          ->whereMonth('student_createtime', date('m'))
-                         ->count()+1;
-        $student_id = "S".substr(date('Ym'),2).sprintf("%02d", $student_department).sprintf("%03d", $student_num);
+                         ->count();
+        if($student_num==0){
+            $student_id = "S".substr(date('Ym'),2).sprintf("%02d", $student_department).sprintf("%03d", 1);
+        }else{
+            //获取上一个学生学号
+            $pre_student_id = DB::table('student')
+                                ->where('student_department', $student_department)
+                                ->whereYear('student_createtime', date('Y'))
+                                ->whereMonth('student_createtime', date('m'))
+                                ->orderBy('student_id', 'desc')
+                                ->limit(1)
+                                ->first();
+            $new_student_num = intval(substr($pre_student_id->student_id , 7 , 10))+1;
+            $student_id = "S".substr(date('Ym'),2).sprintf("%02d", $student_department).sprintf("%03d", $new_student_num);
+        }
         // 获取课程顾问姓名
         $consultant_name = "无 (公共)";
         if($student_consultant!=''){
@@ -271,12 +285,26 @@ class MarketController extends Controller
         // 获取当前用户ID
         $student_createuser = Session::get('user_id');
         // 生成新学生ID
+        // 获取本校区本月学生数量
         $student_num = DB::table('student')
                          ->where('student_department', $student_department)
                          ->whereYear('student_createtime', date('Y'))
                          ->whereMonth('student_createtime', date('m'))
-                         ->count()+1;
-        $student_id = "S".substr(date('Ym'),2).sprintf("%02d", $student_department).sprintf("%03d", $student_num);
+                         ->count();
+        if($student_num==0){
+            $student_id = "S".substr(date('Ym'),2).sprintf("%02d", $student_department).sprintf("%03d", 1);
+        }else{
+            //获取上一个学生学号
+            $pre_student_id = DB::table('student')
+                                ->where('student_department', $student_department)
+                                ->whereYear('student_createtime', date('Y'))
+                                ->whereMonth('student_createtime', date('m'))
+                                ->orderBy('student_id', 'desc')
+                                ->limit(1)
+                                ->first();
+            $new_student_num = intval(substr($pre_student_id->student_id , 7 , 10))+1;
+            $student_id = "S".substr(date('Ym'),2).sprintf("%02d", $student_department).sprintf("%03d", $new_student_num);
+        }
         // 获取课程顾问姓名
         $consultant_name = "无 (公共)";
         if($student_consultant!=''){
@@ -318,7 +346,7 @@ class MarketController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return redirect("/market/publicCustomer/create")
+            return redirect("/market/myCustomer/create")
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '客户添加失败',

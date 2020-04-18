@@ -209,6 +209,10 @@ class CompanyController extends Controller
             DB::table('department')
               ->where('department_id', $department_id)
               ->update(['department_status' => 0]);
+            // 删除相关用户权限
+            DB::table('user_department')
+              ->where('user_department_department', $department_id)
+              ->delete();
         }
         // 捕获异常
         catch(Exception $e){
