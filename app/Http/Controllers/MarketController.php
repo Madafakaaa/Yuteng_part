@@ -518,7 +518,7 @@ class MarketController extends Controller
                      ->get();
         // 获取校区、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         // 返回列表视图
         return view('market/customerAll', ['rows' => $rows,
                                            'currentPage' => $currentPage,
@@ -638,7 +638,7 @@ class MarketController extends Controller
                      ->get();
         // 获取校区、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         // 返回列表视图
         return view('market/customerMy', ['rows' => $rows,
                                            'currentPage' => $currentPage,
@@ -753,7 +753,7 @@ class MarketController extends Controller
                      ->get();
         // 获取校区、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         // 返回列表视图
         return view('market/studentAll', ['rows' => $rows,
                                            'currentPage' => $currentPage,
@@ -954,7 +954,7 @@ class MarketController extends Controller
                      ->get();
         // 获取校区、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         // 返回列表视图
         return view('market/studentDeleted', ['rows' => $rows,
                                            'currentPage' => $currentPage,
@@ -1100,7 +1100,7 @@ class MarketController extends Controller
                      ->get();
         // 获取校区、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         // 获取一个月前日期
         $date = date('Y-m-d');
         $date_month_ago = date('Y-m-d', strtotime ("-1 month", strtotime($date)));
@@ -1119,49 +1119,15 @@ class MarketController extends Controller
 
     /**
      * 签约合同视图
-     * URL: GET /market/contract/create
+     * URL: POST /market/contract/create
      */
     public function contractCreate(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取表单输入
-        if($request->filled('student_id')) {
-            $student_id = $request->input('student_id');
-        }else{
-            $student_id = '';
-        }
-        // 获取一个月前日期
-        $date = date('Y-m-d');
-        $date_month_ago = date('Y-m-d', strtotime ("-1 month", strtotime($date)));
-        // 获取学生信息(未签约或一个月之内新签约)
-        $students = DB::table('student')
-                      ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                      ->where([
-                                 ['student_consultant', Session::get('user_id')],
-                                 ['student_customer_status', 0],
-                              ])
-                      ->orWhere([
-                                 ['student_consultant', Session::get('user_id')],
-                                 ['student_first_contract_date', '>=', $date_month_ago],
-                              ])
-                      ->orderBy('student_grade', 'asc')
-                      ->get();
-        return view('market/contractCreate', ['students' => $students, 'student_id' => $student_id]);
-    }
-
-    /**
-     * 签约合同视图2
-     * URL: POST /market/contract/create2
-     */
-    public function contractCreate2(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
         // 获取学生id
-        $student_id = $request->input('input1');
+        $student_id = $request->input('student_id');
         // 获取学生信息
         $student = DB::table('student')
                      ->join('department', 'student.student_department', '=', 'department.department_id')
@@ -1174,66 +1140,27 @@ class MarketController extends Controller
                    ->join('contract', 'contract.contract_id', '=', 'hour.hour_contract')
                    ->where('hour_student', $student_id)
                    ->get();
-        // 获取已选课程数
-        if($request->filled('selected_course_num')){
-            $selected_course_num = $request->input('selected_course_num');
-        }else{
-            $selected_course_num = 0;
-        }
-        // 获取已选课程ID
-        $selected_course_ids = array();
-        for($i=0; $i<$selected_course_num; $i++){
-            $selected_course_ids[]=$request->input("course{$i}");
-        }
-        // 获取新选课程
-        if($request->filled('input2')){
-            foreach($request->input('input2') as $new_course){
-                $selected_course_num = $selected_course_num + 1;
-                $selected_course_ids[]=$new_course;
-            }
-        }
-        // 获取删除课程
-        if($request->filled('input3')){
-            $selected_course_num = $selected_course_num - 1;
-            $key = array_search($request->input('input3'), $selected_course_ids);
-            unset($selected_course_ids[$key]);
-            $selected_course_ids = array_values($selected_course_ids);
-        }
-        // 获取所有已选课程数据库信息
-        $selected_courses = array();
-        for($i=0; $i<$selected_course_num; $i++){
-            $selected_courses[] = DB::table('course')
-                                    ->join('course_type', 'course.course_type', '=', 'course_type.course_type_name')
-                                    ->where('course_id', $selected_course_ids[$i])
-                                    ->first();
-        }
+
         // 获取课程信息
         $courses = DB::table('course')
                      ->join('course_type', 'course.course_type', '=', 'course_type.course_type_name')
                      ->join('grade', 'course.course_grade', '=', 'grade.grade_id')
                      ->leftJoin('subject', 'course.course_subject', '=', 'subject.subject_id')
                      ->where('course_grade', $student->student_grade)
-                     ->whereIn('course_department', [0, $student->student_department]);
-        // 去除已选课程
-        for($i=0; $i<$selected_course_num; $i++){
-            $courses = $courses->where('course_id', '<>', $selected_course_ids[$i]);
-        }
-        $courses = $courses->where('course_status', 1)
-                           ->orderBy('course_type', 'asc')
-                           ->orderBy('course_grade', 'asc')
-                           ->orderBy('course_time', 'asc')
-                           ->get();
+                     ->whereIn('course_department', [0, $student->student_department])
+                     ->where('course_status', 1)
+                     ->orderBy('course_type', 'asc')
+                     ->orderBy('course_time', 'asc')
+                     ->get();
+
         // 获取支付方式
         $payment_methods = DB::table('payment_method')
                              ->where('payment_method_status', 1)
                              ->get();
-        return view('market/contractCreate2', ['student' => $student,
-                                             'hours' => $hours,
-                                             'courses' => $courses,
-                                             'payment_methods' => $payment_methods,
-                                             'selected_course_ids' => $selected_course_ids,
-                                             'selected_course_num' => $selected_course_num,
-                                             'selected_courses' => $selected_courses]);
+        return view('market/contractCreate', ['student' => $student,
+                                              'hours' => $hours,
+                                              'courses' => $courses,
+                                              'payment_methods' => $payment_methods]);
     }
 
     /**
@@ -1405,8 +1332,9 @@ class MarketController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            // 返回购课列表
-            return redirect("/market/contract/create")
+            return $e;
+            // 返回购课界面
+            return redirect("/market/contract/create?student_id={$request_student_id}")
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '购课添加失败',
@@ -1628,7 +1556,7 @@ class MarketController extends Controller
         list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
-        $rows = $rows->orderBy('contract_createtime', 'asc')
+        $rows = $rows->orderBy('contract_date', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
@@ -1636,7 +1564,7 @@ class MarketController extends Controller
         // 获取校区、学生、课程、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
 
         // 返回列表视图
         return view('market/contractAll', ['rows' => $rows,
@@ -1712,7 +1640,7 @@ class MarketController extends Controller
         // 获取校区、学生、课程、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
 
         // 返回列表视图
         return view('market/contractMy', ['rows' => $rows,
@@ -1731,33 +1659,13 @@ class MarketController extends Controller
      * 学生退费视图
      * URL: GET /market/refund/create
      */
-    public function refundCreate(){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取学生信息
-        $students = DB::table('student')
-                      ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                      ->where('student_consultant', Session::get('user_id'))
-                      ->where('student_customer_status', 1)
-                      ->orderBy('student_grade', 'asc')
-                      ->get();
-        return view('market/refundCreate', ['students' => $students]);
-    }
-
-    /**
-     * 学生退费视图2
-     * URL: POST /market/refund/create2
-     * @param  $request->input('input1'): 退课学生
-     */
-    public function refundCreate2(Request $request){
+    public function refundCreate(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取学生id
-        $student_id = $request->input('input1');
+        $student_id = $request->input('student_id');
         // 获取学生信息
         $student = DB::table('student')
                      ->join('department', 'student.student_department', '=', 'department.department_id')
@@ -1777,17 +1685,17 @@ class MarketController extends Controller
                                                              'title' => '请重新选择学生',
                                                              'message' => '学生没有可退课时,请重新选择学生.']);
         }
-        return view('market/refundCreate2', ['student' => $student,
+        return view('market/refundCreate', ['student' => $student,
                                              'hours' => $hours]);
     }
 
     /**
-     * 学生退费视图3
-     * URL: POST /market/refund/create3
+     * 学生退费视图2
+     * URL: POST /market/refund/create2
      * @param  $request->input('input1'): 退课学生
      * @param  $request->input('input2'): HourID
      */
-    public function refundCreate3(Request $request){
+    public function refundCreate2(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -1826,7 +1734,7 @@ class MarketController extends Controller
         $refund_reasons = DB::table('refund_reason')
                            ->where('refund_reason_status', 1)
                            ->get();
-        return view('market/refundCreate3', ['student' => $student,
+        return view('market/refundCreate2', ['student' => $student,
                                                'hour' => $hour,
                                                'refund_amount' => $refund_amount,
                                                'refund_reasons' => $refund_reasons,
@@ -1834,8 +1742,8 @@ class MarketController extends Controller
     }
 
     /**
-     * 学生退费视图4
-     * URL: POST /market/refund/create4
+     * 学生退费视图3
+     * URL: POST /market/refund/create3
      * @param  $request->input('input1'): 退课学生
      * @param  $request->input('input2'): HourID
      * @param  $request->input('input3'): 违约金
@@ -1844,7 +1752,7 @@ class MarketController extends Controller
      * @param  $request->input('input6'): 退款日期
      * @param  $request->input('input7'): 备注
      */
-    public function refundCreate4(Request $request){
+    public function refundCreate3(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -1892,7 +1800,7 @@ class MarketController extends Controller
         $refund_reasons = DB::table('refund_reason')
                            ->where('refund_reason_status', 1)
                            ->get();
-        return view('market/refundCreate4', ['student' => $student,
+        return view('market/refundCreate3', ['student' => $student,
                                                'hour' => $hour,
                                                'refund_actual_amount' => $refund_actual_amount,
                                                'refund_amount' => $refund_amount,
@@ -2115,7 +2023,7 @@ class MarketController extends Controller
         // 获取校区、学生、课程、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
 
         // 返回列表视图
         return view('market/refundAll', ['rows' => $rows,
@@ -2208,7 +2116,7 @@ class MarketController extends Controller
         // 获取校区、学生、课程、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
 
         // 返回列表视图
         return view('market/refundMy', ['rows' => $rows,
@@ -2225,7 +2133,7 @@ class MarketController extends Controller
 
     /**
      * 审核退课
-     * URL: GET /market/refund/{refund_id}
+     * URL: GET /market/refund/check/{refund_id}
      * @param  int  $refund_id
      */
     public function refundCheck($refund_id){

@@ -38,11 +38,11 @@
         </div>
         <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-info">填写退费信息</span>
+          <span class="badge badge-pill badge-success">填写退费信息</span>
         </div>
-        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #fdd1da;" /></div>
+        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-danger">退费信息确认</span>
+          <span class="badge badge-pill badge-info">退费信息确认</span>
         </div>
       </div>
     </div>
@@ -50,10 +50,10 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/operation/refund/create4" method="post" id="form1" name="form1">
+        <form action="/operation/refund/store" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">三、填写退费信息</h4>
+            <h4 class="mb-0">三、退费信息确认</h4>
           </div>
           <!-- Card body -->
           <div class="card-body">
@@ -104,21 +104,21 @@
                 <input class="form-control form-control-sm" value="{{ $hour->contract_course_original_hour }} 课时" readonly>
               </div>
               <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:blue">赠送课时</span></label>
-              </div>
-              <div class="col-4 px-2 mb-2">
-                <input class="form-control form-control-sm" value="{{ $hour->contract_course_free_hour }} 课时" readonly>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-2 text-right">
                 <label class="form-control-label">已上课时</label>
               </div>
               <div class="col-4 px-2 mb-2">
                 <input class="form-control form-control-sm" value="{{ $hour->hour_used + $hour->hour_used_free }} 课时" readonly>
               </div>
+            </div>
+            <div class="row">
               <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:blue">剩余课时</span></label>
+                <label class="form-control-label"><span style="color:blue">扣除赠送课时</span></label>
+              </div>
+              <div class="col-4 px-2 mb-2">
+                <input class="form-control form-control-sm" value="{{ $hour->contract_course_free_hour }} 课时" readonly>
+              </div>
+              <div class="col-2 text-right">
+                <label class="form-control-label"><span style="color:blue">扣除剩余课时</span></label>
               </div>
               <div class="col-4 px-2 mb-2">
                 <input class="form-control form-control-sm" value="{{ $hour->hour_remain }} 课时" readonly>
@@ -140,40 +140,30 @@
             </div>
             <div class="row">
               <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>违约金</label>
+                <label class="form-control-label"><span style="color:red">违约金</span></label>
               </div>
               <div class="col-4 px-2 mb-2">
-                <input class="form-control form-control-sm" type="number" value="0" autocomplete='off' min="0.00" max="{{ $refund_amount }}" step="0.01" name="input3" required>
+                <input class="form-control form-control-sm" value="{{ number_format($refund_fine, 2) }} 元" readonly>
               </div>
               <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>退款原因</label>
+                <label class="form-control-label">退款原因</label>
               </div>
               <div class="col-4 px-2 mb-2">
-                <select class="form-control form-control-sm" name="input4" data-toggle="select" required>
-                  <option value=''>请选择退款原因...</option>
-                  @foreach ($refund_reasons as $refund_reason)
-                    <option value="{{ $refund_reason->refund_reason_name }}">{{ $refund_reason->refund_reason_name }}</option>
-                  @endforeach
-                </select>
+                <input class="form-control form-control-sm" value="{{ $refund_reason }}" readonly>
               </div>
             </div>
             <div class="row">
               <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>退款方式</label>
+                <label class="form-control-label">退款方式</label>
               </div>
               <div class="col-4 px-2 mb-2">
-                <select class="form-control form-control-sm" name="input5" data-toggle="select" required>
-                  <option value=''>请选择退款方式...</option>
-                  @foreach ($payment_methods as $payment_method)
-                    <option value="{{ $payment_method->payment_method_name }}">{{ $payment_method->payment_method_name }}</option>
-                  @endforeach
-                </select>
+                <input class="form-control form-control-sm" value="{{ $refund_payment_method }}" readonly>
               </div>
               <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>退款时间</label>
+                <label class="form-control-label">退款日期</label>
               </div>
               <div class="col-4 px-2 mb-2">
-                <input class="form-control form-control-sm datepicker" name="input6" type="text" value="{{ date('Y-m-d') }}" required>
+                <input class="form-control form-control-sm" value="{{ $refund_date }}" readonly>
               </div>
             </div>
             <div class="row">
@@ -181,7 +171,16 @@
                 <label class="form-control-label">备注</label>
               </div>
               <div class="col-10 px-2 mb-2">
-                <textarea class="form-control" name="input7" rows="3" resize="none" placeholder="备注..." maxlength="255"></textarea>
+                <textarea class="form-control" name="input7" rows="3" resize="none" maxlength="255" readonly>{{ $refund_remark }}</textarea>
+              </div>
+            </div>
+            <div class="row text-right">
+              <div class="col-6"></div>
+              <div class="col-2">
+                <label class="form-control-label"><span style="color:red">实退金额</span></label>
+              </div>
+              <div class="col-4 px-2 mb-2">
+                <h1>{{ number_format($refund_actual_amount, 2) }} 元</h1>
               </div>
             </div>
             <hr class="my-3">
@@ -193,7 +192,12 @@
               <div class="col-lg-3 col-md-5 col-sm-12">
                 <input type="hidden" name="input1" value="{{ $student->student_id }}">
                 <input type="hidden" name="input2" value="{{ $hour->hour_id }}">
-                <input type="submit" class="btn btn-primary btn-block" value="下一步">
+                <input type="hidden" name="input3" value="{{ $refund_fine }}">
+                <input type="hidden" name="input4" value="{{ $refund_reason }}">
+                <input type="hidden" name="input5" value="{{ $refund_payment_method }}">
+                <input type="hidden" name="input6" value="{{ $refund_date }}">
+                <input type="hidden" name="input7" value="{{ $refund_remark }}">
+                <input type="submit" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>
           </div>

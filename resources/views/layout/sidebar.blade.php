@@ -111,12 +111,6 @@
                   <span class="nav-link-text">我的学生</span>
                 </a>
               </li>
-              <li class="nav-item" @if(!in_array('marketContractCreate', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/market/contract/create" class="nav-link" id="marketContractCreate">
-                  <i class="ni ni-money-coins text-orange"></i>
-                  <span class="nav-link-text">签约合同</span>
-                </a>
-              </li>
               <li class="nav-item" @if(!in_array('marketContractAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/market/contract/all" class="nav-link" id="marketContractAll">
                   <i class="ni ni-money-coins text-orange"></i>
@@ -127,12 +121,6 @@
                 <a href="/market/contract/my" class="nav-link" id="marketContractMy">
                   <i class="ni ni-money-coins text-orange"></i>
                   <span class="nav-link-text">我的签约</span>
-                </a>
-              </li>
-              <li class="nav-item" @if(!in_array('marketRefundCreate', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/market/refund/create" class="nav-link" id="marketRefundCreate">
-                  <i class="ni ni-cart text-orange"></i>
-                  <span class="nav-link-text">学生退费</span>
                 </a>
               </li>
               <li class="nav-item" @if(!in_array('marketRefundAll', Session::get('page_access'))) style="display:none;" @endif>
@@ -175,34 +163,16 @@
                   <span class="nav-link-text">我的学生</span>
                 </a>
               </li>
-              <li class="nav-item" @if(!in_array('operationClassCreate', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/operation/class/create" class="nav-link" id="operationClassCreate">
-                  <i class="ni ni-fat-add text-info"></i>
-                  <span class="nav-link-text">新建班级</span>
-                </a>
-              </li>
-              <li class="nav-item" @if(!in_array('operationClassAll', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/operation/class/all" class="nav-link" id="operationClassAll">
-                  <i class="ni ni-single-copy-04 text-info"></i>
-                  <span class="nav-link-text">班级管理</span>
-                </a>
-              </li>
-              <li class="nav-item" @if(!in_array('operationStudentScheduleCreate', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/operation/studentSchedule/create" class="nav-link" id="operationStudentScheduleCreate">
-                  <i class="ni ni-calendar-grid-58 text-info"></i>
-                  <span class="nav-link-text">学生排课</span>
-                </a>
-              </li>
               <li class="nav-item" @if(!in_array('operationStudentScheduleAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/studentSchedule/all" class="nav-link" id="operationStudentScheduleAll">
                   <i class="ni ni-calendar-grid-58 text-info"></i>
                   <span class="nav-link-text">学生课程</span>
                 </a>
               </li>
-              <li class="nav-item" @if(!in_array('operationClassScheduleCreate', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/operation/classSchedule/create" class="nav-link" id="operationClassScheduleCreate">
-                  <i class="ni ni-calendar-grid-58 text-info"></i>
-                  <span class="nav-link-text">班级排课</span>
+              <li class="nav-item" @if(!in_array('operationClassAll', Session::get('page_access'))) style="display:none;" @endif>
+                <a href="/operation/class/all" class="nav-link" id="operationClassAll">
+                  <i class="ni ni-single-copy-04 text-info"></i>
+                  <span class="nav-link-text">班级管理</span>
                 </a>
               </li>
               <li class="nav-item" @if(!in_array('operationClassScheduleAll', Session::get('page_access'))) style="display:none;" @endif>
@@ -229,12 +199,6 @@
                   <span class="nav-link-text">我的学生上课记录</span>
                 </a>
               </li>
-              <li class="nav-item" @if(!in_array('operationContractCreate', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/operation/contract/create" class="nav-link" id="operationContractCreate">
-                  <i class="ni ni-money-coins text-info"></i>
-                  <span class="nav-link-text">签约合同</span>
-                </a>
-              </li>
               <li class="nav-item" @if(!in_array('operationContractAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/contract/all" class="nav-link" id="operationContractAll">
                   <i class="ni ni-money-coins text-info"></i>
@@ -245,12 +209,6 @@
                 <a href="/operation/contract/my" class="nav-link" id="operationContractMy">
                   <i class="ni ni-money-coins text-info"></i>
                   <span class="nav-link-text">我的签约</span>
-                </a>
-              </li>
-              <li class="nav-item" @if(!in_array('operationRefundCreate', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/operation/refund/create" class="nav-link" id="operationRefundCreate">
-                  <i class="ni ni-cart text-info"></i>
-                  <span class="nav-link-text">学生退费</span>
                 </a>
               </li>
               <li class="nav-item" @if(!in_array('operationRefundAll', Session::get('page_access'))) style="display:none;" @endif>

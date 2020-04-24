@@ -30,107 +30,119 @@
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
       <div class="row justify-content-center">
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-info">选择上课时间</span>
+          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">1</span>
+          </button>
         </div>
-        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #fdd1da;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-danger">选择课程信息</span>
+          <button type="button" class="btn btn-primary btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">2</span>
+          </button>
         </div>
-        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #fdd1da;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-danger">确认上课信息</span>
+          <button type="button" class="btn btn-primary btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">3</span>
+          </button>
         </div>
       </div>
     </div>
   </div>
   <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
+    <div class="col-lg-10 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
         <form action="/operation/classSchedule/create2" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">一、选择上课时间</h4>
+            <h3 class="mb-0">班级课程安排</h3>
           </div>
           <!-- Card body -->
           <div class="card-body">
             <div class="row">
-              <div class="col-2 text-right">
-                <label class="form-control-label">上课校区</label>
+              <div class="col-2 text-center">
+                <label class="form-control-label">班级</label>
               </div>
-              <div class="col-4 pl-2 pr-2 mb-2">
-                <div class="form-group mb-1">
-                  <select class="form-control form-control-sm" name="input0" data-toggle="select" required>
-                    <option value=''>请选择上课校区...</option>
-                    @foreach ($departments as $department)
-                      <option value="{{ $department->department_id }}">{{ $department->department_name }}</option>
-                    @endforeach
-                  </select>
+              <div class="col-2 pl-2 pr-2 mb-2">
+                <label>{{ $class->class_name }}</label>
+                <input type="hidden" name="input_class" value="{{ $class->class_id }}" required>
+              </div>
+              <div class="col-2 text-center">
+                <label class="form-control-label">校区</label>
+              </div>
+              <div class="col-2 pl-2 pr-2 mb-2">
+                <label>{{ $class->department_name }}</label>
+              </div>
+              <div class="col-2 text-center">
+                <label class="form-control-label">年级</label>
+              </div>
+              <div class="col-2 pl-2 pr-2 mb-2">
+                <label>{{ $class->grade_name }}</label>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-3 text-right">
+                <div class="form-group">
+                  <label class="form-control-label"><span style="color:red">*</span>上课日期</label>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <input class="form-control form-control-sm datepicker" type="text" name="input_date_start" value="{{ date('Y-m-d') }}" required>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>上课日期</label>
+              <div class="col-3 text-right">
+                <div class="form-group">
+                  <label class="form-control-label"><span style="color:red">*</span>至</label>
+                </div>
               </div>
-              <div class="col-10 px-2 mb-2">
-                <div class="form-group mb-1">
-                  <div class="row input-daterange datepicker align-items-center">
-                    <div class="col-5">
-                      <input class="form-control form-control-sm" type="text" name="input1" value="{{ date('Y-m-d') }}" required>
-                    </div>
-                    <div class="col-1 text-left">
-                      <label class="form-control-label">起</label>
-                    </div>
-                    <div class="col-5">
-                      <input class="form-control form-control-sm" type="text" name="input2" value="{{ date('Y-m-d') }}" required>
-                    </div>
-                    <div class="col-1 text-left">
-                      <label class="form-control-label">止</label>
-                    </div>
-                  </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <input class="form-control form-control-sm datepicker" type="text" name="input_date_end" value="{{ date('Y-m-d') }}" required>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-2 text-right">
+              <div class="col-3 text-right">
                 <label class="form-control-label"><span style="color:red">*</span>排课规律</label>
               </div>
-              <div class="col-8 px-4 mb-2">
-                <div class="form-group mb-1">
+              <div class="col-8">
+                <div class="form-group">
                   <div class="custom-control custom-checkbox">
-                    <div class="row">
-                      <div class="col-3 pl-2 pr-2 mb-2">
+                    <div class="row mb-2">
+                      <div class="col-3">
                         <input type="checkbox" class="custom-control-input" id="checkAll" onchange="CheckAll();">
-                        <label class="custom-control-label" for="checkAll">全选</label>
+                        <label class="custom-control-label" for="checkAll"><strong>全选</strong></label>
                       </div>
-                      <div class="col-3 pl-2 pr-2 mb-2">
-                        <input type="checkbox" class="custom-control-input checkbox" id="check0" name="input3[]" value="0" onchange="updateCheckAll();">
+                      <div class="col-3">
+                        <input type="checkbox" class="custom-control-input checkbox" id="check0" name="input_days[]" value="0" onchange="updateCheckAll();">
                         <label class="custom-control-label" for="check0">周日</label>
                       </div>
-                      <div class="col-3 pl-2 pr-2 mb-2">
-                        <input type="checkbox" class="custom-control-input checkbox" id="check6" name="input3[]" value="6" onchange="updateCheckAll();">
+                      <div class="col-3">
+                        <input type="checkbox" class="custom-control-input checkbox" id="check6" name="input_days[]" value="6" onchange="updateCheckAll();">
                         <label class="custom-control-label" for="check6">周六</label>
                       </div>
-                      <div class="col-3 pl-2 pr-2 mb-2">
-                        <input type="checkbox" class="custom-control-input checkbox" id="check5" name="input3[]" value="5" onchange="updateCheckAll();">
+                      <div class="col-3">
+                        <input type="checkbox" class="custom-control-input checkbox" id="check5" name="input_days[]" value="5" onchange="updateCheckAll();">
                         <label class="custom-control-label" for="check5">周五</label>
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-3 pl-2 pr-2 mb-2">
-                        <input type="checkbox" class="custom-control-input checkbox" id="check4" name="input3[]" value="4" onchange="updateCheckAll();">
+                      <div class="col-3">
+                        <input type="checkbox" class="custom-control-input checkbox" id="check4" name="input_days[]" value="4" onchange="updateCheckAll();">
                         <label class="custom-control-label" for="check4">周四</label>
                       </div>
-                      <div class="col-3 pl-2 pr-2 mb-2">
-                        <input type="checkbox" class="custom-control-input checkbox" id="check3" name="input3[]" value="3" onchange="updateCheckAll();">
+                      <div class="col-3">
+                        <input type="checkbox" class="custom-control-input checkbox" id="check3" name="input_days[]" value="3" onchange="updateCheckAll();">
                         <label class="custom-control-label" for="check3">周三</label>
                       </div>
-                      <div class="col-3 pl-2 pr-2 mb-2">
-                        <input type="checkbox" class="custom-control-input checkbox" id="check2" name="input3[]" value="2" onchange="updateCheckAll();">
+                      <div class="col-3">
+                        <input type="checkbox" class="custom-control-input checkbox" id="check2" name="input_days[]" value="2" onchange="updateCheckAll();">
                         <label class="custom-control-label" for="check2">周二</label>
                       </div>
-                      <div class="col-3 pl-2 pr-2 mb-2">
-                        <input type="checkbox" class="custom-control-input checkbox" id="check1" name="input3[]" value="1" onchange="updateCheckAll();">
+                      <div class="col-3">
+                        <input type="checkbox" class="custom-control-input checkbox" id="check1" name="input_days[]" value="1" onchange="updateCheckAll();">
                         <label class="custom-control-label" for="check1">周一</label>
                       </div>
                     </div>
@@ -139,12 +151,12 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-2 text-right">
+              <div class="col-3 text-right">
                 <label class="form-control-label"><span style="color:red">*</span>上课时间</label>
               </div>
-              <div class="col-4 pl-2 pr-2 mb-2">
-                <div class="form-group mb-1">
-                  <select class="form-control form-control-sm" name="input4" data-toggle="select" required>
+              <div class="col-4">
+                <div class="form-group">
+                  <select class="form-control form-control-sm" name="input_start" data-toggle="select" required>
                     <option value=''>请选择上课时间...</option>
                     <option value='8:00'>8:00</option>
                     <option value='8:30'>8:30</option>
@@ -179,12 +191,12 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-2 text-right">
+              <div class="col-3 text-right">
                 <label class="form-control-label"><span style="color:red">*</span>下课时间</label>
               </div>
-              <div class="col-4 pl-2 pr-2 mb-2">
-                <div class="form-group mb-1">
-                  <select class="form-control form-control-sm" name="input5" data-toggle="select" required>
+              <div class="col-4">
+                <div class="form-group">
+                  <select class="form-control form-control-sm" name="input_end" data-toggle="select" required>
                     <option value=''>请选择下课时间...</option>
                     <option value='8:30'>8:30</option>
                     <option value='9:00'>9:00</option>
@@ -220,8 +232,69 @@
             </div>
             <hr>
             <div class="row">
+              <div class="col-3 text-right">
+                <label class="form-control-label"><span style="color:red">*</span>教师</label>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <select class="form-control form-control-sm" name="input_teacher" data-toggle="select" required>
+                    <option value=''>请选择教师...</option>
+                    @foreach ($teachers as $teacher)
+                      <option value="{{ $teacher->user_id }}">{{ $teacher->user_name }} ({{ $teacher->position_name }}@if($teacher->user_department!=$class->class_department) {{ $teacher->department_name }}@endif)</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-3 text-right">
+                <label class="form-control-label"><span style="color:red">*</span>教室</label>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <select class="form-control form-control-sm" name="input_classroom" data-toggle="select" required>
+                    <option value=''>请选择教室...</option>
+                    @foreach ($classrooms as $classroom)
+                      <option value="{{ $classroom->classroom_id }}">{{ $classroom->classroom_name }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-3 text-right">
+                <label class="form-control-label"><span style="color:red">*</span>课程</label>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <select class="form-control form-control-sm" name="input_course" data-toggle="select" required>
+                    <option value=''>请选择课程...</option>
+                    @foreach ($courses as $course)
+                      <option value="{{ $course->course_id }}">{{ $course->course_name }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-3 text-right">
+                <label class="form-control-label"><span style="color:red">*</span>科目</label>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <select class="form-control form-control-sm" name="input_subject" data-toggle="select" required>
+                    <option value=''>请选择科目...</option>
+                    @foreach ($subjects as $subject)
+                      <option value="{{ $subject->subject_id }}">{{ $subject->subject_name }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
               <div class="col-lg-3 col-md-5 col-sm-12">
-                <a href="/operation/classSchedule/createIrregular" ><button type="button" class="btn btn-outline-default btn-block">非规律排课</button></a>
+                <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
               </div>
               <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-3 col-md-5 col-sm-12">
@@ -240,7 +313,7 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationClassScheduleCreate');
+  linkActive('operationStudentScheduleCreate');
 
   function CheckAll(){
       // 判断是全选还是反选

@@ -91,7 +91,7 @@
                 <th style='width:110px;' class="text-right">退款金额</th>
                 <th style='width:95px;'>日期</th>
                 <th style='width:132px;'>退费人</th>
-                <th style='width:132px;'>复核人</th>
+                <th style='width:132px;'>审核人</th>
                 <th style='width:270px;'>操作管理</th>
                 <th></th>
               </tr>
@@ -122,9 +122,7 @@
                     @csrf
                     <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>&nbsp;
                     <a href='/contract/{{$row->refund_contract}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a>&nbsp;
-                    @if($row->refund_checked==1)
-                      <a href='#'><button type="button" class="btn btn-outline-danger btn-sm" disabled>删除</button></a>&nbsp;
-                    @else
+                    @if($row->refund_checked==0)
                       {{ deleteConfirm($row->refund_id, ["退费学生：".$row->student_name]) }}
                     @endif
                   </form>

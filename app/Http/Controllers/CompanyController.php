@@ -41,7 +41,7 @@ class CompanyController extends Controller
         list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 10);
 
         // 排序并获取数据对象
-        $rows = $rows->orderBy('department_createtime', 'asc')
+        $rows = $rows->orderBy('department_id', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
@@ -285,7 +285,7 @@ class CompanyController extends Controller
         list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
-        $rows = $rows->orderBy('course_createtime', 'asc')
+        $rows = $rows->orderBy('course_id', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
@@ -318,9 +318,9 @@ class CompanyController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取年级、科目信息、课程类型
-        $departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
+        $departments = DB::table('department')->where('department_status', 1)->orderBy('department_id', 'asc')->get();
+        $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
+        $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
         $course_types = DB::table('course_type')->where('course_type_status', 1)->get();
         return view('company/courseCreate', ['departments' => $departments,
                                               'grades' => $grades,
@@ -405,9 +405,9 @@ class CompanyController extends Controller
         // 获取数据信息
         $course = DB::table('course')->where('course_id', $course_id)->first();
         // 获取校区、年级、科目信息
-        $departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
-        $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
+        $departments = DB::table('department')->where('department_status', 1)->orderBy('department_id', 'asc')->get();
+        $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
+        $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
         // 获取课程类型
         $course_types = DB::table('course_type')
                            ->where('course_type_status', 1)
@@ -557,7 +557,7 @@ class CompanyController extends Controller
 
         // 排序并获取数据对象
         $rows = $rows->orderBy('school_department', 'asc')
-                     ->orderBy('school_createtime', 'asc')
+                     ->orderBy('school_id', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
@@ -790,7 +790,7 @@ class CompanyController extends Controller
 
         // 排序并获取数据对象
         $rows = $rows->orderBy('classroom_department', 'asc')
-                     ->orderBy('classroom_createtime', 'asc')
+                     ->orderBy('classroom_id', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
@@ -1047,8 +1047,8 @@ class CompanyController extends Controller
 
         // 获取校区、岗位、等级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
-        $filter_sections = DB::table('section')->where('section_status', 1)->orderBy('section_createtime', 'asc')->get();
-        $filter_positions = DB::table('position')->where('position_status', 1)->orderBy('position_createtime', 'asc')->get();
+        $filter_sections = DB::table('section')->where('section_status', 1)->orderBy('section_id', 'asc')->get();
+        $filter_positions = DB::table('position')->where('position_status', 1)->orderBy('position_id', 'asc')->get();
 
         // 返回列表视图
         return view('company/user', ['rows' => $rows,
@@ -1080,7 +1080,7 @@ class CompanyController extends Controller
                        ->join('section', 'position.position_section', '=', 'section.section_id')
                        ->where('position_status', 1)
                        ->where('section_status', 1)
-                       ->orderBy('position_createtime', 'asc')
+                       ->orderBy('position_id', 'asc')
                        ->get();
         return view('company/userCreate', ['departments' => $departments, 'positions' => $positions]);
     }

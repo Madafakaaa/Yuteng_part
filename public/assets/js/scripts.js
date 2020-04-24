@@ -1,6 +1,6 @@
 // Main card animation
 $(document).ready(function(){
-    $(".main_card").show("800");
+    $(".main_card").fadeIn("slow");
     //$("#main_card").fadeIn("3000");
 });
 

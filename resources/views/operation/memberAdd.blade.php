@@ -30,11 +30,11 @@
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example mb-4">
       <div class="row justify-content-center">
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-info">选择学生</span>
+          <span class="badge badge-pill badge-success">选择学生</span>
         </div>
-        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #fdd1da;" /></div>
+        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-danger">选择班级</span>
+          <span class="badge badge-pill badge-info">选择班级</span>
         </div>
       </div>
     </div>
@@ -42,23 +42,38 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/operation/member/add2" method="post">
+        <form action="/operation/member/store" method="post">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">一、选择学生</h4>
+            <h4 class="mb-0">选择班级</h4>
           </div>
           <!-- Card body -->
           <div class="card-body">
             <div class="row">
               <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>学生姓名</label>
+                <label class="form-control-label">学生姓名</label>
               </div>
-              <div class="col-6 px-2 mb-2">
-                <select class="form-control form-control-sm" name="input1" data-toggle="select" required>
-                  <option value=''>请选择学生...</option>
-                  @foreach ($students as $student)
-                    <option value="{{ $student->student_id }}" @if($student_id==$student->student_id) selected @endif>
-                      {{ $student->grade_name }} - {{ $student->student_name }}
+              <div class="col-4 px-2 mb-2">
+                <input class="form-control form-control-sm" value="{{ $student->student_name }}" readonly>
+                <input type="hidden" name="input1" value="{{ $student->student_id }}">
+              </div>
+              <div class="col-2 text-right">
+                <label class="form-control-label">年级</label>
+              </div>
+              <div class="col-4 px-2 mb-2">
+                <input class="form-control form-control-sm" value="{{ $student->grade_name }}" readonly>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2 text-right">
+                <label class="form-control-label"><span style="color:red">*</span>班级</label>
+              </div>
+              <div class="col-8 px-2 mb-2">
+                <select class="form-control form-control-sm" name="input2" data-toggle="select" required>
+                  <option value=''>请选择班级...</option>
+                  @foreach ($classes as $class)
+                    <option value="{{ $class->class_id }}">
+                      {{ $class->class_name }} (教师：{{ $class->user_name }}, 科目：{{ $class->subject_name }}, {{ $class->class_current_num }} / {{ $class->class_max_num }} 人)
                     </option>
                   @endforeach
                 </select>

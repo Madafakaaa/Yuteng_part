@@ -6025,7 +6025,7 @@ input[type='button'].btn-block
 {
     margin-bottom: 0;
     padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid #D5D8DB; 
+    border-bottom: 1px solid #D5D8DB;
     background-color: #fff;
 }
 .table-top
@@ -18776,7 +18776,7 @@ a.btn-icon-only
     margin-bottom: 30px;
 
     border: 0;
-    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
+    box-shadow: 3px 3px 6px rgba(136, 152, 170, .3);
 }
 
 .card-translucent

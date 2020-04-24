@@ -123,7 +123,7 @@
                     <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>&nbsp;
                     <a href='/contract/{{$row->refund_contract}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a>&nbsp;
                     @if($row->refund_checked==0&&$row->refund_createuser!=Session::get('user_id'))
-                      <a href='/market/refund/{{$row->refund_id}}'><button type="button" class="btn btn-warning btn-sm">审核</button></a>&nbsp;
+                      <a href='/market/refund/check/{{$row->refund_id}}'><button type="button" class="btn btn-warning btn-sm">审核</button></a>&nbsp;
                     @endif
                     @if($row->refund_checked==0)
                       {{ deleteConfirm($row->refund_id, ["退费学生：".$row->student_name]) }}

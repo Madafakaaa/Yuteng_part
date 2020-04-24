@@ -85,13 +85,12 @@
                 <th style='width:139px;'>学生</th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:60px;'>年级</th>
-                <th style='width:60px;'>性别</th>
                 <th style='width:130px;'>监护人</th>
                 <th style='width:110px;'>电话</th>
                 <th style='width:145px;'>课程顾问</th>
                 <th style='width:145px;'>班主任</th>
-                <th style='width:300px;'>操作管理</th>
-                <th></th>
+                <th style='width:170px;'>操作管理</th>
+                <th style='width:140px;'>签约管理</th>
               </tr>
             </thead>
             <tbody>
@@ -103,7 +102,6 @@
                 <td>{{ $row->student_name }}</td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->grade_name }}</td>
-                <td>{{ $row->student_gender }}</td>
                 <td>{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
                 <td>{{ $row->student_phone }}</td>
                 @if($row->consultant_name=="")
@@ -117,9 +115,13 @@
                   <td>{{ $row->class_adviser_name }} ({{ $row->class_adviser_position_name }})</td>
                 @endif
                 <td>
-                  <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
-                  <a href='/operation/member/add?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">插入班级</button></a>
-                  <a href='/operation/contract/create2?input1={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">签约合同</button></a>
+                  <a href='/operation/studentSchedule/create?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">排课</button></a>
+                  <a href='/operation/member/add?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">插班</button></a>
+                  <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">详情</button></a>
+                </td>
+                <td>
+                  <a href='/operation/contract/create?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">签约</button></a>
+                  <a href='/operation/refund/create?student_id={{$row->student_id}}'><button type="button" class="btn btn-outline-warning btn-sm">退费</button></a>
                 </td>
               </tr>
               @endforeach

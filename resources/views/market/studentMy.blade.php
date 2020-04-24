@@ -90,7 +90,7 @@
                 <th style='width:110px;'>电话</th>
                 <th style='width:145px;'>课程顾问</th>
                 <th style='width:145px;'>班主任</th>
-                <th style='width:188px;'>操作管理</th>
+                <th style='width:250px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>
@@ -119,8 +119,9 @@
                 <td>
                   <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
                   @if($row->student_first_contract_date>=$date_month_ago)
-                    <a href='/market/contract/create2?input1={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">签约合同</button></a>
+                    <a href='/market/contract/create?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">签约合同</button></a>
                   @endif
+                  <a href='/market/refund/create?student_id={{$row->student_id}}'><button type="button" class="btn btn-outline-warning btn-sm">退费</button></a>
                 </td>
               </tr>
               @endforeach

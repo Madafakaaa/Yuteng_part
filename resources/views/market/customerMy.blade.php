@@ -137,7 +137,7 @@
                     @method('DELETE')
                     @csrf
                     <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">客户详情</button></a>
-                    <a href='/market/contract/create2?input1={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">签约合同</button></a>
+                    <a href='/market/contract/create?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">签约合同</button></a>
                     {{ deleteConfirm($row->student_id, ["删除将无法恢复本记录，<br>客户姓名：".$row->student_name]) }}
                   </form>
                 </td>

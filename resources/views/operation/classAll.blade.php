@@ -22,6 +22,10 @@
           </nav>
         </div>
         <div class="col-6 text-right">
+          <a href="/operation/class/create" class="btn btn-sm btn-neutral">
+            <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
+            <span class="btn-inner--text">新建班级</span>
+          </a>
           <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
             <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
             <span class="btn-inner--text">搜索</span>
@@ -123,6 +127,7 @@
                     @method('DELETE')
                     @csrf
                     <a href='/class/{{$row->class_id}}'><button type="button" class="btn btn-primary btn-sm">班级详情</button></a>
+                    <a href='/operation/classSchedule/create?class_id={{$row->class_id}}'><button type="button" class="btn btn-warning btn-sm">排课</button></a>
                     {{ deleteConfirm($row->class_id, ["删除班级将删除所有上课安排，保留已上课记录。"]) }}
                   </form>
                 </td>

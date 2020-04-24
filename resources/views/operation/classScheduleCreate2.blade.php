@@ -30,15 +30,19 @@
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
       <div class="row justify-content-center">
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-success">选择上课时间</span>
+          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">1</span>
+          </button>
         </div>
-        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-info">选择课程信息</span>
+          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">2</span>
+          </button>
         </div>
-        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #fdd1da;" /></div>
         <div class="col-2 text-center">
-          <span class="badge badge-pill badge-danger">确认上课信息</span>
+          <button type="button" class="btn btn-primary btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">3</span>
+          </button>
         </div>
       </div>
     </div>
@@ -46,32 +50,60 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/operation/classSchedule/create3" method="post" id="form1" name="form1">
+        <form action="/operation/classSchedule/store" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">二、选择课程信息</h4>
+            <h3 class="mb-0">排课信息确认</h3>
           </div>
           <!-- Card body -->
           <div class="card-body pt-2">
             <div class="row">
-              <div class="col-2 text-right">
-                <label class="form-control-label">上课校区</label>
+              <div class="col-3 text-right">
+                <label class="form-control-label">班级</label>
               </div>
-              <div class="col-10">
+              <div class="col-9">
                 <div class="form-group mb-1">
                   <div class="row">
                     <div class="col-6 pl-2 pr-2 mb-2">
-                      <input class="form-control form-control-sm" value="{{ $schedule_department_name }}" readonly>
+                      <label>{{ $schedule_class->class_name }}</label>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-2 text-right">
+              <div class="col-3 text-right">
+                <label class="form-control-label">校区</label>
+              </div>
+              <div class="col-9">
+                <div class="form-group mb-1">
+                  <div class="row">
+                    <div class="col-6 pl-2 pr-2 mb-2">
+                      <label>{{ $schedule_class->department_name }}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-3 text-right">
+                <label class="form-control-label">年级</label>
+              </div>
+              <div class="col-9">
+                <div class="form-group mb-1">
+                  <div class="row">
+                    <div class="col-6 pl-2 pr-2 mb-2">
+                      <label>{{ $schedule_class->grade_name }}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-3 text-right">
                 <label class="form-control-label">上课日期(<span style="color:red;">{{ count($schedule_dates) }}</span>天)</label>
               </div>
-              <div class="col-10">
+              <div class="col-9">
                 <div class="form-group mb-1">
                   <div class="row">
                     @foreach ($schedule_dates as $schedule_date)
@@ -84,118 +116,70 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-2 text-right">
+              <div class="col-3 text-right">
                 <label class="form-control-label">上课时间</label>
               </div>
-              <div class="col-10">
+              <div class="col-9">
                 <div class="form-group mb-1">
                   <div class="row">
                     <div class="col-6 pl-2 pr-2 mb-2">
-                      <input class="form-control form-control-sm" type="text" readonly value="{{ $schedule_start }} - {{ $schedule_end }}">
-                    </div>
-                    <div class="col-6 pl-2 pr-2 mb-2">
-                      <input class="form-control form-control-sm" type="text" readonly value="{{ $schedule_time }}分钟">
+                      <label>{{ $schedule_start }} - {{ $schedule_end }} （{{ $schedule_time }}分钟）</label>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>可选班级</label>
+              <div class="col-3 text-right">
+                <label class="form-control-label">任课教师</label>
               </div>
-              <div class="col-10">
+              <div class="col-9">
                 <div class="form-group mb-1">
                   <div class="row">
                     <div class="col-6 pl-2 pr-2 mb-2">
-                      <select class="form-control form-control-sm" name="input1" data-toggle="select" required>
-                        <option value=''>请选择班级...</option>
-                        @foreach ($classes as $class)
-                          @if($class[2]==0)
-                            <option value="{{ $class[0] }}">{{ $class[3] }} - {{ $class[1] }}</option>
-                          @endif
-                        @endforeach
-                      </select>
+                      <label>{{ $schedule_teacher->user_name }}</label>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>可选教师</label>
+              <div class="col-3 text-right">
+                <label class="form-control-label">课程</label>
               </div>
-              <div class="col-10">
+              <div class="col-9">
                 <div class="form-group mb-1">
                   <div class="row">
                     <div class="col-6 pl-2 pr-2 mb-2">
-                      <select class="form-control form-control-sm" name="input2" data-toggle="select" required>
-                        <option value=''>请选择教师...</option>
-                        @foreach ($users as $user)
-                          @if($user[2]==0)
-                            <option value="{{ $user[0] }}">{{ $user[1] }} ({{ $user[5] }}@if($user[4]!=Session::get('user_department')) {{ $user[3] }}@endif)</option>
-                          @endif
-                        @endforeach
-                      </select>
+                      <label>{{ $schedule_course->course_name }}</label>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>可选教室</label>
+              <div class="col-3 text-right">
+                <label class="form-control-label">科目</label>
               </div>
-              <div class="col-10">
+              <div class="col-9">
                 <div class="form-group mb-1">
                   <div class="row">
                     <div class="col-6 pl-2 pr-2 mb-2">
-                      <select class="form-control form-control-sm" name="input3" data-toggle="select" required>
-                        <option value=''>请选择教室...</option>
-                        @foreach ($classrooms as $classroom)
-                          @if($classroom[2]==0)
-                            <option value="{{ $classroom[0] }}">{{ $classroom[1] }}</option>
-                          @endif
-                        @endforeach
-                      </select>
+                      <label>{{ $schedule_subject->subject_name }}</label>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>课程</label>
+              <div class="col-3 text-right">
+                <label class="form-control-label">教室</label>
               </div>
-              <div class="col-10">
+              <div class="col-9">
                 <div class="form-group mb-1">
                   <div class="row">
                     <div class="col-6 pl-2 pr-2 mb-2">
-                      <select class="form-control form-control-sm" name="input4" data-toggle="select" required>
-                        <option value=''>请选择课程...</option>
-                        @foreach ($courses as $course)
-                          <option value="{{ $course->course_id }}">{{ $course->course_name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-2 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>科目</label>
-              </div>
-              <div class="col-10">
-                <div class="form-group mb-1">
-                  <div class="row">
-                    <div class="col-6 pl-2 pr-2 mb-2">
-                      <select class="form-control form-control-sm" name="input5" data-toggle="select" required>
-                        <option value=''>请选择科目...</option>
-                        @foreach ($subjects as $subject)
-                          <option value="{{ $subject->subject_id }}">{{ $subject->subject_name }}</option>
-                        @endforeach
-                      </select>
+                      <label>{{ $schedule_classroom->classroom_name }}</label>
                     </div>
                   </div>
                 </div>
@@ -208,12 +192,18 @@
               </div>
               <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-3 col-md-5 col-sm-12">
-                <input type="hidden" name="input0" value="{{ $schedule_department }}">
-                <input type="hidden" name="input6" value="{{ $schedule_dates_str }}">
-                <input type="hidden" name="input7" value="{{ $schedule_start }}">
-                <input type="hidden" name="input8" value="{{ $schedule_end }}">
-                <input type="hidden" name="input9" value="{{ $schedule_time }}">
-                <input type="submit" class="btn btn-primary btn-block" value="下一步">
+                <input type="hidden" name="input_department" value="{{ $schedule_class->class_department }}">
+                <input type="hidden" name="input_class" value="{{ $schedule_class->class_id }}">
+                <input type="hidden" name="input_teacher" value="{{ $schedule_teacher->user_id }}">
+                <input type="hidden" name="input_classroom" value="{{ $schedule_classroom->classroom_id }}">
+                <input type="hidden" name="input_subject" value="{{ $schedule_subject->subject_id }}">
+                <input type="hidden" name="input_dates_str" value="{{ $schedule_dates_str }}">
+                <input type="hidden" name="input_start" value="{{ $schedule_start }}">
+                <input type="hidden" name="input_end" value="{{ $schedule_end }}">
+                <input type="hidden" name="input_time" value="{{ $schedule_time }}">
+                <input type="hidden" name="input_grade" value="{{ $schedule_class->class_grade }}">
+                <input type="hidden" name="input_course" value="{{ $schedule_course->course_id }}">
+                <input type="submit" class="btn btn-warning btn-block" value="确认">
               </div>
             </div>
           </div>
@@ -228,6 +218,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationClassScheduleCreate');
+  linkActive('operationStudentScheduleCreate');
 </script>
 @endsection
