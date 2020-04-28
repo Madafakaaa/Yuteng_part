@@ -1,13 +1,27 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
-    <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">安排详情</li>
+    <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
 
 @section('content')
+<div class="header bg-primary">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-6">
+          <h6 class="h2 text-white d-inline-block mb-0">课程安排详情</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item active">课程安排详情</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="container-fluid mt-6">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
@@ -15,7 +29,7 @@
         <form action="/education/schedule/attend/{{ $schedule->schedule_id }}/step2" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">上课安排详情</h4>
+            <h2 class="mb-0">上课安排详情</h2>
           </div>
           <!-- Card body -->
           <div class="card-body pt-2">

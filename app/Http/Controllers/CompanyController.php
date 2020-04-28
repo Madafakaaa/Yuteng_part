@@ -104,61 +104,49 @@ class CompanyController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("/company/department")->with(['notify' => true,
-                                                         'type' => 'danger',
-                                                         'title' => '校区添加失败',
-                                                         'message' => '校区添加失败，请重新输入信息']);
+            return redirect("/company/department/create")->with(['notify' => true,
+                                                                 'type' => 'danger',
+                                                                 'title' => '校区添加失败',
+                                                                 'message' => '校区添加失败，请重新输入信息']);
         }
         // 返回校区列表
         return redirect("/company/department")->with(['notify' => true,
-                                                     'type' => 'success',
-                                                     'title' => '校区添加成功',
-                                                     'message' => '校区名称: '.$department_name]);
+                                                      'type' => 'success',
+                                                      'title' => '校区添加成功',
+                                                      'message' => '校区添加成功!']);
     }
 
     /**
      * 修改单个校区
-     * URL: GET /company/department/{department_id}
+     * URL: GET /company/department/edit
      * @param  int  $department_id
      */
-    public function departmentEdit($department_id){
+    public function departmentEdit(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 获取id
+        $department_id = decode($request->input('department_id'), 'department_id');
         // 获取数据信息
         $department = DB::table('department')
                         ->where('department_id', $department_id)
-                        ->get();
-        // 检验数据是否存在
-        if($department->count()!==1){
-            // 未获取到数据
-            return redirect()->action('DepartmentController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '校区显示失败',
-                                     'message' => '校区显示失败，请联系系统管理员']);
-        }
-        // 获取数据对象
-        $department = $department[0];
+                        ->first();
         return view('/company/departmentEdit', ['department' => $department]);
     }
 
     /**
      * 修改新校区提交数据库
-     * URL: PUT /company/department/{department_id}
+     * URL: PUT /company/department/update
      * @param  Request  $request
-     * @param  $request->input('input1'): 名称
-     * @param  $request->input('input2'): 地址
-     * @param  $request->input('input3'): 电话1
-     * @param  $request->input('input4'): 电话2
-     * @param  int  $department_id
      */
-    public function departmentUpdate(Request $request, $department_id){
+    public function departmentUpdate(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 获取id
+        $department_id = decode($request->input('department_id'), 'department_id');
          // 获取表单输入
         $department_name = $request->input('input1');
         $department_location = $request->input('input2');
@@ -179,53 +167,61 @@ class CompanyController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("/company/department/edit/{$department_id}")->with(['notify' => true,
-                                                                                'type' => 'danger',
-                                                                                'title' => '校区修改失败',
-                                                                                'message' => '校区修改失败，请重新输入信息']);
+            return redirect("/company/department/edit?department_id={$request->input('department_id')}")
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '校区修改失败',
+                           'message' => '校区修改失败，请重新输入信息']);
         }
         return redirect("/company/department")->with(['notify' => true,
                                                       'type' => 'success',
                                                       'title' => '校区修改成功',
-                                                      'message' => '校区修改成功，校区名称: '.$department_name]);
+                                                      'message' => '校区修改成功!']);
     }
 
     /**
      * 删除校区
-     * URL: DELETE /company/department/{id}
-     * @param  int  $department_id
+     * URL: DELETE /company/department/delete
      */
-    public function departmentDelete($department_id){
+    public function departmentDelete(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取数据信息
-        $department_name = DB::table('department')
-                             ->where('department_id', $department_id)
-                             ->value('department_name');
+        // 获取id
+        $request_department_ids=$request->input('department_id');
+        $department_ids = array();
+        if(is_array($request_department_ids)){
+            foreach ($request_department_ids as $request_department_id) {
+                $department_ids[]=decode($request_department_id, 'department_id');
+            }
+        }else{
+            $department_ids[]=decode($request_department_ids, 'department_id');
+        }
         // 删除数据
         try{
-            DB::table('department')
-              ->where('department_id', $department_id)
-              ->update(['department_status' => 0]);
-            // 删除相关用户权限
-            DB::table('user_department')
-              ->where('user_department_department', $department_id)
-              ->delete();
+            foreach ($department_ids as  $department_id) {
+                DB::table('department')
+                  ->where('department_id', $department_id)
+                  ->update(['department_status' => 0]);
+                // 删除相关用户权限
+                DB::table('user_department')
+                  ->where('user_department_department', $department_id)
+                  ->delete();
+            }
         }
         // 捕获异常
         catch(Exception $e){
             return redirect("/company/department")->with(['notify' => true,
                                                          'type' => 'danger',
                                                          'title' => '校区删除失败',
-                                                         'message' => '校区删除失败，请联系系统管理员']);
+                                                         'message' => '校区删除失败，请联系系统管理员!']);
         }
         // 返回校区列表
         return redirect("/company/department")->with(['notify' => true,
                                                          'type' => 'success',
                                                          'title' => '校区删除成功',
-                                                         'message' => '校区名称: '.$department_name]);
+                                                         'message' => '校区删除成功!']);
     }
 
     /**

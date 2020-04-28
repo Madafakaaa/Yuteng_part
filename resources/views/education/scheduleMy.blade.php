@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
@@ -128,7 +126,6 @@
                     @method('DELETE')
                     @csrf
                     <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">安排详情</button></a>
-                    <a href='/education/schedule/attend/{{$row->schedule_id}}'><button type="button" class="btn btn-warning btn-sm">考勤</button></a>&nbsp;
                     {{ deleteConfirm($row->schedule_id, ["上课成员：".$row->student_name.", 教师：".$row->user_name]) }}
                   </form>
                 </td>

@@ -32,7 +32,7 @@ class MarketController extends Controller
                      ->get();
         $users = DB::table('user')
                    ->join('position', 'user.user_position', '=', 'position.position_id')
-                   ->where('user_department', Session::get('user_department'))
+                   ->whereIn('user_department', $department_access)
                    ->where('user_status', 1)
                    ->orderBy('position_level', 'desc')
                    ->get();
@@ -40,7 +40,7 @@ class MarketController extends Controller
                     ->where('grade_status', 1)
                     ->orderBy('grade_id', 'asc')->get();
         $schools = DB::table('school')
-                     ->where('school_department', Session::get('user_department'))
+                     ->whereIn('school_department', $department_access)
                      ->where('school_status', 1)
                      ->orderBy('school_id', 'asc')
                      ->get();
@@ -178,11 +178,7 @@ class MarketController extends Controller
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/market/customer/all")
-               ->with(['notify' => true,
-                      'type' => 'success',
-                      'title' => '客户添加成功',
-                      'message' => '客户添加成功']);
+        return view('market/publicCustomerCreateResult', ['student_id' => $student_id]);
     }
 
     /**
@@ -208,7 +204,7 @@ class MarketController extends Controller
                      ->get();
         $users = DB::table('user')
                    ->join('position', 'user.user_position', '=', 'position.position_id')
-                   ->where('user_department', Session::get('user_department'))
+                   ->whereIn('user_department', $department_access)
                    ->where('user_status', 1)
                    ->orderBy('position_level', 'desc')
                    ->get();
@@ -216,7 +212,7 @@ class MarketController extends Controller
                     ->where('grade_status', 1)
                     ->orderBy('grade_id', 'asc')->get();
         $schools = DB::table('school')
-                     ->where('school_department', Session::get('user_department'))
+                     ->whereIn('school_department', $department_access)
                      ->where('school_status', 1)
                      ->orderBy('school_id', 'asc')
                      ->get();
@@ -354,11 +350,7 @@ class MarketController extends Controller
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/market/customer/my")
-               ->with(['notify' => true,
-                      'type' => 'success',
-                      'title' => '客户添加成功',
-                      'message' => '客户添加成功']);
+        return view('market/myCustomerCreateResult', ['student_id' => $student_id]);
     }
 
     /**
@@ -814,6 +806,7 @@ class MarketController extends Controller
                       ->leftJoin('position AS class_adviser_position', 'class_adviser.user_position', '=', 'class_adviser_position.position_id')
                       ->where('student_id', $student_id)
                       ->select('student.student_id AS student_id',
+                                'student.student_department AS student_department',
                                 'student.student_name AS student_name',
                                 'student.student_customer_status AS student_customer_status',
                                 'student.student_consultant AS student_consultant',
@@ -828,7 +821,7 @@ class MarketController extends Controller
                   ->join('department', 'user.user_department', '=', 'department.department_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
                   ->join('section', 'position.position_section', '=', 'section.section_id')
-                  ->where('user_department', Session::get('user_department'))
+                  ->where('user_department', $student->student_department)
                   ->where('user_status', 1)
                   ->get();
         return view('market/followerEdit', ['student' => $student, 'users' => $users]);
@@ -1332,7 +1325,6 @@ class MarketController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
             // 返回购课界面
             return redirect("/market/contract/create?student_id={$request_student_id}")
                    ->with(['notify' => true,

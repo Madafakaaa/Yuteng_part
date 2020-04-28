@@ -25,5 +25,11 @@
 <!-- <script src="{{ asset(_ASSETS_.'/vendor/jquery-validate/jquery.validate.min.js') }}"></script> -->
 <!-- Argon JS -->
 <script src="{{ asset(_ASSETS_.'/js/argon.js?v=1.1.0') }}"></script>
-<!-- Original scripts -->
+<!-- My scripts -->
 <script src="{{ asset(_ASSETS_.'/js/scripts.js') }}"></script>
+<script>
+@if (session('notify'))
+    notify('{{session("title")}}','{{session("message")}}','{{session("type")}}');
+@endif
+</script>
+

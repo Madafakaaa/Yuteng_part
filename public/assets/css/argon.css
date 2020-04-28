@@ -4917,7 +4917,7 @@ input[type='button'].btn-block
 {
     position: absolute;
     top: .25rem;
-    left: -2.75rem;
+    left: 0;
 
     display: block;
 
@@ -4935,7 +4935,7 @@ input[type='button'].btn-block
 {
     position: absolute;
     top: .25rem;
-    left: -2.75rem;
+    left: 0;
 
     display: block;
 
@@ -19193,7 +19193,7 @@ a.btn-icon-only
 .custom-control-label::before
 {
     top: .25rem;
-    left: -1.75rem;
+    left: 0;
 
     transition: all .15s cubic-bezier(.68, -.55, .265, 1.55);
 
@@ -19210,7 +19210,7 @@ a.btn-icon-only
 .custom-control-label::after
 {
     top: .25rem;
-    left: -1.75rem;
+    left: 0;
 }
 
 .custom-control-label span
@@ -19222,6 +19222,7 @@ a.btn-icon-only
 .custom-control-label
 {
     margin-bottom: 0;
+    padding-left: 1.75rem;
 }
 
 .custom-control-alternative .custom-control-label::before
@@ -20113,7 +20114,7 @@ textarea[resize='horizontal']
 
 .custom-control
 {
-    padding-left: 1.75rem;
+    padding-left: 0;
 }
 
 .input-group

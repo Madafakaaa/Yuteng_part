@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
@@ -219,7 +217,7 @@
               </div>
               <div class="col-6">
                 <div class="form-group row">
-                  <label class="col-md-4 col-form-label form-control-label">签约时间<span style="color:red">*</span></label>
+                  <label class="col-md-4 col-form-label form-control-label">签约日期<span style="color:red">*</span></label>
                   <div class="col-md-8">
                     <input class="form-control datepicker" name="contract_date" type="text" value="{{ date('Y-m-d') }}" required>
                   </div>
@@ -258,10 +256,10 @@
             <h3 class="mb-0">结算</h3>
           </div>
           <div class="card-body">
-            <div class="row">
+            <!--<div class="row">
               <div class="col-6 text-right"><h3>课程种类</h3></div>
               <div class="col-6 text-right"><h3><span id="selected_course_num_span"></span> 种</h3></div>
-            </div>
+            </div>-->
             <div class="row">
               <div class="col-6 text-right">购买课时</div>
               <div class="col-6 text-right"><span id="original_hour"></span> 课</div>

@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
@@ -12,12 +10,12 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">添加客户</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">客户管理</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">招生中心</li>
-              <li class="breadcrumb-item active"><a href="/market/customer/all">客户管理</a></li>
+              <li class="breadcrumb-item"><a href="/market/customer/all">客户管理</a></li>
               <li class="breadcrumb-item active">添加客户</li>
             </ol>
           </nav>
@@ -32,6 +30,9 @@
       <div class="card main_card" style="display:none">
         <form action="/market/publicCustomer/create" method="post">
           @csrf
+          <div class="card-header">
+            <h3 class="mb-0">添加客户</h3>
+          </div>
           <div class="card-body">
             <div class="row">
               <div class="col-6">

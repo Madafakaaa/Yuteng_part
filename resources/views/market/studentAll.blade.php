@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection

@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
@@ -86,22 +84,23 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="table-responsive">
-          <table class="table align-items-center table-hover text-left table-bordered">
+        <div class="table-responsive freeze-table-4">
+          <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
-                <th style='width:70px;'>序号</th>
-                <th style='width:99px;'>校区</th>
-                <th style='width:200px;'>学生</th>
-                <th style='width:200px;'>课程</th>
-                <th style='width:100px;'>教师</th>
-                <th style='width:70px;'>科目</th>
-                <th style='width:70px;'>年级</th>
-                <th style='width:100px;'>日期</th>
-                <th style='width:110px;'>时间</th>
-                <th style='width:110px;'>地点</th>
-                <th style='width:188px;'>操作管理</th>
-                <th></th>
+                <th style='width:40px;' class="table-bordered"></th>
+                <th style='width:70px;' class="table-bordered">序号</th>
+                <th style='width:120px;'>学生</th>
+                <th style='width:200px;'></th>
+                <th style='width:100px;' class="table-bordered">校区</th>
+                <th style='width:160px;' class="table-bordered">日期</th>
+                <th style='width:110px;' class="table-bordered">时间</th>
+                <th style='width:100px;' class="table-bordered">教师</th>
+                <th style='width:70px;' class="table-bordered">科目</th>
+                <th style='width:70px;' class="table-bordered">年级</th>
+                <th style='width:110px;' class="table-bordered">教室</th>
+                <th style='width:170px;' class="table-bordered">课程</th>
+                <th style='width:100px;' class="table-bordered">排课用户</th>
               </tr>
             </thead>
             <tbody>
@@ -109,25 +108,40 @@
                 <tr class="text-center"><td colspan="12">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr title="创建时间：{{ $row->schedule_createtime }}。">
-                <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->department_name }}</td>
-                <td>{{ $row->student_name }}</td>
-                <td>{{ $row->course_name }}</td>
-                <td>{{ $row->user_name }}</td>
-                <td>{{ $row->subject_name }}</td>
-                <td>{{ $row->grade_name }}</td>
-                <td>{{ $row->schedule_date }}</td>
-                <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
-                <td>{{ $row->classroom_name }}</td>
+              <tr>
+                <td class="table-bordered">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="selected" value='{{encode($row->schedule_id, 'schedule_id')}}'>
+                    <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
+                  </div>
+                </td>
+                <td class="table-bordered">{{ $startIndex+$loop->iteration }}</td>
+                <td>
+                  {{ $row->student_name }}&nbsp;
+                  @if($row->student_gender=="男")
+                    <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
+                  @else
+                    <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
+                  @endif
+                </td>
                 <td>
                   <form action="/operation/studentSchedule/{{$row->schedule_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">安排详情</button></a>
-                    {{ deleteConfirm($row->schedule_id, ["上课成员：".$row->student_name.", 教师：".$row->user_name]) }}
+                    <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">详情</button></a>&nbsp;
+                    <a href='/operation/schedule/attend/{{$row->schedule_id}}'><button type="button" class="btn btn-warning btn-sm">点名</button></a>&nbsp;
+                    {{ deleteConfirm($row->schedule_id, ["教师：".$row->teacher_name]) }}
                   </form>
                 </td>
+                <td class="table-bordered">{{ $row->department_name }}</td>
+                <td class="table-bordered">{{ $row->schedule_date }}&nbsp;{{ dateToDay($row->schedule_date) }}</td>
+                <td class="table-bordered">{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
+                <td class="table-bordered">{{ $row->teacher_name }}</td>
+                <td class="table-bordered">{{ $row->subject_name }}</td>
+                <td class="table-bordered">{{ $row->grade_name }}</td>
+                <td class="table-bordered">{{ $row->classroom_name }}</td>
+                <td class="table-bordered">{{ $row->course_name }}</td>
+                <td class="table-bordered">{{ $row->creator_name }}</td>
               </tr>
               @endforeach
             </tbody>

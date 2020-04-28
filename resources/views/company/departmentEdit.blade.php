@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
@@ -30,9 +28,11 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/company/department/{{ $department->department_id }}" method="post" id="form1" name="form1">
-          @method('PUT')
+        <form action="/company/department/update" method="post" id="form1" name="form1">
           @csrf
+          <div class="card-header">
+            <h3 class="mb-0">修改校区</h3>
+          </div>
           <!-- Card body -->
           <div class="card-body">
             <div class="row">
@@ -78,6 +78,7 @@
               </div>
               <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-4 col-md-5 col-sm-12">
+                <input type="hidden" name="department_id" value="{{ encode($department->department_id, 'department_id') }}" readonly>
                 <input type="submit" class="btn btn-warning btn-block" value="修改">
               </div>
             </div>

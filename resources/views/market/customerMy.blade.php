@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
@@ -94,17 +92,16 @@
           <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
-                <th style='width:139px;'>学生</th>
+                <th style='width:80px;'>序号</th>
+                <th style='width:140px;'>客户</th>
                 <th style='width:90px;'>校区</th>
-                <th style='width:60px;'>年级</th>
-                <th style='width:60px;'>性别</th>
-                <th style='width:130px;'>监护人</th>
-                <th style='width:110px;'>电话</th>
+                <th style='width:70px;'>年级</th>
+                <th style='width:140px;'>监护人</th>
+                <th style='width:120px;'>电话</th>
                 <th style='width:80px;'>优先级</th>
                 <th style='width:100px;'>上次跟进</th>
-                <th style='width:145px;'>课程顾问</th>
+                <th style='width:160px;'>课程顾问</th>
                 <th style='width:300px;'>操作管理</th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -113,10 +110,17 @@
               @endif
               @foreach ($rows as $row)
               <tr>
-                <td>{{ $row->student_name }}</td>
+                <td>{{ $startIndex+$loop->iteration }}</td>
+                <td>
+                  {{ $row->student_name }}&nbsp;
+                  @if($row->student_gender=="男")
+                    <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
+                  @else
+                    <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
+                  @endif
+                </td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->grade_name }}</td>
-                <td>{{ $row->student_gender }}</td>
                 <td>{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
                 <td>{{ $row->student_phone }}</td>
                 @if($row->student_follow_level==1)
@@ -136,8 +140,8 @@
                   <form action="/market/customer/my/{{$row->student_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">客户详情</button></a>
-                    <a href='/market/contract/create?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">签约合同</button></a>
+                    <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">详情</button></a>
+                    <a href='/market/contract/create?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">签约</button></a>
                     {{ deleteConfirm($row->student_id, ["删除将无法恢复本记录，<br>客户姓名：".$row->student_name]) }}
                   </form>
                 </td>

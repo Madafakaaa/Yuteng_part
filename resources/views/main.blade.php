@@ -16,9 +16,6 @@
 </body>
 </html>
 
-<!-- PHP/JS functions -->
-@include('layout.functions')
-
 <!-- Sidebar active status -->
 @section('sidebar_status')
 <script>

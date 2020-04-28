@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
@@ -32,6 +30,9 @@
       <div class="card main_card" style="display:none">
         <form action="/company/user/create" method="post" id="form1" name="form1">
           @csrf
+          <div class="card-header">
+            <h3 class="mb-0">添加用户</h3>
+          </div>
           <!-- Card body -->
           <div class="card-body">
             <div class="row">

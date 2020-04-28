@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
@@ -95,7 +93,7 @@
               <tr>
                 <th style='width:70px;'>序号</th>
                 <th style='width:114px;'>学生</th>
-                <th style='width:110px;'>班级</th>
+                <th style='width:160px;'>班级</th>
                 <th style='width:120px;'>教师</th>
                 <th style='width:65px;'>年级</th>
                 <th style='width:65px;'>科目</th>
@@ -104,7 +102,7 @@
                 <th style='width:110px;'>日期</th>
                 <th style='width:110px;'>时间</th>
                 <th style='width:120px;'>复核人</th>
-                <th style='width:188px;'>操作管理</th>
+                <th style='width:150px;'>操作管理</th>
                 <th></th>
               </tr>
             </thead>

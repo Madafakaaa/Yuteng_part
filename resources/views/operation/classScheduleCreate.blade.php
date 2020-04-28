@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
@@ -158,10 +156,10 @@
                 <div class="form-group">
                   <select class="form-control form-control-sm" name="input_start" data-toggle="select" required>
                     <option value=''>请选择上课时间...</option>
-                    <option value='8:00'>8:00</option>
-                    <option value='8:30'>8:30</option>
-                    <option value='9:00'>9:00</option>
-                    <option value='9:30'>9:30</option>
+                    <option value='08:00'>08:00</option>
+                    <option value='08:30'>08:30</option>
+                    <option value='09:00'>09:00</option>
+                    <option value='09:30'>09:30</option>
                     <option value='10:00'>10:00</option>
                     <option value='10:30'>10:30</option>
                     <option value='11:00'>11:00</option>
@@ -198,9 +196,9 @@
                 <div class="form-group">
                   <select class="form-control form-control-sm" name="input_end" data-toggle="select" required>
                     <option value=''>请选择下课时间...</option>
-                    <option value='8:30'>8:30</option>
-                    <option value='9:00'>9:00</option>
-                    <option value='9:30'>9:30</option>
+                    <option value='08:30'>08:30</option>
+                    <option value='09:00'>09:00</option>
+                    <option value='09:30'>09:30</option>
                     <option value='10:00'>10:00</option>
                     <option value='10:30'>10:30</option>
                     <option value='11:00'>11:00</option>

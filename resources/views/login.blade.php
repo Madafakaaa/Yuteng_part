@@ -58,7 +58,7 @@
             </form>
           </div>
         </div>
-          <footer class="footer ml-1 mt-4 mb--4“>
+          <footer class="footer ml-1 mt-4 mb--4">
             <div class="row align-items-center justify-content-lg-between">
               <div class="col-lg-6">
                 <div class="copyright text-center text-lg-left text-muted">
@@ -77,4 +77,3 @@
   @include('layout.scripts')
 </body>
 </html>
-@include('layout.functions')

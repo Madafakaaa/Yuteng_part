@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
@@ -90,20 +88,20 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="table-responsive">
-          <table class="table align-items-center table-hover text-left table-bordered">
+        <div class="table-responsive freeze-table-3">
+          <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
-                <th style='width:70px;'>序号</th>
-                <th style='width:339px;'>班级</th>
-                <th style='width:100px;'>校区</th>
-                <th style='width:120px;'>班号</th>
-                <th style='width:90px;'>年级</th>
-                <th style='width:90px;'>科目</th>
-                <th style='width:110px;'>班级人数</th>
-                <th style='width:210px;'>负责教师</th>
-                <th style='width:188px;'>操作管理</th>
-                <th></th>
+                <th style='width:40px;' class="table-bordered"></th>
+                <th style='width:80px;' class="table-bordered">序号</th>
+                <th style='width:150px;'>班级</th>
+                <th style='width:180px;'></th>
+                <th style='width:100px;' class="table-bordered">校区</th>
+                <th style='width:120px;' class="table-bordered">班号</th>
+                <th style='width:90px;' class="table-bordered">年级</th>
+                <th style='width:90px;' class="table-bordered">科目</th>
+                <th style='width:110px;' class="table-bordered">班级人数</th>
+                <th style='width:210px;' class="table-bordered">负责教师</th>
               </tr>
             </thead>
             <tbody>
@@ -111,17 +109,15 @@
               <tr class="text-center"><td colspan="9">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr title="班级：{{ $row->class_name }}。创建时间：{{ $row->class_createtime }}。">
-                <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->class_name }}</td>
-                <td>{{ $row->department_name }}</td>
-                <td>{{ $row->class_id }}</td>
-                <td>{{ $row->grade_name }}</td>
-                <td>@if($row->class_subject==0) 全科目 @else{{ $row->subject_name }}@endif</td>
-                <td>
-                  {{ $row->class_current_num }} / {{ $row->class_max_num }} 人
+              <tr>
+                <td class="table-bordered">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="selected" value='{{encode($row->class_id, 'class_id')}}'>
+                    <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
+                  </div>
                 </td>
-                <td>{{ $row->user_name }} ({{ $row->position_name }})</td>
+                <td class="table-bordered">{{ $startIndex+$loop->iteration }}</td>
+                <td>{{ $row->class_name }}</td>
                 <td>
                   <form action="/operation/class/all/{{$row->class_id}}" method="POST">
                     @method('DELETE')
@@ -131,6 +127,18 @@
                     {{ deleteConfirm($row->class_id, ["删除班级将删除所有上课安排，保留已上课记录。"]) }}
                   </form>
                 </td>
+                <td class="table-bordered">{{ $row->department_name }}</td>
+                <td class="table-bordered">{{ $row->class_id }}</td>
+                <td class="table-bordered">{{ $row->grade_name }}</td>
+                <td class="table-bordered">@if($row->class_subject==0) 全科目 @else{{ $row->subject_name }}@endif</td>
+                <td class="table-bordered">
+                  @if($row->class_current_num==$row->class_max_num)
+                    <span style="color:green;">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
+                  @else
+                    <span style="color:red;">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
+                  @endif
+                </td class="table-bordered">
+                <td class="table-bordered">{{ $row->user_name }} ({{ $row->position_name }})</td>
               </tr>
               @endforeach
             </tbody>

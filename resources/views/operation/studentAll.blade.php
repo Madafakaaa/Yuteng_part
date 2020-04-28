@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
@@ -78,20 +76,20 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="table-responsive freeze-table">
-          <table class="table align-items-center table-hover text-left table-bordered">
+        <div class="table-responsive freeze-table-4">
+          <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
-                <th style='width:139px;'>学生</th>
-                <th style='width:90px;'>校区</th>
-                <th style='width:60px;'>年级</th>
-                <th style='width:60px;'>性别</th>
-                <th style='width:130px;'>监护人</th>
-                <th style='width:110px;'>电话</th>
-                <th style='width:145px;'>课程顾问</th>
-                <th style='width:145px;'>班主任</th>
-                <th style='width:300px;'>操作管理</th>
-                <th></th>
+                <th style='width:40px;' class="table-bordered"></th>
+                <th style='width:80px;' class="table-bordered">序号</th>
+                <th style='width:100px;'>学生</th>
+                <th style='width:280px;'></th>
+                <th style='width:90px;' class="table-bordered">校区</th>
+                <th style='width:60px;' class="table-bordered">年级</th>
+                <th style='width:130px;' class="table-bordered">监护人</th>
+                <th style='width:110px;' class="table-bordered">电话</th>
+                <th style='width:145px;' class="table-bordered">课程顾问</th>
+                <th style='width:145px;' class="table-bordered">班主任</th>
               </tr>
             </thead>
             <tbody>
@@ -100,32 +98,46 @@
               @endif
               @foreach ($rows as $row)
               <tr>
-                <td>{{ $row->student_name }}</td>
-                <td>{{ $row->department_name }}</td>
-                <td>{{ $row->grade_name }}</td>
-                <td>{{ $row->student_gender }}</td>
-                <td>{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
-                <td>{{ $row->student_phone }}</td>
-                @if($row->consultant_name=="")
-                  <td><span style="color:red;">无</span></td>
-                @else
-                  <td>{{ $row->consultant_name }} ({{ $row->consultant_position_name }})</td>
-                @endif
-                @if($row->class_adviser_name=="")
-                  <td><span style="color:red;">无</span></td>
-                @else
-                  <td>{{ $row->class_adviser_name }} ({{ $row->class_adviser_position_name }})</td>
-                @endif
+                <td class="table-bordered">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="selected" value='{{encode($row->student_id, 'student_id')}}'>
+                    <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
+                  </div>
+                </td>
+                <td class="table-bordered">{{ $startIndex+$loop->iteration }}</td>
+                <td style='width:50px;'>
+                  {{ $row->student_name }}&nbsp;
+                  @if($row->student_gender=="男")
+                    <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
+                  @else
+                    <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
+                  @endif
+                </td>
                 <td>
                   <form action="/operation/student/all/{{$row->student_id}}" method="POST">
                     @method('DELETE')
                     @csrf
-                    <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
-                    <a href='/operation/member/add?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">插入班级</button></a>
+                    <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">详情</button></a>
+                    <a href='/operation/studentSchedule/create?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">排课</button></a>
+                    <a href='/operation/member/add?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">插班</button></a>
                     <a href='/operation/follower/edit?student_id={{$row->student_id}}'><button type="button" class="btn btn-warning btn-sm">修改负责人</button></a>
                     {{ deleteConfirm($row->student_id, ["学生删除后将转为离校学生，<br>学生姓名：".$row->student_name]) }}
                   </form>
                 </td>
+                <td class="table-bordered">{{ $row->department_name }}</td>
+                <td class="table-bordered">{{ $row->grade_name }}</td>
+                <td class="table-bordered">{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
+                <td class="table-bordered">{{ $row->student_phone }}</td>
+                @if($row->consultant_name=="")
+                  <td class="table-bordered"><span style="color:red;">无</span></td>
+                @else
+                  <td class="table-bordered">{{ $row->consultant_name }} ({{ $row->consultant_position_name }})</td>
+                @endif
+                @if($row->class_adviser_name=="")
+                  <td class="table-bordered"><span style="color:red;">无</span></td>
+                @else
+                  <td class="table-bordered">{{ $row->class_adviser_name }} ({{ $row->class_adviser_position_name }})</td>
+                @endif
               </tr>
               @endforeach
             </tbody>
