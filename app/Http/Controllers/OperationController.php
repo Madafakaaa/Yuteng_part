@@ -903,6 +903,8 @@ class OperationController extends Controller
         $schedule_classroom = DB::table('classroom')
                                 ->where('classroom_id', $schedule_classroom)
                                 ->first();
+        // 生成班级名称
+        $class_name = $schedule_student->student_name."1v1".$schedule_subject->subject_name;
         return view('operation/studentScheduleCreate2', ['schedule_student' => $schedule_student,
                                                          'schedule_teacher' => $schedule_teacher,
                                                          'schedule_course' => $schedule_course,
@@ -912,7 +914,8 @@ class OperationController extends Controller
                                                          'schedule_dates_str' => $schedule_dates_str,
                                                          'schedule_start' => $schedule_start,
                                                          'schedule_end' => $schedule_end,
-                                                         'schedule_time' => $schedule_time]);
+                                                         'schedule_time' => $schedule_time,
+                                                         'class_name' => $class_name]);
     }
 
     /**
@@ -937,7 +940,7 @@ class OperationController extends Controller
         }
         // 获取表单输入
         $schedule_department = $request->input('input_department');
-        $schedule_participant = $request->input('input_student');
+        $schedule_student = $request->input('input_student');
         $schedule_teacher = $request->input('input_teacher');
         $schedule_classroom = $request->input('input_classroom');
         $schedule_subject = $request->input('input_subject');
@@ -947,6 +950,13 @@ class OperationController extends Controller
         $schedule_time = $request->input('input_time');
         $schedule_grade = $request->input('input_grade');
         $schedule_course = $request->input('input_course');
+        $schedule_class_name = $request->input('input_class_name');
+        // 获取学生信息
+        $student = DB::table('student')
+                              ->where('student_id', $schedule_student)
+                              ->join('department', 'student.student_department', '=', 'department.department_id')
+                              ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
+                              ->first();
         // 获取当前用户ID
         $schedule_createuser = Session::get('user_id');
         // 拆分上课日期字符串
@@ -954,14 +964,41 @@ class OperationController extends Controller
         // 获取所选日期数量
         $schedule_date_num = count($schedule_dates);
         // 获取上课成员类型
-        $schedule_participant_type = 0;
+        $schedule_participant_type = 1;
+        // 生成新班级ID
+        $class_num = DB::table('class')
+                       ->where('class_department', $schedule_department)
+                       ->whereYear('class_createtime', date('Y'))
+                       ->whereMonth('class_createtime', date('m'))
+                       ->count()+1;
+        $class_id = "C".substr(date('Ym'),2).sprintf("%02d", $schedule_department).sprintf("%03d", $class_num);
         // 插入数据库
         DB::beginTransaction();
         try{
+            // 新建班级
+            DB::table('class')->insert(
+                ['class_id' => $class_id,
+                 'class_name' => $schedule_class_name,
+                 'class_department' => $schedule_department,
+                 'class_grade' => $student->student_grade,
+                 'class_subject' => $schedule_subject,
+                 'class_teacher' => $schedule_teacher,
+                 'class_max_num' => 1,
+                 'class_current_num' => 1,
+                 'class_remark' => '',
+                 'class_createuser' => $schedule_createuser]
+            );
+            // 添加班级成员
+            DB::table('member')->insert(
+                ['member_class' => $class_id,
+                 'member_student' => $schedule_student,
+                 'member_createuser' => $schedule_createuser]
+            );
+            //
             for($i=0; $i<$schedule_date_num; $i++){
                 DB::table('schedule')->insert(
                     ['schedule_department' => $schedule_department,
-                     'schedule_participant' => $schedule_participant,
+                     'schedule_participant' => $class_id,
                      'schedule_participant_type' => $schedule_participant_type,
                      'schedule_teacher' => $schedule_teacher,
                      'schedule_course' => $schedule_course,
@@ -987,7 +1024,7 @@ class OperationController extends Controller
         }
         DB::commit();
         // 返回本校课程安排列表
-        return view('operation/studentScheduleCreateResult', ['student_id' => $schedule_participant]);
+        return view('operation/studentScheduleCreateResult', ['student_id' => $schedule_student]);
     }
 
     /**

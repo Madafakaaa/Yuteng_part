@@ -19,21 +19,27 @@
             </ol>
           </nav>
         </div>
-        <div class="col-6 text-right">
-          <a href="/company/course/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加校区">
-            <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-            <span class="btn-inner--text">添加课程</span>
-          </a>
-          <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
-            <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
-            <span class="btn-inner--text">搜索</span>
-          </a>
-        </div>
       </div>
     </div>
   </div>
 </div>
-<div class="container-fluid mt-4">
+<div class="container-fluid mt-3">
+  <div class="row mb-3">
+    <div class="col-auto">
+      <a href="/company/course/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加课程">
+        <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
+        <span class="btn-inner--text">添加课程</span>
+      </a>
+      <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
+        <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
+        <span class="btn-inner--text">搜索</span>
+      </a>
+      <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/company/course/delete', '确认批量删除所选课程？')">
+        <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
+        <span class="btn-inner--text">批量删除</span>
+      </button>
+    </div>
+  </div>
   <div class="row justify-content-center">
     <div class="col-12">
       <div class="collapse @if($filter_status==1) show @endif" id="filter">
@@ -88,12 +94,14 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="table-responsive">
-          <table class="table align-items-center table-hover text-left table-bordered">
+        <div class="table-responsive freeze-table-4">
+          <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
-                <th style='width:80px;'>序号</th>
-                <th style='width:220px;'>课程名称</th>
+                <th style='width:40px;'></th>
+                <th style='width:70px;'>序号</th>
+                <th style='width:120px;'>课程名称</th>
+                <th style='width:120px;'></th>
                 <th style='width:130px;'>课程类型</th>
                 <th style='width:100px;'>开课校区</th>
                 <th style='width:100px;'>课程季度</th>
@@ -101,8 +109,6 @@
                 <th style='width:100px;'>课程科目</th>
                 <th style='width:152px;'>课时单价</th>
                 <th style='width:130px;'>课程时长</th>
-                <th style='width:188px;'>操作管理</th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -110,9 +116,19 @@
               <tr class="text-center"><td colspan="10">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr title="备注：{{ $row->course_remark }}， 创建日期：{{ $row->course_createtime }}">
+              <tr>
+                <td>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($row->course_id, 'course_id')}}'>
+                    <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
+                  </div>
+                </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>{{ $row->course_name }}</td>
+                <td>
+                  <a href='/company/course/edit?id={{encode($row->course_id, 'course_id')}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
+                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/company/course/delete?id={{encode($row->course_id, 'course_id')}}', '确认删除课程？')">删除</button>
+                </td>
                 <td><img src="{{ asset(_ASSETS_.$row->course_type_icon_path) }}" /> {{ $row->course_type }}</td>
                 <td>@if($row->course_department==0) 全校区 @else{{ $row->department_name }}@endif</td>
                 <td>{{ $row->course_quarter }}</td>
@@ -120,14 +136,6 @@
                 <td>@if($row->course_subject==0) 全科目 @else{{ $row->subject_name }}@endif</td>
                 <td>{{ $row->course_unit_price }}元</td>
                 <td>{{ $row->course_time }}分钟</td>
-                <td class="p-2">
-                  <form action="/company/course/{{$row->course_id}}" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <a href='/company/course/{{$row->course_id}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
-                    {{ deleteConfirm($row->course_id, ["课程名称：".$row->course_name]) }}
-                  </form>
-                </td>
               </tr>
               @endforeach
             </tbody>

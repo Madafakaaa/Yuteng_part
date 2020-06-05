@@ -10,13 +10,13 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">添加大区</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">修改大区</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">公司管理</li>
               <li class="breadcrumb-item"><a href="/company/school">大区管理</a></li>
-              <li class="breadcrumb-item active">添加大区</li>
+              <li class="breadcrumb-item active">修改大区</li>
             </ol>
           </nav>
         </div>
@@ -26,12 +26,12 @@
 </div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
+    <div class="col-lg-10 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/company/school/create" method="post" id="form1" name="form1">
+        <form action="/company/school/update?id={{encode($school->school_id, 'school_id')}}" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
-            <h3 class="mb-0">添加大区</h3>
+            <h2 class="mb-0">修改大区</h2>
           </div>
           <!-- Card body -->
           <div class="card-body">
@@ -39,7 +39,7 @@
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">名称<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" name="input1" placeholder="请输入名称..." autocomplete='off' required maxlength="10">
+                  <input class="form-control" type="text" name="input1" value="{{ $school->school_name }}" autocomplete='off' required maxlength="10">
                 </div>
               </div>
               <div class="col-6">
@@ -48,7 +48,7 @@
                   <select class="form-control" name="input2" data-toggle="select" required>
                     <option value=''>请选择校区...</option>
                     @foreach ($departments as $department)
-                      <option value="{{ $department->department_id }}">{{ $department->department_name }}</option>
+                      <option value="{{ $department->department_id }}" @if($school->school_department==$department->department_id) selected @endif>{{ $department->department_name }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -60,17 +60,25 @@
                   <label class="form-control-label">类型<span style="color:red">*</span></label>
                   <select class="form-control" name="input3" data-toggle="select" required>
                     <option value=''>请选择类型...</option>
-                    <option value='小学'>小学</option>
-                    <option value='初中'>初中</option>
-                    <option value='高中'>高中</option>
-                    <option value='其它'>其它</option>
+                    <option value='小学' @if($school->school_type=="小学") selected @endif>小学</option>
+                    <option value='初中' @if($school->school_type=="初中") selected @endif>初中</option>
+                    <option value='高中' @if($school->school_type=="高中") selected @endif>高中</option>
+                    <option value='其它' @if($school->school_type=="其它") selected @endif>其它</option>
                   </select>
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">地址<span style="color:red">*</span></label>
-                  <input class="form-control" type="text" name="input4" placeholder="请输入学校地址..." autocomplete='off' required maxlength="40">
+                  <input class="form-control" type="text" name="input4" value="{{ $school->school_location }}" autocomplete='off' required maxlength="40">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label class="form-control-label">创建时间</label>
+                  <input class="form-control" type="text" value="{{ $school->school_createtime }}" readonly>
                 </div>
               </div>
             </div>
@@ -81,11 +89,11 @@
               </div>
               <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-4 col-md-5 col-sm-12">
-                <input type="submit" class="btn btn-warning btn-block" value="提交">
+                <input type="submit" class="btn btn-warning btn-block" value="修改">
               </div>
             </div>
           </div>
-        <form>
+        </form>
       </div>
     </div>
   </div>

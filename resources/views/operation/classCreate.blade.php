@@ -94,7 +94,7 @@
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">最大人数<span style="color:red">*</span></label>
-                  <input class="form-control" name="input6" type="number" value="2" autocomplete='off' min='2' required>
+                  <input class="form-control" name="input6" type="number" value="2" autocomplete='off' min='1' required>
                 </div>
               </div>
             </div>

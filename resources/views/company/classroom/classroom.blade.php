@@ -19,21 +19,27 @@
             </ol>
           </nav>
         </div>
-        <div class="col-6 text-right">
-          <a href="/company/classroom/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加教室">
-            <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-            <span class="btn-inner--text">添加教室</span>
-          </a>
-          <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
-            <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
-            <span class="btn-inner--text">搜索</span>
-          </a>
-        </div>
       </div>
     </div>
   </div>
 </div>
-<div class="container-fluid mt-4">
+<div class="container-fluid mt-3">
+  <div class="row mb-3">
+    <div class="col-auto">
+      <a href="/company/classroom/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加教室">
+        <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
+        <span class="btn-inner--text">添加教室</span>
+      </a>
+      <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
+        <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
+        <span class="btn-inner--text">搜索</span>
+      </a>
+      <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/company/classroom/delete', '确认批量删除所选教室？')">
+        <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
+        <span class="btn-inner--text">批量删除</span>
+      </button>
+    </div>
+  </div>
   <div class="row justify-content-center">
     <div class="col-12">
       <div class="collapse @if($filter_status==1) show @endif" id="filter">
@@ -82,16 +88,17 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="table-responsive">
-          <table class="table align-items-center table-hover text-left table-bordered">
+        <div class="table-responsive freeze-table-4">
+          <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
-                <th style='width:8%;'>序号</th>
-                <th style='width:16%;'>教室名称</th>
-                <th style='width:16%;'>所属校区</th>
-                <th style='width:16%;'>容纳人数</th>
-                <th style='width:16%;'>教室类型</th>
-                <th>操作管理</th>
+                <th style='width:40px;'></th>
+                <th style='width:70px;'>序号</th>
+                <th style='width:100px;'>名称</th>
+                <th style='width:100px;'></th>
+                <th style='width:100px;'>所属校区</th>
+                <th style='width:100px;'>容纳人数</th>
+                <th style='width:100px;'>教室类型</th>
               </tr>
             </thead>
             <tbody>
@@ -100,19 +107,21 @@
               @endif
               @foreach ($rows as $row)
               <tr>
+                <td>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($row->classroom_id, 'classroom_id')}}'>
+                    <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
+                  </div>
+                </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>{{ $row->classroom_name }}</td>
+                <td>
+                  <a href='/company/classroom/edit?id={{encode($row->classroom_id, 'classroom_id')}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
+                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/company/classroom/delete?id={{encode($row->classroom_id, 'classroom_id')}}', '确认删除教室？')">删除</button>
+                </td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->classroom_student_num }}人</td>
                 <td>{{ $row->classroom_type }}</td>
-                <td>
-                  <form action="/company/classroom/{{$row->classroom_id}}" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <a href='/company/classroom/{{$row->classroom_id}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
-                    {{ deleteConfirm($row->classroom_id, ["教室名称：".$row->classroom_name]) }}
-                  </form>
-                </td>
               </tr>
               @endforeach
             </tbody>

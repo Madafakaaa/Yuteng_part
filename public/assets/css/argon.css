@@ -2005,6 +2005,12 @@ pre code
     border-bottom-width: 2px;
 }
 
+
+.table-borderless
+{
+    border: 0;
+}
+
 .table-borderless th,
 .table-borderless td,
 .table-borderless thead th,

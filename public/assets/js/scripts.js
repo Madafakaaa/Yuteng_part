@@ -126,7 +126,7 @@ function batchDeleteConfirm(url, msg) {
     // Confirmation
     var result = confirm(msg);
     if (result == true) {
-        obj = document.getElementsByName("selected");
+        obj = document.getElementsByName("id");
         check_val = [];
         for(k in obj){
             if(obj[k].checked)
@@ -134,10 +134,11 @@ function batchDeleteConfirm(url, msg) {
         }
         if(check_val.length<=0){
             alert("请至少勾选一行数据！");
+            $('.delete-button').attr("disabled", false);
         }else{
             url += "?";
             for(var i=0;i<check_val.length;i++){
-                url+="department_id[]="+check_val[i]+"&";
+                url+="id[]="+check_val[i]+"&";
             }
             window.location.href=url;
         }

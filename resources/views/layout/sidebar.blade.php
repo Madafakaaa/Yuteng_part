@@ -152,12 +152,6 @@
                   <span class="nav-link-text">学生管理</span>
                 </a>
               </li>
-              <li class="nav-item" @if(!in_array('operationStudentScheduleAll', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/operation/studentSchedule/all" class="nav-link" id="operationStudentScheduleAll">
-                  <i class="ni ni-calendar-grid-58 text-info"></i>
-                  <span class="nav-link-text">学生课程</span>
-                </a>
-              </li>
               <li class="nav-item" @if(!in_array('operationClassAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/class/all" class="nav-link" id="operationClassAll">
                   <i class="ni ni-single-copy-04 text-info"></i>
@@ -167,7 +161,7 @@
               <li class="nav-item" @if(!in_array('operationClassScheduleAll', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/classSchedule/all" class="nav-link" id="operationClassScheduleAll">
                   <i class="ni ni-calendar-grid-58 text-info"></i>
-                  <span class="nav-link-text">班级课程</span>
+                  <span class="nav-link-text">课程安排</span>
                 </a>
               </li>
               <li class="nav-item" @if(!in_array('operationAttendedScheduleAll', Session::get('page_access'))) style="display:none;" @endif>

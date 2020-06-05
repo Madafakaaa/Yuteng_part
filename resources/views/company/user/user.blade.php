@@ -19,21 +19,27 @@
             </ol>
           </nav>
         </div>
-        <div class="col-6 text-right">
-          <a href="/company/user/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加校区">
-            <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-            <span class="btn-inner--text">添加用户</span>
-          </a>
-          <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
-            <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
-            <span class="btn-inner--text">搜索</span>
-          </a>
-        </div>
       </div>
     </div>
   </div>
 </div>
-<div class="container-fluid mt-4">
+<div class="container-fluid mt-3">
+  <div class="row mb-3">
+    <div class="col-auto">
+      <a href="/company/user/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加用户">
+        <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
+        <span class="btn-inner--text">添加用户</span>
+      </a>
+      <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
+        <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
+        <span class="btn-inner--text">搜索</span>
+      </a>
+      <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/company/user/delete', '确认批量删除所选用户？')">
+        <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
+        <span class="btn-inner--text">批量删除</span>
+      </button>
+    </div>
+  </div>
   <div class="row justify-content-center">
     <div class="col-12">
       <div class="collapse @if($filter_status==1) show @endif" id="filter">
@@ -109,13 +115,14 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <!-- Card header -->
-        <div class="table-responsive">
-          <table class="table align-items-center table-hover text-left table-bordered">
+        <div class="table-responsive freeze-table-4">
+          <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
+                <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:120px;'>姓名</th>
+                <th style='width:90px;'>姓名</th>
+                <th style='width:250px;'></th>
                 <th style='width:100px;'>账号</th>
                 <th style='width:100px;'>校区</th>
                 <th style='width:140px;'>部门</th>
@@ -124,40 +131,40 @@
                 <th style='width:100px;'>跨校区教学</th>
                 <th style='width:140px;'>手机</th>
                 <th style='width:149px;'>微信</th>
-                <th style='width:300px;'>操作管理</th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="10">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="12">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr title="入职日期: {{ $row->user_entry_date }}, 微信: {{ $row->user_wechat }}。">
-                <td>{{ $startIndex+$loop->iteration }}</td>
-                <td title="姓名：{{ $row->user_name }}">{{ $row->user_name }}</td>
-                <td title="账号：{{ $row->user_id }}">{{ $row->user_id }}</td>
-                <td title="校区：{{ $row->department_name }}">{{ $row->department_name }}</td>
-                <td title="部门：{{ $row->section_name }}">{{ $row->section_name }}</td>
-                <td title="岗位：{{ $row->position_name }}">{{ $row->position_name }}</td>
-                <td title="等级：等级 {{ $row->position_level }}">等级 {{ $row->position_level }}</td>
-                @if($row->user_cross_teaching==1)
-                  <td title="跨校区教学：是"><span style="color:green;">是</span></td>
-                @else
-                  <td title="跨校区教学：否"><span style="color:red;">否</span></td>
-                @endif
-                <td title="手机：{{ $row->user_phone }}">{{ $row->user_phone }}</td>
-                <td title="微信：{{ $row->user_wechat }}">{{ $row->user_wechat }}</td>
+              <tr>
                 <td>
-                  <form action="/company/user/{{ $row->user_id }}" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <a href='/user/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">用户详情</button></a>
-                    <a href='/company/user/access/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">用户权限</button></a>
-                    <a href='/company/user/password/restore/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">密码恢复</button></a>
-                    {{ deleteConfirm($row->user_id, ["用户名称：".$row->user_name]) }}
-                  </form>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($row->user_id, 'user_id')}}'>
+                    <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
+                  </div>
                 </td>
+                <td>{{ $startIndex+$loop->iteration }}</td>
+                <td>{{ $row->user_name }}</td>
+                <td>
+                  <a href='/user/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">详情</button></a>
+                  <a href='/company/user/access?id={{encode($row->user_id, 'user_id')}}'><button type="button" class="btn btn-primary btn-sm">权限</button></a>
+                  <a href='/company/user/password/restore?id={{encode($row->user_id, 'user_id')}}'><button type="button" class="btn btn-primary btn-sm">密码重置</button></a>
+                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/company/user/delete?id={{encode($row->user_id, 'user_id')}}', '确认删除用户？')">删除</button>
+                </td>
+                <td>{{ $row->user_id }}</td>
+                <td>{{ $row->department_name }}</td>
+                <td>{{ $row->section_name }}</td>
+                <td>{{ $row->position_name }}</td>
+                <td>等级 {{ $row->position_level }}</td>
+                @if($row->user_cross_teaching==1)
+                  <td><span style="color:green;">是</span></td>
+                @else
+                  <td><span style="color:red;">否</span></td>
+                @endif
+                <td>{{ $row->user_phone }}</td>
+                <td>{{ $row->user_wechat }}</td>
               </tr>
               @endforeach
             </tbody>

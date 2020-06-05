@@ -67,12 +67,8 @@
                   </h4>
                 </div>
                 <div class="col-auto">
-                  <form action="/company/section/{{$section->section_id}}" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <a href='/company/section/{{$section->section_id}}'><button type="button" class="btn btn-sm btn-primary">修改</button></a>
-                    {{ deleteConfirm($section->section_id, ["部门名称：".$section->section_name]) }}
-                  </form>
+                  <a href='/company/section/edit?id={{encode($section->section_id, 'section_id')}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
+                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/company/section/delete?id={{encode($section->section_id, 'section_id')}}', '确认删除部门？')">删除</button>
                 </div>
               </div>
             </li>
@@ -106,7 +102,6 @@
                 <th style='width:180px;'>部门</th>
                 <th style='width:140px;'>等级</th>
                 <th style='width:180px;'>操作管理</th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -120,12 +115,8 @@
                 <td>{{ $row->section_name }}</td>
                 <td>等级 {{ $row->position_level }}</td>
                 <td>
-                  <form action="/company/position/{{$row->position_id}}" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <a href='/company/position/{{$row->position_id}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
-                    {{ deleteConfirm($row->position_id, ["岗位名称：".$row->position_name]) }}
-                  </form>
+                  <a href='/company/position/edit?id={{encode($row->position_id, 'position_id')}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
+                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/company/position/delete?id={{encode($row->position_id, 'position_id')}}', '确认删除岗位？')">删除</button>
                 </td>
               </tr>
               @endforeach

@@ -26,12 +26,12 @@
 </div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
+    <div class="col-lg-10 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
         <form action="/company/department/update" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
-            <h3 class="mb-0">修改校区</h3>
+            <h2 class="mb-0">修改校区</h2>
           </div>
           <!-- Card body -->
           <div class="card-body">
@@ -63,22 +63,14 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-control-label">添加时间</label>
-                  <input class="form-control" type="text" value="{{ $department->department_createtime }}" readonly>
-                </div>
-              </div>
-            </div>
-            <hr class="my-3">
+            <hr>
             <div class="row">
               <div class="col-lg-4 col-md-5 col-sm-12">
                 <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
               </div>
               <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-4 col-md-5 col-sm-12">
-                <input type="hidden" name="department_id" value="{{ encode($department->department_id, 'department_id') }}" readonly>
+                <input type="hidden" name="id" value="{{ encode($department->department_id, 'department_id') }}" readonly>
                 <input type="submit" class="btn btn-warning btn-block" value="修改">
               </div>
             </div>

@@ -28,7 +28,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/company/user/access/{{ $user->user_id }}" method="post">
+        <form action="/company/user/access/update" method="post">
           @csrf
           <!-- Card body -->
           <div class="card-body">
@@ -153,10 +153,11 @@
             <hr>
             <div class="row">
               <div class="col-lg-4 col-md-5 col-sm-12">
-                <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
+                <a href="/company/user" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
               </div>
               <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-4 col-md-5 col-sm-12">
+                <input type="hidden" name="id" value="{{ encode($user->user_id, 'user_id') }}" readonly>
                 <input type="submit" class="btn btn-warning btn-block" value="修改">
               </div>
             </div>

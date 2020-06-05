@@ -45,39 +45,46 @@
   <div class="row justify-content-center">
     <div class="col-12">
       <div class="card main_card mb-4" style="display:none">
-        <div class="table-responsive freeze-table-3">
+        <div class="table-responsive freeze-table-4">
           <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
-                <th style='width:40px;' class="table-bordered"></th>
+                <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:270px;' colspan="2">校区</th>
-                <th style='width:205px;' class="table-bordered">电话1</th>
-                <th style='width:205px;' class="table-bordered">电话2</th>
-                <th style='width:489px;' class="table-bordered">地址</th>
+                <th style='width:100px;'>校区</th>
+                <th style='width:120px;'></th>
+                <th style='width:205px;'>电话1</th>
+                <th style='width:205px;'>电话2</th>
+                <th style='width:500px;'>地址</th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="6">当前没有记录</td></tr>
+                <tr class="text-center"><td colspan="7">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
               <tr>
-                <td class="table-bordered">
+                <td>
                   <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="selected" value='{{encode($row->department_id, 'department_id')}}'>
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($row->department_id, 'department_id')}}'>
                     <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
                   </div>
                 </td>
+
                 <td>{{ $startIndex+$loop->iteration }}</td>
+
                 <td>{{ $row->department_name }}</td>
+
                 <td>
-                  <a href='/company/department/edit?department_id={{encode($row->department_id, 'department_id')}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
-                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/company/department/delete?department_id={{encode($row->department_id, 'department_id')}}', '确认删除校区？')">删除</button>
+                  <a href='/company/department/edit?id={{encode($row->department_id, 'department_id')}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
+                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/company/department/delete?id={{encode($row->department_id, 'department_id')}}', '确认删除校区？')">删除</button>
                 </td>
-                <td class="table-bordered">{{ $row->department_phone1 }}</td>
-                <td class="table-bordered">{{ $row->department_phone2 }}</td>
-                <td class="table-bordered">{{ $row->department_location }}</td>
+
+                <td>{{ $row->department_phone1 }}</td>
+
+                <td>{{ $row->department_phone2 }}</td>
+
+                <td>{{ $row->department_location }}</td>
               </tr>
               @endforeach
             </tbody>

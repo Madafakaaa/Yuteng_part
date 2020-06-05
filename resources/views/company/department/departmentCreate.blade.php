@@ -26,12 +26,12 @@
 </div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
+    <div class="col-lg-10 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
         <form action="/company/department/store" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
-            <h3 class="mb-0">添加校区</h3>
+            <h2 class="mb-0">添加校区</h2>
           </div>
           <!-- Card body -->
           <div class="card-body">
