@@ -448,4 +448,95 @@ class StudentController extends Controller
                                                            'title' => '修改学生负责人成功',
                                                            'message' => '学生名称: '.$student_name]);
     }
+
+    /**
+     * 清理课时
+     * URL: GET /student/cleanHour/{hour_id}
+     * @param  int  $hour_id        : Hour id
+     */
+    public function cleanHour($hour_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取课时信息
+        $hour = DB::table('hour')
+                     ->join('student', 'student.student_id', '=', 'hour.hour_student')
+                     ->join('course', 'course.course_id', '=', 'hour.hour_course')
+                     ->where('hour_id', $hour_id)
+                     ->first();
+        return view('student/cleanHour', ['hour' => $hour]);
+    }
+
+    /**
+     * 清理课时提交
+     * URL: POST /student/cleanHour/{hour_id}
+     * @param  Request  $request
+     * @param  int  $hour_id        : Hour id
+     */
+    public function cleanHourStore(Request $request, $hour_id){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取表单输入
+        $hour_cleaned_record_amount = $request->input('input_cleaned_record_amount');
+        if($request->filled('input_remark')) {
+            $hour_cleaned_record_remark = $request->input('input_remark');
+        }else{
+            $hour_cleaned_record_remark = "";
+        }
+        // 获取课时信息
+        $hour = DB::table('hour')
+                     ->join('student', 'student.student_id', '=', 'hour.hour_student')
+                     ->join('course', 'course.course_id', '=', 'hour.hour_course')
+                     ->where('hour_id', $hour_id)
+                     ->first();
+        // 更新数据
+        DB::beginTransaction();
+        try{
+            if($hour->hour_remain>=$hour_cleaned_record_amount){
+                // 更新剩余课时
+                DB::table('hour')
+                  ->where('hour_id', $hour_id)
+                  ->decrement('hour_remain', $hour_cleaned_record_amount);
+                DB::table('hour')
+                  ->where('hour_id', $hour_id)
+                  ->increment('hour_cleaned', $hour_cleaned_record_amount);
+            }else{
+                // 更新剩余课时
+                DB::table('hour')
+                  ->where('hour_id', $hour_id)
+                  ->update(['hour_remain' =>  0]);
+                $free_clean_amount = $hour_cleaned_record_amount-$hour->hour_remain;
+                DB::table('hour')
+                  ->where('hour_id', $hour_id)
+                  ->decrement('hour_remain_free', $free_clean_amount);
+                DB::table('hour')
+                  ->where('hour_id', $hour_id)
+                  ->increment('hour_cleaned', $hour_cleaned_record_amount);
+            }
+            // 添加课时清理记录
+            DB::table('hour_cleaned_record')->insert(
+                ['hour_cleaned_record_hour' => $hour->hour_student,
+                 'hour_cleaned_record_amount' => $hour_cleaned_record_amount,
+                 'hour_cleaned_record_remark' => $hour_cleaned_record_remark,
+                 'hour_cleaned_record_createuser' => Session::get('user_id')]
+            );
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return redirect("/student/{$hour->hour_student}")->with(['notify' => true,
+                                                               'type' => 'danger',
+                                                               'title' => '学生课时清理失败',
+                                                               'message' => '学生课时清理失败，请重新输入信息']);
+        }
+        DB::commit();
+        // 返回客户列表
+        return redirect("/student/{$hour->hour_student}")->with(['notify' => true,
+                                                           'type' => 'success',
+                                                           'title' => '学生课时清理成功',
+                                                           'message' => '学生课时清理成功']);
+    }
 }

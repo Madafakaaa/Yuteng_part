@@ -286,6 +286,7 @@
                     <th>已用赠送课时</th>
                     <th>剩余正常课时</th>
                     <th>剩余赠送课时</th>
+                    <th>清理课时</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -297,6 +298,7 @@
                       <td>{{ $hour->hour_used_free }} 课时</td>
                       <td>{{ $hour->hour_remain }} 课时</td>
                       <td>{{ $hour->hour_remain_free }} 课时</td>
+                      <td><a href='/student/cleanHour/{{$hour->hour_id}}'><button type="button" class="btn btn-primary btn-sm">清理课时</button></a></td>
                     </tr>
                   @endforeach
                 </tbody>

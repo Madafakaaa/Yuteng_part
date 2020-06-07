@@ -306,6 +306,9 @@ Route::put('/student/{student_id}', 'StudentController@update');
 Route::post('/student/{student_id}/remark', 'StudentController@remark');
 // 学生跟进记录提交
 Route::post('/student/{student_id}/record', 'StudentController@record');
+// 清理课时
+Route::get('/student/cleanHour/{hour_id}', 'StudentController@cleanHour');
+Route::post('/student/cleanHour/{hour_id}', 'StudentController@cleanHourStore');
 
 // 班级
 // 查看班级

@@ -1443,7 +1443,6 @@ class OperationController extends Controller
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                   ->whereIn('schedule_department', $department_access)
-                  ->where('schedule_participant_type', '=', 1)
                   ->where('schedule_attended', '=', 0);
 
         // 搜索条件
