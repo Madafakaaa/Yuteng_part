@@ -73,7 +73,7 @@
                 <th style="border:1px solid #32325d; width:9%;">类型</th>
                 <th style="border:1px solid #32325d; width:10%;">单价</th>
                 <th style="border:1px solid #32325d; width:9%;">购买课时</th>
-                <th style="border:1px solid #32325d; width:12%;">合计</th>
+                <th style="border:1px solid #32325d; width:12%;">金额</th>
                 <th style="border:1px solid #32325d; width:42%;">备注</th>
               </thead>
               <tbody>
@@ -81,7 +81,7 @@
                 <tr class="text-center"><td colspan="6">没有购买课程！</td></tr>
                 @endif
                 @foreach ($contract_courses as $contract_course)
-                <tr @if($contract_course->contract_course_status==0) style="text-decoration:line-through;" @endif>
+                <tr>
                   <td style="border:1px solid #32325d;">{{ $contract_course->course_name }}</td>
                   <td style="border:1px solid #32325d;">{{ $contract_course->course_type }}</td>
                   <td style="border:1px solid #32325d;">{{ number_format($contract_course->contract_course_original_unit_price, 1) }} 元</td>
@@ -103,11 +103,19 @@
                   </td>
                 </tr>
                 @endforeach
+                @if($contract->contract_extra_fee!=0)
+                <tr>
+                  <td style="border:1px solid #32325d;" colspan="3"><strong>综合手续费</strong></td>
+                  <td style="border:1px solid #32325d;"></td>
+                  <td style="border:1px solid #32325d;"><strong>{{ number_format($contract->contract_extra_fee, 1) }} 元</strong></td>
+                  <td style="border:1px solid #32325d;"></td>
+                </tr>
+                @endif
                 <tr>
                   <td style="border:1px solid #32325d;" colspan="3"><strong>合计</strong></td>
-                  <td style="border:1px solid #32325d;"><strong>{{ number_format($contract->contract_original_hour) }} 课时</strong></td>
+                  <td style="border:1px solid #32325d;"><strong>{{ number_format($contract->contract_original_hour, 1) }} 课时</strong></td>
                   <td style="border:1px solid #32325d;"><strong>{{ number_format($contract->contract_total_price, 1) }} 元</strong></td>
-                  <td style="border:1px solid #32325d;">@if($contract->contract_extra_fee!=0) <strong>综合手续费：{{ number_format($contract->contract_extra_fee, 1) }} 元.</strong> @endif</td>
+                  <td style="border:1px solid #32325d;">{{ $contract->contract_remark }}</td>
                 </tr>
               </tbody>
             </table>

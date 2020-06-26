@@ -15,11 +15,12 @@ class ContractController extends Controller
      * URL: GET /contract/{id}
      * @param  int  $contract_id
      */
-    public function show($contract_id){
+    public function show(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $contract_id = decode($request->input('id'), 'contract_id');
         // 获取数据信息
         $contract = DB::table('contract')
                       ->join('student', 'contract.contract_student', '=', 'student.student_id')

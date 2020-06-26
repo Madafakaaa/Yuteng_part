@@ -15,11 +15,12 @@ class ClassController extends Controller
      * URL: GET /class/{id}
      * @param  int  $class_id
      */
-    public function show(Request $request, $class_id){
+    public function show(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $class_id = decode($request->input('id'), 'class_id');
         // 获取数据信息
         $class = DB::table('class')
                    ->join('department', 'class.class_department', '=', 'department.department_id')

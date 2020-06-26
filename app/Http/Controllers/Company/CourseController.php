@@ -224,7 +224,7 @@ class CourseController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("company/course/edit?id={encode($course_id, 'course_id')}")
+            return redirect("company/course/edit?id=".encode($course_id, 'course_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '课程修改失败',
@@ -279,6 +279,5 @@ class CourseController extends Controller
                        'title' => '课程删除成功',
                        'message' => '课程删除成功!']);
     }
-
 
 }

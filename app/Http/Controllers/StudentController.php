@@ -15,11 +15,12 @@ class StudentController extends Controller
      * URL: GET /student/{id}
      * @param  int  $student_id
      */
-    public function show(Request $request, $student_id){
+    public function show(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $student_id = decode($request->input('id'), 'student_id');
         if($request->filled('selected')) {
             $selected = $request->input('selected');
         }else{
