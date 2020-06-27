@@ -19825,7 +19825,10 @@ a.btn-icon-only
 .dropdown-menu
 {
     min-width: 12rem;
+    max-height: 130px;
+    overflow: auto;
 }
+
 .dropdown-menu .dropdown-item
 {
     font-size: .875rem;

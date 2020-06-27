@@ -74,17 +74,52 @@ class ClassController extends Controller
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
 
+        $members = array();
+        $schedules = array();
+        foreach($rows as $row){
+            //获取班级成员
+            $temp_member = array();
+            $db_members = DB::table('member')
+                            ->join('student', 'member.member_student', '=', 'student.student_id')
+                            ->where('member_class', $row->class_id)
+                            ->get();
+            foreach($db_members as $db_member){
+                $temp = array();
+                $temp['student_name'] = $db_member->student_name;
+                $temp_member[] = $temp;
+            }
+            $members[] = $temp_member;
+            //获取课程安排
+            $temp_schedule = array();
+            $db_schedules = DB::table('schedule')
+                              ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                              ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
+                              ->where('schedule_participant', $row->class_id)
+                              ->get();
+            foreach($db_schedules as $db_schedule){
+                $temp = array();
+                $temp['schedule_date'] = $db_schedule->schedule_date;
+                $temp['schedule_start'] = $db_schedule->schedule_start;
+                $temp['schedule_end'] = $db_schedule->schedule_end;
+                $temp['user_name'] = $db_schedule->user_name;
+                $temp_schedule[] = $temp;
+            }
+            $schedules[] = $temp_schedule;
+        }
+
         // 返回列表视图
         return view('operation/class/class', ['rows' => $rows,
-                                           'currentPage' => $currentPage,
-                                           'totalPage' => $totalPage,
-                                           'startIndex' => $offset,
-                                           'request' => $request,
-                                           'totalNum' => $totalNum,
-                                           'filter_status' => $filter_status,
-                                           'filter_departments' => $filter_departments,
-                                           'filter_grades' => $filter_grades,
-                                           'filter_subjects' => $filter_subjects]);
+                                              'members' => $members,
+                                              'schedules' => $schedules,
+                                              'currentPage' => $currentPage,
+                                              'totalPage' => $totalPage,
+                                              'startIndex' => $offset,
+                                              'request' => $request,
+                                              'totalNum' => $totalNum,
+                                              'filter_status' => $filter_status,
+                                              'filter_departments' => $filter_departments,
+                                              'filter_grades' => $filter_grades,
+                                              'filter_subjects' => $filter_subjects]);
     }
 
     /**

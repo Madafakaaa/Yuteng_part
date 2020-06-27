@@ -106,8 +106,8 @@
                 <th style='width:120px;'>班号</th>
                 <th style='width:90px;'>年级</th>
                 <th style='width:90px;'>科目</th>
-                <th style='width:110px;'>班级人数</th>
-                <th style='width:80px;'>已排课</th>
+                <th style='width:150px;'>班级人数</th>
+                <th style='width:150px;'>已排课</th>
                 <th style='width:80px;'>已上课</th>
                 <th style='width:210px;'>负责教师</th>
               </tr>
@@ -141,8 +141,32 @@
                   @else
                     <span style="color:red;">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
                   @endif
+                  <div class="dropdown">
+                    <a class="btn btn-sm btn-outline-primary" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">查看列表</a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                      @if(count($members[$loop->iteration-1])==0)
+                        <a class="dropdown-item" href="#">无</a>
+                      @endif
+                      @foreach ($members[$loop->iteration-1] as $member)
+                        <a class="dropdown-item" href="#">{{ $member['student_name'] }}</a>
+                      @endforeach
+                    </div>
+                  </div>
                 </td>
-                <td>{{ $row->class_schedule_num }} 节</td>
+                <td>
+                  {{ $row->class_schedule_num }} 节
+                  <div class="dropdown">
+                    <a class="btn btn-sm btn-outline-primary" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">查看列表</a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                      @if(count($schedules[$loop->iteration-1])==0)
+                        <a class="dropdown-item" href="#">无</a>
+                      @endif
+                      @foreach ($schedules[$loop->iteration-1] as $schedule)
+                        <a class="dropdown-item" href="#">{{ $schedule['schedule_date'] }} {{ dateToDay($schedule['schedule_date']) }} {{ date('H:i', strtotime($schedule['schedule_start'])) }} - {{ date('H:i', strtotime($schedule['schedule_end'])) }}</a>
+                      @endforeach
+                    </div>
+                  </div>
+                </td>
                 <td>{{ $row->class_attended_num }} 节</td>
                 <td>{{ $row->user_name }} ({{ $row->position_name }})</td>
               </tr>
