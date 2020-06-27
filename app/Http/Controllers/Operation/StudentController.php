@@ -292,4 +292,395 @@ class StudentController extends Controller
                       'title' => '插入班级成功',
                       'message' => '插入班级成功']);
     }
+
+    /**
+     * 安排学生课程视图
+     * URL: GET /operation/studentSchedule/create
+     */
+    public function studentScheduleCreate(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取学生id
+        $student_id = decode($request->input('id'), 'student_id');
+        // 获取学生信息
+        $student = DB::table('student')
+                     ->join('department', 'student.student_department', '=', 'department.department_id')
+                     ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
+                     ->where('student_id', $student_id)
+                     ->first();
+        // 获取教师名单
+        $teachers = DB::table('user')
+                      ->join('position', 'user.user_position', '=', 'position.position_id')
+                      ->join('department', 'user.user_department', '=', 'department.department_id')
+                      ->where('user_cross_teaching', '=', 1)
+                      ->where('user_department', '<>', $student->student_department)
+                      ->where('user_status', 1)
+                      ->orderBy('user_department', 'asc')
+                      ->orderBy('position_level', 'desc');
+        $teachers = DB::table('user')
+                      ->join('position', 'user.user_position', '=', 'position.position_id')
+                      ->join('department', 'user.user_department', '=', 'department.department_id')
+                      ->where('user_department', '=', $student->student_department)
+                      ->where('user_status', 1)
+                      ->orderBy('position_level', 'desc')
+                      ->union($teachers)
+                      ->get();
+        // 获取教室名单
+        $classrooms = DB::table('classroom')
+                        ->where('classroom_department', $student->student_department)
+                        ->where('classroom_status', 1)
+                        ->orderBy('classroom_id', 'asc')
+                        ->get();
+        // 获取科目
+        $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
+        // 获取课程
+        $courses = DB::table('course')->where('course_grade', $student->student_grade)->where('course_status', 1)->orderBy('course_id', 'asc')->get();
+        // 获取年级、科目、用户信息
+        return view('operation/student/studentScheduleCreate', ['student' => $student,
+                                                                'teachers' => $teachers,
+                                                                'classrooms' => $classrooms,
+                                                                'subjects' => $subjects,
+                                                                'courses' => $courses]);
+    }
+
+    /**
+     * 安排学生课程视图2
+     * URL: GET /operation/studentSchedule/create2
+     * @param  Request  $request
+     * @param  $request->input('input_student'): 学生/班级
+     * @param  $request->input('input2'): 上课教师
+     * @param  $request->input('input3'): 上课教室
+     * @param  $request->input('input4'): 课程
+     * @param  $request->input('input5'): 科目
+     * @param  $request->input('input6'): 上课日期
+     * @param  $request->input('input7'): 上课时间
+     * @param  $request->input('input8'): 下课时间
+     * @param  $request->input('input9'): 课程时长
+     */
+    public function studentScheduleCreate2(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+
+        // 获取表单输入
+        $schedule_student = $request->input('input_student');
+        $schedule_date_start = $request->input('input_date_start');
+        $schedule_date_end = $request->input('input_date_end');
+        $schedule_days = $request->input('input_days');
+        $schedule_start = $request->input('input_start');
+        $schedule_end = $request->input('input_end');
+        $schedule_teacher = $request->input('input_teacher');
+        $schedule_classroom = $request->input('input_classroom');
+        $schedule_course = $request->input('input_course');
+        $schedule_subject = $request->input('input_subject');
+        // 判断Checkbox是否为空
+        if(!isset($schedule_days)){
+            return redirect("/operation/student/schedule/create?id=".encode($schedule_student, 'student_id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '未选择上课规律',
+                           'message' => '至少选择一天上课，请重新输入！']);
+        }
+
+        // 日期数据处理
+        $schedule_date_start = date('Y-m-d', strtotime( $schedule_date_start));
+        $schedule_date_end = date('Y-m-d', strtotime( $schedule_date_end));
+        $schedule_date_temp = $schedule_date_start;
+        $schedule_dates_str = "";
+        while($schedule_date_temp <= $schedule_date_end){
+            foreach($schedule_days as $schedule_day){
+                if(date("w", strtotime($schedule_date_temp))==$schedule_day){
+                    if($schedule_dates_str==""){
+                        $schedule_dates_str.=$schedule_date_temp;
+                    }else{
+                        $schedule_dates_str.=",".$schedule_date_temp;
+                    }
+                    break;
+                }
+            }
+            $schedule_date_temp = date('Y-m-d', strtotime ("+1 day", strtotime($schedule_date_temp)));
+        }
+
+        // 拆分上课日期字符串
+        $schedule_dates = explode(',', $schedule_dates_str);
+        // 获取所选日期数量
+        $schedule_date_num = count($schedule_dates);
+        // 判断日期数量是否大于50
+        if($schedule_date_num>100){
+            return redirect("/operation/student/schedule/create?id=".encode($schedule_student, 'student_id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '请选择重新上课日期',
+                           'message' => '上课日期数量过多，超过最大上限100节课！']);
+        }
+        // 验证日期格式
+        for($i=0; $i<$schedule_date_num; $i++){
+            if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $schedule_dates[$i])){
+                return redirect("/operation/student/schedule/create?id=".encode($schedule_student, 'student_id'))
+                       ->with(['notify' => true,
+                               'type' => 'danger',
+                               'title' => '请选择重新上课日期',
+                               'message' => '上课日期格式有误！']);
+            }
+        }
+        // 如果上课时间不在下课时间之前返回上一页
+        $schedule_start = date('H:i', strtotime($schedule_start));
+        $schedule_end = date('H:i', strtotime($schedule_end));
+        if($schedule_start>=$schedule_end){
+            return redirect("/operation/student/schedule/create?id=".encode($schedule_student, 'student_id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '请重新选择上课、下课时间',
+                           'message' => '上课时间须在下课时间前！']);
+        }
+        // 计算课程时长
+        $schedule_time = 60*(intval(explode(':', $schedule_end)[0])-intval(explode(':', $schedule_start)[0]))+intval(explode(':', $schedule_end)[1])-intval(explode(':', $schedule_start)[1]);
+
+        // 获取学生信息
+        $schedule_student = DB::table('student')
+                              ->where('student_id', $schedule_student)
+                              ->join('department', 'student.student_department', '=', 'department.department_id')
+                              ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
+                              ->first();
+        // 获取教师信息
+        $schedule_teacher = DB::table('user')
+                              ->where('user_id', $schedule_teacher)
+                              ->first();
+        // 获取课程信息
+        $schedule_course = DB::table('course')
+                             ->where('course_id', $schedule_course)
+                             ->first();
+        // 获取科目名称
+        $schedule_subject = DB::table('subject')
+                              ->where('subject_id', $schedule_subject)
+                              ->first();
+        // 获取教室名称
+        $schedule_classroom = DB::table('classroom')
+                                ->where('classroom_id', $schedule_classroom)
+                                ->first();
+        // 生成班级名称
+        $class_name = $schedule_student->student_name." 1v1".$schedule_subject->subject_name;
+        return view('operation/student/studentScheduleCreate2', ['schedule_student' => $schedule_student,
+                                                                 'schedule_teacher' => $schedule_teacher,
+                                                                 'schedule_course' => $schedule_course,
+                                                                 'schedule_subject' => $schedule_subject,
+                                                                 'schedule_classroom' => $schedule_classroom,
+                                                                 'schedule_dates' => $schedule_dates,
+                                                                 'schedule_dates_str' => $schedule_dates_str,
+                                                                 'schedule_start' => $schedule_start,
+                                                                 'schedule_end' => $schedule_end,
+                                                                 'schedule_time' => $schedule_time,
+                                                                 'class_name' => $class_name]);
+    }
+
+    /**
+     * 安排学生课程提交
+     * URL: POST /operation/studentSchedule/store
+     * @param  Request  $request
+     * @param  $request->input('input1'): 学生/班级
+     * @param  $request->input('input2'): 教师
+     * @param  $request->input('input3'): 教室
+     * @param  $request->input('input4'): 科目
+     * @param  $request->input('input5'): 上课日期
+     * @param  $request->input('input6'): 上课时间
+     * @param  $request->input('input7'): 下课时间
+     * @param  $request->input('input8'): 课程时长
+     * @param  $request->input('input9'): 年级
+     * @param  $request->input('input10'): 课程
+     */
+    public function studentScheduleStore(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取表单输入
+        $schedule_department = $request->input('input_department');
+        $schedule_student = $request->input('input_student');
+        $schedule_teacher = $request->input('input_teacher');
+        $schedule_classroom = $request->input('input_classroom');
+        $schedule_subject = $request->input('input_subject');
+        $schedule_dates_str = $request->input('input_dates_str');
+        $schedule_start = $request->input('input_start');
+        $schedule_end = $request->input('input_end');
+        $schedule_time = $request->input('input_time');
+        $schedule_grade = $request->input('input_grade');
+        $schedule_course = $request->input('input_course');
+        $schedule_class_name = $request->input('input_class_name');
+        // 获取学生信息
+        $student = DB::table('student')
+                              ->where('student_id', $schedule_student)
+                              ->join('department', 'student.student_department', '=', 'department.department_id')
+                              ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
+                              ->first();
+        // 获取当前用户ID
+        $schedule_createuser = Session::get('user_id');
+        // 拆分上课日期字符串
+        $schedule_dates = explode(',', $schedule_dates_str);
+        // 获取所选日期数量
+        $schedule_date_num = count($schedule_dates);
+        // 获取上课成员类型
+        $schedule_participant_type = 1;
+        // 生成新班级ID
+        $class_num = DB::table('class')
+                       ->where('class_department', $schedule_department)
+                       ->whereYear('class_createtime', date('Y'))
+                       ->whereMonth('class_createtime', date('m'))
+                       ->count()+1;
+        $class_id = "C".substr(date('Ym'),2).sprintf("%02d", $schedule_department).sprintf("%03d", $class_num);
+        // 插入数据库
+        DB::beginTransaction();
+        try{
+            // 新建班级
+            DB::table('class')->insert(
+                ['class_id' => $class_id,
+                 'class_name' => $schedule_class_name,
+                 'class_department' => $schedule_department,
+                 'class_grade' => $student->student_grade,
+                 'class_subject' => $schedule_subject,
+                 'class_teacher' => $schedule_teacher,
+                 'class_max_num' => 1,
+                 'class_current_num' => 1,
+                 'class_schedule_num' => $schedule_date_num,
+                 'class_remark' => $schedule_class_name,
+                 'class_createuser' => $schedule_createuser]
+            );
+            // 添加班级成员
+            DB::table('member')->insert(
+                ['member_class' => $class_id,
+                 'member_student' => $schedule_student,
+                 'member_course' => $schedule_course,
+                 'member_createuser' => $schedule_createuser]
+            );
+            //
+            for($i=0; $i<$schedule_date_num; $i++){
+                DB::table('schedule')->insert(
+                    ['schedule_department' => $schedule_department,
+                     'schedule_participant' => $class_id,
+                     'schedule_participant_type' => $schedule_participant_type,
+                     'schedule_teacher' => $schedule_teacher,
+                     'schedule_course' => $schedule_course,
+                     'schedule_subject' => $schedule_subject,
+                     'schedule_grade' => $schedule_grade,
+                     'schedule_classroom' => $schedule_classroom,
+                     'schedule_date' => $schedule_dates[$i],
+                     'schedule_start' => $schedule_start,
+                     'schedule_end' => $schedule_end,
+                     'schedule_time' => $schedule_time,
+                     'schedule_createuser' => $schedule_createuser]
+                );
+            }
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return $e;
+            return redirect("/operation/student/schedule/create?id=".encode($schedule_student, 'student_id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '学生课程安排失败',
+                           'message' => '学生课程安排失败，请联系系统管理员。']);
+        }
+        DB::commit();
+        // 返回本校课程安排列表
+        return redirect("/operation/student/schedule/success?id=".encode($schedule_student, 'student_id'))
+               ->with(['notify' => true,
+                       'type' => 'success',
+                       'title' => '课程安排成功',
+                       'message' => '课程安排成功']);
+    }
+
+    public function studentScheduleCreateSuccess(Request $request){
+        return view('operation/student/studentScheduleCreateSuccess', ['id' => $request->input('id')]);
+    }
+
+
+    /**
+     * 插入班级视图
+     * URL: GET /operation/student/joinClass
+     */
+    public function joinClass(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $student_id = decode($request->input('student_id'), 'student_id');
+        $course_id = decode($request->input('course_id'), 'course_id');
+        // 获取学生信息
+        $student = DB::table('student')
+                      ->join('grade', 'grade.grade_id', '=', 'student.student_grade')
+                      ->where('student_id', $student_id)
+                      ->first();
+
+        // 获取剩余课时信息
+        $hours = DB::table('hour')
+                  ->join('course', 'hour.hour_course', '=', 'course.course_id')
+                  ->where('hour_student', $student_id)
+                  ->get();
+
+        // 获取班级信息
+        $classes = DB::table('class')
+                      ->join('subject', 'subject.subject_id', '=', 'class.class_subject')
+                      ->join('user', 'user.user_id', '=', 'class.class_teacher')
+                      ->join('position', 'user.user_position', '=', 'position.position_id')
+                      ->where('class_department', '=', $student->student_department)
+                      ->where('class_grade', '=', $student->student_grade)
+                      ->whereColumn('class_current_num', '<', 'class_max_num')
+                      ->where('class_status', 1)
+                      ->get();
+        return view('operation/student/joinClass', ['student' => $student,
+                                                     'course_id' => $course_id,
+                                                     'hours' => $hours,
+                                                     'classes' => $classes]);
+    }
+
+
+    /**
+     * 插入班级提交
+     * URL: GET /operation/hour/joinClass/store
+     */
+    public function joinClassStore(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $student_id = $request->input('input1');
+        $course_id = $request->input('input2');
+        $class_id = $request->input('input3');
+        // 插入数据库
+        DB::beginTransaction();
+        try{
+            // 添加班级成员
+            DB::table('member')->insert(
+                ['member_class' => $class_id,
+                 'member_student' => $student_id,
+                 'member_course' => $course_id,
+                 'member_createuser' => Session::get('user_id')]
+            );
+            // 更新班级人数
+            DB::table('class')
+              ->where('class_id', $class_id)
+              ->increment('class_current_num');
+            // 插入学生动态
+            //
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return redirect("/operation/student")
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '插入班级失败',
+                           'message' => '插入班级失败，请重新输入信息']);
+        }
+        DB::commit();
+        // 返回客户列表
+        return redirect("/operation/student")
+               ->with(['notify' => true,
+                      'type' => 'success',
+                      'title' => '插入班级成功',
+                      'message' => '插入班级成功']);
+    }
 }

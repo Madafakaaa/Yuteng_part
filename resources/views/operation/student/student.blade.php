@@ -89,7 +89,7 @@
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
                 <th style='width:110px;'>学生</th>
-                <th style='width:260px;'></th>
+                <th style='width:320px;'></th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:60px;'>年级</th>
                 <th style='width:130px;'>监护人</th>
@@ -122,6 +122,8 @@
                 <td>
                   <a href="/student?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
                   <a href="/operation/student/follower/edit?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">修改负责人</button></a>
+                  <a href="/operation/student/schedule/create?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">一对一排课</button></a>
+                  <a href="/operation/student/joinClass?student_id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">加入班级</button></a>
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/student/delete?id={{encode($row->student_id, 'student_id')}}', '确认删除学生？')">删除</button>
                 </td>
                 <td>{{ $row->department_name }}</td>

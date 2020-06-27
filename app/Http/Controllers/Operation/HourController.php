@@ -67,8 +67,6 @@ class HourController extends Controller
                               'student.student_id AS student_id',
                               'student.student_name AS student_name',
                               'student.student_gender AS student_gender',
-                              'student.student_follow_level AS student_follow_level',
-                              'student.student_last_follow_date AS student_last_follow_date',
                               'department.department_name AS department_name',
                               'grade.grade_name AS grade_name',
                               'consultant.user_name AS consultant_name',
@@ -81,19 +79,57 @@ class HourController extends Controller
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
+
+        $datas = array();
+        foreach($rows as $row){
+            $temp = array();
+            $temp['course_name'] = $row->course_name;
+            $temp['course_id'] = $row->course_id;
+            $temp['hour_remain'] = $row->hour_remain;
+            $temp['hour_used'] = $row->hour_used;
+            $temp['hour_cleaned'] = $row->hour_cleaned;
+            $temp['student_id'] = $row->student_id;
+            $temp['student_name'] = $row->student_name;
+            $temp['student_gender'] = $row->student_gender;
+            $temp['department_name'] = $row->department_name;
+            $temp['grade_name'] = $row->grade_name;
+            $temp['consultant_name'] = $row->consultant_name;
+            $temp['consultant_position_name'] = $row->consultant_position_name;
+            $temp['class_adviser_name'] = $row->class_adviser_name;
+            $temp['class_adviser_position_name'] = $row->class_adviser_position_name;
+            // 获取课程安排信息
+            $schedule_count = 0;
+            $classes = DB::table('member')
+                         ->join('class', 'member.member_class', '=', 'class.class_id')
+                         ->where('member_student', $row->student_id)
+                         ->where('member_course', $row->course_id)
+                         ->get();
+            $schedule_classes = array();
+            foreach($classes as $class){
+                $temp2 = array();
+                $temp2['class_name'] = $class->class_name;
+                $temp2['class_id'] = $class->class_id;
+                $temp2['class_schedule_num'] = $class->class_schedule_num;
+                $schedule_classes[] = $temp2;
+                $schedule_count+=$class->class_schedule_num;
+            }
+            $temp['schedule_count']=$schedule_count;
+            $temp['schedule_classes']=$schedule_classes;
+            $datas[] = $temp;
+        }
         // 获取校区、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         // 返回列表视图
-        return view('operation/hour/hour', ['rows' => $rows,
-                                           'currentPage' => $currentPage,
-                                           'totalPage' => $totalPage,
-                                           'startIndex' => $offset,
-                                           'request' => $request,
-                                           'totalNum' => $totalNum,
-                                           'filter_status' => $filter_status,
-                                           'filter_departments' => $filter_departments,
-                                           'filter_grades' => $filter_grades]);
+        return view('operation/hour/hour', ['datas' => $datas,
+                                            'currentPage' => $currentPage,
+                                            'totalPage' => $totalPage,
+                                            'startIndex' => $offset,
+                                            'request' => $request,
+                                            'totalNum' => $totalNum,
+                                            'filter_status' => $filter_status,
+                                            'filter_departments' => $filter_departments,
+                                            'filter_grades' => $filter_grades]);
     }
 
     /**
@@ -353,4 +389,5 @@ class HourController extends Controller
                       'title' => '课时清理成功',
                       'message' => '课时清理成功']);
     }
+
 }

@@ -27,7 +27,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/operation/contract/edit/{{ $contract->contract_id }}" method="post">
+        <form action="/operation/contract/update?id={{encode($contract->contract_id, 'contract_id')}}" method="post">
           @csrf
           <!-- Card body -->
           <div class="card-body">

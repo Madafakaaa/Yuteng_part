@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Exception;
 
-class ScheduleController extends Controller
+class AttendedScheduleController extends Controller
 {
     /**
-     * 本校班级课程安排视图
-     * URL: GET /operation/schedule
+     * 我的班级课程安排视图
+     * URL: GET /operation/attendedSchedule
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 课程安排校区
@@ -20,7 +20,7 @@ class ScheduleController extends Controller
      * @param  $request->input('filter4'): 课程安排教师
      * @param  $request->input('filter5'): 课程安排日期
      */
-    public function schedule(Request $request){
+    public function attendedSchedule(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -40,7 +40,7 @@ class ScheduleController extends Controller
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                   ->whereIn('schedule_department', $department_access)
-                  ->where('schedule_attended', '=', 0);
+                  ->where('schedule_attended', '=', 1);
 
         // 搜索条件
         // 判断是否有搜索条件
@@ -99,16 +99,16 @@ class ScheduleController extends Controller
         $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
 
         // 返回列表视图
-        return view('operation/schedule/schedule', ['rows' => $rows,
-                                                   'currentPage' => $currentPage,
-                                                   'totalPage' => $totalPage,
-                                                   'startIndex' => $offset,
-                                                   'request' => $request,
-                                                   'totalNum' => $totalNum,
-                                                   'filter_status' => $filter_status,
-                                                   'filter_departments' => $filter_departments,
-                                                   'filter_grades' => $filter_grades,
-                                                   'filter_subjects' => $filter_subjects]);
+        return view('operation/attendedSchedule/attendedSchedule', ['rows' => $rows,
+                                                                   'currentPage' => $currentPage,
+                                                                   'totalPage' => $totalPage,
+                                                                   'startIndex' => $offset,
+                                                                   'request' => $request,
+                                                                   'totalNum' => $totalNum,
+                                                                   'filter_status' => $filter_status,
+                                                                   'filter_departments' => $filter_departments,
+                                                                   'filter_grades' => $filter_grades,
+                                                                   'filter_subjects' => $filter_subjects]);
     }
 
     public function scheduleDelete(Request $request){

@@ -10,20 +10,14 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">我的学生</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">我的学生课时</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">运营中心</li>
-              <li class="breadcrumb-item active">我的学生</li>
+              <li class="breadcrumb-item active">我的学生课时</li>
             </ol>
           </nav>
-        </div>
-        <div class="col-6 text-right">
-          <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
-            <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
-            <span class="btn-inner--text">搜索</span>
-          </a>
         </div>
       </div>
     </div>
@@ -36,10 +30,6 @@
         <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
         <span class="btn-inner--text">搜索</span>
       </a>
-      <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/operation/student/delete', '确认批量删除所选学生？')">
-        <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
-        <span class="btn-inner--text">批量删除</span>
-      </button>
     </div>
   </div>
   <div class="row justify-content-center">
@@ -88,62 +78,82 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="table-responsive freeze-table-4">
+        <div class="table-responsive freeze-table-5">
           <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:110px;'>学生</th>
-                <th style='width:260px;'></th>
+                <th style='width:120px;'>学生</th>
+                <th style='width:140px;'>课程</th>
+                <th style='width:320px;'></th>
+                <th style='width:100px;'>剩余</th>
+                <th style='width:100px;'>已消耗</th>
+                <th style='width:100px;'>已清理</th>
+                <th style='width:130px;'>课时使用班级</th>
+                <th style='width:130px;'>已排课数量</th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:60px;'>年级</th>
-                <th style='width:130px;'>监护人</th>
-                <th style='width:110px;'>电话</th>
                 <th style='width:145px;'>课程顾问</th>
                 <th style='width:145px;'>班主任</th>
               </tr>
             </thead>
             <tbody>
-              @if(count($rows)==0)
+              @if(count($datas)==0)
               <tr class="text-center"><td colspan="11">当前没有记录</td></tr>
               @endif
-              @foreach ($rows as $row)
+              @foreach ($datas as $data)
               <tr>
                 <td>
                   <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($row->student_id, 'student_id')}}'>
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($data['student_id'], 'student_id')}}'>
                     <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
                   </div>
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>
-                  {{ $row->student_name }}&nbsp;
-                  @if($row->student_gender=="男")
+                  {{ $data['student_name'] }}&nbsp;
+                  @if($data['student_gender']=="男")
                     <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
                   @else
                     <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
                   @endif
                 </td>
+                <td>{{ $data['course_name'] }}</td>
                 <td>
-                  <a href="/student?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
-                  <a href="/operation/myStudent/contract/create?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">签约</button></a>
-                  <a href="/operation/myStudent/schedule/create?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">一对一排课</button></a>
-                  <a href="/operation/myStudent/joinClass?student_id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">加入班级</button></a>
+                  <a href="/student?id={{encode($data['student_id'], 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
+                  <a href="/operation/myStudent/joinClass?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-warning btn-sm">加入班级</button></a>
+                  <a href="/operation/myStudent/schedule/create?id={{encode($data['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">一对一排课</button></a>
+                  <a href="/operation/myHour/refund/create?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-danger btn-sm">退费</button></a>
                 </td>
-                <td>{{ $row->department_name }}</td>
-                <td>{{ $row->grade_name }}</td>
-                <td>{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
-                <td>{{ $row->student_phone }}</td>
-                @if($row->consultant_name=="")
+                <td>{{ $data['hour_remain'] }} 课时</td>
+                <td>{{ $data['hour_used'] }} 课时</td>
+                <td>{{ $data['hour_cleaned'] }} 课时</td>
+                <td>
+                  <div class="dropdown">
+                    <a class="btn btn-sm btn-outline-primary" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">查看列表</a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                      @if(count($data['schedule_classes'])==0)
+                        <a class="dropdown-item" href="#">无</a>
+                      @endif
+                      @foreach ($data['schedule_classes'] as $schedule_class)
+                        <a class="dropdown-item" href="#">{{ $schedule_class['class_name'] }} (已排{{ $schedule_class['class_schedule_num'] }}节课)</a>
+                      @endforeach
+                    </div>
+                  </div>
+                </td>
+                <td>{{ $data['schedule_count'] }} 节课</td>
+                <td>{{ $data['department_name'] }}</td>
+                <td>{{ $data['grade_name'] }}</td>
+                @if($data['consultant_name']=="")
                   <td><span style="color:red;">无</span></td>
                 @else
-                  <td>{{ $row->consultant_name }} ({{ $row->consultant_position_name }})</td>
+                  <td>{{ $data['consultant_name'] }} ({{ $data['consultant_position_name'] }})</td>
                 @endif
-                @if($row->class_adviser_name=="")
+                @if($data['class_adviser_name']=="")
                   <td><span style="color:red;">无</span></td>
                 @else
-                  <td>{{ $row->class_adviser_name }} ({{ $row->class_adviser_position_name }})</td>
+                  <td>{{ $data['class_adviser_name'] }} ({{ $data['class_adviser_position_name'] }})</td>
                 @endif
               </tr>
               @endforeach
@@ -161,6 +171,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationStudentMy');
+  linkActive('operationMyHour');
 </script>
 @endsection

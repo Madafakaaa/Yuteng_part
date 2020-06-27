@@ -26,6 +26,18 @@ $(document).ready(function(){
         'shadow': true,
         'freezeHead': false,
     });
+
+    $(".freeze-table-5").freezeTable({
+        'columnNum' : 5,
+        'shadow': true,
+        'freezeHead': false,
+    });
+
+    $(".freeze-table-6").freezeTable({
+        'columnNum' : 6,
+        'shadow': true,
+        'freezeHead': false,
+    });
 });
 
 

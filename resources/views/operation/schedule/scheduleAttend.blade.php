@@ -27,7 +27,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-10 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/operation/schedule/attend/{{ $schedule->schedule_id }}/step2" method="post" id="form1" name="form1">
+        <form action="/operation/schedule/attend/store" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
             <h3 class="mb-0">课程安排点名</h3>
@@ -43,6 +43,8 @@
                   <label>{{ $schedule->department_name }}</label>
                 </div>
               </div>
+            </div>
+            <div class="row">
               <div class="col-2 text-right">
                 <label class="form-control-label"><span style="color:red">*</span>上课日期</label>
               </div>
@@ -216,8 +218,8 @@
                     <select class="form-control form-control-sm" name="input{{ $loop->iteration }}_2" id="input{{ $loop->iteration }}_2" data-toggle="select" required>
                       <option value=''>请选择课程...</option>
                       @foreach ($student_course[1] as $course)
-                        <option value="{{ $course->hour_id }}" @if($schedule->schedule_course==$course->course_id) selected @endif>
-                          {{ $course->course_name }} ({{ $course->hour_remain }} 课时@if($course->hour_remain_free>0) / {{ $course->hour_remain_free }} 赠送 @endif)
+                        <option value="{{ $course->course_id }}">
+                          {{ $course->course_name }} ({{ $course->hour_remain }} 课时)
                         </option>
                       @endforeach
                     </select>
@@ -254,6 +256,7 @@
               <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-3 col-md-5 col-sm-12">
                 <input type="hidden" name="input_student_num" value="{{ count($student_courses) }}">
+                <input type="hidden" name="input_schedule" value="{{ $schedule->schedule_id }}">
                 <input type="submit" class="btn btn-primary btn-block" value="下一步">
               </div>
             </div>

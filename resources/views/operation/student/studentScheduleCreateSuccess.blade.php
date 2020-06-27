@@ -68,16 +68,16 @@
             <hr>
             <div class="row">
               <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="/operation/studentSchedule/create?student_id={{ $student_id }}" ><button type="button" class="btn btn-outline-primary btn-block">再次排课</button></a>
+                <a href="/operation/student" ><button type="button" class="btn btn-outline-primary btn-block">学生管理</button></a>
               </div>
               <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="/student/{{ $student_id }}" ><button type="button" class="btn btn-outline-primary btn-block">查看学生详情</button></a>
+                <a href="/operation/class" ><button type="button" class="btn btn-outline-primary btn-block">班级管理</button></a>
               </div>
               <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="/operation/student/my" ><button type="button" class="btn btn-outline-primary btn-block">我的学生</button></a>
+                <a href="/operation/hour" ><button type="button" class="btn btn-outline-primary btn-block">学生课时</button></a>
               </div>
               <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="/operation/schedule/my" ><button type="button" class="btn btn-outline-primary btn-block">我的学生课程安排</button></a>
+                <a href="/operation/schedule" ><button type="button" class="btn btn-outline-primary btn-block">课程安排</button></a>
               </div>
             </div>
           </div>

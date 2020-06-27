@@ -127,8 +127,8 @@
                   {{ $row->class_name }}
                 </td>
                 <td>
-                  <a href='/schedule/{{$row->schedule_id}}'><button type="button" class="btn btn-primary btn-sm">详情</button></a>&nbsp;
-                  <a href='/operation/schedule/attend/{{$row->schedule_id}}'><button type="button" class="btn btn-warning btn-sm">点名</button></a>&nbsp;
+                  <a href="/schedule/{{$row->schedule_id}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>&nbsp;
+                  <a href="/operation/schedule/attend?id={{encode($row->schedule_id, 'schedule_id')}}"><button type="button" class="btn btn-warning btn-sm">点名</button></a>&nbsp;
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/schedule/delete?id={{encode($row->schedule_id, 'schedule_id')}}', '确认删除课程安排？')">删除</button>
                 </td>
                 <td>{{ $row->department_name }}</td>

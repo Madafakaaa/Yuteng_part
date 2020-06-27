@@ -39,11 +39,12 @@ class ScheduleController extends Controller
      * URL: GET /attendedSchedule/{participant_id}
      * @param  int  $participant_id
      */
-    public function attendedSchedule($participant_id){
+    public function attendedSchedule(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $participant_id=decode($request->input('id'), 'participant_id');
         // 获取数据信息
         $schedule = DB::table('participant')
                       ->join('schedule', 'participant.participant_schedule', '=', 'schedule.schedule_id')
