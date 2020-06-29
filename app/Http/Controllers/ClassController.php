@@ -49,7 +49,7 @@ class ClassController extends Controller
         $students = DB::table('student')
                       ->where('student_grade', $class->class_grade)
                       ->where('student_department', $class->class_department)
-                      ->where('student_customer_status', 1)
+                      ->where('student_contract_num', '>', 0)
                       ->where('student_status', 1)
                       ->orderBy('student_createtime', 'asc')
                       ->get();
@@ -92,11 +92,12 @@ class ClassController extends Controller
      * URL: GET /class/{id}/edit
      * @param  int  $class_id
      */
-    public function edit($class_id){
+    public function edit(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $class_id = decode($request->input('id'), 'class_id');
         // 获取数据信息
         $class = DB::table('class')
                    ->join('department', 'class.class_department', '=', 'department.department_id')
@@ -149,11 +150,12 @@ class ClassController extends Controller
      * @param  $request->input('input6'): 备注
      * @param  int  $class_id
      */
-    public function update(Request $request, $class_id){
+    public function update(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $class_id = decode($request->input('id'), 'class_id');
          // 获取表单输入
         $class_name = $request->input('input1');
         $class_grade = $request->input('input2');
@@ -178,64 +180,29 @@ class ClassController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("/class/{$class_id}/edit")->with(['notify' => true,
-                                                              'type' => 'danger',
-                                                              'title' => '班级修改失败',
-                                                              'message' => '班级修改失败，请重新输入信息']);
+            return redirect("/class/edit?id=".encode($class_id, 'class_id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '班级修改失败',
+                           'message' => '班级修改失败，请重新输入信息']);
         }
-        return redirect("/class/{$class_id}")->with(['notify' => true,
-                                         'type' => 'success',
-                                         'title' => '班级修改成功',
-                                         'message' => '班级修改成功，班级名称: '.$class_name]);
-    }
-
-    /**
-     * 修改班级备注
-     * URL: POST /class/{id}/remark
-     * @param  Request  $request
-     * @param  $request->input('input1'): 班级备注
-     * @param  int  $student_id         : 班级id
-     */
-    public function remark(Request $request, $class_id){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取表单输入
-        $class_remark = $request->input('input1');
-        // 更新数据
-        DB::beginTransaction();
-        try{
-            // 更新学生备注
-            DB::table('class')
-              ->where('class_id', $class_id)
-              ->update(['class_remark' =>  $class_remark]);
-        }
-        // 捕获异常
-        catch(Exception $e){
-            DB::rollBack();
-            return redirect("/class/{$class_id}")->with(['notify' => true,
-                                                           'type' => 'danger',
-                                                           'title' => '修改班级备注失败',
-                                                           'message' => '修改班级备注失败，请重新输入信息']);
-        }
-        DB::commit();
-        // 返回客户列表
-        return redirect("/class/{$class_id}")->with(['notify' => true,
-                                                       'type' => 'success',
-                                                       'title' => '修改班级备注成功',
-                                                       'message' => '修改班级备注成功！']);
+        return redirect("/class?id=".encode($class_id, 'class_id'))
+               ->with(['notify' => true,
+                         'type' => 'success',
+                         'title' => '班级修改成功',
+                         'message' => '班级修改成功，班级名称: '.$class_name]);
     }
 
     /**
      * 插入班级提交
      * URL: GET /operation/member/store
      */
-    public function memberAdd(Request $request, $class_id){
+    public function memberAdd(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $class_id = decode($request->input('id'), 'class_id');
         $student_id = $request->input('input1');
         // 插入数据库
         DB::beginTransaction();
@@ -256,7 +223,7 @@ class ClassController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return redirect("/class/{$class_id}")
+            return redirect("/class?id=".encode($class_id, 'class_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '添加学生失败',
@@ -264,7 +231,7 @@ class ClassController extends Controller
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/class/{$class_id}")
+        return redirect("/class?id=".encode($class_id, 'class_id'))
                ->with(['notify' => true,
                       'type' => 'success',
                       'title' => '添加学生成功',
@@ -275,16 +242,17 @@ class ClassController extends Controller
      * 班级成员删除
      * URL: DELETE/class/{class_id}
      */
-    public function memberDelete(Request $request, $class_id){
+    public function memberDelete(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        $student_id = $request->input('input1');
+        $class_id = decode($request->input('class_id'), 'class_id');
+        $student_id = decode($request->input('student_id'), 'student_id');
         // 插入数据库
         DB::beginTransaction();
         try{
-            // 添加班级成员
+            // 删除班级成员
             DB::table('member')
               ->where('member_class', $class_id)
               ->where('member_student', $student_id)
@@ -299,7 +267,7 @@ class ClassController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return redirect("/class/{$class_id}")
+            return redirect("/class?id=".encode($class_id, 'class_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '删除成员失败',
@@ -307,42 +275,10 @@ class ClassController extends Controller
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/class/{$class_id}")
+        return redirect("/class?id=".encode($class_id, 'class_id'))
                ->with(['notify' => true,
                       'type' => 'success',
                       'title' => '删除成员成功',
                       'message' => '删除成员成功']);
-    }
-
-    /**
-     * 删除班级
-     * URL: DELETE /class/{id}
-     * @param  int  $class_id
-     */
-    public function destroy($class_id){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取数据信息
-        $class_name = DB::table('class')->where('class_id', $class_id)->value('class_name');
-        // 删除数据
-        try{
-            DB::table('class')->where('class_id', $class_id)->update(['class_status' => 0]);
-        }
-        // 捕获异常
-        catch(Exception $e){
-            return redirect()->action('ClassController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '班级删除失败',
-                                     'message' => '班级删除失败，请联系系统管理员']);
-        }
-        // 返回班级列表
-        return redirect()->action('ClassController@index')
-                         ->with(['notify' => true,
-                                 'type' => 'success',
-                                 'title' => '班级删除成功',
-                                 'message' => '班级名称: '.$class_name]);
     }
 }

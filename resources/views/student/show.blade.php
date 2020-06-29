@@ -38,7 +38,7 @@
         </div>
         <div class="card-header text-center border-0 pb-0 pb-4">
           <div class="d-flex justify-content-between">
-            <a href="/student/{{ $student->student_id }}/edit" class="btn btn-sm btn-primary mr-4">修改信息</a>
+            <a href="/student/edit?id={{encode($student->student_id,'student_id')}}" class="btn btn-sm btn-primary mr-4">修改信息</a>
           </div>
         </div>
         <div class="card-body pt-0">
@@ -119,7 +119,7 @@
         <div class="card-header">
           <h5 class="h3 mb-0">学生备注</h5>
         </div>
-        <form action="/student/{{ $student->student_id }}/remark" method="post">
+        <form action="/student/remark?id={{encode($student->student_id,'student_id')}}" method="post">
           @csrf
           <div class="card-body p-3">
             <div class="row">
@@ -183,11 +183,7 @@
                   @foreach ($schedules as $schedule)
                     <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
                       <td>{{ $loop->iteration }}</td>
-                      @if($schedule->schedule_participant_type==0)
-                        <td><span style="color:green;">一对一</span></td>
-                      @else
-                        <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
-                      @endif
+                      <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
                       <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
                       <td>{{ $schedule->subject_name }}</td>
                       <td>{{ $schedule->grade_name }}</td>
@@ -222,11 +218,7 @@
                   @foreach ($attended_schedules as $schedule)
                     <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
                       <td>{{ $loop->iteration }}</td>
-                      @if($schedule->schedule_participant_type==0)
-                        <td><span style="color:green;">一对一</span></td>
-                      @else
-                        <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
-                      @endif
+                      <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
                       <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
                       <td>{{ $schedule->subject_name }}</td>
                       <td>{{ $schedule->grade_name }}</td>
@@ -248,24 +240,24 @@
                 <thead class="thead-light">
                   <tr>
                     <th>序号</th>
-                    <th>校区</th>
                     <th>班级</th>
+                    <th>使用课程</th>
                     <th>教师</th>
                     <th>科目</th>
-                    <th>年级</th>
                     <th>人数</th>
+                    <th>已排课程</th>
                   </tr>
                 </thead>
                 <tbody>
                   @foreach ($classes as $class)
                     <tr>
                       <td>{{ $loop->iteration }}</td>
-                      <td>{{ $class->department_name }}</td>
                       <td>{{ $class->class_name }}</td>
+                      <td>{{ $class->course_name }}</td>
                       <td>{{ $class->user_name }}</td>
                       <td>{{ $class->subject_name }}</td>
-                      <td>{{ $class->grade_name }}</td>
                       <td>{{ $class->class_current_num }} / {{ $class->class_max_num }} 人</td>
+                      <td>{{ $class->class_schedule_num }} 节</td>
                     </tr>
                   @endforeach
                 </tbody>
@@ -282,11 +274,9 @@
                   <tr>
                     <th>序号</th>
                     <th>课程</th>
-                    <th>已用正常课时</th>
-                    <th>已用赠送课时</th>
-                    <th>剩余正常课时</th>
-                    <th>剩余赠送课时</th>
-                    <th>清理课时</th>
+                    <th>剩余课时</th>
+                    <th>已用课时</th>
+                    <th>已清理课时</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -294,11 +284,9 @@
                     <tr>
                       <td>{{ $loop->iteration }}</td>
                       <td>{{ $hour->course_name }}</td>
-                      <td>{{ $hour->hour_used }} 课时</td>
-                      <td>{{ $hour->hour_used_free }} 课时</td>
                       <td>{{ $hour->hour_remain }} 课时</td>
-                      <td>{{ $hour->hour_remain_free }} 课时</td>
-                      <td><a href='/student/cleanHour/{{$hour->hour_id}}'><button type="button" class="btn btn-primary btn-sm">清理课时</button></a></td>
+                      <td>{{ $hour->hour_used }} 课时</td>
+                      <td>{{ $hour->hour_cleaned }} 课时</td>
                     </tr>
                   @endforeach
                 </tbody>
@@ -337,7 +325,7 @@
                       <td title="{{ $contract->user_name }} ({{ $contract->position_name }})">{{ $contract->user_name }} ({{ $contract->position_name }})</td>
                       <td title="{{ $contract->contract_payment_method }}">{{ $contract->contract_payment_method }}</td>
                       <td title="{{ $contract->contract_date }}">{{ $contract->contract_date }}</td>
-                      <td><a href='/contract/{{$contract->contract_id}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a></td>
+                      <td><a href="/contract?id={{encode($contract->contract_id, 'contract_id')}}" target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a></td>
                     </tr>
                   @endforeach
                 </tbody>
@@ -351,7 +339,7 @@
             <div class="card-header">
               <h5 class="h3 mb-0">添加跟进记录</h5>
             </div>
-            <form action="/student/{{ $student->student_id }}/record" method="post">
+            <form action="/student/record?id={{encode($student->student_id,'student_id')}}" method="post">
               @csrf
               <div class="card-body p-3">
                 <div class="row">

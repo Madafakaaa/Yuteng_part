@@ -1,7 +1,5 @@
 @extends('main')
 
-@include('layout.php_functions')
-
 @section('nav')
     <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
 @endsection
@@ -29,8 +27,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/class/{{ $class->class_id }}" method="post" id="form1" name="form1">
-          @method('PUT')
+        <form action="/class/update?id={{ encode($class->class_id, 'class_id') }}" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
             <h4 class="mb-0">修改班级</h4>
@@ -118,7 +115,7 @@
               <div class="col-12">
                 <div class="form-group">
                   <label class="form-control-label">备注</label>
-                  <textarea class="form-control" name="input6" rows="3" resize="none" spellcheck="false" autocomplete='off' maxlength="140"></textarea>
+                  <textarea class="form-control" name="input6" rows="3" resize="none" spellcheck="false" autocomplete='off' maxlength="140">{{ $class->class_remark }}</textarea>
                 </div>
               </div>
             </div>

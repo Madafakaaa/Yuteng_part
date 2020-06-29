@@ -28,7 +28,7 @@
       <div class="card">
         <div class="card-header text-center border-0 pb-0 pb-4">
           <div class="d-flex justify-content-between">
-            <a href="/class/{{ $class->class_id }}/edit" class="btn btn-sm btn-primary mr-4">修改信息</a>
+            <a href="/class/edit?id={{ encode($class->class_id, 'class_id') }}" class="btn btn-sm btn-primary mr-4">修改信息</a>
             <!-- <a href="/schedule/create"  target="_blank" class="btn btn-sm btn-warning float-right">新建排课</a> -->
           </div>
         </div>
@@ -65,9 +65,6 @@
           <ul class="list-group list-group-flush list my--1">
             @foreach ($members as $member)
             <li class="list-group-item px-0">
-              <form action="/class/{{ $class->class_id }}" method="POST">
-                @method('DELETE')
-                @csrf
                 <div class="row align-items-center">
                   <div class="col-auto">
                     <a href="#" class="avatar rounded-circle">
@@ -82,15 +79,14 @@
                     <small>{{ $member->student_id }}</small>
                   </div>
                   <div class="col-auto">
-                    <input type="hidden" name="input1" value="{{ $member->student_id }}">
-                    <input type="submit" class="btn btn-sm btn-outline-danger" value="删除">
+                    <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/class/memberDelete?class_id={{ encode($class->class_id, 'class_id') }}&student_id={{ encode($member->student_id, 'student_id') }}', '确认删除学生？')">删除</button>
                   </div>
                 </div>
-              </form>
             </li>
             @endforeach
           </ul>
-            <form action="/class/{{ $class->class_id }}/add" method="post">
+          <!--
+            <form action="/class/memberAdd?id={{ encode($class->class_id, 'class_id') }}" method="post">
               @csrf
               <div class="card-body p-3">
                 <div class="row">
@@ -110,6 +106,7 @@
                 </div>
               </div>
             </form>
+          -->
         </div>
       </div>
       <div class="card">

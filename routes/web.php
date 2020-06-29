@@ -298,40 +298,35 @@ Route::any('/finance/consumption', 'FinanceController@consumption');
 // 退费统计
 Route::any('/finance/refund', 'FinanceController@refund');
 
-// 用户
-// 查看用户
+
+// 用户详情
 Route::get('/user/{user_id}', 'UserController@show');
-// 修改用户
-Route::get('/user/{user_id}/edit', 'UserController@edit');
-// 更新用户
-Route::put('/user/{user_id}', 'UserController@update');
+    // 修改用户
+    Route::get('/user/{user_id}/edit', 'UserController@edit');
+    // 更新用户
+    Route::put('/user/{user_id}', 'UserController@update');
 
-// 学生
-// 查看学生
+
+// 学生详情
 Route::get('/student', 'StudentController@show');
-// 修改学生
-Route::get('/student/{student_id}/edit', 'StudentController@edit');
-Route::put('/student/{student_id}', 'StudentController@update');
-// 学生跟进记录提交
-Route::post('/student/{student_id}/remark', 'StudentController@remark');
-// 学生跟进记录提交
-Route::post('/student/{student_id}/record', 'StudentController@record');
-// 清理课时
-Route::get('/student/cleanHour/{hour_id}', 'StudentController@cleanHour');
-Route::post('/student/cleanHour/{hour_id}', 'StudentController@cleanHourStore');
+    // 修改学生
+    Route::get('/student/edit', 'StudentController@edit');
+    Route::post('/student/update', 'StudentController@update');
+    // 学生跟进记录提交
+    Route::post('/student/remark', 'StudentController@remark');
+    // 学生跟进记录提交
+    Route::post('/student/record', 'StudentController@record');
 
-// 班级
-// 查看班级
-Route::get('/class/{class_id}', 'ClassController@show');
-// 修改班级
-Route::get('/class/{class_id}/edit', 'ClassController@edit');
-Route::put('/class/{class_id}', 'ClassController@update');
-// 删除成员
-Route::post('/class/{class_id}/add', 'ClassController@memberAdd');
-// 删除成员
-Route::delete('/class/{class_id}', 'ClassController@memberDelete');
+// 班级详情
+Route::get('/class', 'ClassController@show');
+    // 修改班级
+    Route::get('/class/edit', 'ClassController@edit');
+    Route::post('/class/update', 'ClassController@update');
+    // 删除成员
+    Route::post('/class/memberAdd', 'ClassController@memberAdd');
+    // 删除成员
+    Route::get('/class/memberDelete', 'ClassController@memberDelete');
 
-// 合同
 // 查看合同
 Route::get('/contract', 'ContractController@show');
 

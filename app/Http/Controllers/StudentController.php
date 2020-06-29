@@ -50,7 +50,6 @@ class StudentController extends Controller
                               'student.student_follow_num AS student_follow_num',
                               'student.student_contract_num AS student_contract_num',
                               'student.student_last_follow_date AS student_last_follow_date',
-                              'student.student_customer_status AS student_customer_status',
                               'department.department_name AS department_name',
                               'grade.grade_name AS grade_name',
                               'school.school_name AS school_name',
@@ -73,18 +72,18 @@ class StudentController extends Controller
         $classes = DB::table('member')
                      ->join('student', 'member.member_student', '=', 'student.student_id')
                      ->join('class', 'member.member_class', '=', 'class.class_id')
+                     ->join('course', 'member.member_course', '=', 'course.course_id')
                      ->join('user', 'class.class_teacher', '=', 'user.user_id')
-                     ->join('department', 'class.class_department', '=', 'department.department_id')
-                     ->join('grade', 'grade.grade_id', '=', 'class.class_grade')
                      ->join('subject', 'subject.subject_id', '=', 'class.class_subject')
                      ->where('member.member_student', '=', $student_id)
                      ->get();
 
         // 班级id和学生id数组
-        $class_ids = array($student_id);
+        $class_ids = array();
         foreach($classes as $class){
             $class_ids[] = $class->class_id;
         }
+
         // 获取所有课程安排
         $schedules = DB::table('schedule')
                        ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
@@ -121,10 +120,10 @@ class StudentController extends Controller
 
         // 获取签约合同
         $contracts = DB::table('contract')
-                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
-                   ->join('position', 'user.user_position', '=', 'position.position_id')
-                   ->where('contract_student', '=', $student_id)
-                   ->get();
+                       ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
+                       ->join('position', 'user.user_position', '=', 'position.position_id')
+                       ->where('contract_student', '=', $student_id)
+                       ->get();
 
         // 获取学生动态
         $student_records = DB::table('student_record')
@@ -135,6 +134,7 @@ class StudentController extends Controller
                              ->orderBy('student_record_createtime', 'desc')
                              ->limit(50)
                              ->get();
+
         return view('student/show', ['selected' => $selected,
                                      'student' => $student,
                                      'classes' => $classes,
@@ -150,11 +150,12 @@ class StudentController extends Controller
      * URL: GET /customer/{student_id}/edit
      * @param  int  $student_id        : 学生id
      */
-    public function edit($student_id){
+    public function edit(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $student_id = decode($request->input('id'), 'student_id');
         // 获取数据信息
         $student = DB::table('student')->where('student_id', $student_id)->get();
         if($student->count()!==1){
@@ -200,11 +201,12 @@ class StudentController extends Controller
      * @param  $request->input('input10'): 学生生日
      * @param  int  $student_id        : 学生id
      */
-    public function update(Request $request, $student_id){
+    public function update(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $student_id = $request->input('id');
         // 获取表单输入
         $student_name = $request->input('input1');
         $student_department = $request->input('input2');
@@ -225,11 +227,6 @@ class StudentController extends Controller
         }
         $student_source = $request->input('input10');
         $student_birthday = $request->input('input11');
-        //  获取学生信息
-        $student = DB::table('student')
-                     ->where('student_id', $student_id)
-                     ->first();
-        $student_name = $student->student_name;
         // 更新数据库
         DB::beginTransaction();
         try{
@@ -258,31 +255,38 @@ class StudentController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
-            return redirect("/student/{$student_id}/edit")->with(['notify' => true,
-                                                                    'type' => 'danger',
-                                                                    'title' => '学生修改失败',
-                                                                    'message' => '学生修改失败，请重新输入信息']);
+            return redirect("/student/edit?id=".encode($student_id, 'student_id'))
+                   ->with(['notify' => true,
+                            'type' => 'danger',
+                            'title' => '学生修改失败',
+                            'message' => '学生修改失败，请重新输入信息']);
         }
         DB::commit();
-        return redirect("/student/{$student_id}")->with(['notify' => true,
-                                                        'type' => 'success',
-                                                        'title' => '学生修改成功',
-                                                        'message' => '学生修改成功，学生名称: '.$student_name]);
+        //  获取学生信息
+        $student = DB::table('student')
+                     ->where('student_id', $student_id)
+                     ->first();
+        $student_name = $student->student_name;
+        return redirect("/student?id=".encode($student_id, 'student_id'))
+           ->with(['notify' => true,
+                    'type' => 'success',
+                    'title' => '学生修改成功',
+                    'message' => '学生修改成功，学生名称: '.$student_name]);
     }
 
     /**
      * 修改学生备注
-     * URL: POST /student/{id}/remark
+     * URL: POST /student/remark
      * @param  Request  $request
      * @param  $request->input('input1'): 学生备注
      * @param  int  $student_id        : 学生id
      */
-    public function remark(Request $request, $student_id){
+    public function remark(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $student_id = decode($request->input('id'), 'student_id');
         // 获取表单输入
         $student_remark = $request->input('input1');
         // 更新数据
@@ -303,33 +307,36 @@ class StudentController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return redirect("/student/{$student_id}")->with(['notify' => true,
-                                                               'type' => 'danger',
-                                                               'title' => '修改学生备注失败',
-                                                               'message' => '修改学生备注失败，请重新输入信息']);
+            return redirect("/student?id=".encode($student_id, 'student_id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '修改学生备注失败',
+                           'message' => '修改学生备注失败，请重新输入信息']);
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/student/{$student_id}")->with(['notify' => true,
-                                                           'type' => 'success',
-                                                           'title' => '修改学生备注成功',
-                                                           'message' => '修改学生备注成功']);
+        return redirect("/student?id=".encode($student_id, 'student_id'))
+               ->with(['notify' => true,
+                       'type' => 'success',
+                       'title' => '修改学生备注成功',
+                       'message' => '修改学生备注成功']);
     }
 
     /**
      * 学生跟进动态提交
-     * URL: POST /student/{id}/record
+     * URL: POST /student/record
      * @param  Request  $request
      * @param  $request->input('input1'): 跟进内容
      * @param  $request->input('input2'): 跟进方式
      * @param  $request->input('input3'): 跟进时间
      * @param  int  $student_id        : 学生id
      */
-    public function record(Request $request, $student_id){
+    public function record(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $student_id = decode($request->input('id'), 'student_id');
         // 获取表单输入
         $student_record_content = "跟进方式：".$request->input('input2')."，跟进日期：".$request->input('input3')."。<br>".$request->input('input1');
         // 获取数据信息
@@ -358,186 +365,20 @@ class StudentController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return redirect("/student/{$student_id}")->with(['notify' => true,
-                                                               'type' => 'danger',
-                                                               'title' => '添加跟进动态失败',
-                                                               'message' => '添加跟进动态失败，请重新输入信息']);
+            return redirect("/student?id=".encode($student_id, 'student_id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '添加跟进动态失败',
+                           'message' => '添加跟进动态失败，请重新输入信息']);
         }
         DB::commit();
         // 返回客户列表
-        return redirect("/student/{$student_id}")->with(['notify' => true,
-                                                           'type' => 'success',
-                                                           'title' => '添加跟进动态成功',
-                                                           'message' => '添加跟进动态成功']);
+        return redirect("/student?id=".encode($student_id, 'student_id'))
+               ->with(['notify' => true,
+                       'type' => 'success',
+                       'title' => '添加跟进动态成功',
+                       'message' => '添加跟进动态成功']);
     }
 
-    /**
-     * 修改学生负责人
-     * URL: POST /student/{id}/follower
-     * @param  Request  $request
-     * @param  $request->input('input1'): 负责人
-     * @param  int  $student_id        : 学生id
-     */
-    public function follower(Request $request, $student_id){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取表单输入
-        if($request->filled('input1')) {
-            $student_new_follower = $request->input('input1');
-        }else{
-            $student_new_follower = "";
-        }
-        // 获取客户信息
-        $student = DB::table('student')
-                     ->leftJoin('user', 'student.student_follower', '=', 'user.user_id')
-                     ->where('student_id', $student_id)
-                     ->first();
-        // 获取学生姓名
-        $student_name = $student->student_name;
-        // 获取原负责人姓名
-        $student_old_follower_name = $student->user_name;
-        $student_old_follower = $student->user_id;
-        if($student_old_follower_name==""){
-            $student_old_follower_name="无(公共)";
-        }
-        // 原负责人和新负责人相同，返回上一级
-        if($student_old_follower==$student_new_follower){
-            return redirect("/customer/{$student_id}")->with(['notify' => true,
-                                                               'type' => 'danger',
-                                                               'title' => '修改学生负责人失败',
-                                                               'message' => '原负责人与新负责人相同，请重新选择']);
-        }
-        // 获取新跟进人姓名
-        if($student_new_follower==""){
-            $student_new_follower_name="无(公共)";
-        }else{
-            $student_new_follower_name = DB::table('user')
-                                           ->where('user_id', $student_new_follower)
-                                           ->first()
-                                           ->user_name;
-        }
-        // 更新数据
-        DB::beginTransaction();
-        try{
-            // 更新学生负责人
-            DB::table('student')
-              ->where('student_id', $student_id)
-              ->update(['student_follower' =>  $student_new_follower,
-                        'student_customer_status' =>  2]);
-            // 添加学生动态
-            DB::table('student_record')->insert(
-                ['student_record_student' => $student_id,
-                 'student_record_type' => '更换负责人',
-                 'student_record_content' => '更换学生负责人。原负责人：'.$student_old_follower_name."，新负责人：".$student_new_follower_name."。",
-                 'student_record_createuser' => Session::get('user_id')]
-            );
-        }
-        // 捕获异常
-        catch(Exception $e){
-            DB::rollBack();
-            return redirect("/student/{$student_id}")->with(['notify' => true,
-                                                               'type' => 'danger',
-                                                               'title' => '修改学生跟负责失败',
-                                                               'message' => '修改学生跟负责失败，请重新输入信息']);
-        }
-        DB::commit();
-        // 返回客户列表
-        return redirect("/student/{$student_id}")->with(['notify' => true,
-                                                           'type' => 'success',
-                                                           'title' => '修改学生负责人成功',
-                                                           'message' => '学生名称: '.$student_name]);
-    }
 
-    /**
-     * 清理课时
-     * URL: GET /student/cleanHour/{hour_id}
-     * @param  int  $hour_id        : Hour id
-     */
-    public function cleanHour($hour_id){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取课时信息
-        $hour = DB::table('hour')
-                     ->join('student', 'student.student_id', '=', 'hour.hour_student')
-                     ->join('course', 'course.course_id', '=', 'hour.hour_course')
-                     ->where('hour_id', $hour_id)
-                     ->first();
-        return view('student/cleanHour', ['hour' => $hour]);
-    }
-
-    /**
-     * 清理课时提交
-     * URL: POST /student/cleanHour/{hour_id}
-     * @param  Request  $request
-     * @param  int  $hour_id        : Hour id
-     */
-    public function cleanHourStore(Request $request, $hour_id){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取表单输入
-        $hour_cleaned_record_amount = $request->input('input_cleaned_record_amount');
-        if($request->filled('input_remark')) {
-            $hour_cleaned_record_remark = $request->input('input_remark');
-        }else{
-            $hour_cleaned_record_remark = "";
-        }
-        // 获取课时信息
-        $hour = DB::table('hour')
-                     ->join('student', 'student.student_id', '=', 'hour.hour_student')
-                     ->join('course', 'course.course_id', '=', 'hour.hour_course')
-                     ->where('hour_id', $hour_id)
-                     ->first();
-        // 更新数据
-        DB::beginTransaction();
-        try{
-            if($hour->hour_remain>=$hour_cleaned_record_amount){
-                // 更新剩余课时
-                DB::table('hour')
-                  ->where('hour_id', $hour_id)
-                  ->decrement('hour_remain', $hour_cleaned_record_amount);
-                DB::table('hour')
-                  ->where('hour_id', $hour_id)
-                  ->increment('hour_cleaned', $hour_cleaned_record_amount);
-            }else{
-                // 更新剩余课时
-                DB::table('hour')
-                  ->where('hour_id', $hour_id)
-                  ->update(['hour_remain' =>  0]);
-                $free_clean_amount = $hour_cleaned_record_amount-$hour->hour_remain;
-                DB::table('hour')
-                  ->where('hour_id', $hour_id)
-                  ->decrement('hour_remain_free', $free_clean_amount);
-                DB::table('hour')
-                  ->where('hour_id', $hour_id)
-                  ->increment('hour_cleaned', $hour_cleaned_record_amount);
-            }
-            // 添加课时清理记录
-            DB::table('hour_cleaned_record')->insert(
-                ['hour_cleaned_record_hour' => $hour->hour_student,
-                 'hour_cleaned_record_amount' => $hour_cleaned_record_amount,
-                 'hour_cleaned_record_remark' => $hour_cleaned_record_remark,
-                 'hour_cleaned_record_createuser' => Session::get('user_id')]
-            );
-        }
-        // 捕获异常
-        catch(Exception $e){
-            DB::rollBack();
-            return redirect("/student/{$hour->hour_student}")->with(['notify' => true,
-                                                               'type' => 'danger',
-                                                               'title' => '学生课时清理失败',
-                                                               'message' => '学生课时清理失败，请重新输入信息']);
-        }
-        DB::commit();
-        // 返回客户列表
-        return redirect("/student/{$hour->hour_student}")->with(['notify' => true,
-                                                           'type' => 'success',
-                                                           'title' => '学生课时清理成功',
-                                                           'message' => '学生课时清理成功']);
-    }
 }

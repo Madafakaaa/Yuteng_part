@@ -95,6 +95,7 @@ class ClassController extends Controller
                               ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
                               ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                               ->where('schedule_participant', $row->class_id)
+                              ->where('schedule_attended', 0)
                               ->get();
             foreach($db_schedules as $db_schedule){
                 $temp = array();

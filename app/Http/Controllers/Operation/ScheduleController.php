@@ -394,6 +394,13 @@ class ScheduleController extends Controller
                         'schedule_absence_num' => $schedule_absence_num,
                         'schedule_attended' => 1,
                         'schedule_attended_user' => Session::get('user_id')]);
+            // 更新班级信息
+            DB::table('class')
+              ->where('class_id', $schedule->schedule_participant)
+              ->increment('class_attended_num');
+            DB::table('class')
+              ->where('class_id', $schedule->schedule_participant)
+              ->decrement('class_schedule_num');
         }
         // 捕获异常
         catch(Exception $e){
