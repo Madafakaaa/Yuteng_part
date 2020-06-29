@@ -266,41 +266,29 @@ Route::get('/operation/myRefund', 'Operation\MyRefundController@myRefund');
 
 
 // 教学中心
-// 全部学生
-Route::get('/education/student/all', 'EducationController@studentAll');
-// 本校学生
-Route::get('/education/student/department', 'EducationController@studentDepartment');
-// 我的学生
-Route::get('/education/student/my', 'EducationController@studentMy');
-// 全部班级
-Route::get('/education/class/all', 'EducationController@classAll');
-// 删除班级
-Route::delete('/education/class/all/{class_id}', 'EducationController@classDelete');
-// 本校班级
-Route::get('/education/class/department', 'EducationController@classDepartment');
+// 学生管理
+Route::get('/education/student', 'Education\StudentController@student');
+// 班级管理
+Route::get('/education/class', 'Education\ClassController@class');
+// 课程安排
+Route::get('/education/schedule', 'Education\ScheduleController@schedule');
+// 上课记录
+Route::get('/education/attendedSchedule', 'Education\AttendedScheduleController@attendedSchedule');
 // 我的班级
-Route::get('/education/class/my', 'EducationController@classMy');
-// 全部课程安排
-Route::get('/education/schedule/all', 'EducationController@scheduleAll');
-// 本校课程安排
-Route::get('/education/schedule/department', 'EducationController@scheduleDepartment');
+Route::get('/education/myClass', 'Education\MyClassController@myClass');
 // 我的课程安排
-Route::get('/education/schedule/my', 'EducationController@scheduleMy');
-// 全部上课记录
-Route::get('/education/attendedSchedule/all', 'EducationController@attendedScheduleAll');
-// 本校上课记录
-Route::get('/education/attendedSchedule/department', 'EducationController@attendedScheduleDepartment');
+Route::get('/education/mySchedule', 'Education\MyScheduleController@mySchedule');
 // 我的上课记录
-Route::get('/education/attendedSchedule/my', 'EducationController@attendedScheduleMy');
-// 上传教案
-Route::get('/education/document/create', 'EducationController@documentCreate');
-Route::post('/education/document/store', 'EducationController@documentStore');
+Route::get('/education/myAttendedSchedule', 'Education\MyAttendedScheduleController@myAttendedSchedule');
 // 教案中心
-Route::get('/education/document', 'EducationController@document');
-// 下载教案
-Route::get('/education/document/{document_id}', 'EducationController@documentDownload');
-// 删除教案
-Route::delete('/education/document/{document_id}', 'EducationController@documentDelete');
+Route::get('/education/document', 'Education\DocumentController@document');
+    // 上传教案
+    Route::get('/education/document/create', 'Education\DocumentController@documentCreate');
+    Route::post('/education/document/store', 'Education\DocumentController@documentStore');
+    // 下载教案
+    Route::get('/education/document/download', 'Education\DocumentController@documentDownload');
+    // 删除教案
+    Route::get('/education/document/delete', 'Education\DocumentController@documentDelete');
 
 // 数据中心
 // 签约统计

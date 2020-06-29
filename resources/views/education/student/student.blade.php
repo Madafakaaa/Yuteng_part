@@ -10,26 +10,28 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">我的学生</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">学生管理</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">教学中心</li>
-              <li class="breadcrumb-item active">我的学生</li>
+              <li class="breadcrumb-item active">学生管理</li>
             </ol>
           </nav>
-        </div>
-        <div class="col-6 text-right">
-          <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
-            <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
-            <span class="btn-inner--text">搜索</span>
-          </a>
         </div>
       </div>
     </div>
   </div>
 </div>
-<div class="container-fluid mt-4">
+<div class="container-fluid mt-3">
+  <div class="row mb-3">
+    <div class="col-auto">
+      <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
+        <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
+        <span class="btn-inner--text">搜索</span>
+      </a>
+    </div>
+  </div>
   <div class="row justify-content-center">
     <div class="col-12">
       <div class="collapse @if($filter_status==1) show @endif" id="filter">
@@ -76,50 +78,50 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="table-responsive">
-          <table class="table align-items-center table-hover text-left table-bordered">
+        <div class="table-responsive freeze-table-4">
+          <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
-                <th style='width:139px;'>学生</th>
+                <th style='width:40px;'></th>
+                <th style='width:70px;'>序号</th>
+                <th style='width:110px;'>学生</th>
+                <th style='width:320px;'></th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:60px;'>年级</th>
-                <th style='width:60px;'>性别</th>
                 <th style='width:130px;'>监护人</th>
                 <th style='width:110px;'>电话</th>
-                <th style='width:80px;'>优先级</th>
-                <th style='width:100px;'>上次跟进</th>
-                <th style='width:70px;'>状态</th>
                 <th style='width:145px;'>课程顾问</th>
                 <th style='width:145px;'>班主任</th>
-                <th style='width:188px;'>操作管理</th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="12">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="11">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
               <tr>
-                <td>{{ $row->student_name }}</td>
+                <td>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($row->student_id, 'student_id')}}'>
+                    <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
+                  </div>
+                </td>
+                <td>{{ $startIndex+$loop->iteration }}</td>
+                <td>
+                  {{ $row->student_name }}&nbsp;
+                  @if($row->student_gender=="男")
+                    <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
+                  @else
+                    <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
+                  @endif
+                </td>
+                <td>
+                  <a href="/student?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
+                </td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->grade_name }}</td>
-                <td>{{ $row->student_gender }}</td>
                 <td>{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
                 <td>{{ $row->student_phone }}</td>
-                @if($row->student_follow_level==1)
-                  <td><span style="color:#8B4513;">低</span></td>
-                @elseif($row->student_follow_level==2)
-                  <td><span style="color:#FF4500;">中</span></td>
-                @elseif($row->student_follow_level==3)
-                  <td><span style="color:#FF0000;">高</span></td>
-                @endif
-                <td>{{ $row->student_last_follow_date }}</td>
-                @if($row->student_customer_status==0)
-                  <td><span style="color:red;">未签约</span></td>
-                @else
-                  <td><span style="color:green;">已签约</span></td>
-                @endif
                 @if($row->consultant_name=="")
                   <td><span style="color:red;">无</span></td>
                 @else
@@ -130,9 +132,6 @@
                 @else
                   <td>{{ $row->class_adviser_name }} ({{ $row->class_adviser_position_name }})</td>
                 @endif
-                <td>
-                  <a href='/student/{{$row->student_id}}'><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
-                </td>
               </tr>
               @endforeach
             </tbody>
@@ -149,6 +148,6 @@
 <script>
   linkActive('link-education');
   navbarActive('navbar-education');
-  linkActive('educationStudentMy');
+  linkActive('educationStudent');
 </script>
 @endsection

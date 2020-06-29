@@ -422,4 +422,6 @@ class ScheduleController extends Controller
     public function scheduleAttendSuccess(Request $request){
         return view('operation/schedule/scheduleAttendSuccess', ['id' => $request->input('id')]);
     }
+
+
 }

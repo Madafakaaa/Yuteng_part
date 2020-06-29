@@ -10,26 +10,28 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">我的班级</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">课程安排</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">教学中心</li>
-              <li class="breadcrumb-item active">我的班级</li>
+              <li class="breadcrumb-item active">课程安排</li>
             </ol>
           </nav>
-        </div>
-        <div class="col-6 text-right">
-          <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
-            <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
-            <span class="btn-inner--text">搜索</span>
-          </a>
         </div>
       </div>
     </div>
   </div>
 </div>
-<div class="container-fluid mt-4">
+<div class="container-fluid mt-3">
+  <div class="row mb-3">
+    <div class="col-auto">
+      <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
+        <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
+        <span class="btn-inner--text">搜索</span>
+      </a>
+    </div>
+  </div>
   <div class="row justify-content-center">
     <div class="col-12">
       <div class="collapse @if($filter_status==1) show @endif" id="filter">
@@ -84,49 +86,61 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
-        <div class="table-responsive">
-          <table class="table align-items-center table-hover text-left table-bordered">
+        <div class="table-responsive freeze-table-4">
+          <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
+                <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:339px;'>班级</th>
+                <th style='width:120px;'>班级</th>
+                <th style='width:210px;'></th>
                 <th style='width:100px;'>校区</th>
-                <th style='width:120px;'>班号</th>
-                <th style='width:90px;'>年级</th>
-                <th style='width:90px;'>科目</th>
+                <th style='width:160px;'>日期</th>
+                <th style='width:110px;'>时间</th>
                 <th style='width:110px;'>班级人数</th>
-                <th style='width:210px;'>负责教师</th>
-                <th style='width:188px;'>操作管理</th>
-                <th></th>
+                <th style='width:100px;'>教师</th>
+                <th style='width:70px;'>科目</th>
+                <th style='width:70px;'>年级</th>
+                <th style='width:110px;'>教室</th>
+                <th style='width:170px;'>课程</th>
+                <th style='width:100px;'>排课用户</th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="9">当前没有记录</td></tr>
+                <tr class="text-center"><td colspan="12">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
-              <tr title="班级：{{ $row->class_name }}。创建时间：{{ $row->class_createtime }}。">
-                <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->department_name }}</td>
-                <td>{{ $row->class_name }}</td>
-                <td>{{ $row->class_id }}</td>
-                <td>{{ $row->grade_name }}</td>
-                <td>@if($row->class_subject==0) 全科目 @else{{ $row->subject_name }}@endif</td>
+              <tr>
                 <td>
-                  <div class="d-flex align-items-center">
-                    <!-- <div><div class="progress" style="width:70px;"><div class="progress-bar bg-success" style="width: 50%;"></div></div></div> -->
-                    <span class="completion ml-2">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($row->schedule_id, 'schedule_id')}}'>
+                    <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
                   </div>
                 </td>
-                <td>{{ $row->user_name }} ({{ $row->position_name }})</td>
+                <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>
-                  <form action="class/{{$row->class_id}}" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <a href='/class/{{$row->class_id}}'><button type="button" class="btn btn-primary btn-sm">班级详情</button></a>
-                    {{ deleteConfirm($row->class_id, ["班级名称：".$row->class_name]) }}
-                  </form>
+                  {{ $row->class_name }}
                 </td>
+                <td>
+                  <a href="/schedule/{{$row->schedule_id}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>&nbsp;
+                </td>
+                <td>{{ $row->department_name }}</td>
+                <td>{{ $row->schedule_date }}&nbsp;{{ dateToDay($row->schedule_date) }}</td>
+                <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
+                <td>
+                  @if($row->class_current_num==$row->class_max_num)
+                    <span style="color:green;">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
+                  @else
+                    <span style="color:red;">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
+                  @endif
+                </td>
+                <td>{{ $row->teacher_name }}</td>
+                <td>{{ $row->subject_name }}</td>
+                <td>{{ $row->grade_name }}</td>
+                <td>{{ $row->classroom_name }}</td>
+                <td>{{ $row->course_name }}</td>
+                <td>{{ $row->creator_name }}</td>
               </tr>
               @endforeach
             </tbody>
@@ -143,6 +157,6 @@
 <script>
   linkActive('link-education');
   navbarActive('navbar-education');
-  linkActive('educationClassMy');
+  linkActive('educationSchedule');
 </script>
 @endsection

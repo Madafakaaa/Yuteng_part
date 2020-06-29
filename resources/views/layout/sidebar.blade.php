@@ -244,7 +244,7 @@
                 </a>
               </li>
               <li class="nav-item" @if(!in_array('educationSchedule', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/education/schedule/all" class="nav-link" id="educationSchedule">
+                <a href="/education/schedule" class="nav-link" id="educationSchedule">
                   <i class="ni ni-calendar-grid-58 text-pink"></i>
                   <span class="nav-link-text">课程安排</span>
                 </a>
@@ -256,12 +256,12 @@
                 </a>
               </li>
               <hr>
-              <li class="nav-item" @if(!in_array('educationMyStudent', Session::get('page_access'))) style="display:none;" @endif>
+              <!-- <li class="nav-item" @if(!in_array('educationMyStudent', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/myStudent" class="nav-link" id="educationMyStudent">
                   <i class="ni ni-single-02 text-pink"></i>
                   <span class="nav-link-text">我的学生</span>
                 </a>
-              </li>
+              </li> -->
               <li class="nav-item" @if(!in_array('educationMyClass', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/myClass" class="nav-link" id="educationMyClass">
                   <i class="ni ni-single-copy-04 text-pink"></i>
@@ -281,12 +281,6 @@
                 </a>
               </li>
               <hr>
-              <li class="nav-item" @if(!in_array('educationDocumentCreate', Session::get('page_access'))) style="display:none;" @endif>
-                <a class="nav-link" href="/education/document/create" id="educationDocumentCreate">
-                  <i class="ni ni-cloud-upload-96 text-pink"></i>
-                  <span class="nav-link-text">上传教案</span>
-                </a>
-              </li>
               <li class="nav-item" @if(!in_array('educationDocument', Session::get('page_access'))) style="display:none;" @endif>
                 <a class="nav-link" href="/education/document" id="educationDocument">
                   <i class="ni ni-cloud-download-95 text-pink"></i>
