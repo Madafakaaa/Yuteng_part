@@ -161,6 +161,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationStudentMy');
+  linkActive('operationMyStudent');
 </script>
 @endsection

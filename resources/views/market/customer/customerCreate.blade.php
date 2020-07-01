@@ -10,7 +10,7 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">客户管理</h6>
+          <h6 class="h2 text-white d-inline-block mb-0">添加客户</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
@@ -28,7 +28,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/market/customer/store" method="post">
+        <form action="/market/customer/store" method="post" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">
             <h3 class="mb-0">添加客户</h3>
@@ -41,7 +41,7 @@
                   <select class="form-control" name="input0" data-toggle="select" required>
                     <option value=''>请选择客户校区...</option>
                     @foreach ($departments as $department)
-                      <option value="{{ $department->department_id }}">{{ $department->department_name }}</option>
+                      <option value="{{ $department->department_id }}" selected>{{ $department->department_name }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -183,7 +183,7 @@
               </div>
               <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-3 col-md-5 col-sm-12">
-                <input type="submit" class="btn btn-warning btn-block" value="提交">
+                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>
           </div>
@@ -198,6 +198,6 @@
 <script>
   linkActive('link-market');
   navbarActive('navbar-market');
-  linkActive('marketCustomerAll');
+  linkActive('marketCustomer');
 </script>
 @endsection

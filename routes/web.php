@@ -223,7 +223,6 @@ Route::get('/operation/schedule', 'Operation\ScheduleController@schedule');
     Route::get('/operation/schedule/delete', 'Operation\ScheduleController@scheduleDelete');
     // 考勤
     Route::get('/operation/schedule/attend', 'Operation\ScheduleController@scheduleAttend');
-    Route::post('/operation/schedule/attend2', 'Operation\ScheduleController@scheduleAttend2');
     Route::post('/operation/schedule/attend/store', 'Operation\ScheduleController@scheduleAttendStore');
     Route::get('/operation/schedule/attend/success', 'Operation\ScheduleController@scheduleAttendSuccess');
 // 上课记录
@@ -332,7 +331,7 @@ Route::get('/contract', 'ContractController@show');
 
 // 上课
 // 查看上课安排详情
-Route::get('/schedule/{schedule_id}', 'ScheduleController@schedule');
+Route::get('/schedule', 'ScheduleController@schedule');
 // 查看上课记录详情
 Route::get('/attendedSchedule', 'ScheduleController@attendedSchedule');
 

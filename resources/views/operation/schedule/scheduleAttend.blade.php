@@ -27,7 +27,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-10 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/operation/schedule/attend/store" method="post" id="form1" name="form1">
+        <form action="/operation/schedule/attend/store" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">
             <h3 class="mb-0">课程安排点名</h3>
@@ -257,7 +257,7 @@
               <div class="col-lg-3 col-md-5 col-sm-12">
                 <input type="hidden" name="input_student_num" value="{{ count($student_courses) }}">
                 <input type="hidden" name="input_schedule" value="{{ $schedule->schedule_id }}">
-                <input type="submit" class="btn btn-primary btn-block" value="下一步">
+                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>
           </div>
@@ -293,6 +293,7 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
+  linkActive('operationSchedule');
 
 function disableInput(a){
   if($("input[name='input"+a+"_1']:checked").val()==2){

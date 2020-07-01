@@ -27,7 +27,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/education/document/store" method="post" id="form1" name="form1" enctype="multipart/form-data">
+        <form action="/education/document/store" method="post" id="form1" name="form1" enctype="multipart/form-data" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <!-- Card body -->
           <div class="card-body">
@@ -101,7 +101,7 @@
               </div>
               <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-3 col-md-5 col-sm-12">
-            	<input type="submit" class="btn btn-warning btn-block" value="提交">
+                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>
           </div>
@@ -116,6 +116,6 @@
 <script>
   linkActive('link-education');
   navbarActive('navbar-education');
-  linkActive('educationDocumentCreate');
+  linkActive('educationDocument');
 </script>
 @endsection

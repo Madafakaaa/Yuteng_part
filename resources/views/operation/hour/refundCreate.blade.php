@@ -15,6 +15,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">运营中心</li>
+              <li class="breadcrumb-item"><a href="/operation/hour">学生课时</a></li>
               <li class="breadcrumb-item active">课时退费</li>
             </ol>
           </nav>
@@ -27,7 +28,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/operation/hour/refund/store" method="post" id="form1" name="form1">
+        <form action="/operation/hour/refund/store" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <!-- Card body -->
           <div class="card-header">
@@ -140,7 +141,7 @@
               </div>
               <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-3 col-md-5 col-sm-12">
-                <input type="submit" class="btn btn-warning btn-block" value="提交">
+                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>
           </div>

@@ -92,6 +92,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationStudentScheduleCreate');
+  linkActive('operationMyStudent');
 </script>
 @endsection

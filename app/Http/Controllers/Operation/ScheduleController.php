@@ -178,6 +178,14 @@ class ScheduleController extends Controller
                       ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                       ->where('schedule_id', $schedule_id)
                       ->first();
+        // 判断是否已经点名
+        if($schedule->schedule_attended==1){
+            return redirect("/operation/schedule/attend/success?id=".encode($schedule->schedule_participant, 'class_id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '课程已经点名',
+                           'message' => '课程已经点名']);
+        }
         // 获取上课日期、时间
         $schedule_date = $schedule->schedule_date;
         $schedule_start = $schedule->schedule_start;

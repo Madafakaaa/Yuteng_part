@@ -24,7 +24,7 @@
   </div>
 </div>
 <div class="container-fluid mt-4">
-  <form action="/market/myCustomer/contract/store" method="post" id="form1" name="form1">
+  <form action="/market/myCustomer/contract/store" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submit_button')">
     @csrf
     <div class="row">
       <div class="col-4">
@@ -488,6 +488,6 @@ update();
 <script>
   linkActive('link-market');
   navbarActive('navbar-market');
-  linkActive('marketContractCreate');
+  linkActive('marketMyStudent');
 </script>
 @endsection

@@ -27,7 +27,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/market/myContract/update?id={{encode($contract->contract_id, 'contract_id')}}" method="post">
+        <form action="/market/myContract/update?id={{encode($contract->contract_id, 'contract_id')}}" method="post" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">
             <h2 class="mb-0">补缴合同费用</h2>
@@ -81,7 +81,7 @@
               </div>
               <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-3 col-md-5 col-sm-12">
-                <input type="submit" class="btn btn-warning btn-block" value="提交">
+                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>
           </div>
@@ -96,5 +96,6 @@
 <script>
   linkActive('link-market');
   navbarActive('navbar-market');
+  linkActive('marketMyContract');
 </script>
 @endsection

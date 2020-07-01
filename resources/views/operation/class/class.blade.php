@@ -185,6 +185,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationClassAll');
+  linkActive('operationClass');
 </script>
 @endsection

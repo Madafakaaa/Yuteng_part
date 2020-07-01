@@ -141,6 +141,7 @@ class CourseController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
+            return $e;
             return redirect("/company/course/create")
                    ->with(['notify' => true,
                            'type' => 'danger',

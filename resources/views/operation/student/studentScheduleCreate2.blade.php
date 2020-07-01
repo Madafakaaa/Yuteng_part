@@ -48,7 +48,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/operation/student/schedule/store" method="post" id="form1" name="form1">
+        <form action="/operation/student/schedule/store" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">
             <h3 class="mb-0">排课信息确认</h3>
@@ -218,7 +218,7 @@
                 <input type="hidden" name="input_time" value="{{ $schedule_time }}">
                 <input type="hidden" name="input_grade" value="{{ $schedule_student->student_grade }}">
                 <input type="hidden" name="input_course" value="{{ $schedule_course->course_id }}">
-                <input type="submit" class="btn btn-warning btn-block" value="确认">
+                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="确认">
               </div>
             </div>
           </div>
@@ -233,6 +233,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationStudentScheduleCreate');
+  linkActive('operationStudent');
 </script>
 @endsection

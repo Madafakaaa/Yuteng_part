@@ -311,7 +311,7 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationStudentScheduleCreate');
+  linkActive('operationStudent');
 
   function CheckAll(){
       // 判断是全选还是反选

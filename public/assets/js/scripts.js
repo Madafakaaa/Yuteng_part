@@ -74,10 +74,6 @@ function navbarActive(id){
     document.getElementById(id).setAttribute("class", "collapse show");
 }
 
-// Form auto submit
-function form_submit(id){
-    document.getElementById(id).submit();
-}
 
 function barChart(id,label,labels,data) {
     var barChart = new Chart($("#" + id), {
@@ -157,4 +153,9 @@ function batchDeleteConfirm(url, msg) {
     } else {
         $('.delete-button').attr("disabled", false);
     }
+}
+
+function submitButtonDisable(button_id) {
+    // Disable button first
+    $('#'+button_id).attr("disabled", true);
 }

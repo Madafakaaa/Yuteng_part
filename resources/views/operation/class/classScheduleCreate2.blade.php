@@ -15,6 +15,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">运营中心</li>
+              <li class="breadcrumb-item"><a href="/operation/class">班级管理</a></li>
               <li class="breadcrumb-item active">班级排课</li>
             </ol>
           </nav>
@@ -48,7 +49,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/operation/class/schedule/store" method="post" id="form1" name="form1">
+        <form action="/operation/class/schedule/store" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">
             <h3 class="mb-0">排课信息确认</h3>
@@ -201,7 +202,7 @@
                 <input type="hidden" name="input_time" value="{{ $schedule_time }}">
                 <input type="hidden" name="input_grade" value="{{ $schedule_class->class_grade }}">
                 <input type="hidden" name="input_course" value="{{ $schedule_course->course_id }}">
-                <input type="submit" class="btn btn-warning btn-block" value="确认">
+                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="确认">
               </div>
             </div>
           </div>
@@ -216,6 +217,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationStudentScheduleCreate');
+  linkActive('operationClass');
 </script>
 @endsection

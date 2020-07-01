@@ -15,7 +15,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">运营中心</li>
-              <li class="breadcrumb-item"><a href="/operation/class/all">班级管理</a></li>
+              <li class="breadcrumb-item"><a href="/operation/class">班级管理</a></li>
               <li class="breadcrumb-item active">新建班级</li>
             </ol>
           </nav>
@@ -28,7 +28,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/operation/class/store" method="post" id="form1" name="form1">
+        <form action="/operation/class/store" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <!-- Card body -->
           <div class="card-body">
@@ -113,7 +113,7 @@
               </div>
               <div class="col-6"></div>
               <div class="col-3">
-                <input type="submit" class="btn btn-warning btn-block" value="提交">
+                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>
           </div>
@@ -128,6 +128,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationClassAll');
+  linkActive('operationClass');
 </script>
 @endsection

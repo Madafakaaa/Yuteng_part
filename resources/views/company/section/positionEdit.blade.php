@@ -26,9 +26,9 @@
 </div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
+    <div class="col-lg-8 col-md-8 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/company/position/update" method="post" id="form1" name="form1">
+        <form action="/company/position/update" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">
             <h2 class="mb-0">修改岗位</h2>
@@ -80,7 +80,7 @@
               <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-4 col-md-5 col-sm-12">
                 <input type="hidden" name="id" value="{{ encode($position->position_id, 'position_id') }}" readonly>
-            	<input type="submit" class="btn btn-warning btn-block" value="修改">
+            	<input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="修改">
               </div>
             </div>
           </div>

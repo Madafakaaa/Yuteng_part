@@ -99,6 +99,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationMemberAdd');
+  linkActive('operationStudent');
 </script>
 @endsection

@@ -154,6 +154,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationContractMy');
+  linkActive('operationMyContract');
 </script>
 @endsection

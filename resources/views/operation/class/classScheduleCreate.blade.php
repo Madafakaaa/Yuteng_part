@@ -15,6 +15,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">运营中心</li>
+              <li class="breadcrumb-item"><a href="/operation/class">班级管理</a></li>
               <li class="breadcrumb-item active">班级排课</li>
             </ol>
           </nav>
@@ -311,7 +312,7 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationStudentScheduleCreate');
+  linkActive('operationClass');
 
   function CheckAll(){
       // 判断是全选还是反选

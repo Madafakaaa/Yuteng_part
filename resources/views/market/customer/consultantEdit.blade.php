@@ -15,7 +15,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">招生中心</li>
-              <li class="breadcrumb-item active"><a href="/market/customer/all">客户管理</a></li>
+              <li class="breadcrumb-item active"><a href="/market/customer">客户管理</a></li>
               <li class="breadcrumb-item active">修改课程顾问</li>
             </ol>
           </nav>
@@ -41,7 +41,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/market/customer/consultant/update" method="post">
+        <form action="/market/customer/consultant/update" method="post" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">
             <h4 class="mb-0">修改课程顾问</h4>
@@ -91,7 +91,7 @@
               </div>
               <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-3 col-md-5 col-sm-12">
-                <input type="submit" class="btn btn-warning btn-block" value="修改">
+                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="修改">
               </div>
             </div>
           </div>
@@ -106,6 +106,6 @@
 <script>
   linkActive('link-market');
   navbarActive('navbar-market');
-  linkActive('marketCustomerAll');
+  linkActive('marketCustomer');
 </script>
 @endsection

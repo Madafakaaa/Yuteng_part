@@ -187,6 +187,6 @@
 <script>
   linkActive('link-market');
   navbarActive('navbar-market');
-  linkActive('marketCustomerMy');
+  linkActive('marketMyCustomer');
 </script>
 @endsection

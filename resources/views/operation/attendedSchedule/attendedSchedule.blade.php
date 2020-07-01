@@ -162,6 +162,6 @@
 <script>
   linkActive('link-operation');
   navbarActive('navbar-operation');
-  linkActive('operationSchedule');
+  linkActive('operationAttendedSchedule');
 </script>
 @endsection

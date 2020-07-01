@@ -71,6 +71,6 @@
 <script>
   linkActive('link-market');
   navbarActive('navbar-market');
-  linkActive('marketCustomerMy');
+  linkActive('marketMyStudent');
 </script>
 @endsection

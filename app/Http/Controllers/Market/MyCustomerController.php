@@ -112,7 +112,7 @@ class MyCustomerController extends Controller
         // 获取校区、来源、用户、年级信息
         $departments = DB::table('department')
                          ->where('department_status', 1)
-                         ->whereIn('department_id', $department_access)
+                         ->where('department_id', Session::get('user_department'))
                          ->orderBy('department_id', 'asc')
                          ->get();
         $sources = DB::table('source')

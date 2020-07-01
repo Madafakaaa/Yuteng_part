@@ -26,9 +26,9 @@
 </div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12">
+    <div class="col-lg-8 col-md-8 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/company/user/access/update" method="post">
+        <form action="/company/user/access/update" method="post" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <!-- Card body -->
           <div class="card-body">
@@ -158,7 +158,7 @@
               <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
               <div class="col-lg-4 col-md-5 col-sm-12">
                 <input type="hidden" name="id" value="{{ encode($user->user_id, 'user_id') }}" readonly>
-                <input type="submit" class="btn btn-warning btn-block" value="修改">
+                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="修改">
               </div>
             </div>
           </div>
