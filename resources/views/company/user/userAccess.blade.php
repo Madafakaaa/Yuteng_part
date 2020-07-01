@@ -30,6 +30,9 @@
       <div class="card main_card" style="display:none">
         <form action="/company/user/access/update" method="post" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
+          <div class="card-header">
+            <h3 class="mb-0">用户权限</h3>
+          </div>
           <!-- Card body -->
           <div class="card-body">
             <div class="row">

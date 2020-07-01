@@ -131,7 +131,7 @@ class StudentController extends Controller
                              ->join('department', 'student.student_department', '=', 'department.department_id')
                              ->join('user', 'student_record.student_record_createuser', '=', 'user.user_id')
                              ->where('student_record_student', $student_id)
-                             ->orderBy('student_record_createtime', 'desc')
+                             ->orderBy('student_record_id', 'desc')
                              ->limit(50)
                              ->get();
 
@@ -175,9 +175,9 @@ class StudentController extends Controller
                          ->whereIn('department_id', $department_access)
                          ->orderBy('department_id', 'asc')
                          ->get();
-        $sources = DB::table('source')->where('source_status', 1)->orderBy('source_createtime', 'asc')->get();
-        $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $schools = DB::table('school')->where('school_status', 1)->orderBy('school_createtime', 'asc')->get();
+        $sources = DB::table('source')->where('source_status', 1)->orderBy('source_id', 'asc')->get();
+        $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
+        $schools = DB::table('school')->where('school_status', 1)->orderBy('school_id', 'asc')->get();
         return view('student/edit', ['student' => $student,
                                       'departments' => $departments,
                                       'sources' => $sources,

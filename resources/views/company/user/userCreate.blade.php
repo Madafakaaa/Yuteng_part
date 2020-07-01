@@ -26,12 +26,12 @@
 </div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-8 col-sm-12 card-wrapper ct-example">
+    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
         <form action="/company/user/store" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">
-            <h2 class="mb-0">添加用户</h2>
+            <h3 class="mb-0">添加用户</h3>
           </div>
           <!-- Card body -->
           <div class="card-body">

@@ -77,7 +77,7 @@ class UserController extends Controller
         list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
-        $rows = $rows->orderBy('user_createtime', 'asc')
+        $rows = $rows->orderBy('user_id', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();

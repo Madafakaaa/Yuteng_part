@@ -215,59 +215,31 @@ class ScheduleController extends Controller
                         ->where('subject_status', 1)
                         ->orderBy('subject_id', 'asc')
                         ->get();
-
-        // 获取上课成员(学生/班级成员)
+        // 获取班级成员
         $student_courses = array();
-        // 获取成员ID
-        $schedule_participant = $schedule->schedule_participant;
-        // 获取成员ID首字母
-        $schedule_type = substr($schedule_participant , 0 , 1);
-        if($schedule_type=="S"){ // 上课成员为学生
+        // 获取班级学生
+        $members = DB::table('member')
+                     ->join('class', 'class.class_id', '=', 'member.member_class')
+                     ->join('student', 'member.member_student', '=', 'student.student_id')
+                     ->where('member_class', $schedule->schedule_participant)
+                     ->get();
+        foreach ($members as $member){
             // 获取学生信息
             $student = DB::table('student')
                          ->join('department', 'student.student_department', '=', 'department.department_id')
                          ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                         ->where('student_id', $schedule_participant)
+                         ->where('student_id', $member->student_id)
                          ->first();
             // 获取学生已购课程
-            $courses = DB::table('student')
-                         ->join('hour', 'student.student_id', '=', 'hour.hour_student')
+            $courses = DB::table('hour')
+                         ->join('student', 'student.student_id', '=', 'hour.hour_student')
                          ->join('course', 'hour.hour_course', '=', 'course.course_id')
                          ->where([
-                             ['student.student_id', '=', $schedule_participant],
+                             ['student.student_id', '=', $member->student_id],
                              ['hour.hour_remain', '>', '0'],
                          ])
-                         ->orWhere([
-                             ['student.student_id', '=', $schedule_participant],
-                             ['hour.hour_remain_free', '>', '0'],
-                         ])
                          ->get();
-            $student_courses[] = array($student, $courses);
-        }else{ // 上课成员为班级
-            // 获取班级学生
-            $members = DB::table('member')
-                         ->join('class', 'class.class_id', '=', 'member.member_class')
-                         ->join('student', 'member.member_student', '=', 'student.student_id')
-                         ->where('member_class', $schedule_participant)
-                         ->get();
-            foreach ($members as $member){
-                // 获取学生信息
-                $student = DB::table('student')
-                             ->join('department', 'student.student_department', '=', 'department.department_id')
-                             ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                             ->where('student_id', $member->student_id)
-                             ->first();
-                // 获取学生已购课程
-                $courses = DB::table('hour')
-                             ->join('student', 'student.student_id', '=', 'hour.hour_student')
-                             ->join('course', 'hour.hour_course', '=', 'course.course_id')
-                             ->where([
-                                 ['student.student_id', '=', $member->student_id],
-                                 ['hour.hour_remain', '>', '0'],
-                             ])
-                             ->get();
-                $student_courses[] = array($student, $courses);
-            }
+            $student_courses[] = array($student, $courses, $member->member_course);
         }
         return view('operation/schedule/scheduleAttend', ['schedule' => $schedule,
                                                           'teachers' => $teachers,

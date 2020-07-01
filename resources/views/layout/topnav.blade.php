@@ -46,7 +46,7 @@
                 <div class="row align-items-center">
                   <div class="col-auto">
                     <!-- Avatar -->
-                    <img alt="Image placeholder" src="{{ asset(_ASSETS_.'/img/theme/team-1.jpg') }}" class="avatar rounded-circle">
+                    <img alt="Image placeholder" src="{{ asset(_ASSETS_.'/avatar/male.jpg') }}" class="avatar rounded-circle">
                   </div>
                   <div class="col ml--2">
                     <div class="d-flex justify-content-between align-items-center">
@@ -61,25 +61,6 @@
                   </div>
                 </div>
               </a>
-              <a href="#!" class="list-group-item list-group-item-action">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <!-- Avatar -->
-                    <img alt="Image placeholder" src="{{ asset(_ASSETS_.'/img/theme/team-2.jpg') }}" class="avatar rounded-circle">
-                  </div>
-                  <div class="col ml--2">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div>
-                        <h4 class="mb-0 text-sm">管理员2</h4>
-                      </div>
-                      <div class="text-right text-muted">
-                        <small>2019-09-28</small>
-                      </div>
-                    </div>
-                    <p class="text-sm mb-0">最新通知1.</p>
-                  </div>
-                </div>
-              </a>
             </div>
             <!-- View all -->
             <a href="#!" class="dropdown-item text-center text-primary font-weight-bold py-3">查看全部</a>
@@ -91,7 +72,7 @@
           <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="media align-items-center">
               <span class="avatar avatar-sm rounded-circle">
-                <img alt="Image placeholder" src="{{ asset(_ASSETS_.'/img/theme/team-1.jpg') }}">
+                <img src="{{ asset(_ASSETS_.'/avatar/'.Session::get('user_photo')) }}" class="rounded-circle" alt="Image missing">
               </span>
               <div class="media-body ml-2 d-none d-lg-block">
                 <span class="mb-0 text-sm  font-weight-bold">{{ Session::get('user_name') }}</span>

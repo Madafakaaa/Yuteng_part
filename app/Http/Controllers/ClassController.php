@@ -51,7 +51,7 @@ class ClassController extends Controller
                       ->where('student_department', $class->class_department)
                       ->where('student_contract_num', '>', 0)
                       ->where('student_status', 1)
-                      ->orderBy('student_createtime', 'asc')
+                      ->orderBy('student_id', 'asc')
                       ->get();
 
         // 获取所有课程安排
@@ -114,8 +114,8 @@ class ClassController extends Controller
         }
         $class = $class[0];
         // 获取年级、科目、用户信息
-        $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_createtime', 'asc')->get();
-        $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_createtime', 'asc')->get();
+        $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
+        $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
         $users = DB::table('user')
                    ->join('position', 'user.user_position', '=', 'position.position_id')
                    ->join('department', 'user.user_department', '=', 'department.department_id')

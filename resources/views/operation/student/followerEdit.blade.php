@@ -15,6 +15,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">运营中心</li>
+              <li class="breadcrumb-item"><a href="/operation/student">学生管理</a></li>
               <li class="breadcrumb-item active">修改负责人</li>
             </ol>
           </nav>
@@ -25,20 +26,7 @@
 </div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example mb-4">
-      <div class="row justify-content-center">
-        <div class="col-2 text-center">
-          <span class="badge badge-pill badge-success">选择学生</span>
-        </div>
-        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
-        <div class="col-2 text-center">
-          <span class="badge badge-pill badge-info">修改负责人</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12">
+    <div class="col-lg-6 col-md-9 col-sm-12">
       <div class="card main_card" style="display:none">
         <form action="/operation/student/follower/update" method="post" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
@@ -100,12 +88,12 @@
             </div>
             <hr class="my-3">
             <div class="row">
-              <div class="col-lg-3 col-md-5 col-sm-12">
-                <a href="javascript:history.go(-1)"><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
+              <div class="col-lg-4 col-md-5 col-sm-12">
+                <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
               </div>
-              <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
-              <div class="col-lg-3 col-md-5 col-sm-12">
-                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="修改">
+              <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
+              <div class="col-lg-4 col-md-5 col-sm-12">
+                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>
           </div>

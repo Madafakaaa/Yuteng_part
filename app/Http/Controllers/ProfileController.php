@@ -28,7 +28,7 @@ class ProfileController extends Controller
                   ->where('user_id', Session::get('user_id'))
                   ->first();
 
-        return view('profile/show', ['user' => $user]);
+        return view('profile/profile', ['user' => $user]);
     }
 
     /**

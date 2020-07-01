@@ -15,6 +15,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">运营中心</li>
+              <li class="breadcrumb-item"><a href="/operation/student">学生管理</a></li>
               <li class="breadcrumb-item active">插入班级</li>
             </ol>
           </nav>

@@ -26,27 +26,6 @@
 </div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
-      <div class="row justify-content-center">
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">1</span>
-          </button>
-        </div>
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">2</span>
-          </button>
-        </div>
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">3</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
         <form action="/operation/classSchedule/store" method="post" id="form1" name="form1">
@@ -83,6 +62,27 @@
             </div>
           </div>
         <form>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
+      <div class="row justify-content-center">
+        <div class="col-2 text-center">
+          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">1</span>
+          </button>
+        </div>
+        <div class="col-2 text-center">
+          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">2</span>
+          </button>
+        </div>
+        <div class="col-2 text-center">
+          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">3</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -65,7 +65,7 @@ class MyClassController extends Controller
         list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
-        $rows = $rows->orderBy('class_createtime', 'asc')
+        $rows = $rows->orderBy('class_id', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();

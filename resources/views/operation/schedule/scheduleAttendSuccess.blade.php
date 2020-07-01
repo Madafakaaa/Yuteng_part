@@ -39,7 +39,7 @@
             </div>
             <div class="row justify-content-center">
               <div class="col-3 text-center">
-                <h2 class="my-2 text-success">课程安排点名成功</h2>
+                <h2 class="my-2 text-success">课程点名成功</h2>
               </div>
             </div>
             <hr>
@@ -58,27 +58,6 @@
               </div>
             </div>
           </div>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
-      <div class="row justify-content-center">
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">1</span>
-          </button>
-        </div>
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">2</span>
-          </button>
-        </div>
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">3</span>
-          </button>
-        </div>
       </div>
     </div>
   </div>

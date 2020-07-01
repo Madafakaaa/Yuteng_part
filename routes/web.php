@@ -321,7 +321,7 @@ Route::get('/class', 'ClassController@show');
     // 修改班级
     Route::get('/class/edit', 'ClassController@edit');
     Route::post('/class/update', 'ClassController@update');
-    // 删除成员
+    // 添加成员
     Route::post('/class/memberAdd', 'ClassController@memberAdd');
     // 删除成员
     Route::get('/class/memberDelete', 'ClassController@memberDelete');

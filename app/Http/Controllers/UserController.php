@@ -64,12 +64,12 @@ class UserController extends Controller
         }
         $user = $user[0];
         // 获取校区、岗位信息
-        $departments = DB::table('department')->where('department_status', 1)->orderBy('department_createtime', 'asc')->get();
+        $departments = DB::table('department')->where('department_status', 1)->orderBy('department_id', 'asc')->get();
         $positions = DB::table('position')
                        ->join('section', 'position.position_section', '=', 'section.section_id')
                        ->where('position_status', 1)
                        ->where('section_status', 1)
-                       ->orderBy('position_createtime', 'asc')
+                       ->orderBy('position_id', 'asc')
                        ->get();
         return view('user/edit', ['user' => $user, 'departments' => $departments, 'positions' => $positions]);
     }

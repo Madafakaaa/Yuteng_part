@@ -12,7 +12,7 @@ class ContractController extends Controller
 
     /**
      * 查看合同视图
-     * URL: GET /contract/{id}
+     * URL: GET /contract
      * @param  int  $contract_id
      */
     public function show(Request $request){

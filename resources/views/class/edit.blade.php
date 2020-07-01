@@ -27,7 +27,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
-        <form action="/class/update?id={{ encode($class->class_id, 'class_id') }}" method="post" id="form1" name="form1">
+        <form action="/class/update?id={{ encode($class->class_id, 'class_id') }}" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">
             <h4 class="mb-0">修改班级</h4>
@@ -126,7 +126,7 @@
               </div>
               <div class="col-6"></div>
               <div class="col-3">
-                <input type="submit" class="btn btn-warning btn-block" value="提交">
+                <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>
           </div>

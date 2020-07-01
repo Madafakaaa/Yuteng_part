@@ -386,7 +386,10 @@ class MyStudentController extends Controller
         // 获取科目
         $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
         // 获取课程
-        $courses = DB::table('course')->where('course_grade', $student->student_grade)->where('course_status', 1)->orderBy('course_id', 'asc')->get();
+        $courses = DB::table('hour')
+                     ->join('course', 'hour.hour_course', '=', 'course.course_id')
+                     ->where('hour_student', $student->student_id)
+                     ->get();
         // 获取年级、科目、用户信息
         return view('operation/myStudent/myStudentScheduleCreate', ['student' => $student,
                                                                     'teachers' => $teachers,

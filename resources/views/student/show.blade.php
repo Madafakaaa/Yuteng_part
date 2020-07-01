@@ -26,12 +26,12 @@
   <div class="row">
     <div class="col-lg-4 col-md-6 col-sm-12">
       <div class="card card-profile">
-        <img src="../../assets/img/theme/img-1-1000x600.jpg" alt="Image placeholder" class="card-img-top">
+        <img src="{{ asset(_ASSETS_.'/img/theme/bg1.jpg') }}" alt="Image placeholder" class="card-img-top">
         <div class="row justify-content-center">
           <div class="col-lg-3 order-lg-2">
             <div class="card-profile-image">
               <a href="#">
-                <img src="../../assets/img/portrait/user_1.gif" class="rounded-circle">
+                <img src="{{ asset(_ASSETS_.'/avatar/student.png') }}" class="rounded-circle">
               </a>
             </div>
           </div>
@@ -119,7 +119,7 @@
         <div class="card-header">
           <h5 class="h3 mb-0">学生备注</h5>
         </div>
-        <form action="/student/remark?id={{encode($student->student_id,'student_id')}}" method="post">
+        <form action="/student/remark?id={{encode($student->student_id,'student_id')}}" method="post" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-body p-3">
             <div class="row">
@@ -132,7 +132,7 @@
             <div class="row">
               <div class="col-8"></div>
               <div class="col-4">
-                <input type="submit" class="btn btn-sm btn-warning btn-block" value="修改备注">
+                <input type="submit" id="submitButton1" class="btn btn-sm btn-warning btn-block" value="修改备注">
               </div>
             </div>
           </div>
@@ -339,7 +339,7 @@
             <div class="card-header">
               <h5 class="h3 mb-0">添加跟进记录</h5>
             </div>
-            <form action="/student/record?id={{encode($student->student_id,'student_id')}}" method="post">
+            <form action="/student/record?id={{encode($student->student_id,'student_id')}}" method="post" onsubmit="submitButtonDisable('submitButton2')">
               @csrf
               <div class="card-body p-3">
                 <div class="row">
@@ -375,7 +375,7 @@
                   </div>
                   <div class="col-1"></div>
                   <div class="col-3">
-                    <input type="submit" class="btn btn-sm btn-warning btn-block" value="保存">
+                    <input type="submit" id="submitButton2" class="btn btn-sm btn-warning btn-block" value="保存">
                   </div>
                 </div>
               </div>

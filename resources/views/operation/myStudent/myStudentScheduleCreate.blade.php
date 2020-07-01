@@ -25,27 +25,6 @@
 </div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
-      <div class="row justify-content-center">
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">1</span>
-          </button>
-        </div>
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-primary btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">2</span>
-          </button>
-        </div>
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-primary btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">3</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
     <div class="col-lg-10 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
         <form action="/operation/myStudent/schedule/create2" method="post" id="form1" name="form1">
@@ -268,7 +247,7 @@
                   <select class="form-control form-control-sm" name="input_course" data-toggle="select" required>
                     <option value=''>请选择课程...</option>
                     @foreach ($courses as $course)
-                      <option value="{{ $course->course_id }}">{{ $course->course_name }}</option>
+                      <option value="{{ $course->course_id }}">{{ $course->course_name }} (剩余：{{ $course->hour_remain }}课时)</option>
                     @endforeach
                   </select>
                 </div>
@@ -291,16 +270,37 @@
             </div>
             <hr>
             <div class="row">
-              <div class="col-lg-3 col-md-5 col-sm-12">
+              <div class="col-lg-4 col-md-5 col-sm-12">
                 <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
               </div>
-              <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
-              <div class="col-lg-3 col-md-5 col-sm-12">
+              <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
+              <div class="col-lg-4 col-md-5 col-sm-12">
                 <input type="submit" class="btn btn-primary btn-block" value="下一步">
               </div>
             </div>
           </div>
         <form>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
+      <div class="row justify-content-center">
+        <div class="col-2 text-center">
+          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">1</span>
+          </button>
+        </div>
+        <div class="col-2 text-center">
+          <button type="button" class="btn btn-primary btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">2</span>
+          </button>
+        </div>
+        <div class="col-2 text-center">
+          <button type="button" class="btn btn-primary btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">3</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -218,7 +218,7 @@
                     <select class="form-control form-control-sm" name="input{{ $loop->iteration }}_2" id="input{{ $loop->iteration }}_2" data-toggle="select" required>
                       <option value=''>请选择课程...</option>
                       @foreach ($student_course[1] as $course)
-                        <option value="{{ $course->course_id }}">
+                        <option value="{{ $course->course_id }}" @if($student_course[2]==$course->course_id) selected @endif>
                           {{ $course->course_name }} ({{ $course->hour_remain }} 课时)
                         </option>
                       @endforeach
@@ -262,27 +262,6 @@
             </div>
           </div>
         <form>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
-      <div class="row justify-content-center">
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">1</span>
-          </button>
-        </div>
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-primary btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">2</span>
-          </button>
-        </div>
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-primary btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">3</span>
-          </button>
-        </div>
       </div>
     </div>
   </div>

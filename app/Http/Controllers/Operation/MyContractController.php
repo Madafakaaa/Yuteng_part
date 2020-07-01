@@ -62,14 +62,14 @@ class MyContractController extends Controller
         list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
-        $rows = $rows->orderBy('contract_createtime', 'asc')
+        $rows = $rows->orderBy('contract_date', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
 
         // 获取校区、学生、课程、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
-        $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_createtime', 'asc')->get();
+        $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
 
         // 返回列表视图

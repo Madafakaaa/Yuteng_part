@@ -26,36 +26,66 @@
   <div class="row">
     <div class="col-lg-4 col-md-6 col-sm-12">
       <div class="card card-profile">
-        <div class="card-body">
-          <div class="text-center pb-2">
-            <h1>{{ $user->user_name }}</h1>
-            <div class="h5 font-weight-300">{{ $user->user_id }}</div>
-            <hr>
-            <div class="row text-left ml-2">
-              <div class="col-6">
-                <div class="h4">校区 - {{ $user->department_name }}</div>
-              </div>
-              <div class="col-6">
-                <div class="h4">性别 - {{ $user->user_gender }}</div>
-              </div>
-              <div class="col-6">
-                <div class="h4">部门 - {{ $user->position_name }}</div>
-              </div>
-              <div class="col-6">
-                <div class="h4">岗位 - {{ $user->section_name }}</div>
-              </div>
-              <div class="col-6">
-                <div class="h4">手机 - {{ $user->user_phone }}</div>
-              </div>
-              <div class="col-6">
-                <div class="h4">微信 - {{ $user->user_wechat }}</div>
-              </div>
-              <div class="col-6">
-                <div class="h4">入职日期 - {{ $user->user_entry_date }}</div>
+        <img src="{{ asset(_ASSETS_.'/img/theme/bg1.jpg') }}" alt="Image missing" class="card-img-top">
+        <div class="row justify-content-center">
+          <div class="col-lg-3 order-lg-2">
+            <div class="card-profile-image">
+              <img src="{{ asset(_ASSETS_.'/avatar/'.Session::get('user_photo')) }}" class="rounded-circle">
+            </div>
+          </div>
+        </div>
+        <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+          <div class="d-flex justify-content-between">
+            <a href="#" class="btn btn-sm btn-default mr-4">修改头像</a>
+          </div>
+        </div>
+        <div class="card-body pt-0">
+          <div class="text-center">
+            <h5 class="h3">
+              {{ $user->user_name }}
+              @if($user->user_gender=="男")
+                <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
+              @else
+                <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
+              @endif
+            </h5>
+            <div class="h5 font-weight-300">
+              <i class="ni location_pin mr-2"></i>{{ $user->user_id }}
+            </div>
+            <div class="h5 mt-4">
+              <i class="ni business_briefcase-24 mr-2"></i>{{ $user->department_name }}
+            </div>
+            <div class="h5">
+              <i class="ni business_briefcase-24 mr-2"></i>{{ $user->section_name }} - {{ $user->position_name }}
+            </div>
+            <div class="h5">
+              <i class="ni business_briefcase-24 mr-2"></i>手机 - {{ $user->user_phone }}
+            </div>
+            <div class="h5">
+              <i class="ni business_briefcase-24 mr-2"></i>微信 - {{ $user->user_wechat }}
+            </div>
+            <div class="h5">
+              <i class="ni business_briefcase-24 mr-2"></i>入职日期 - {{ $user->user_entry_date }}
+            </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col">
+              <div class="card-profile-stats d-flex justify-content-center">
+                <div>
+                  <span class="heading">22</span>
+                  <span class="description">Friends</span>
+                </div>
+                <div>
+                  <span class="heading">10</span>
+                  <span class="description">Photos</span>
+                </div>
+                <div>
+                  <span class="heading">89</span>
+                  <span class="description">Comments</span>
+                </div>
               </div>
             </div>
-            <hr>
-          </div>
+          </div>-->
         </div>
       </div>
     </div>
@@ -70,7 +100,7 @@
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="password-card" role="tabpanel">
           <div class="card main_card mb-4" style="display:none">
-            <form action="/user/{{ $user->user_id }}/password" method="post" id="form1" name="form1">
+            <form action="/user/{{ $user->user_id }}/password" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
               @csrf
               <div class="card-body">
                 <div class="row justify-content-center">
@@ -101,7 +131,7 @@
                 <div class="row">
                   <div class="col-lg-8 col-md-7 col-sm-12 my-2"></div>
                   <div class="col-lg-3 col-md-5 col-sm-12">
-                    <input type="submit" class="btn btn-warning btn-block" value="修改">
+                    <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="修改">
                   </div>
                 </div>
               </div>

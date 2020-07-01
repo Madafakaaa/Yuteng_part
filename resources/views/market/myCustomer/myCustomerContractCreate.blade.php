@@ -15,6 +15,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">招生中心</li>
+              <li class="breadcrumb-item"><a href="/market/myCustomer">我的客户</a></li>
               <li class="breadcrumb-item active">签约合同</li>
             </ol>
           </nav>
@@ -148,7 +149,7 @@
             </div>
           </div>
           <div class="table-responsive">
-            <table class="table align-items-center table-hover text-left table-bordered">
+            <table class="table align-items-center table-hover text-left">
               <thead class="thead-light">
                 <tr>
                   <th style='width:180px;'>课程</th>

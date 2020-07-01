@@ -317,6 +317,7 @@ class StudentController extends Controller
                       ->where('user_cross_teaching', '=', 1)
                       ->where('user_department', '<>', $student->student_department)
                       ->where('user_status', 1)
+                      ->where('department_status', 1)
                       ->orderBy('user_department', 'asc')
                       ->orderBy('position_level', 'desc');
         $teachers = DB::table('user')
@@ -324,6 +325,7 @@ class StudentController extends Controller
                       ->join('department', 'user.user_department', '=', 'department.department_id')
                       ->where('user_department', '=', $student->student_department)
                       ->where('user_status', 1)
+                      ->where('department_status', 1)
                       ->orderBy('position_level', 'desc')
                       ->union($teachers)
                       ->get();
@@ -336,7 +338,10 @@ class StudentController extends Controller
         // 获取科目
         $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
         // 获取课程
-        $courses = DB::table('course')->where('course_grade', $student->student_grade)->where('course_status', 1)->orderBy('course_id', 'asc')->get();
+        $courses = DB::table('hour')
+                     ->join('course', 'hour.hour_course', '=', 'course.course_id')
+                     ->where('hour_student', $student->student_id)
+                     ->get();
         // 获取年级、科目、用户信息
         return view('operation/student/studentScheduleCreate', ['student' => $student,
                                                                 'teachers' => $teachers,

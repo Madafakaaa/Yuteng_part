@@ -26,27 +26,6 @@
 </div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
-      <div class="row justify-content-center">
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">1</span>
-          </button>
-        </div>
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">2</span>
-          </button>
-        </div>
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-primary btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">3</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card main_card" style="display:none">
         <form action="/operation/class/schedule/store" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
@@ -186,11 +165,11 @@
             </div>
             <hr>
             <div class="row">
-              <div class="col-lg-3 col-md-5 col-sm-12">
+              <div class="col-lg-4 col-md-5 col-sm-12">
                 <a href="javascript:history.go(-1)" ><button type="button" class="btn btn-outline-primary btn-block">上一步</button></a>
               </div>
-              <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
-              <div class="col-lg-3 col-md-5 col-sm-12">
+              <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
+              <div class="col-lg-4 col-md-5 col-sm-12">
                 <input type="hidden" name="input_department" value="{{ $schedule_class->class_department }}">
                 <input type="hidden" name="input_class" value="{{ $schedule_class->class_id }}">
                 <input type="hidden" name="input_teacher" value="{{ $schedule_teacher->user_id }}">
@@ -207,6 +186,27 @@
             </div>
           </div>
         <form>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
+      <div class="row justify-content-center">
+        <div class="col-2 text-center">
+          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">1</span>
+          </button>
+        </div>
+        <div class="col-2 text-center">
+          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">2</span>
+          </button>
+        </div>
+        <div class="col-2 text-center">
+          <button type="button" class="btn btn-primary btn-icon-only rounded-circle">
+            <span class="btn-inner--icon">3</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

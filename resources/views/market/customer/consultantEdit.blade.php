@@ -26,27 +26,13 @@
 </div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example mb-4">
-      <div class="row justify-content-center">
-        <div class="col-2 text-center">
-          <span class="badge badge-pill badge-success">选择学生</span>
-        </div>
-        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
-        <div class="col-2 text-center">
-          <span class="badge badge-pill badge-info">选择负责人</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12">
+    <div class="col-lg-6 col-md-9 col-sm-12">
       <div class="card main_card" style="display:none">
         <form action="/market/customer/consultant/update" method="post" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">修改课程顾问</h4>
+            <h3 class="mb-0">修改课程顾问</h3>
           </div>
-          <!-- Card body -->
           <div class="card-body">
             <div class="row">
               <div class="col-2 text-right">

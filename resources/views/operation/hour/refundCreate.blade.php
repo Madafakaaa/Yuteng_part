@@ -136,11 +136,11 @@
             </div>
             <hr class="my-3">
             <div class="row">
-              <div class="col-lg-3 col-md-5 col-sm-12">
+              <div class="col-lg-4 col-md-5 col-sm-12">
                 <a href="/operation/hour" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
               </div>
-              <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
-              <div class="col-lg-3 col-md-5 col-sm-12">
+              <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
+              <div class="col-lg-4 col-md-5 col-sm-12">
                 <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>
