@@ -34,7 +34,6 @@ class UserController extends Controller
                   ->join('department', 'user.user_department', '=', 'department.department_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
                   ->join('section', 'position.position_section', '=', 'section.section_id')
-                  ->whereIn('user_department', $department_access)
                   ->where('user_status', 1);
 
         // 搜索条件
@@ -160,6 +159,11 @@ class UserController extends Controller
         }else{
             $user_wechat = "无";
         }
+        if($user_gender=='男'){
+            $user_photo="male.png";
+        }else{
+            $user_photo="female.png";
+        }
         // 获取当前用户ID
         $user_createuser = Session::get('user_id');
         // 插入数据库
@@ -168,6 +172,7 @@ class UserController extends Controller
                 ['user_id' => $user_id,
                  'user_name' => $user_name,
                  'user_gender' => $user_gender,
+                 'user_photo' => $user_photo,
                  'user_department' => $user_department,
                  'user_position' => $user_position,
                  'user_entry_date' => $user_entry_date,

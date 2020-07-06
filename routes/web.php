@@ -227,6 +227,9 @@ Route::get('/operation/schedule', 'Operation\ScheduleController@schedule');
     Route::get('/operation/schedule/attend/success', 'Operation\ScheduleController@scheduleAttendSuccess');
 // 上课记录
 Route::get('/operation/attendedSchedule', 'Operation\AttendedScheduleController@attendedSchedule');
+// 课程表
+    // 周表
+    Route::get('/operation/calendar/week', 'Operation\CalendarController@calendarWeek');
 // 我的学生课程安排
 Route::get('/operation/mySchedule', 'Operation\MyScheduleController@mySchedule');
     // 我的学生课程安排删除
@@ -339,5 +342,3 @@ Route::get('/attendedSchedule', 'ScheduleController@attendedSchedule');
 Route::get('/profile', 'ProfileController@show');
 Route::post('/user/{user_id}/password', 'ProfileController@password');
 
-// 课程表
-Route::get('/calendar', 'CalendarController@calendar');

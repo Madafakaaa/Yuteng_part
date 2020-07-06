@@ -20,6 +20,10 @@
   <link rel="stylesheet" href="{{ asset(_ASSETS_.'/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset(_ASSETS_.'/vendor/select2/dist/css/select2.min.css') }}">
   <link rel="stylesheet" href="{{ asset(_ASSETS_.'/vendor/sweetalert2/dist/sweetalert2.min.css') }}">
+
+  <link rel="stylesheet" type="text/css" href="{{ asset(_ASSETS_.'/vendor/toastuicalendar/tui-calendar.css') }}" />
+  <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+  <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
   <!-- Argon CSS -->
   <link rel="stylesheet" href="{{ asset(_ASSETS_.'/css/argon.css?v=1.1.0') }}" type="text/css">
 </head>

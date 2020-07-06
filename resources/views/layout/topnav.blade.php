@@ -46,7 +46,7 @@
                 <div class="row align-items-center">
                   <div class="col-auto">
                     <!-- Avatar -->
-                    <img alt="Image placeholder" src="{{ asset(_ASSETS_.'/avatar/male.jpg') }}" class="avatar rounded-circle">
+                    <img alt="Image placeholder" src="{{ asset(_ASSETS_.'/avatar/male.png') }}" class="avatar rounded-circle">
                   </div>
                   <div class="col ml--2">
                     <div class="d-flex justify-content-between align-items-center">

@@ -21,8 +21,14 @@
 <script src="{{ asset(_ASSETS_.'/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset(_ASSETS_.'/vendor/sweetalert2/dist/sweetalert2.min.js') }}"></script>
 <script src="{{ asset(_ASSETS_.'/vendor/freeze-table/freeze-table.min.js') }}"></script>
-<!-- <script src="{{ asset(_ASSETS_.'/vendor/dropzone/dist/min/dropzone.min.js') }}"></script> -->
-<!-- <script src="{{ asset(_ASSETS_.'/vendor/jquery-validate/jquery.validate.min.js') }}"></script> -->
+
+<script src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.js"></script>
+<script src="https://uicdn.toast.com/tui.dom/v3.0.0/tui-dom.js"></script>
+<script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+<script src="{{ asset(_ASSETS_.'/vendor/toastuicalendar/tui-calendar.js') }}"></script>
+
 <!-- Argon JS -->
 <script src="{{ asset(_ASSETS_.'/js/argon.js?v=1.1.0') }}"></script>
 <!-- My scripts -->

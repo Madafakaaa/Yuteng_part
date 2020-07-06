@@ -161,7 +161,7 @@
               </li>
               <li class="nav-item" @if(!in_array('operationSchedule', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/schedule" class="nav-link" id="operationSchedule">
-                  <i class="ni ni-calendar-grid-58 text-info"></i>
+                  <i class="ni ni-bullet-list-67 text-info"></i>
                   <span class="nav-link-text">课程安排</span>
                 </a>
               </li>
@@ -169,6 +169,12 @@
                 <a href="/operation/attendedSchedule" class="nav-link" id="operationAttendedSchedule">
                   <i class="ni ni-bullet-list-67 text-info"></i>
                   <span class="nav-link-text">上课记录</span>
+                </a>
+              </li>
+              <li class="nav-item" >
+                <a href="/operation/calendar/week" class="nav-link" id="operationCalendarWeek">
+                  <i class="ni ni-calendar-grid-58 text-info"></i>
+                  <span class="nav-link-text">课程表</span>
                 </a>
               </li>
               <hr>
