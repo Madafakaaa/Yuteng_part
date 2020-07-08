@@ -176,14 +176,20 @@ class CustomerController extends Controller
                          ->whereYear('student_createtime', date('Y'))
                          ->whereMonth('student_createtime', date('m'))
                          ->count();
+        if($student_num>900){
+            return redirect("/market/customer/create")
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '客户添加失败',
+                           'message' => '本校本月已经添加超过900学生，超出本月上限']);
+        }
         if($student_num==0){
             $student_id = "S".substr(date('Ym'),2).sprintf("%02d", $student_department).sprintf("%03d", 1);
         }else{
             //获取上一个学生学号
             $pre_student_id = DB::table('student')
                                 ->where('student_department', $student_department)
-                                ->whereYear('student_createtime', date('Y'))
-                                ->whereMonth('student_createtime', date('m'))
+                                ->where('student_id', 'like', "S".substr(date('Ym'),2).sprintf("%02d", $student_department)."%")
                                 ->orderBy('student_id', 'desc')
                                 ->limit(1)
                                 ->first();
@@ -235,7 +241,7 @@ class CustomerController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '客户添加失败',
-                           'message' => '客户添加失败，请重新输入信息']);
+                           'message' => '客户添加失败，该学生已经存在于本校区']);
         }
         DB::commit();
         // 返回客户列表
