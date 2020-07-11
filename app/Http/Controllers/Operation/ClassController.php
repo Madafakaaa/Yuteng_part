@@ -219,7 +219,7 @@ class ClassController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '班级添加失败',
-                           'message' => '班级添加失败，请重新输入信息']);
+                           'message' => '班级添加失败，错误码:318']);
         }
         // 返回班级列表
         return redirect("/operation/class")
@@ -267,7 +267,7 @@ class ClassController extends Controller
             return redirect("/operation/class")->with(['notify' => true,
                                                          'type' => 'danger',
                                                          'title' => '班级删除失败',
-                                                         'message' => '班级删除失败，请联系系统管理员']);
+                                                         'message' => '班级删除失败，错误码:319']);
         }
         DB::commit();
         // 返回班级列表
@@ -366,7 +366,7 @@ class ClassController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '未选择上课规律',
-                           'message' => '至少选择一天上课，请重新输入！']);
+                           'message' => '至少选择一天上课，错误码:320']);
         }
 
         // 日期数据处理
@@ -397,7 +397,7 @@ class ClassController extends Controller
             return redirect("/operation/class/schedule/create?class_id={$schedule_class}")->with(['notify' => true,
                                                                                                    'type' => 'danger',
                                                                                                    'title' => '请选择重新上课日期',
-                                                                                                   'message' => '上课日期数量过多，超过最大上限50！']);
+                                                                                                   'message' => '上课日期数量过多，超过最大上限50，错误码:321']);
         }
         // 验证日期格式
         for($i=0; $i<$schedule_date_num; $i++){
@@ -405,7 +405,7 @@ class ClassController extends Controller
                 return redirect("/operation/class/schedule/create?class_id={$schedule_class}")->with(['notify' => true,
                                                                                                        'type' => 'danger',
                                                                                                        'title' => '请选择重新上课日期',
-                                                                                                       'message' => '上课日期格式有误！']);
+                                                                                                       'message' => '上课日期格式有误，错误码:322']);
             }
         }
         // 如果上课时间不在下课时间之前返回上一页
@@ -415,7 +415,7 @@ class ClassController extends Controller
             return redirect("/operation/classSchedule/create?class_id={$schedule_class}")->with(['notify' => true,
                                                                                                    'type' => 'danger',
                                                                                                    'title' => '请重新选择上课、下课时间',
-                                                                                                   'message' => '上课时间须在下课时间前！']);
+                                                                                                   'message' => '上课时间须在下课时间前，错误码:323']);
         }
         // 计算课程时长
         $schedule_time = 60*(intval(explode(':', $schedule_end)[0])-intval(explode(':', $schedule_start)[0]))+intval(explode(':', $schedule_end)[1])-intval(explode(':', $schedule_start)[1]);
@@ -527,7 +527,7 @@ class ClassController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '班级课程安排失败',
-                           'message' => '班级课程安排失败，请联系系统管理员。']);
+                           'message' => '班级课程安排失败，错误码:324']);
         }
         DB::commit();
         // 返回本校课程安排列表

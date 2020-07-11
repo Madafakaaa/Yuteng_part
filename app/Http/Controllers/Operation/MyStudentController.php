@@ -133,9 +133,9 @@ class MyStudentController extends Controller
                              ->where('payment_method_status', 1)
                              ->get();
         return view('operation/myStudent/myStudentContractCreate', ['student' => $student,
-                                                              'hours' => $hours,
-                                                              'courses' => $courses,
-                                                              'payment_methods' => $payment_methods]);
+                                                                  'hours' => $hours,
+                                                                  'courses' => $courses,
+                                                                  'payment_methods' => $payment_methods]);
     }
 
     /**
@@ -323,7 +323,7 @@ class MyStudentController extends Controller
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '购课添加失败',
-                         'message' => '购课添加失败，请重新添加']);
+                         'message' => '购课添加失败，错误码:333']);
         }
         DB::commit();
         // 获取学生、课程名称
@@ -435,7 +435,7 @@ class MyStudentController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '未选择上课规律',
-                           'message' => '至少选择一天上课，请重新输入！']);
+                           'message' => '至少选择一天上课，错误码:334']);
         }
 
         // 日期数据处理
@@ -467,7 +467,7 @@ class MyStudentController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '请选择重新上课日期',
-                           'message' => '上课日期数量过多，超过最大上限100节课！']);
+                           'message' => '上课日期数量过多，超过最大上限100节课，错误码:335']);
         }
         // 验证日期格式
         for($i=0; $i<$schedule_date_num; $i++){
@@ -476,7 +476,7 @@ class MyStudentController extends Controller
                        ->with(['notify' => true,
                                'type' => 'danger',
                                'title' => '请选择重新上课日期',
-                               'message' => '上课日期格式有误！']);
+                               'message' => '上课日期格式有误，错误码:336']);
             }
         }
         // 如果上课时间不在下课时间之前返回上一页
@@ -487,7 +487,7 @@ class MyStudentController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '请重新选择上课、下课时间',
-                           'message' => '上课时间须在下课时间前！']);
+                           'message' => '上课时间须在下课时间前，错误码:337']);
         }
         // 计算课程时长
         $schedule_time = 60*(intval(explode(':', $schedule_end)[0])-intval(explode(':', $schedule_start)[0]))+intval(explode(':', $schedule_end)[1])-intval(explode(':', $schedule_start)[1]);
@@ -634,7 +634,7 @@ class MyStudentController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '学生课程安排失败',
-                           'message' => '学生课程安排失败，请联系系统管理员。']);
+                           'message' => '学生课程安排失败，错误码:338']);
         }
         DB::commit();
         // 返回本校课程安排列表
@@ -726,7 +726,7 @@ class MyStudentController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '插入班级失败',
-                           'message' => '插入班级失败，请重新输入信息']);
+                           'message' => '插入班级失败，错误码:339']);
         }
         DB::commit();
         // 返回客户列表

@@ -36,11 +36,11 @@ class DepartmentController extends Controller
                      ->get();
         // 返回列表视图
         return view('/company/department/department', ['rows' => $rows,
-                                           'currentPage' => $currentPage,
-                                           'totalPage' => $totalPage,
-                                           'startIndex' => $offset,
-                                           'request' => $request,
-                                           'totalNum' => $totalNum]);
+                                                       'currentPage' => $currentPage,
+                                                       'totalPage' => $totalPage,
+                                                       'startIndex' => $offset,
+                                                       'request' => $request,
+                                                       'totalNum' => $totalNum]);
     }
 
     /**
@@ -89,7 +89,7 @@ class DepartmentController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '校区添加失败',
-                           'message' => '校区添加失败，请重新输入信息']);
+                           'message' => '校区名已存在，错误码:101']);
         }
         // 返回校区列表
         return redirect("/company/department")
@@ -152,7 +152,7 @@ class DepartmentController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '校区修改失败',
-                           'message' => '校区修改失败，请重新输入信息']);
+                           'message' => '校区修改失败，错误码:102']);
         }
         return redirect("/company/department")
                ->with(['notify' => true,
@@ -198,7 +198,7 @@ class DepartmentController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '校区删除失败',
-                           'message' => '校区删除失败，请联系系统管理员!']);
+                           'message' => '校区删除失败，错误码:103']);
         }
         // 返回校区列表
         return redirect("/company/department")

@@ -15,6 +15,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">运营中心</li>
+              <li class="breadcrumb-item"><a href="/operation/myHour">我的学生课时</a></li>
               <li class="breadcrumb-item active">课时退费</li>
             </ol>
           </nav>
@@ -78,7 +79,13 @@
               </div>
               <div class="col-4 px-2 mb-2">
                 <div class="form-group mb-1">
-                  <label>{{ ($hour->hour_remain+$hour->hour_used)*$hour->hour_average_price-$hour->hour_used*$course->course_unit_price }} 元</label>
+                  <label>
+                    @if($refund_amount>0)
+                      {{ $refund_amount }} 元
+                    @else
+                      0 元
+                    @endif
+                  </label>
                 </div>
               </div>
             </div>
@@ -88,7 +95,8 @@
                 <label class="form-control-label"><span style="color:red">*</span>实际退款</label>
               </div>
               <div class="col-4 px-2 mb-2">
-                <input class="form-control form-control-sm" name="input3" type="number" value="{{ ($hour->hour_remain+$hour->hour_used)*$hour->hour_average_price-$hour->hour_used*$course->course_unit_price }}" autocomplete='off' min="0.00" max="{{ ($hour->hour_remain+$hour->hour_used)*$hour->hour_average_price-$hour->hour_used*$course->course_unit_price }}" step="0.01" required>
+                <input class="form-control form-control-sm" name="input3" type="number" value=@if($refund_amount>0) "{{ $refund_amount }}" @else "0" @endif
+                  autocomplete='off' min="0.00" max=@if($refund_amount>0) "{{ $refund_amount }}" @else "0" @endif step="0.01" required>
               </div>
             </div>
             <div class="row">
@@ -135,11 +143,11 @@
             </div>
             <hr class="my-3">
             <div class="row">
-              <div class="col-lg-3 col-md-5 col-sm-12">
+              <div class="col-lg-4 col-md-5 col-sm-12">
                 <a href="/operation/hour" ><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
               </div>
-              <div class="col-lg-6 col-md-2 col-sm-12 my-2"></div>
-              <div class="col-lg-3 col-md-5 col-sm-12">
+              <div class="col-lg-4 col-md-2 col-sm-12 my-2"></div>
+              <div class="col-lg-4 col-md-5 col-sm-12">
                 <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="提交">
               </div>
             </div>

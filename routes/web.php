@@ -176,9 +176,9 @@ Route::get('/operation/hour', 'Operation\HourController@hour');
     Route::get('/operation/hour/refund/create', 'Operation\HourController@refundCreate');
     Route::post('/operation/hour/refund/store', 'Operation\HourController@refundStore');
     Route::get('/operation/hour/refund/delete', 'Operation\HourController@refundDelete');
-    // 课时清理
-    Route::get('/operation/hour/clean', 'Operation\HourController@hourClean');
-    Route::post('/operation/hour/clean/store', 'Operation\HourController@hourCleanStore');
+    // 课时修改
+    Route::get('/operation/hour/edit', 'Operation\HourController@hourEdit');
+    Route::post('/operation/hour/update', 'Operation\HourController@hourUpdate');
 // 班级管理
 Route::get('/operation/class', 'Operation\ClassController@class');
     // 新建班级
@@ -236,8 +236,6 @@ Route::get('/operation/mySchedule', 'Operation\MyScheduleController@mySchedule')
     Route::get('/operation/mySchedule/delete', 'Operation\MyScheduleController@myScheduleDelete');
 // 我的学生上课记录
 Route::get('/operation/myAttendedSchedule', 'Operation\MyAttendedScheduleController@myAttendedSchedule');
-    // 复核上课记录
-    // Route::get('/operation/myAttendedSchedule/check', 'Operation\MyAttendedScheduleController@myAttendedScheduleCheck');
 // 签约管理
 Route::get('/operation/contract', 'Operation\ContractController@contract');
     // 删除签约
@@ -254,17 +252,12 @@ Route::get('/operation/myContract', 'Operation\MyContractController@myContract')
     Route::post('/operation/myContract/update', 'Operation\MyContractController@myContractUpdate');
 // 退费管理
 Route::get('/operation/refund', 'Operation\RefundController@refund');
-  // 退费复核
-  // Route::get('/operation/refund/check', 'Operation\RefundController@refundCheck');
   // 退费删除
   Route::get('/operation/refund/delete', 'Operation\RefundController@refundDelete');
 // 我的退费
 Route::get('/operation/myRefund', 'Operation\MyRefundController@myRefund');
-  // 退费复核
-  // Route::get('/operation/refund/check', 'Operation\RefundController@refundCheck');
   // 退费删除
   Route::get('/operation/myRefund/delete', 'Operation\MyRefundController@myRefundDelete');
-
 
 
 // 教学中心
@@ -276,6 +269,9 @@ Route::get('/education/class', 'Education\ClassController@class');
 Route::get('/education/schedule', 'Education\ScheduleController@schedule');
 // 上课记录
 Route::get('/education/attendedSchedule', 'Education\AttendedScheduleController@attendedSchedule');
+// 课程表
+    // 周表
+    Route::get('/education/calendar/week', 'Education\CalendarController@calendarWeek');
 // 我的班级
 Route::get('/education/myClass', 'Education\MyClassController@myClass');
 // 我的课程安排

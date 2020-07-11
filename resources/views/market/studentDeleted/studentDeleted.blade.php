@@ -30,10 +30,12 @@
         <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
         <span class="btn-inner--text">搜索</span>
       </a>
-      <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/market/student/deleted/delete', '确认批量彻底删除所选学生？')">
-        <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
-        <span class="btn-inner--text">批量删除</span>
-      </button>
+      <!--
+        <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/market/student/deleted/delete', '确认批量彻底删除所选学生？')">
+          <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
+          <span class="btn-inner--text">批量删除</span>
+        </button>
+      -->
     </div>
   </div>
   <div class="row justify-content-center">
@@ -122,7 +124,7 @@
                 <td>
                   <a href="/student?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
                   <a href='/market/student/deleted/restore?id={{encode($row->student_id, 'student_id')}}'><button type="button" class="btn btn-outline-primary btn-sm">恢复</button></a>
-                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/market/student/deleted/delete?id={{encode($row->student_id, 'student_id')}}', '确认彻底删除学生？')">删除</button>
+                  <!-- <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/market/student/deleted/delete?id={{encode($row->student_id, 'student_id')}}', '确认彻底删除学生？')">删除</button> -->
                 </td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->grade_name }}</td>

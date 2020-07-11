@@ -129,7 +129,7 @@ class DocumentController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '教案上传失败',
-                           'message' => '文件大于10MB，教案上传失败，请重新选择文件']);
+                           'message' => '文件大于10MB，错误码:401']);
         }
         // 获取文件名称
         $document_file_name = $file->getClientOriginalName();
@@ -162,7 +162,7 @@ class DocumentController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '教案上传失败',
-                           'message' => '教案上传失败，请联系系统管理员！']);
+                           'message' => '教案上传失败，错误码:402']);
         }
         // 上传文件
         $file->move("files/document", $document_path);
@@ -201,7 +201,7 @@ class DocumentController extends Controller
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '档案下载失败',
-                         'message' => '档案文件已删除，下载失败']);
+                         'message' => '档案文件已删除，错误码:403']);
         }
     }
 

@@ -172,23 +172,20 @@ class CustomerController extends Controller
         // 生成新学生ID
         // 获取本校区本月学生数量
         $student_num = DB::table('student')
-                         ->where('student_department', $student_department)
-                         ->whereYear('student_createtime', date('Y'))
-                         ->whereMonth('student_createtime', date('m'))
+                         ->where('student_id', 'like', "S".substr(date('Ym'),2).sprintf("%02d", $student_department)."%")
                          ->count();
         if($student_num>900){
             return redirect("/market/customer/create")
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '客户添加失败',
-                           'message' => '本校本月已经添加超过900学生，超出本月上限']);
+                           'message' => '本校本月已经添加超过900学生，超出本月上限，错误码:201']);
         }
         if($student_num==0){
             $student_id = "S".substr(date('Ym'),2).sprintf("%02d", $student_department).sprintf("%03d", 1);
         }else{
             //获取上一个学生学号
             $pre_student_id = DB::table('student')
-                                ->where('student_department', $student_department)
                                 ->where('student_id', 'like', "S".substr(date('Ym'),2).sprintf("%02d", $student_department)."%")
                                 ->orderBy('student_id', 'desc')
                                 ->limit(1)
@@ -241,7 +238,7 @@ class CustomerController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '客户添加失败',
-                           'message' => '客户添加失败，该学生已经存在于本校区']);
+                           'message' => '客户添加失败，该学生已经存在于本校区，错误码:202']);
         }
         DB::commit();
         // 返回客户列表
@@ -321,7 +318,7 @@ class CustomerController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '负责人修改失败',
-                           'message' => '负责人修改失败，请重新输入信息']);
+                           'message' => '负责人修改失败，错误码:203']);
         }
         DB::commit();
         // 返回客户列表
@@ -361,7 +358,7 @@ class CustomerController extends Controller
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '客户删除失败',
-                         'message' => '客户删除失败，请联系系统管理员']);
+                         'message' => '客户删除失败，错误码:204']);
         }
         // 返回课程列表
         return redirect("/market/customer")

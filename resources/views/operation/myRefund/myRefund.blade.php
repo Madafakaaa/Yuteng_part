@@ -92,7 +92,6 @@
                 <th style='width:120px;' class="text-right">退款金额</th>
                 <th style='width:110px;'>日期</th>
                 <th style='width:140px;'>退费人</th>
-                <th style='width:140px;'>复核人</th>
               </tr>
             </thead>
             <tbody>
@@ -121,11 +120,6 @@
                 <td class="text-right"><strong>{{ number_format($row->refund_amount, 2) }} 元</strong></td>
                 <td>{{ $row->refund_date }}</td>
                 <td>{{ $row->createuser_name }} ({{ $row->createuser_position_name }})</td>
-                @if($row->refund_checked==0)
-                  <td><span style="color:red;">未审核</span></td>
-                @else
-                  <td><span style="color:green;">{{ $row->checked_user_name }} ({{ $row->checked_user_position_name }})</span></td>
-                @endif
               </tr>
               @endforeach
             </tbody>

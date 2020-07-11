@@ -79,7 +79,13 @@
               </div>
               <div class="col-4 px-2 mb-2">
                 <div class="form-group mb-1">
-                  <label>{{ ($hour->hour_remain+$hour->hour_used)*$hour->hour_average_price-$hour->hour_used*$course->course_unit_price }} 元</label>
+                  <label>
+                    @if($refund_amount>0)
+                      {{ $refund_amount }} 元
+                    @else
+                      0 元
+                    @endif
+                  </label>
                 </div>
               </div>
             </div>
@@ -89,7 +95,8 @@
                 <label class="form-control-label"><span style="color:red">*</span>实际退款</label>
               </div>
               <div class="col-4 px-2 mb-2">
-                <input class="form-control form-control-sm" name="input3" type="number" value="{{ ($hour->hour_remain+$hour->hour_used)*$hour->hour_average_price-$hour->hour_used*$course->course_unit_price }}" autocomplete='off' min="0.00" max="{{ ($hour->hour_remain+$hour->hour_used)*$hour->hour_average_price-$hour->hour_used*$course->course_unit_price }}" step="0.01" required>
+                <input class="form-control form-control-sm" name="input3" type="number" value=@if($refund_amount>0) "{{ $refund_amount }}" @else "0" @endif
+                  autocomplete='off' min="0.00" max=@if($refund_amount>0) "{{ $refund_amount }}" @else "0" @endif step="0.01" required>
               </div>
             </div>
             <div class="row">

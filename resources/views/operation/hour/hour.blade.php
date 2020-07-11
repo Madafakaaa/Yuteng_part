@@ -89,7 +89,7 @@
                 <th style='width:320px;'></th>
                 <th style='width:100px;'>剩余</th>
                 <th style='width:100px;'>已消耗</th>
-                <th style='width:100px;'>已清理</th>
+                <th style='width:100px;'>课时单价</th>
                 <th style='width:130px;'>课时使用班级</th>
                 <th style='width:130px;'>共计排课数量</th>
                 <th style='width:90px;'>校区</th>
@@ -124,12 +124,12 @@
                   <a href="/student?id={{encode($data['student_id'], 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
                   <a href="/operation/student/joinClass?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-warning btn-sm">加入班级</button></a>
                   <a href="/operation/student/schedule/create?id={{encode($data['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">一对一排课</button></a>
-                  <a href="/operation/hour/clean?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-primary btn-sm">清理</button></a>
+                  <a href="/operation/hour/edit?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-primary btn-sm">修改课时</button></a>
                   <a href="/operation/hour/refund/create?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-danger btn-sm">退费</button></a>
                 </td>
                 <td>{{ $data['hour_remain'] }} 课时</td>
                 <td>{{ $data['hour_used'] }} 课时</td>
-                <td>{{ $data['hour_cleaned'] }} 课时</td>
+                <td>{{ $data['hour_average_price'] }} 元/课时</td>
                 <td>
                   {{ count($data['schedule_classes']) }}个班级
                   <div class="dropdown">

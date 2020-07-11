@@ -185,12 +185,11 @@ class ContractController extends Controller
             // 捕获异常
             catch(Exception $e){
                 DB::rollBack();
-                return $e;
                 return redirect("/market/contract")
                        ->with(['notify' => true,
                                'type' => 'danger',
                                'title' => '购课记录删除失败',
-                               'message' => '购课记录删除失败，请联系系统管理员']);
+                               'message' => '购课记录删除失败，错误码:214']);
             }
             DB::commit();
             // 返回购课列表
@@ -204,7 +203,7 @@ class ContractController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '购课记录删除失败',
-                           'message' => '学生剩余课时不足，购课记录删除失败。']);
+                           'message' => '学生剩余课时不足，错误码:215']);
         }
     }
 
@@ -262,7 +261,7 @@ class ContractController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '缴费提交失败',
-                           'message' => '缴费提交失败，请联系系统管理员']);
+                           'message' => '缴费提交失败，错误码:216']);
         }
         DB::commit();
         return redirect("/market/contract")

@@ -114,7 +114,7 @@ class StudentDeletedController extends Controller
                      ->with(['notify' => true,
                              'type' => 'danger',
                              'title' => '学生恢复失败',
-                             'message' => '学生恢复失败，请联系系统管理员']);
+                             'message' => '学生恢复失败，错误码:316']);
         }
         // 返回岗位列表
         return redirect("/operation/student/deleted")
@@ -158,7 +158,7 @@ class StudentDeletedController extends Controller
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '学生删除失败',
-                         'message' => '学生删除失败，请联系系统管理员']);
+                         'message' => '学生删除失败，错误码:317']);
         }
         // 返回课程列表
         return redirect("/operation/student/deleted")

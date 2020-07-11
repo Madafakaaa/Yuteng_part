@@ -103,7 +103,7 @@ class SectionController extends Controller
                      ->with(['notify' => true,
                              'type' => 'danger',
                              'title' => '部门添加失败',
-                             'message' => '部门添加失败，请重新输入信息']);
+                             'message' => '部门添加失败，错误码:117']);
         }
         // 返回部门列表
         return redirect("/company/section")
@@ -158,7 +158,7 @@ class SectionController extends Controller
                    ->with(['notify' => true,
                           'type' => 'danger',
                           'title' => '部门修改失败',
-                          'message' => '部门修改失败，请重新输入信息']);
+                          'message' => '部门修改失败，错误码:118']);
         }
         return redirect("/company/section")
                ->with(['notify' => true,
@@ -191,7 +191,7 @@ class SectionController extends Controller
                      ->with(['notify' => true,
                              'type' => 'danger',
                              'title' => '部门删除失败',
-                             'message' => '部门删除失败，请联系系统管理员']);
+                             'message' => '部门删除失败，错误码:119']);
         }
         // 返回部门列表
         return redirect("/company/section")
@@ -249,7 +249,7 @@ class SectionController extends Controller
                      ->with(['notify' => true,
                              'type' => 'danger',
                              'title' => '岗位添加失败',
-                             'message' => '岗位添加失败，请重新输入信息']);
+                             'message' => '岗位添加失败，错误码:120']);
         }
         // 返回岗位列表
         return redirect("/company/section")
@@ -312,7 +312,7 @@ class SectionController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '岗位修改失败',
-                           'message' => '岗位修改失败，请重新输入信息']);
+                           'message' => '岗位修改失败，错误码:121']);
         }
         return redirect("/company/section")
                ->with(['notify' => true,
@@ -345,7 +345,7 @@ class SectionController extends Controller
                      ->with(['notify' => true,
                              'type' => 'danger',
                              'title' => '岗位删除失败',
-                             'message' => '岗位删除失败，请联系系统管理员']);
+                             'message' => '岗位删除失败，错误码:122']);
         }
         // 返回岗位列表
         return redirect("/company/section")

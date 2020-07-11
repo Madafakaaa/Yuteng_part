@@ -66,7 +66,6 @@ class RefundController extends Controller
         $rows = $rows->select('refund.refund_id',
                               'refund.refund_remain',
                               'refund.refund_used',
-                              'refund.refund_cleaned',
                               'refund.refund_amount',
                               'refund.refund_unit_price',
                               'refund.refund_date',
@@ -143,7 +142,6 @@ class RefundController extends Controller
                   ->where('hour_course', $refund->refund_course)
                   ->update(['hour_remain' => $hour->hour_remain+$refund->refund_remain,
                             'hour_used' => $hour->hour_used+$refund->refund_used,
-                            'hour_cleaned' => $hour->hour_cleaned+$refund->refund_cleaned,
                             'hour_average_price' => $hour_average_price]);
             }else{
                 DB::table('hour')->insert(
@@ -151,7 +149,6 @@ class RefundController extends Controller
                      'hour_course' => $refund->refund_course,
                      'hour_remain' => $refund->refund_remain,
                      'hour_used' => $refund->refund_used,
-                     'hour_cleaned' => $refund->refund_cleaned,
                      'hour_average_price' => $refund->refund_unit_price]
                 );
             }
@@ -176,7 +173,7 @@ class RefundController extends Controller
                    ->with(['notify' => true,
                           'type' => 'danger',
                           'title' => '退费记录删除失败！',
-                          'message' => '退费记录删除失败，请联系系统管理员']);
+                          'message' => '退费记录删除失败，错误码:349']);
         }
         DB::commit();
         // 返回购课列表

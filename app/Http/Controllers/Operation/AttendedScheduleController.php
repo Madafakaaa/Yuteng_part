@@ -146,7 +146,7 @@ class AttendedScheduleController extends Controller
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '课程安排删除失败',
-                         'message' => '课程安排删除失败，请联系系统管理员']);
+                         'message' => '课程安排删除失败，错误码:329']);
         }
         // 返回课程列表
         return redirect("/operation/schedule")
@@ -296,8 +296,8 @@ class AttendedScheduleController extends Controller
             return redirect("/operation/schedule/attend?id=".encode($schedule_id, 'schedule_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
-                           'title' => '请重新选择上课、下课时间',
-                           'message' => '上课时间须在下课时间前！']);
+                           'title' => '上课、下课时间错误',
+                           'message' => '上课时间须在下课时间前，错误码:330']);
         }
         // 声明数据数组
         for($i=1;$i<=$schedule_student_num;$i++){
@@ -324,7 +324,7 @@ class AttendedScheduleController extends Controller
                            ->with(['notify' => true,
                                    'type' => 'danger',
                                    'title' => '学生剩余课时不足，请重新选择',
-                                   'message' => $student_name.'剩余课时不足，请重新选择']);
+                                   'message' => $student_name.'剩余课时不足，错误码:331']);
 
                 }
             }
@@ -403,8 +403,8 @@ class AttendedScheduleController extends Controller
             return redirect("/operation/schedule/attend?id=".encode($schedule_id, 'schedule_id'))
                    ->with(['notify' => true,
                          'type' => 'danger',
-                         'title' => '学生剩余课时不足，请重新选择',
-                         'message' => '学生剩余课时不足，请重新选择']);
+                         'title' => '学生剩余课时不足',
+                         'message' => '学生剩余课时不足，错误码:332']);
         }
         DB::commit();
         // 返回我的上课记录视图

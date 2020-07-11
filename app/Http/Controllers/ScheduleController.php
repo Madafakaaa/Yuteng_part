@@ -88,7 +88,7 @@ class ScheduleController extends Controller
                    ->with(['notify' => true,
                           'type' => 'danger',
                           'title' => '上课记录复核失败',
-                          'message' => '非学生班主任操作，上课记录复核失败！']);
+                          'message' => '非学生班主任操作，错误码:324']);
         }
         DB::beginTransaction();
         // 插入数据库
@@ -101,13 +101,12 @@ class ScheduleController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
             // 返回我的学生上课记录
             return redirect("/operation/attendedSchedule/my")
                    ->with(['notify' => true,
                           'type' => 'danger',
                           'title' => '上课记录复核失败',
-                          'message' => '上课记录复核失败，请联系系统管理员！']);
+                          'message' => '上课记录复核失败，错误码:325']);
         }
         DB::commit();
         return redirect("/operation/attendedSchedule/my")

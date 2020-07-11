@@ -68,7 +68,7 @@
                 <div class="row align-items-center">
                   <div class="col-auto">
                     <a href="#" class="avatar rounded-circle">
-                      <img alt="Image placeholder" src="../../assets/img/theme/team-1.jpg">
+                      <img alt="Image placeholder" src="{{ asset(_ASSETS_.'/avatar/student.png') }}">
                     </a>
                   </div>
                   <div class="col ml--2">
@@ -181,7 +181,7 @@
                     <th>年级</th>
                     <th>日期</th>
                     <th>时间</th>
-                    <th>地点</th>
+                    <th>教室</th>
                   </tr>
                 </thead>
                 <tbody>

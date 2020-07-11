@@ -146,7 +146,7 @@ class CourseController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '课程添加失败',
-                           'message' => '课程添加失败，请重新输入信息']);
+                           'message' => '课程添加失败，错误码:104']);
         }
         // 返回课程列表
         return redirect("/company/course")
@@ -229,7 +229,7 @@ class CourseController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '课程修改失败',
-                           'message' => '课程修改失败!']);
+                           'message' => '课程修改失败，错误码:105']);
         }
         return redirect("/company/course")
                ->with(['notify' => true,
@@ -271,7 +271,7 @@ class CourseController extends Controller
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '课程删除失败',
-                         'message' => '课程删除失败，请联系系统管理员']);
+                         'message' => '课程删除失败，错误码:106']);
         }
         // 返回课程列表
         return redirect("/company/course")

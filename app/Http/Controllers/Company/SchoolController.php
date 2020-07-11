@@ -125,7 +125,7 @@ class SchoolController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '大区添加失败',
-                           'message' => '大区添加失败，请重新输入信息']);
+                           'message' => '大区添加失败，错误码:107']);
         }
         // 返回学校列表
         return redirect("/company/school")
@@ -195,7 +195,7 @@ class SchoolController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '大区修改失败',
-                           'message' => '大区修改失败，请重新输入信息']);
+                           'message' => '大区修改失败，错误码:108']);
         }
         return redirect("/company/school")
                ->with(['notify' => true,
@@ -238,7 +238,7 @@ class SchoolController extends Controller
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '大区删除失败',
-                         'message' => '大区删除失败，请联系系统管理员']);
+                         'message' => '大区删除失败，错误码:109']);
         }
         // 返回学校列表
         return redirect("/company/school")

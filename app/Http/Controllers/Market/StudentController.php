@@ -169,7 +169,7 @@ class StudentController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '负责人修改失败',
-                           'message' => '负责人修改失败，请联系系统管理员']);
+                           'message' => '负责人修改失败，错误码:205']);
         }
         DB::commit();
         // 返回客户列表
@@ -209,7 +209,7 @@ class StudentController extends Controller
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '学生删除失败',
-                         'message' => '学生删除失败，请联系系统管理员']);
+                         'message' => '学生删除失败，错误码:206']);
         }
         // 返回课程列表
         return redirect("/market/student")

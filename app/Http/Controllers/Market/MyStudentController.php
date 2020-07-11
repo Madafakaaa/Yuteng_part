@@ -328,7 +328,7 @@ class MyStudentController extends Controller
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '购课添加失败',
-                         'message' => '购课添加失败，请重新添加']);
+                         'message' => '购课添加失败，错误码:213']);
         }
         DB::commit();
         // 获取学生、课程名称

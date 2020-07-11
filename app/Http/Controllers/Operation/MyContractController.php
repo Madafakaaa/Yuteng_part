@@ -189,7 +189,7 @@ class MyContractController extends Controller
                        ->with(['notify' => true,
                                'type' => 'danger',
                                'title' => '购课记录删除失败',
-                               'message' => '购课记录删除失败，请联系系统管理员']);
+                               'message' => '购课记录删除失败，错误码:346']);
             }
             DB::commit();
             // 返回购课列表
@@ -203,7 +203,7 @@ class MyContractController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '购课记录删除失败',
-                           'message' => '学生剩余课时不足，购课记录删除失败。']);
+                           'message' => '学生剩余课时不足，错误码:347']);
         }
     }
 
@@ -261,7 +261,7 @@ class MyContractController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '缴费提交失败',
-                           'message' => '缴费提交失败，请联系系统管理员']);
+                           'message' => '缴费提交失败，错误码:348']);
         }
         DB::commit();
         return redirect("/operation/myContract")

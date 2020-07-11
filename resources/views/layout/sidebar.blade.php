@@ -261,6 +261,12 @@
                   <span class="nav-link-text">上课记录</span>
                 </a>
               </li>
+              <li class="nav-item" >
+                <a href="/education/calendar/week" class="nav-link" id="educationCalendarWeek">
+                  <i class="ni ni-calendar-grid-58 text-pink"></i>
+                  <span class="nav-link-text">课程表</span>
+                </a>
+              </li>
               <hr>
               <!-- <li class="nav-item" @if(!in_array('educationMyStudent', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/myStudent" class="nav-link" id="educationMyStudent">

@@ -63,7 +63,7 @@ class HourController extends Controller
                               'course.course_id AS course_id',
                               'hour.hour_remain AS hour_remain',
                               'hour.hour_used AS hour_used',
-                              'hour.hour_cleaned AS hour_cleaned',
+                              'hour.hour_average_price AS hour_average_price',
                               'student.student_id AS student_id',
                               'student.student_name AS student_name',
                               'student.student_gender AS student_gender',
@@ -87,7 +87,7 @@ class HourController extends Controller
             $temp['course_id'] = $row->course_id;
             $temp['hour_remain'] = $row->hour_remain;
             $temp['hour_used'] = $row->hour_used;
-            $temp['hour_cleaned'] = $row->hour_cleaned;
+            $temp['hour_average_price'] = $row->hour_average_price;
             $temp['student_id'] = $row->student_id;
             $temp['student_name'] = $row->student_name;
             $temp['student_gender'] = $row->student_gender;
@@ -149,7 +149,7 @@ class HourController extends Controller
             return redirect("/operation/hour")->with(['notify' => true,
                                                      'type' => 'danger',
                                                      'title' => '退费失败',
-                                                     'message' => '学生没有可退课时,请重新选择.']);
+                                                     'message' => '学生没有可退课时，错误码:310']);
         }
         // 获取剩余课时
         $hour = DB::table('hour')
@@ -160,7 +160,7 @@ class HourController extends Controller
             return redirect("/operation/hour")->with(['notify' => true,
                                                      'type' => 'danger',
                                                      'title' => '退费失败',
-                                                     'message' => '学生没有可退课时,请重新选择.']);
+                                                     'message' => '学生没有可退课时，错误码:311']);
         }
         // 获取学生信息
         $student = DB::table('student')
@@ -178,11 +178,14 @@ class HourController extends Controller
         $refund_reasons = DB::table('refund_reason')
                            ->where('refund_reason_status', 1)
                            ->get();
+        // 计算可退金额
+        $refund_amount = ($hour->hour_remain+$hour->hour_used)*$hour->hour_average_price-$hour->hour_used*$course->course_unit_price;
         return view('operation/hour/refundCreate', ['hour' => $hour,
                                                     'course' => $course,
                                                     'student' => $student,
                                                     'payment_methods' => $payment_methods,
-                                                    'refund_reasons' => $refund_reasons]);
+                                                    'refund_reasons' => $refund_reasons,
+                                                    'refund_amount' => $refund_amount]);
     }
 
     /**
@@ -228,7 +231,6 @@ class HourController extends Controller
                  'refund_student' => $refund_student,
                  'refund_remain' => $hour->hour_remain,
                  'refund_used' => $hour->hour_used,
-                 'refund_cleaned' => $hour->hour_cleaned,
                  'refund_unit_price' => $hour->hour_average_price,
                  'refund_amount' => $refund_amount,
                  'refund_reason' => $refund_reason,
@@ -252,13 +254,12 @@ class HourController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
             // 返回购课列表
             return redirect("/operation/hour")
                    ->with(['notify' => true,
                              'type' => 'danger',
                              'title' => '退费失败',
-                             'message' => '退费失败，请联系系统管理员']);
+                             'message' => '退费失败，错误码:312']);
         }
         DB::commit();
         // 返回购课列表
@@ -274,7 +275,7 @@ class HourController extends Controller
      * URL: POST /operation/hour/clean
      * @param  $request->input('input1'): 退课学生
      */
-    public function hourClean(Request $request){
+    public function hourEdit(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -286,7 +287,7 @@ class HourController extends Controller
             return redirect("/operation/hour")->with(['notify' => true,
                                                      'type' => 'danger',
                                                      'title' => '课时清理失败',
-                                                     'message' => '学生没有可清理课时,请重新选择.']);
+                                                     'message' => '学生没有可清理课时，错误码:313']);
         }
         // 获取剩余课时
         $hour = DB::table('hour')
@@ -297,7 +298,7 @@ class HourController extends Controller
             return redirect("/operation/hour")->with(['notify' => true,
                                                      'type' => 'danger',
                                                      'title' => '课时清理失败',
-                                                     'message' => '学生没有可清理课时,请重新选择.']);
+                                                     'message' => '学生没有可清理课时，错误码:314']);
         }
         // 获取学生信息
         $student = DB::table('student')
@@ -307,7 +308,7 @@ class HourController extends Controller
         $course = DB::table('course')
                   ->where('course_id', $course_id)
                   ->first();
-        return view('operation/hour/hourClean', ['hour' => $hour,
+        return view('operation/hour/hourEdit', ['hour' => $hour,
                                                  'course' => $course,
                                                  'student' => $student]);
     }
@@ -324,45 +325,46 @@ class HourController extends Controller
      * @param  $request->input('input6'): 退款日期
      * @param  $request->input('input7'): 备注
      */
-    public function hourCleanStore(Request $request){
+    public function hourUpdate(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 获取表单数据
-        $hour_cleaned_record_student = $request->input('input1');
-        $hour_cleaned_record_course = $request->input('input2');
-        $hour_cleaned_record_amount = round((float)$request->input('input3'), 2);
-        if($request->filled('input4')) {
-            $hour_cleaned_record_remark = $request->input('input4');
+        $hour_update_record_student = $request->input('input1');
+        $hour_update_record_course = $request->input('input2');
+        $hour_update_record_amount = round((float)$request->input('input3'), 1);
+        $hour_update_record_average_price = round((float)$request->input('input4'), 2);
+        if($request->filled('input5')) {
+            $hour_update_record_remark = $request->input('input5');
         }else{
-        	$hour_cleaned_record_remark = "";
+        	$hour_update_record_remark = "";
         }
         // 获取剩余课时
         $hour = DB::table('hour')
-                  ->where('hour_student', $hour_cleaned_record_student)
-                  ->where('hour_course', $hour_cleaned_record_course)
+                  ->where('hour_student', $hour_update_record_student)
+                  ->where('hour_course', $hour_update_record_course)
                   ->first();
         DB::beginTransaction();
         // 插入数据库
         try{
-            // 插入hour_cleaned_record表
-            DB::table('hour_cleaned_record')->insert(
-                ['hour_cleaned_record_student' => $hour_cleaned_record_student,
-                 'hour_cleaned_record_course' => $hour_cleaned_record_course,
-                 'hour_cleaned_record_amount' => $hour_cleaned_record_amount,
-                 'hour_cleaned_record_remark' => $hour_cleaned_record_remark,
-                 'hour_cleaned_record_createuser' => Session::get('user_id')]
+            // 插入hour_update_record表
+            DB::table('hour_update_record')->insert(
+                ['hour_update_record_student' => $hour_update_record_student,
+                 'hour_update_record_course' => $hour_update_record_course,
+                 'hour_update_record_remain_before' => $hour->hour_remain,
+                 'hour_update_record_average_price_before' => $hour->hour_average_price,
+                 'hour_update_record_remain_after' => $hour_update_record_amount,
+                 'hour_update_record_average_price_after' => $hour_update_record_average_price,
+                 'hour_update_record_remark' => $hour_update_record_remark,
+                 'hour_update_record_createuser' => Session::get('user_id')]
             );
             // 更新Hour表
             DB::table('hour')
-              ->where('hour_student', $hour_cleaned_record_student)
-              ->where('hour_course', $hour_cleaned_record_course)
-              ->decrement('hour_remain', $hour_cleaned_record_amount);
-            DB::table('hour')
-              ->where('hour_student', $hour_cleaned_record_student)
-              ->where('hour_course', $hour_cleaned_record_course)
-              ->increment('hour_cleaned', $hour_cleaned_record_amount);
+              ->where('hour_student', $hour_update_record_student)
+              ->where('hour_course', $hour_update_record_course)
+              ->update(['hour_remain' => $hour_update_record_amount,
+                        'hour_average_price' => $hour_update_record_average_price]);
             // 添加学生动态
             //DB::table('student_record')->insert(
             //    ['student_record_student' => $student_id,
@@ -373,21 +375,20 @@ class HourController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
             // 返回购课列表
             return redirect("/operation/hour")
                    ->with(['notify' => true,
                              'type' => 'danger',
-                             'title' => '课时清理失败',
-                             'message' => '课时清理失败，请联系系统管理员']);
+                             'title' => '课时修改失败',
+                             'message' => '课时修改失败，错误码:315']);
         }
         DB::commit();
         // 返回购课列表
         return redirect("/operation/hour")
                ->with(['notify' => true,
                       'type' => 'success',
-                      'title' => '课时清理成功',
-                      'message' => '课时清理成功']);
+                      'title' => '课时修改成功',
+                      'message' => '课时修改成功']);
     }
 
 }

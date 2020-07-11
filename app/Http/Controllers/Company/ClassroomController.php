@@ -131,7 +131,7 @@ class ClassroomController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '教室添加失败',
-                           'message' => '教室添加失败，请重新输入信息']);
+                           'message' => '教室添加失败，错误码:110']);
         }
         // 返回教室列表
         return redirect("/company/classroom")
@@ -201,7 +201,7 @@ class ClassroomController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '教室修改失败',
-                           'message' => '教室修改失败，请重新输入信息']);
+                           'message' => '教室修改失败，错误码:111']);
         }
         return redirect("/company/classroom")
                ->with(['notify' => true,
@@ -244,7 +244,7 @@ class ClassroomController extends Controller
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '教室删除失败',
-                         'message' => '教室删除失败，请联系系统管理员']);
+                         'message' => '教室删除失败，错误码:112']);
         }
         // 返回教室列表
         return redirect("/company/classroom")

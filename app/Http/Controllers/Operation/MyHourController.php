@@ -65,7 +65,7 @@ class MyHourController extends Controller
                               'course.course_id AS course_id',
                               'hour.hour_remain AS hour_remain',
                               'hour.hour_used AS hour_used',
-                              'hour.hour_cleaned AS hour_cleaned',
+                              'hour.hour_average_price AS hour_average_price',
                               'student.student_id AS student_id',
                               'student.student_name AS student_name',
                               'student.student_gender AS student_gender',
@@ -89,7 +89,7 @@ class MyHourController extends Controller
             $temp['course_id'] = $row->course_id;
             $temp['hour_remain'] = $row->hour_remain;
             $temp['hour_used'] = $row->hour_used;
-            $temp['hour_cleaned'] = $row->hour_cleaned;
+            $temp['hour_average_price'] = $row->hour_average_price;
             $temp['student_id'] = $row->student_id;
             $temp['student_name'] = $row->student_name;
             $temp['student_gender'] = $row->student_gender;
@@ -151,7 +151,7 @@ class MyHourController extends Controller
             return redirect("/operation/myHour")->with(['notify' => true,
                                                      'type' => 'danger',
                                                      'title' => '退费失败',
-                                                     'message' => '学生没有可退课时,请重新选择.']);
+                                                     'message' => '学生没有可退课时，错误码:340']);
         }
         // 获取剩余课时
         $hour = DB::table('hour')
@@ -162,7 +162,7 @@ class MyHourController extends Controller
             return redirect("/operation/myHour")->with(['notify' => true,
                                                      'type' => 'danger',
                                                      'title' => '退费失败',
-                                                     'message' => '学生没有可退课时,请重新选择.']);
+                                                     'message' => '学生没有可退课时，错误码:341']);
         }
         // 获取学生信息
         $student = DB::table('student')
@@ -180,11 +180,14 @@ class MyHourController extends Controller
         $refund_reasons = DB::table('refund_reason')
                            ->where('refund_reason_status', 1)
                            ->get();
+        // 计算可退金额
+        $refund_amount = ($hour->hour_remain+$hour->hour_used)*$hour->hour_average_price-$hour->hour_used*$course->course_unit_price;
         return view('operation/myHour/refundCreate', ['hour' => $hour,
                                                     'course' => $course,
                                                     'student' => $student,
                                                     'payment_methods' => $payment_methods,
-                                                    'refund_reasons' => $refund_reasons]);
+                                                    'refund_reasons' => $refund_reasons,
+                                                    'refund_amount' => $refund_amount]);
     }
 
     /**
@@ -230,7 +233,6 @@ class MyHourController extends Controller
                  'refund_student' => $refund_student,
                  'refund_remain' => $hour->hour_remain,
                  'refund_used' => $hour->hour_used,
-                 'refund_cleaned' => $hour->hour_cleaned,
                  'refund_unit_price' => $hour->hour_average_price,
                  'refund_amount' => $refund_amount,
                  'refund_reason' => $refund_reason,
@@ -259,7 +261,7 @@ class MyHourController extends Controller
                    ->with(['notify' => true,
                              'type' => 'danger',
                              'title' => '退费失败',
-                             'message' => '退费失败，请联系系统管理员']);
+                             'message' => '退费失败，错误码:342']);
         }
         DB::commit();
         // 返回购课列表

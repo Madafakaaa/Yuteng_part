@@ -188,7 +188,7 @@ class UserController extends Controller
                      ->with(['notify' => true,
                              'type' => 'danger',
                              'title' => '用户添加失败',
-                             'message' => '用户添加失败，请重新输入信息']);
+                             'message' => '用户添加失败，错误码:113']);
         }
         // 返回用户列表
         return redirect("/company/user")
@@ -315,7 +315,7 @@ class UserController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '用户权限修改失败',
-                           'message' => '用户权限修改失败！']);
+                           'message' => '用户权限修改失败，错误码:114']);
         }
         DB::commit();
         return redirect("/company/user/access?id={$request->input('id')}")
@@ -353,7 +353,7 @@ class UserController extends Controller
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '恢复用户默认密码失败',
-                           'message' => '恢复用户默认密码失败！']);
+                           'message' => '恢复用户默认密码失败，错误码:115']);
         }
         DB::commit();
         return redirect("/company/user")
@@ -397,7 +397,7 @@ class UserController extends Controller
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '用户删除失败',
-                         'message' => '用户删除失败，请联系系统管理员']);
+                         'message' => '用户删除失败，错误码:116']);
         }
         // 返回用户列表
         return redirect("/company/user")
