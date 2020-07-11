@@ -138,9 +138,8 @@ class MyContractController extends Controller
 
                     $hour_remain = $hour->hour_remain;
                     $hour_used = $hour->hour_used;
-                    $hour_cleaned = $hour->hour_cleaned;
                     $hour_average_price = $hour->hour_average_price;
-                    $hour_total_price = ($hour_remain+$hour_used+$hour_cleaned)*$hour_average_price;
+                    $hour_total_price = ($hour_remain+$hour_used)*$hour_average_price;
                     $hour_remain-=$contract_course->contract_course_total_hour;
                     $hour_total_price-=$contract_course->contract_course_total_price;
                     if($hour_remain==0){

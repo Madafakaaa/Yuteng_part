@@ -499,9 +499,8 @@ class MyCustomerController extends Controller
                               ->first();
                     $hour_remain = $hour->hour_remain;
                     $hour_used = $hour->hour_used;
-                    $hour_cleaned = $hour->hour_cleaned;
                     $hour_average_price = $hour->hour_average_price;
-                    $hour_total_price = ($hour_remain+$hour_used+$hour_cleaned)*$hour_average_price;
+                    $hour_total_price = ($hour_remain+$hour_used)*$hour_average_price;
                     $hour_remain+=$request_course[2]+$request_course[6];
                     $hour_total_price+=$request_course[8];
                     $hour_average_price = $hour_total_price/$hour_remain;
@@ -516,7 +515,6 @@ class MyCustomerController extends Controller
                          'hour_course' => $request_course[0],
                          'hour_remain' => $request_course[2]+$request_course[6],
                          'hour_used' => 0,
-                         'hour_cleaned' => 0,
                          'hour_average_price' => $contract_course_actual_unit_price]
                     );
                 }

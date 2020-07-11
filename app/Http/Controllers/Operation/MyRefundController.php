@@ -129,12 +129,12 @@ class MyRefundController extends Controller
                           ->where('hour_course', $refund->refund_course)
                           ->first();
                 // 计算hour中总价值
-                $hour_total_price = ($hour->hour_remain+$hour->hour_used+$hour->hour_cleaned)*$hour->hour_average_price;
+                $hour_total_price = ($hour->hour_remain+$hour->hour_used)*$hour->hour_average_price;
                 // 增加总价值
-                $hour_total_price += ($refund->refund_remain+$refund->refund_used+$refund->refund_cleaned)*$refund->refund_unit_price;
+                $hour_total_price += ($refund->refund_remain+$refund->refund_used)*$refund->refund_unit_price;
                 // 计算新单价
-                if($hour->hour_remain+$hour->hour_used+$hour->hour_cleaned+$refund->refund_remain+$refund->refund_used+$refund->refund_cleaned!=0){
-                    $hour_average_price = $hour_total_price/($hour->hour_remain+$hour->hour_used+$hour->hour_cleaned+$refund->refund_remain+$refund->refund_used+$refund->refund_cleaned);
+                if($hour->hour_remain+$hour->hour_used+$refund->refund_remain+$refund->refund_used!=0){
+                    $hour_average_price = $hour_total_price/($hour->hour_remain+$hour->hour_used+$refund->refund_remain+$refund->refund_used);
                 }else{
                     $hour_average_price = 0;
                 }
