@@ -80,10 +80,6 @@
                     <h5 class="mb-0">{{ $hour->hour_used }} 课时</h5>
                   </div>
                   <div class="col">
-                    <small>已清理</small>
-                    <h5 class="mb-0">{{ $hour->hour_cleaned }} 课时</h5>
-                  </div>
-                  <div class="col">
                     <small>课时单价</small>
                     <h5 class="mb-0">{{ $hour->hour_average_price }} 元</h5>
                   </div>

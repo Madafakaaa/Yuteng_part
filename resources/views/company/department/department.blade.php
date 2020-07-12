@@ -42,6 +42,30 @@
       </button>
     </div>
   </div>
+  <div class="row">
+    <div class="col-xl-3 col-md-6">
+      <div class="card card-stats">
+        <!-- Card body -->
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title text-uppercase text-muted mb-0">Total traffic</h5>
+              <span class="h2 font-weight-bold mb-0 counter-value">350,897</span>
+            </div>
+            <div class="col-auto">
+              <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                <i class="ni ni-active-40"></i>
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 mb-0 text-sm">
+            <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+            <span class="text-nowrap">Since last month</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="row justify-content-center">
     <div class="col-12">
       <div class="card main_card mb-4" style="display:none">
@@ -102,5 +126,20 @@
   linkActive('link-company');
   navbarActive('navbar-company');
   linkActive('companyDepartment');
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.counter-value').each(function(){
+		$(this).prop('Counter',0).animate({
+			Counter: $(this).text()
+		},{
+			duration: 3500,
+			easing: 'swing',
+			step: function (now){
+				$(this).text(Math.ceil(now));
+			}
+		});
+	});
+});
 </script>
 @endsection

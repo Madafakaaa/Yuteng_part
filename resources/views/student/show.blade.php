@@ -276,7 +276,7 @@
                     <th>课程</th>
                     <th>剩余课时</th>
                     <th>已用课时</th>
-                    <th>已清理课时</th>
+                    <th>课时单价</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -286,7 +286,7 @@
                       <td>{{ $hour->course_name }}</td>
                       <td>{{ $hour->hour_remain }} 课时</td>
                       <td>{{ $hour->hour_used }} 课时</td>
-                      <td>{{ $hour->hour_cleaned }} 课时</td>
+                      <td>{{ $hour->hour_average_price }} 元/课时</td>
                     </tr>
                   @endforeach
                 </tbody>
