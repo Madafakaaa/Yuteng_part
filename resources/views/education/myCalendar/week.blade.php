@@ -15,7 +15,7 @@
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item active">教学中心</li>
-              <li class="breadcrumb-item active">课程表</li>
+              <li class="breadcrumb-item active">我的课程表</li>
             </ol>
           </nav>
         </div>
@@ -104,6 +104,6 @@ $(document).ready(function(){
 });
   linkActive('link-education');
   navbarActive('navbar-education');
-  linkActive('educationCalendarWeek');
+  linkActive('educationMyCalendarWeek');
 </script>
 @endsection

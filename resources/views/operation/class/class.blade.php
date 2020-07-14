@@ -141,29 +141,104 @@
                   @else
                     <span style="color:red;">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
                   @endif
-                  <div class="dropdown">
-                    <a class="btn btn-sm btn-outline-primary" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">查看列表</a>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                      @if(count($members[$loop->iteration-1])==0)
-                        <a class="dropdown-item" href="#">无</a>
-                      @endif
-                      @foreach ($members[$loop->iteration-1] as $member)
-                        <a class="dropdown-item" href="#">{{ $member['student_name'] }}</a>
-                      @endforeach
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-{{$loop->iteration}}-1">查看列表</button>
+                  <div class="modal fade" id="modal-{{$loop->iteration}}-1" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+                    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h6 class="modal-title">{{ $row->class_name }}</h6>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <ul class="list-group list-group-flush list my--3">
+                            @if(count($members[$loop->iteration-1])==0)
+                              <li class="list-group-item px-0">
+                                <div class="row align-items-center">
+                                  <div class="col ml--2">
+                                    <h4 class="mb-0">
+                                      <a href="#!">无</a>
+                                    </h4>
+                                  </div>
+                                </div>
+                              </li>
+                            @endif
+                            @foreach ($members[$loop->iteration-1] as $member)
+                              <li class="list-group-item px-0">
+                                <div class="row align-items-center">
+                                  <div class="col-auto">
+                                    <a href="#" class="avatar rounded-circle">
+                                      <img alt="..." src="{{ asset(_ASSETS_.'/avatar/student.png') }}">
+                                    </a>
+                                  </div>
+                                  <div class="col ml--2">
+                                    <h4 class="mb-0">
+                                      <a href="/student?id={{encode($member['student_id'], 'student_id')}}">{{ $member['student_name'] }}</a>
+                                    </h4>
+                                    <span class="text-success">●</span>
+                                    <small>{{ $member['student_id'] }}</small>
+                                  </div>
+                                  <div class="col-auto">
+                                    <a href="/student?id={{encode($member['student_id'], 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
+                                  </div>
+                                </div>
+                              </li>
+                            @endforeach
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">关闭</button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </td>
                 <td>
                   {{ $row->class_schedule_num }} 节
-                  <div class="dropdown">
-                    <a class="btn btn-sm btn-outline-primary" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">查看列表</a>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                      @if(count($schedules[$loop->iteration-1])==0)
-                        <a class="dropdown-item" href="#">无</a>
-                      @endif
-                      @foreach ($schedules[$loop->iteration-1] as $schedule)
-                        <a class="dropdown-item" href="#">{{ $schedule['schedule_date'] }} {{ dateToDay($schedule['schedule_date']) }} {{ date('H:i', strtotime($schedule['schedule_start'])) }} - {{ date('H:i', strtotime($schedule['schedule_end'])) }}</a>
-                      @endforeach
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-{{$loop->iteration}}-2">查看列表</button>
+                  <div class="modal fade" id="modal-{{$loop->iteration}}-2" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+                    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h6 class="modal-title">{{ $row->class_name }}</h6>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <ul class="list-group list-group-flush list my--3">
+                            @if(count($schedules[$loop->iteration-1])==0)
+                              <li class="list-group-item px-0">
+                                <div class="row align-items-center">
+                                  <div class="col ml--2">
+                                    <h4 class="mb-0">
+                                      <a href="#!">无</a>
+                                    </h4>
+                                  </div>
+                                </div>
+                              </li>
+                            @endif
+                            @foreach ($schedules[$loop->iteration-1] as $schedule)
+                              <li class="list-group-item px-0">
+                                <div class="row align-items-center">
+                                  <div class="col ml--2">
+                                    <h4 class="mb-0">
+                                      <a href="#">{{ $schedule['schedule_date'] }} {{ dateToDay($schedule['schedule_date']) }} {{ date('H:i', strtotime($schedule['schedule_start'])) }} - {{ date('H:i', strtotime($schedule['schedule_end'])) }}</a>
+                                    </h4>
+                                  </div>
+                                  <div class="col-auto">
+                                    <a href="/schedule?id={{encode($schedule['schedule_id'],'schedule_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
+                                  </div>
+                                </div>
+                              </li>
+                            @endforeach
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">关闭</button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </td>

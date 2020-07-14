@@ -123,7 +123,7 @@
                   {{ $row->class_name }}
                 </td>
                 <td>
-                  <!-- <a href="/attendedSchedule/?id={{encode($row->schedule_id,'schedule_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>&nbsp; -->
+                  <a href="/attendedSchedule/?id={{encode($row->schedule_id,'schedule_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>&nbsp;
                 </td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->schedule_date }}&nbsp;{{ dateToDay($row->schedule_date) }}</td>

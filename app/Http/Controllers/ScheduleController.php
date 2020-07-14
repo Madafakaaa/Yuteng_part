@@ -15,105 +15,70 @@ class ScheduleController extends Controller
      * URL: GET /schedule/{schedule_id}
      * @param  int  $schedule_id
      */
-    public function schedule($schedule_id){
+    public function schedule(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $schedule_id = decode($request->input('id'), 'schedule_id');
         // 获取数据信息
         $schedule = DB::table('schedule')
                       ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
-                      ->leftJoin('student', 'schedule.schedule_participant', '=', 'student.student_id')
-                      ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                      ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
                       ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
                       ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                       ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                       ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                       ->where('schedule_id', $schedule_id)
                       ->first();
-        return view('schedule/schedule', ['schedule' => $schedule]);
+        // 获取学生信息
+        $members = DB::table('member')
+                      ->join('student', 'member.member_student', '=', 'student.student_id')
+                      ->join('course', 'member.member_course', '=', 'course.course_id')
+                      ->join('hour', [
+                                       ['hour.hour_student', '=', 'member.member_student'],
+                                       ['hour.hour_course', '=', 'member.member_course'],
+                                     ])
+                      ->where('member_class', $schedule->schedule_participant)
+                      ->get();
+        return view('schedule/schedule', ['schedule' => $schedule,
+                                          'members' => $members]);
     }
 
     /**
-     * 上课记录详情视图
-     * URL: GET /attendedSchedule/{participant_id}
-     * @param  int  $participant_id
+     * 上课记录视图
+     * URL: GET /attendedSchedule
+     * @param  int  $schedule_id
      */
     public function attendedSchedule(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        $participant_id=decode($request->input('id'), 'participant_id');
+        $schedule_id = decode($request->input('id'), 'schedule_id');
         // 获取数据信息
-        $schedule = DB::table('participant')
-                      ->join('schedule', 'participant.participant_schedule', '=', 'schedule.schedule_id')
+        $schedule = DB::table('schedule')
                       ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
-                      ->leftJoin('student', 'schedule.schedule_participant', '=', 'student.student_id')
-                      ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                      ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
                       ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
                       ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                       ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                       ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
-                      ->where('participant_id', $participant_id)
+                      ->where('schedule_id', $schedule_id)
                       ->first();
-        // 获取上课成员数据信息
-        $participants = DB::table('participant')
-                          ->join('student', 'participant.participant_student', '=', 'student.student_id')
-                          ->join('hour', 'participant.participant_hour', '=', 'hour.hour_id')
-                          ->join('course', 'hour.hour_course', '=', 'course.course_id')
-                          ->where('participant.participant_schedule', $schedule->schedule_id)
-                          ->get();
+        // 获取学生信息
+        $members = DB::table('participant')
+                      ->join('schedule', 'participant.participant_schedule', '=', 'schedule.schedule_id')
+                      ->join('student', 'participant.participant_student', '=', 'student.student_id')
+                      ->join('course', 'participant.participant_course', '=', 'course.course_id')
+                      ->join('hour', [
+                                       ['hour.hour_student', '=', 'participant.participant_student'],
+                                       ['hour.hour_course', '=', 'participant.participant_course'],
+                                     ])
+                      ->where('schedule_id', $schedule_id)
+                      ->get();
         return view('schedule/attendedSchedule', ['schedule' => $schedule,
-                                                  'participants' => $participants]);
-    }
-
-    /**
-     * 上课记录复核
-     * URL: GET /attendedSchedule/{participant_id}/check
-     * @param  int  $participant_id
-     */
-    public function attendedScheduleCheck($participant_id){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        // 获取上课成员数据信息
-        $participants = DB::table('participant')
-                          ->join('student', 'participant.participant_student', '=', 'student.student_id')
-                          ->where('participant.participant_id', $participant_id)
-                          ->first();
-        if($participants->student_class_adviser!=Session::get('user_id')){
-            return redirect("/operation/attendedSchedule/my")
-                   ->with(['notify' => true,
-                          'type' => 'danger',
-                          'title' => '上课记录复核失败',
-                          'message' => '非学生班主任操作，错误码:324']);
-        }
-        DB::beginTransaction();
-        // 插入数据库
-        try{
-            DB::table('participant')
-              ->where('participant.participant_id', $participant_id)
-              ->update(['participant_checked' => 1,
-                        'participant_checked_user' => Session::get('user_id')]);
-        }
-        // 捕获异常
-        catch(Exception $e){
-            DB::rollBack();
-            // 返回我的学生上课记录
-            return redirect("/operation/attendedSchedule/my")
-                   ->with(['notify' => true,
-                          'type' => 'danger',
-                          'title' => '上课记录复核失败',
-                          'message' => '上课记录复核失败，错误码:325']);
-        }
-        DB::commit();
-        return redirect("/operation/attendedSchedule/my")
-               ->with(['notify' => true,
-                      'type' => 'success',
-                      'title' => '上课记录复核成功',
-                      'message' => '上课记录复核成功！']);
+                                                  'members' => $members]);
     }
 
 }

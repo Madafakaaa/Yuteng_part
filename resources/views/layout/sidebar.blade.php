@@ -261,7 +261,7 @@
                   <span class="nav-link-text">上课记录</span>
                 </a>
               </li>
-              <li class="nav-item" >
+              <li class="nav-item">
                 <a href="/education/calendar/week" class="nav-link" id="educationCalendarWeek">
                   <i class="ni ni-calendar-grid-58 text-pink"></i>
                   <span class="nav-link-text">课程表</span>
@@ -290,6 +290,12 @@
                 <a href="/education/myAttendedSchedule" class="nav-link" id="educationMyAttendedSchedule">
                   <i class="ni ni-bullet-list-67 text-pink"></i>
                   <span class="nav-link-text">我的上课记录</span>
+                </a>
+              </li>
+              <li class="nav-item" >
+                <a href="/education/myCalendar/week" class="nav-link" id="educationMyCalendarWeek">
+                  <i class="ni ni-calendar-grid-58 text-pink"></i>
+                  <span class="nav-link-text">我的课程表</span>
                 </a>
               </li>
               <hr>

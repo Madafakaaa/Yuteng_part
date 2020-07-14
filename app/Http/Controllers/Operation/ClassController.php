@@ -86,6 +86,7 @@ class ClassController extends Controller
             foreach($db_members as $db_member){
                 $temp = array();
                 $temp['student_name'] = $db_member->student_name;
+                $temp['student_id'] = $db_member->student_id;
                 $temp_member[] = $temp;
             }
             $members[] = $temp_member;
@@ -99,6 +100,7 @@ class ClassController extends Controller
                               ->get();
             foreach($db_schedules as $db_schedule){
                 $temp = array();
+                $temp['schedule_id'] = $db_schedule->schedule_id;
                 $temp['schedule_date'] = $db_schedule->schedule_date;
                 $temp['schedule_start'] = $db_schedule->schedule_start;
                 $temp['schedule_end'] = $db_schedule->schedule_end;

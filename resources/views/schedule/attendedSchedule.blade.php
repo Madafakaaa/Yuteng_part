@@ -22,24 +22,31 @@
     </div>
   </div>
 </div>
-<div class="container-fluid mt-6">
+<div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
-        <form action="/education/schedule/attend/{{ $schedule->schedule_id }}/step2" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
-            <h4 class="mb-0">上课详情</h4>
+            <h3 class="mb-0">上课记录详情</h3>
           </div>
           <!-- Card body -->
-          <div class="card-body pt-2">
+          <div class="card-body py-3">
             <div class="row">
               <div class="col-2 text-right">
                 <label class="form-control-label">上课校区</label>
               </div>
               <div class="col-4 px-2 mb-2">
                 <div class="form-group mb-1">
-                  <input class="form-control form-control-sm" value="{{ $schedule->department_name }}" readonly>
+                  <label>{{ $schedule->department_name }}</label>
+                </div>
+              </div>
+              <div class="col-2 text-right">
+                <label class="form-control-label">班级</label>
+              </div>
+              <div class="col-4 px-2 mb-2">
+                <div class="form-group mb-1">
+                  <label>{{ $schedule->class_name }}</label>
                 </div>
               </div>
             </div>
@@ -49,22 +56,15 @@
               </div>
               <div class="col-4 px-2 mb-2">
                 <div class="form-group mb-1">
-                  <input class="form-control form-control-sm" value="{{ $schedule->schedule_date }}" readonly>
+                  <label>{{ $schedule->schedule_date }}</label>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-2 text-right">
                 <label class="form-control-label">上课时间</label>
               </div>
               <div class="col-4 px-2 mb-2">
                 <div class="form-group mb-1">
-                  <input class="form-control form-control-sm" value="{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}" readonly>
-                </div>
-              </div>
-              <div class="col-4 px-2 mb-2">
-                <div class="form-group mb-1">
-                  <input class="form-control form-control-sm" value="{{ $schedule->schedule_time }}分钟" readonly>
+                  <label>{{ date('H:i', strtotime($schedule->schedule_start)) }} ~ {{ date('H:i', strtotime($schedule->schedule_end)) }}</label>
                 </div>
               </div>
             </div>
@@ -74,17 +74,15 @@
               </div>
               <div class="col-4 px-2 mb-2">
                 <div class="form-group mb-1">
-                  <input class="form-control form-control-sm" value="{{ $schedule->user_name }}" readonly>
+                  <label>{{ $schedule->user_name }}</label>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-2 text-right">
                 <label class="form-control-label">科目</label>
               </div>
               <div class="col-4 px-2 mb-2">
                 <div class="form-group mb-1">
-                  <input class="form-control form-control-sm" type="text" readonly value="{{ $schedule->subject_name }}">
+                  <label>{{ $schedule->subject_name }}</label>
                 </div>
               </div>
             </div>
@@ -94,63 +92,52 @@
               </div>
               <div class="col-4 px-2 mb-2">
                 <div class="form-group mb-1">
-                  <input class="form-control form-control-sm" value="{{ $schedule->classroom_name }}" readonly>
+                  <label>{{ $schedule->classroom_name }}</label>
                 </div>
               </div>
             </div>
-            <hr>
-            @foreach($participants as $participant)
+            <hr class="my-3">
             <div class="row">
-              <div class="col-2 text-right">
-                <label class="form-control-label">学生{{ $loop->iteration }}</label>
-              </div>
-              <div class="col-4 px-2 mb-2">
-                <div class="form-group mb-1">
-                  <input class="form-control form-control-sm" value="{{ $participant->student_name }}" readonly>
-                </div>
-              </div>
-              <div class="col-2 text-right">
-                <label class="form-control-label">考勤</label>
-              </div>
-              <div class="col-4 px-2 mb-2">
-                <div class="form-group mb-1">
-                  @if($participant->participant_attend_status==1)
-                    <input class="form-control form-control-sm" value="正常" readonly>
-                  @elseif($participant->participant_attend_status==2)
-                    <input class="form-control form-control-sm" value="请假" readonly>
-                  @else
-                    <input class="form-control form-control-sm" value="旷课" readonly>
-                  @endif
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-2 text-right">
-                <label class="form-control-label">扣除课时</label>
-              </div>
-              <div class="col-4 px-2 mb-2">
-                <div class="form-group mb-1">
-                  <input class="form-control form-control-sm" value="{{ $participant->course_name }}" readonly>
-                </div>
-              </div>
-              <div class="col-2 text-right">
-                <label class="form-control-label">扣除数量</label>
-              </div>
-              <div class="col-4 px-2 mb-2">
-                <div class="form-group mb-1">
-                  <input class="form-control form-control-sm" value="{{ $participant->participant_amount }}课时" readonly>
-                </div>
+              <div class="col-12">
+                <ul class="list-group list-group-flush list my--3">
+                  @foreach($members as $member)
+                    <li class="list-group-item px-0">
+                      <div class="row align-items-center">
+                        <div class="col-auto">
+                          <!-- Avatar -->
+                          <a href="/student?id={{encode($member->student_id, 'student_id')}}" class="avatar rounded-circle">
+                            <img alt="..." src="{{ asset(_ASSETS_.'/avatar/student.png') }}">
+                          </a>
+                        </div>
+                        <div class="col ml--2">
+                          <h4 class="mb-0">
+                            <a href="/student?id={{encode($member->student_id, 'student_id')}}">{{ $member->student_name }}</a>
+                          </h4>
+                          @if($member->participant_attend_status==1)
+                            <span class="text-success"><small>●正常</small></span>
+                          @elseif($member->participant_attend_status==2)
+                            <span class="text-warning"><small>●请假</small></span>
+                          @else
+                            <span class="text-danger"><small>●旷课</small></span>
+                          @endif
+                          <small>{{ $member->course_name }} 使用{{ $member->participant_amount }}课时</small>
+                        </div>
+                        <div class="col-auto">
+                          <a href="/student?id={{encode($member->student_id, 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
+                        </div>
+                      </div>
+                    </li>
+                  @endforeach
+                </ul>
               </div>
             </div>
-            <hr>
-            @endforeach
+            <hr class="my-3">
             <div class="row">
               <div class="col-lg-3 col-md-5 col-sm-12">
                 <a href="javascript:history.go(-1)"><button type="button" class="btn btn-outline-primary btn-block">返回</button></a>
               </div>
             </div>
           </div>
-        <form>
       </div>
     </div>
   </div>

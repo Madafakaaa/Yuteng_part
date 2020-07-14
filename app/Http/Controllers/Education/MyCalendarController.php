@@ -1,12 +1,12 @@
 <?php
-namespace App\Http\Controllers\Operation;
+namespace App\Http\Controllers\Education;
 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CalendarController extends Controller
+class MyCalendarController extends Controller
 {
 
     public function calendarWeek(Request $request)
@@ -95,6 +95,7 @@ class CalendarController extends Controller
                        ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                        ->whereIn('schedule_department', $department_ids)
                        ->where('schedule_attended', '=', 0)
+                       ->where('schedule_teacher', '=', Session::get('user_id'))
                        ->where('schedule_date', '>=', $first_day)
                        ->where('schedule_date', '<=', $last_day);
         // 获取校区
@@ -137,6 +138,7 @@ class CalendarController extends Controller
                                 ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                                 ->whereIn('schedule_department', $department_ids)
                                 ->where('schedule_attended', '=', 1)
+                                ->where('schedule_teacher', '=', Session::get('user_id'))
                                 ->where('schedule_date', '>=', $first_day)
                                 ->where('schedule_date', '<=', $last_day);
 
@@ -169,7 +171,7 @@ class CalendarController extends Controller
             $rows[] = $temp;
         }
 
-        return view('operation/calendar/week', ['calendars' => $calendars,
+        return view('education/myCalendar/week', ['calendars' => $calendars,
                                                 'department_links' => $department_links,
                                                 'current_department_id' => $current_department_id,
                                                 'rows' => $rows,

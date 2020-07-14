@@ -1728,7 +1728,8 @@ var Datepicker = (function() {
 		var options = {
 			disableTouchKeyboard: true,
 			autoclose: false,
-            format: "yyyy-mm-dd"
+            format: "yyyy-mm-dd",
+            weekStart: 1
 		};
 		$this.datepicker(options);
 	}

@@ -92,8 +92,8 @@
               <tr>
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:120px;'>班级</th>
-                <th style='width:210px;'></th>
+                <th style='width:150px;'>班级</th>
+                <th style='width:120px;'></th>
                 <th style='width:100px;'>校区</th>
                 <th style='width:160px;'>日期</th>
                 <th style='width:110px;'>时间</th>
@@ -123,7 +123,7 @@
                   {{ $row->class_name }}
                 </td>
                 <td>
-                  <a href="/schedule/{{$row->schedule_id}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>&nbsp;
+                  <a href="/schedule?id={{encode($row->schedule_id,'schedule_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>&nbsp;
                 </td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->schedule_date }}&nbsp;{{ dateToDay($row->schedule_date) }}</td>

@@ -94,7 +94,7 @@
                       <select class="form-control" name="filter6" data-toggle="select">
                         <option value=''>跨校区教学</option>
                         <option value='1' @if($request->input('filter6')==1) selected @endif>是</option>
-                        <option value='0' @if($request->input('filter6')==0) selected @endif>否</option>
+                        <option value='2' @if($request->input('filter6')==2) selected @endif>否</option>
                       </select>
 	                </div>
                   </div>
@@ -146,7 +146,14 @@
                   </div>
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->user_name }}</td>
+                <td>
+                  {{ $row->user_name }}&nbsp;
+                  @if($row->user_gender=="男")
+                    <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
+                  @else
+                    <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
+                  @endif
+                </td>
                 <td>
                   <a href='/user/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">详情</button></a>
                   <a href='/company/user/access?id={{encode($row->user_id, 'user_id')}}'><button type="button" class="btn btn-primary btn-sm">权限</button></a>

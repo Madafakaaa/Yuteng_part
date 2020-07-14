@@ -17,6 +17,10 @@ class CalendarController extends Controller
         }
 
         // 获取用户校区权限
+        $current_department_id = 0;
+        if ($request->filled('department')) {
+            $current_department_id = decode($request->input("department"),'department_id');
+        }
         $department_ids = Session::get('department_access');
 
         // 获取日期
@@ -41,6 +45,7 @@ class CalendarController extends Controller
 
         // 生成校区分类
         $calendars = array();
+        $department_links = array();
         $index = 0;
         foreach($department_ids as $department_id){
             $department = DB::table('department')
@@ -63,8 +68,14 @@ class CalendarController extends Controller
             $attended_calendar['dragBgColor']=$colors[$index];
             $attended_calendar['borderColor']=$attended_border_color;
 
+            $department_link = array();
+            $department_link['department_id'] = $department_id;
+            $department_link['department_name'] = $department->department_name;
+            $department_link['department_color'] = $colors[$index];
+
             $calendars[] = $unattended_calendar;
             $calendars[] = $attended_calendar;
+            $department_links[] = $department_link;
 
             $index++;
             if($index>=count($colors)){
@@ -85,8 +96,12 @@ class CalendarController extends Controller
                        ->whereIn('schedule_department', $department_ids)
                        ->where('schedule_attended', '=', 0)
                        ->where('schedule_date', '>=', $first_day)
-                       ->where('schedule_date', '<=', $last_day)
-                       ->get();
+                       ->where('schedule_date', '<=', $last_day);
+        // 获取校区
+        if ($current_department_id!=0) {
+            $schedules = $schedules->where('schedule_department', $current_department_id);
+        }
+        $schedules = $schedules->get();
 
         foreach($schedules as $schedule){
             $temp = array();
@@ -123,8 +138,13 @@ class CalendarController extends Controller
                                 ->whereIn('schedule_department', $department_ids)
                                 ->where('schedule_attended', '=', 1)
                                 ->where('schedule_date', '>=', $first_day)
-                                ->where('schedule_date', '<=', $last_day)
-                                ->get();
+                                ->where('schedule_date', '<=', $last_day);
+
+        // 获取校区
+        if ($current_department_id!=0) {
+            $attended_schedules = $attended_schedules->where('schedule_department', $current_department_id);
+        }
+        $attended_schedules = $attended_schedules->get();
 
         foreach($attended_schedules as $schedule){
             $temp = array();
@@ -150,6 +170,8 @@ class CalendarController extends Controller
         }
 
         return view('education/calendar/week', ['calendars' => $calendars,
+                                                'department_links' => $department_links,
+                                                'current_department_id' => $current_department_id,
                                                 'rows' => $rows,
                                                 'first_day' => $first_day,
                                                 'last_day' => $last_day,

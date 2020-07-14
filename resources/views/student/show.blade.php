@@ -387,7 +387,7 @@
               <div class="d-flex w-100 justify-content-between">
                 <div>
                   <div class="d-flex w-100 align-items-center">
-                    <img src="../assets/img/theme/team-1.jpg" alt="Image placeholder" class="avatar avatar-xs mr-2" />
+                    <img src="{{ asset(_ASSETS_.'/avatar/male.png') }}" class="avatar avatar-xs mr-2" />
                     <h5 class="mb-1">{{ $student_record->user_name }}</h5>
                   </div>
                 </div>

@@ -278,6 +278,9 @@ Route::get('/education/myClass', 'Education\MyClassController@myClass');
 Route::get('/education/mySchedule', 'Education\MyScheduleController@mySchedule');
 // 我的上课记录
 Route::get('/education/myAttendedSchedule', 'Education\MyAttendedScheduleController@myAttendedSchedule');
+// 我的课程表
+    // 周表
+    Route::get('/education/myCalendar/week', 'Education\MyCalendarController@calendarWeek');
 // 教案中心
 Route::get('/education/document', 'Education\DocumentController@document');
     // 上传教案

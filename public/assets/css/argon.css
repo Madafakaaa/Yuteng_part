@@ -2455,6 +2455,7 @@ pre code
 .table-responsive
 {
     display: block;
+
     overflow-x: auto;
 
     width: 100%;
@@ -7737,6 +7738,10 @@ a.close.disabled
     padding: 1.5rem;
 
     flex: 1 1 auto;
+
+    max-height:400px;
+
+    overflow: auto;
 }
 
 .modal-footer
@@ -19825,7 +19830,7 @@ a.btn-icon-only
 .dropdown-menu
 {
     min-width: 12rem;
-    max-height: 130px;
+    max-height: 400px;
     overflow: auto;
 }
 

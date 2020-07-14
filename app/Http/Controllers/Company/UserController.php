@@ -66,7 +66,7 @@ class UserController extends Controller
         }
         // 跨校区教学
         if ($request->filled('filter6')) {
-            $rows = $rows->where('user_cross_teaching', $request->input('filter6'));
+            $rows = $rows->where('user_cross_teaching', 2-$request->input('filter6'));
             $filter_status = 1;
         }
 

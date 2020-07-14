@@ -58,7 +58,7 @@
               <div class="row align-items-center">
                 <div class="col-auto">
                   <h4 class="mb-0">
-                    {{$section->section_id}}
+                    {{ $loop->iteration }}
                   </h4>
                 </div>
                 <div class="col ml--2">
@@ -94,7 +94,7 @@
           </div>
         </div>
         <div class="table-responsive">
-          <table class="table align-items-center table-hover text-left table-bordered">
+          <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
                 <th style='width:70px;'>序号</th>
