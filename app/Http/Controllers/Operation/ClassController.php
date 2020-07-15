@@ -378,7 +378,7 @@ class ClassController extends Controller
         $schedule_subject = $request->input('input_subject');
         // 判断Checkbox是否为空
         if(!isset($schedule_days)){
-            return redirect("/operation/class/schedule/create?id={encode($schedule_class,'class_id')}")
+            return redirect("/operation/class/schedule/create?id=".encode($schedule_class, 'class_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '未选择上课规律',
@@ -408,18 +408,18 @@ class ClassController extends Controller
         $schedule_dates = explode(',', $schedule_dates_str);
         // 获取所选日期数量
         $schedule_date_num = count($schedule_dates);
-        // 判断日期数量是否大于50
-        if($schedule_date_num>50){
-            return redirect("/operation/class/schedule/create?id={encode($schedule_class,'class_id')}")
+        // 判断日期数量是否大于100
+        if($schedule_date_num>100){
+            return redirect("/operation/class/schedule/create?id=".encode($schedule_class, 'class_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '请选择重新上课日期',
-                           'message' => '上课日期数量过多，超过最大上限50，错误码:321']);
+                           'message' => '上课日期数量过多，超过最大上限100，错误码:321']);
         }
         // 验证日期格式
         for($i=0; $i<$schedule_date_num; $i++){
             if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $schedule_dates[$i])){
-                return redirect("/operation/class/schedule/create?id={encode($schedule_class,'class_id')}")
+                return redirect("/operation/class/schedule/create?id=".encode($schedule_class, 'class_id'))
                        ->with(['notify' => true,
                                'type' => 'danger',
                                'title' => '请选择重新上课日期',
@@ -430,7 +430,7 @@ class ClassController extends Controller
         $schedule_start = date('H:i', strtotime($schedule_start));
         $schedule_end = date('H:i', strtotime($schedule_end));
         if($schedule_start>=$schedule_end){
-            return redirect("/operation/class/schedule/create?id={encode($schedule_class,'class_id')}")
+            return redirect("/operation/class/schedule/create?id=".encode($schedule_class, 'class_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '请重新选择上课、下课时间',
@@ -542,7 +542,7 @@ class ClassController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return redirect("/operation/class/schedule/create?id={encode($schedule_participant, 'class_id')}")
+            return redirect("/operation/class/schedule/create?id=".encode($schedule_participant, 'class_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '班级课程安排失败',
