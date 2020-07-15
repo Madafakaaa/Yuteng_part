@@ -39,7 +39,7 @@ class CalendarController extends Controller
         $first_day_next = date('Y-m-d', strtotime ("+7 day", strtotime($first_day)));
 
         // 生成（校区分类）颜色
-        $colors = array('#BA55D3', '#6E7FE8', '#FF8C00', '#808080', '#FFB6C1', '#90EE90', '#F08080', '#90EE90');
+        // $colors = array('#BA55D3', '#6E7FE8', '#FF8C00', '#808080', '#FFB6C1', '#90EE90', '#F08080', '#90EE90');
         $attended_border_color = '#00FF7F';
         $unattended_border_color = '#FF4040';
 
@@ -56,31 +56,28 @@ class CalendarController extends Controller
             $unattended_calendar['id']=$department_id.'_unattended';
             $unattended_calendar['name']=$department->department_name.' - 未点名';
             $unattended_calendar['color']='#FFFFFF';
-            $unattended_calendar['bgColor']=$colors[$index];
-            $unattended_calendar['dragBgColor']=$colors[$index];
+            $unattended_calendar['bgColor']=getColor($index);
+            $unattended_calendar['dragBgColor']=getColor($index);
             $unattended_calendar['borderColor']=$unattended_border_color;
 
             $attended_calendar=array();
             $attended_calendar['id']=$department_id.'_attended';
             $attended_calendar['name']=$department->department_name;
             $attended_calendar['color']='#FFFFFF';
-            $attended_calendar['bgColor']=$colors[$index];
-            $attended_calendar['dragBgColor']=$colors[$index];
+            $attended_calendar['bgColor']=getColor($index);
+            $attended_calendar['dragBgColor']=getColor($index);
             $attended_calendar['borderColor']=$attended_border_color;
 
             $department_link = array();
             $department_link['department_id'] = $department_id;
             $department_link['department_name'] = $department->department_name;
-            $department_link['department_color'] = $colors[$index];
+            $department_link['department_color'] = getColor($index);
 
             $calendars[] = $unattended_calendar;
             $calendars[] = $attended_calendar;
             $department_links[] = $department_link;
 
             $index++;
-            if($index>=count($colors)){
-                $index=0;
-            }
         }
 
         // 课程表内容数据数组

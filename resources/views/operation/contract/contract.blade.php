@@ -60,6 +60,14 @@
                         @endforeach
                       </select>
 	                </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                      <select class="form-control" name="filter4" data-toggle="select">
+                        <option value=''>签约人</option>
+                        @foreach ($filter_users as $filter_user)
+                          <option value="{{ $filter_user->user_id }}" @if($request->input('filter4')==$filter_user->user_id) selected @endif>{{$filter_user->department_name}} {{ $filter_user->user_name }}</option>
+                        @endforeach
+                      </select>
+	                </div>
                   </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-1">
@@ -88,7 +96,7 @@
                 <th style='width:250px;'></th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:65px;'>年级</th>
-                <th style='width:65px;'>类型</th>
+                <th style='width:65px;'>部门</th>
                 <th style='width:90px;' class="text-right">合计课时</th>
                 <th style='width:110px;' class="text-right">应付金额</th>
                 <th style='width:110px;' class="text-right">实付金额</th>
@@ -123,10 +131,10 @@
                 </td>
                 <td title="{{ $row->department_name }}">{{ $row->department_name }}</td>
                 <td title="{{ $row->grade_name }}">{{ $row->grade_name }}</td>
-                @if($row->contract_type==0)
-                  <td title="首签"><span style="color:red;">首签</span></td>
+                @if($row->contract_section==0)
+                  <td><span style="color:red;">招生部</span></td>
                 @else
-                  <td title="续费"><span style="color:green;">续费</span></td>
+                  <td><span style="color:green;">运营部</span></td>
                 @endif
                 <td class="text-right" title="{{ $row->contract_total_hour }} 课时"><strong>{{ $row->contract_total_hour }} 课时</strong></td>
                 <td class="text-right" title="{{ number_format($row->contract_total_price, 2) }} 元"><strong>{{ number_format($row->contract_total_price, 2) }} 元</strong></td>

@@ -101,7 +101,7 @@
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">最大人数<span style="color:red">*</span></label>
-                  <input class="form-control" type="number" name="input5" value="{{ $class->class_max_num }}" autocomplete='off' @if($class->class_current_num==0) min="2" @else min="{{ $class->class_current_num }}" @endif>
+                  <input class="form-control" type="number" name="input5" value="{{ $class->class_max_num }}" autocomplete='off' @if($class->class_current_num==0) min="1" @else min="{{ $class->class_current_num }}" @endif>
                 </div>
               </div>
               <div class="col-6">

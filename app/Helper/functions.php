@@ -183,4 +183,9 @@ function deleteConfirm($id,$messages){
         </div>";
 }
 
+function getColor($id){
+    $colors = array('#FFA07A','#8769FD','#808080','#FF64C8','#FFD700','#FE9900','#E26FFD','#61A0FF','#323232','#C8FF50','#64F0F0','#D3D3D3');
+    return $colors[($id%12)];
+}
+
 ?>

@@ -235,6 +235,21 @@
                   </div>
                 </div>
               </div>
+              <div class="col-6">
+                <div class="form-group row">
+                  <label class="col-md-4 col-form-label form-control-label">班主任<span style="color:red">*</span></label>
+                  <div class="col-md-8">
+                    <select class="form-control" name="student_class_adviser" data-toggle="select" required>
+                      <option value=''>无</option>
+                      @foreach ($users as $user)
+                        <option value="{{ $user->user_id }}" @if($student->student_class_adviser==$user->user_id) selected @endif>
+                          {{ $user->user_name }} ({{ $user->position_name }})
+                        </option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="row">
               <div class="col-12">

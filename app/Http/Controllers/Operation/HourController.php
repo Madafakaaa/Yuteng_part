@@ -54,6 +54,16 @@ class HourController extends Controller
             $rows = $rows->where('student_grade', '=', $request->input('filter3'));
             $filter_status = 1;
         }
+        // 课程顾问
+        if ($request->filled('filter4')) {
+            $rows = $rows->where('student_consultant', '=', $request->input('filter4'));
+            $filter_status = 1;
+        }
+        // 班主任
+        if ($request->filled('filter5')) {
+            $rows = $rows->where('student_class_adviser', '=', $request->input('filter5'));
+            $filter_status = 1;
+        }
         // 保存数据总数
         $totalNum = $rows->count();
         // 计算分页信息
@@ -120,6 +130,14 @@ class HourController extends Controller
         // 获取校区、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
+        $filter_users = DB::table('user')
+                          ->join('department', 'user.user_department', '=', 'department.department_id')
+                          ->join('position', 'user.user_position', '=', 'position.position_id')
+                          ->where('user_status', 1)
+                          ->whereIn('user_department', $department_access)
+                          ->orderBy('user_department', 'asc')
+                          ->orderBy('user_position', 'desc')
+                          ->get();
         // 返回列表视图
         return view('operation/hour/hour', ['datas' => $datas,
                                             'currentPage' => $currentPage,
@@ -129,7 +147,8 @@ class HourController extends Controller
                                             'totalNum' => $totalNum,
                                             'filter_status' => $filter_status,
                                             'filter_departments' => $filter_departments,
-                                            'filter_grades' => $filter_grades]);
+                                            'filter_grades' => $filter_grades,
+                                            'filter_users' => $filter_users]);
     }
 
     /**

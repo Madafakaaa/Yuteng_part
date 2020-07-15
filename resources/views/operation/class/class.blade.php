@@ -76,6 +76,14 @@
                         @endforeach
                       </select>
 	                </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                      <select class="form-control" name="filter5" data-toggle="select">
+                        <option value=''>负责教师</option>
+                        @foreach ($filter_users as $filter_user)
+                          <option value="{{ $filter_user->user_id }}" @if($request->input('filter5')==$filter_user->user_id) selected @endif>{{$filter_user->department_name}} {{ $filter_user->user_name }}</option>
+                        @endforeach
+                      </select>
+	                </div>
                   </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-1">

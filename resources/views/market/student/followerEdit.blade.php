@@ -26,19 +26,6 @@
 </div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-9 col-sm-12 card-wrapper ct-example mb-4">
-      <div class="row justify-content-center">
-        <div class="col-2 text-center">
-          <span class="badge badge-pill badge-success">选择学生</span>
-        </div>
-        <div class="col-1 pt-2"><hr class="pr-4" style="height:3px;border:none;border-top:4px dashed #b0eed3;" /></div>
-        <div class="col-2 text-center">
-          <span class="badge badge-pill badge-info">选择负责人</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
         <form action="/market/student/follower/update" method="post" onsubmit="submitButtonDisable('submitButton1')">

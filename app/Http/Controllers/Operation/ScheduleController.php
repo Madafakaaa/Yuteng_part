@@ -279,6 +279,30 @@ class ScheduleController extends Controller
                            'title' => '请重新选择上课、下课时间',
                            'message' => '上课时间须在下课时间前，错误码:326']);
         }
+        // 判断是否有学生
+        if($schedule_student_num==0){
+            return redirect("/operation/schedule/attend?id=".encode($schedule_id, 'schedule_id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '课程安排点名失败',
+                           'message' => '班级内没有学生，错误码:326']);
+        }
+
+
+        // 获取安排信息
+        $schedule = DB::table('schedule')
+                      ->where('schedule_id', $schedule_id)
+                      ->first();
+
+        // 判断是否已经点名
+        if($schedule->schedule_attended==1){
+            return redirect("/operation/schedule/attend/success?id=".encode($schedule->schedule_participant, 'class_id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '课程已经点名',
+                           'message' => '课程已经点名']);
+        }
+
         // 声明数据数组
         for($i=1;$i<=$schedule_student_num;$i++){
             $participant_student = $request->input('input'.$i.'_0');
@@ -309,10 +333,6 @@ class ScheduleController extends Controller
                 }
             }
         }
-        // 获取安排信息
-        $schedule = DB::table('schedule')
-                      ->where('schedule_id', $schedule_id)
-                      ->first();
 
         // 统计上课人数
         $schedule_attended_num = 0; // 正常
@@ -385,7 +405,6 @@ class ScheduleController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
             // 返回第一步
             return redirect("/operation/schedule/attend?id=".encode($schedule_id, 'schedule_id'))
                    ->with(['notify' => true,

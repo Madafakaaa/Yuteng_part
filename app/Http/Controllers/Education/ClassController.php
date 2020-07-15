@@ -57,6 +57,11 @@ class ClassController extends Controller
             $rows = $rows->where('class_subject', '=', $request->input('filter4'));
             $filter_status = 1;
         }
+        // 负责教师
+        if ($request->filled('filter5')) {
+            $rows = $rows->where('class_teacher', '=', $request->input('filter5'));
+            $filter_status = 1;
+        }
 
         // 保存数据总数
         $totalNum = $rows->count();
@@ -73,6 +78,14 @@ class ClassController extends Controller
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
+        $filter_users = DB::table('user')
+                          ->join('department', 'user.user_department', '=', 'department.department_id')
+                          ->join('position', 'user.user_position', '=', 'position.position_id')
+                          ->where('user_status', 1)
+                          ->whereIn('user_department', $department_access)
+                          ->orderBy('user_department', 'asc')
+                          ->orderBy('user_position', 'desc')
+                          ->get();
 
         $members = array();
         $schedules = array();
@@ -119,7 +132,8 @@ class ClassController extends Controller
                                               'filter_status' => $filter_status,
                                               'filter_departments' => $filter_departments,
                                               'filter_grades' => $filter_grades,
-                                              'filter_subjects' => $filter_subjects]);
+                                              'filter_subjects' => $filter_subjects,
+                                              'filter_users' => $filter_users]);
     }
 
 }

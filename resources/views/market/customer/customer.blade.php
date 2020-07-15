@@ -50,37 +50,22 @@
                 <div class="col-lg-8 col-md-8 col-sm-12 mb-1">
                   <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
-                      <input class="form-control" type="text" name="filter1" placeholder="学生姓名..." autocomplete="off" @if($request->filled('filter1')) value="{{ $request->filter1 }}" @endif>
+                      <input class="form-control" type="text" name="filter_name" placeholder="学生姓名..." autocomplete="off" @if($request->filled('filter_name')) value="{{ $request->filter1 }}" @endif>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
-                      <select class="form-control" name="filter2" data-toggle="select">
-                        <option value=''>全部校区</option>
-                        @foreach ($filter_departments as $filter_department)
-                          <option value="{{ $filter_department->department_id }}" @if($request->input('filter2')==$filter_department->department_id) selected @endif>{{ $filter_department->department_name }}</option>
-                        @endforeach
-                      </select>
-	                </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
-                      <select class="form-control" name="filter3" data-toggle="select">
+                      <select class="form-control" name="filter_grade" data-toggle="select">
                         <option value=''>全部年级</option>
                         @foreach ($filter_grades as $filter_grade)
-                          <option value="{{ $filter_grade->grade_id }}" @if($request->input('filter3')==$filter_grade->grade_id) selected @endif>{{ $filter_grade->grade_name }}</option>
+                          <option value="{{ $filter_grade->grade_id }}" @if($request->input('filter_grade')==$filter_grade->grade_id) selected @endif>{{ $filter_grade->grade_name }}</option>
                         @endforeach
                       </select>
 	                </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
-                      <select class="form-control" name="filter4" data-toggle="select">
-                        <option value=''>优先级</option>
-                        <option value='1' @if($request->input('filter4')==1) selected @endif>低</option>
-                        <option value='2' @if($request->input('filter4')==2) selected @endif>中</option>
-                        <option value='3' @if($request->input('filter4')==3) selected @endif>高</option>
-                      </select>
-	                </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
-                      <select class="form-control" name="filter5" data-toggle="select">
-                        <option value=''>签约状态</option>
-                        <option value='0' @if($request->input('filter5')==='0') selected @endif>未签约</option>
-                        <option value='1' @if($request->input('filter5')==='1') selected @endif>已签约</option>
+                      <select class="form-control" name="filter_user" data-toggle="select">
+                        <option value=''>课程顾问</option>
+                        @foreach ($filter_users as $filter_user)
+                          <option value="{{ $filter_user->user_id }}" @if($request->input('filter_user')==$filter_user->user_id) selected @endif>{{$filter_user->department_name}} {{ $filter_user->user_name }}</option>
+                        @endforeach
                       </select>
 	                </div>
                   </div>
@@ -101,6 +86,15 @@
         </div>
       </div>
       <div class="card main_card mb-4" style="display:none">
+        <div class="card-header p-2" style="border-bottom:0px;">
+          <small class="text-muted font-weight-bold px-2">校区</small>
+          <a href='?'>
+            <button type="button" class="btn btn-primary btn-sm" @if(!$request->filled('filter_department')) disabled @endif>全部</button>
+          </a>
+          @foreach($filter_departments as $filter_department)
+            <a href="?filter_department={{$filter_department->department_id}}"><button type="button" class="btn btn-primary btn-sm" @if($request->input('filter_department')==$filter_department->department_id) disabled @endif style="background-color:{{getColor($filter_department->department_id)}};border-color:{{getColor($filter_department->department_id)}};">{{$filter_department->department_name}}</button></a>
+          @endforeach
+        </div>
         <div class="table-responsive freeze-table-4">
           <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
@@ -144,7 +138,7 @@
                   <a href="/market/customer/consultant/edit?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">修改课程顾问</button></a>
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/market/customer/delete?id={{encode($row->student_id, 'student_id')}}', '确认删除客户？')">删除</button>
                 </td>
-                <td>{{ $row->department_name }}</td>
+                <td><span style="color:{{getColor($row->department_id)}};">{{ $row->department_name }}</span></td>
                 <td>{{ $row->grade_name }}</td>
                 <td>{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
                 <td>{{ $row->student_phone }}</td>

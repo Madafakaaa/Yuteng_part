@@ -359,10 +359,21 @@ class MyCustomerController extends Controller
         $payment_methods = DB::table('payment_method')
                              ->where('payment_method_status', 1)
                              ->get();
+
+        // 获取班主任名单
+        $users = DB::table('user')
+                  ->join('department', 'user.user_department', '=', 'department.department_id')
+                  ->join('position', 'user.user_position', '=', 'position.position_id')
+                  ->join('section', 'position.position_section', '=', 'section.section_id')
+                  ->where('user_department', $student->student_department)
+                  ->where('user_status', 1)
+                  ->get();
+
         return view('market/myCustomer/myCustomerContractCreate', ['student' => $student,
-                                                                  'hours' => $hours,
-                                                                  'courses' => $courses,
-                                                                  'payment_methods' => $payment_methods]);
+                                                                   'hours' => $hours,
+                                                                   'courses' => $courses,
+                                                                   'payment_methods' => $payment_methods,
+                                                                   'users' => $users]);
     }
 
     /**
@@ -392,6 +403,7 @@ class MyCustomerController extends Controller
         }
         $request_contract_type = $request->input('contract_type');
         $request_contract_extra_fee = round((float)$request->input("extra_fee"), 2);
+        $request_student_class_adviser = $request->input('student_class_adviser');
         $request_courses = array();
         // 生成新合同号(上一个合同号加一或新合同号001)
         $sub_student_id = substr($request_student_id , 1 , 10);
@@ -527,11 +539,12 @@ class MyCustomerController extends Controller
             DB::table('student')
               ->where('student_id', $request_student_id)
               ->update(['student_last_contract_date' =>  date('Y-m-d')]);
-            // 更新学生首次签约时间
+            // 更新学生首次签约时间和班主任
             if($request->input('contract_type')==0){
                 DB::table('student')
                   ->where('student_id', $request_student_id)
-                  ->update(['student_first_contract_date' =>  date('Y-m-d')]);
+                  ->update(['student_first_contract_date' =>  date('Y-m-d'),
+                            'student_class_adviser' =>  $request_student_class_adviser]);
             }
             // 添加学生动态
             DB::table('student_record')->insert(

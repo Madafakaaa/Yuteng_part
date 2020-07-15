@@ -57,6 +57,11 @@ class ClassController extends Controller
             $rows = $rows->where('class_subject', '=', $request->input('filter4'));
             $filter_status = 1;
         }
+        // 负责教师
+        if ($request->filled('filter5')) {
+            $rows = $rows->where('class_teacher', '=', $request->input('filter5'));
+            $filter_status = 1;
+        }
 
         // 保存数据总数
         $totalNum = $rows->count();
@@ -73,6 +78,14 @@ class ClassController extends Controller
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
+        $filter_users = DB::table('user')
+                          ->join('department', 'user.user_department', '=', 'department.department_id')
+                          ->join('position', 'user.user_position', '=', 'position.position_id')
+                          ->where('user_status', 1)
+                          ->whereIn('user_department', $department_access)
+                          ->orderBy('user_department', 'asc')
+                          ->orderBy('user_position', 'desc')
+                          ->get();
 
         $members = array();
         $schedules = array();
@@ -122,7 +135,8 @@ class ClassController extends Controller
                                               'filter_status' => $filter_status,
                                               'filter_departments' => $filter_departments,
                                               'filter_grades' => $filter_grades,
-                                              'filter_subjects' => $filter_subjects]);
+                                              'filter_subjects' => $filter_subjects,
+                                              'filter_users' => $filter_users]);
     }
 
     /**
@@ -364,7 +378,7 @@ class ClassController extends Controller
         $schedule_subject = $request->input('input_subject');
         // 判断Checkbox是否为空
         if(!isset($schedule_days)){
-            return redirect("/operation/classSchedule/create?class_id={$schedule_class}")
+            return redirect("/operation/class/schedule/create?id={encode($schedule_class,'class_id')}")
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '未选择上课规律',
@@ -396,28 +410,31 @@ class ClassController extends Controller
         $schedule_date_num = count($schedule_dates);
         // 判断日期数量是否大于50
         if($schedule_date_num>50){
-            return redirect("/operation/class/schedule/create?class_id={$schedule_class}")->with(['notify' => true,
-                                                                                                   'type' => 'danger',
-                                                                                                   'title' => '请选择重新上课日期',
-                                                                                                   'message' => '上课日期数量过多，超过最大上限50，错误码:321']);
+            return redirect("/operation/class/schedule/create?id={encode($schedule_class,'class_id')}")
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '请选择重新上课日期',
+                           'message' => '上课日期数量过多，超过最大上限50，错误码:321']);
         }
         // 验证日期格式
         for($i=0; $i<$schedule_date_num; $i++){
             if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $schedule_dates[$i])){
-                return redirect("/operation/class/schedule/create?class_id={$schedule_class}")->with(['notify' => true,
-                                                                                                       'type' => 'danger',
-                                                                                                       'title' => '请选择重新上课日期',
-                                                                                                       'message' => '上课日期格式有误，错误码:322']);
+                return redirect("/operation/class/schedule/create?id={encode($schedule_class,'class_id')}")
+                       ->with(['notify' => true,
+                               'type' => 'danger',
+                               'title' => '请选择重新上课日期',
+                               'message' => '上课日期格式有误，错误码:322']);
             }
         }
         // 如果上课时间不在下课时间之前返回上一页
         $schedule_start = date('H:i', strtotime($schedule_start));
         $schedule_end = date('H:i', strtotime($schedule_end));
         if($schedule_start>=$schedule_end){
-            return redirect("/operation/classSchedule/create?class_id={$schedule_class}")->with(['notify' => true,
-                                                                                                   'type' => 'danger',
-                                                                                                   'title' => '请重新选择上课、下课时间',
-                                                                                                   'message' => '上课时间须在下课时间前，错误码:323']);
+            return redirect("/operation/class/schedule/create?id={encode($schedule_class,'class_id')}")
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '请重新选择上课、下课时间',
+                           'message' => '上课时间须在下课时间前，错误码:323']);
         }
         // 计算课程时长
         $schedule_time = 60*(intval(explode(':', $schedule_end)[0])-intval(explode(':', $schedule_start)[0]))+intval(explode(':', $schedule_end)[1])-intval(explode(':', $schedule_start)[1]);
@@ -525,7 +542,7 @@ class ClassController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return redirect("/operation/class/schedule/create?id={$schedule_class}")
+            return redirect("/operation/class/schedule/create?id={encode($schedule_participant, 'class_id')}")
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '班级课程安排失败',

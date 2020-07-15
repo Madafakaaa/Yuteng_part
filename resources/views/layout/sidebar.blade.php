@@ -171,7 +171,7 @@
                   <span class="nav-link-text">上课记录</span>
                 </a>
               </li>
-              <li class="nav-item" >
+              <li class="nav-item" @if(!in_array('operationSchedule', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/operation/calendar/week" class="nav-link" id="operationCalendarWeek">
                   <i class="ni ni-calendar-grid-58 text-info"></i>
                   <span class="nav-link-text">课程表</span>
@@ -261,7 +261,7 @@
                   <span class="nav-link-text">上课记录</span>
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('educationSchedule', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/calendar/week" class="nav-link" id="educationCalendarWeek">
                   <i class="ni ni-calendar-grid-58 text-pink"></i>
                   <span class="nav-link-text">课程表</span>
@@ -292,7 +292,7 @@
                   <span class="nav-link-text">我的上课记录</span>
                 </a>
               </li>
-              <li class="nav-item" >
+              <li class="nav-item" @if(!in_array('educationMySchedule', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/education/myCalendar/week" class="nav-link" id="educationMyCalendarWeek">
                   <i class="ni ni-calendar-grid-58 text-pink"></i>
                   <span class="nav-link-text">我的课程表</span>

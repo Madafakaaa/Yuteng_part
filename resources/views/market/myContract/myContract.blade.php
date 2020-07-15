@@ -88,7 +88,7 @@
                 <th style='width:250px;'></th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:65px;'>年级</th>
-                <th style='width:65px;'>类型</th>
+                <th style='width:65px;'>部门</th>
                 <th style='width:90px;' class="text-right">合计课时</th>
                 <th style='width:110px;' class="text-right">应付金额</th>
                 <th style='width:110px;' class="text-right">实付金额</th>
@@ -123,10 +123,10 @@
                 </td>
                 <td title="{{ $row->department_name }}">{{ $row->department_name }}</td>
                 <td title="{{ $row->grade_name }}">{{ $row->grade_name }}</td>
-                @if($row->contract_type==0)
-                  <td title="首签"><span style="color:red;">首签</span></td>
+                @if($row->contract_section==0)
+                  <td><span style="color:red;">招生部</span></td>
                 @else
-                  <td title="续费"><span style="color:green;">续费</span></td>
+                  <td><span style="color:green;">运营部</span></td>
                 @endif
                 <td class="text-right" title="{{ $row->contract_total_hour }} 课时"><strong>{{ $row->contract_total_hour }} 课时</strong></td>
                 <td class="text-right" title="{{ number_format($row->contract_total_price, 2) }} 元"><strong>{{ number_format($row->contract_total_price, 2) }} 元</strong></td>
