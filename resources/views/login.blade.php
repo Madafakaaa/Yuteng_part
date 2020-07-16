@@ -24,7 +24,7 @@
 <body>
   <div class="container" id="container">
     <div class="row" id="row">
-      <div class="col-md-9" style="background:url(assets/img/background/bg1.jpg) 22%;">
+      <div class="col-md-9" style="background:url(assets/img/background/bg1.jpg) 22%;background-size:100% 100%; ">
       </div>
       <div class="col-md-3">
         <div class="card mt-7">
@@ -32,7 +32,7 @@
             <form action="/login" method="post">
               @csrf
               <div style="text-align:center; margin-bottom:15%;">
-                  <img src="assets\img\brand\logo.JPG" width="200px;" height="200px;">
+                <img src="assets\img\brand\logo.JPG" width="200px;" height="200px;">
               </div>
               <br>
               <div class="input-group">
@@ -58,18 +58,15 @@
             </form>
           </div>
         </div>
-          <footer class="footer ml-1 mt-4 mb--4">
-            <div class="row align-items-center justify-content-lg-between">
-              <div class="col-lg-6">
-                <div class="copyright text-center text-lg-left text-muted">
-                  &copy; 上海育藤教育
-                </div>
-                <div class="copyright text-center text-lg-left text-muted">
-                  &copy; 2019 张子一
-                </div>
+        <footer class="footer ml-1 mt-6">
+          <div class="row align-items-center justify-content-lg-between">
+            <div class="col-lg-6">
+              <div class="copyright text-center text-lg-left text-muted">
+                <small>&copy; 2019 上海育藤教育</small>
               </div>
             </div>
-          </footer>
+          </div>
+        </footer>
       </div>
     </div>
   </div>

@@ -92,6 +92,7 @@ class MyCalendarController extends Controller
                        ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                        ->whereIn('schedule_department', $department_ids)
                        ->where('schedule_attended', '=', 0)
+                       ->where('schedule_teacher', Session::get('user_id'))
                        ->where('schedule_date', '>=', $first_day)
                        ->where('schedule_date', '<=', $last_day);
         // 获取校区
@@ -134,6 +135,7 @@ class MyCalendarController extends Controller
                                 ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                                 ->whereIn('schedule_department', $department_ids)
                                 ->where('schedule_attended', '=', 1)
+                                ->where('schedule_teacher', Session::get('user_id'))
                                 ->where('schedule_date', '>=', $first_day)
                                 ->where('schedule_date', '<=', $last_day);
 

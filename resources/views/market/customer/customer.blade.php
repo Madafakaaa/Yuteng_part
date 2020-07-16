@@ -105,7 +105,6 @@
                 <th style='width:210px;'></th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:70px;'>年级</th>
-                <th style='width:140px;'>监护人</th>
                 <th style='width:120px;'>电话</th>
                 <th style='width:80px;'>优先级</th>
                 <th style='width:100px;'>上次跟进</th>
@@ -140,7 +139,6 @@
                 </td>
                 <td><span style="color:{{getColor($row->department_id)}};">{{ $row->department_name }}</span></td>
                 <td>{{ $row->grade_name }}</td>
-                <td>{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
                 <td>{{ $row->student_phone }}</td>
                 @if($row->student_follow_level==1)
                   <td><span style="color:#8B4513;">低</span></td>

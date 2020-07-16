@@ -101,11 +101,9 @@
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
                 <th style='width:110px;'>学生</th>
-                <th style='width:320px;'></th>
+                <th style='width:120px;'></th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:60px;'>年级</th>
-                <th style='width:130px;'>监护人</th>
-                <th style='width:110px;'>电话</th>
                 <th style='width:145px;'>课程顾问</th>
                 <th style='width:145px;'>班主任</th>
               </tr>
@@ -136,8 +134,6 @@
                 </td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->grade_name }}</td>
-                <td>{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
-                <td>{{ $row->student_phone }}</td>
                 @if($row->consultant_name=="")
                   <td><span style="color:red;">无</span></td>
                 @else

@@ -84,18 +84,17 @@
               <tr>
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:120px;'>学生</th>
-                <th style='width:140px;'>课程</th>
-                <th style='width:320px;'></th>
-                <th style='width:100px;'>剩余</th>
-                <th style='width:100px;'>已消耗</th>
-                <th style='width:100px;'>课时单价</th>
-                <th style='width:130px;'>课时使用班级</th>
-                <th style='width:130px;'>已排课数量</th>
+                <th style='width:100px;'>学生</th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:60px;'>年级</th>
-                <th style='width:145px;'>课程顾问</th>
+                <th style='width:140px;'>课程</th>
+                <th style='width:330px;'></th>
+                <th style='width:100px;'>剩余</th>
+                <th style='width:100px;'>已消耗</th>
+                <th style='width:130px;'>课时使用班级</th>
+                <th style='width:130px;'>共计排课数量</th>
                 <th style='width:145px;'>班主任</th>
+                <th style='width:145px;'>课程顾问</th>
               </tr>
             </thead>
             <tbody>
@@ -119,17 +118,20 @@
                     <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
                   @endif
                 </td>
-                <td>{{ $data['course_name'] }}</td>
+                <td>{{ $data['department_name'] }}</td>
+                <td>{{ $data['grade_name'] }}</td>
+                <td><strong>{{ $data['course_name'] }}</strong></td>
                 <td>
                   <a href="/student?id={{encode($data['student_id'], 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
-                  <a href="/operation/myStudent/joinClass?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-warning btn-sm">加入班级</button></a>
-                  <a href="/operation/myStudent/schedule/create?id={{encode($data['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">一对一排课</button></a>
-                  <a href="/operation/myHour/refund/create?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-danger btn-sm">退费</button></a>
+                  <a href="/operation/student/joinClass?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-warning btn-sm">加入班级</button></a>
+                  <a href="/operation/student/schedule/create?id={{encode($data['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">一对一排课</button></a>
+                  <a href="/operation/hour/edit?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-primary btn-sm">修改课时</button></a>
+                  <a href="/operation/hour/refund/create?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-danger btn-sm">退费</button></a>
                 </td>
                 <td>{{ $data['hour_remain'] }} 课时</td>
                 <td>{{ $data['hour_used'] }} 课时</td>
-                <td>{{ $data['hour_average_price'] }} 元/课时</td>
                 <td>
+                  {{ count($data['schedule_classes']) }}个班级
                   <div class="dropdown">
                     <a class="btn btn-sm btn-outline-primary" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">查看列表</a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
@@ -143,17 +145,15 @@
                   </div>
                 </td>
                 <td>{{ $data['schedule_count'] }} 节课</td>
-                <td>{{ $data['department_name'] }}</td>
-                <td>{{ $data['grade_name'] }}</td>
-                @if($data['consultant_name']=="")
-                  <td><span style="color:red;">无</span></td>
-                @else
-                  <td>{{ $data['consultant_name'] }} ({{ $data['consultant_position_name'] }})</td>
-                @endif
                 @if($data['class_adviser_name']=="")
                   <td><span style="color:red;">无</span></td>
                 @else
                   <td>{{ $data['class_adviser_name'] }} ({{ $data['class_adviser_position_name'] }})</td>
+                @endif
+                @if($data['consultant_name']=="")
+                  <td><span style="color:red;">无</span></td>
+                @else
+                  <td>{{ $data['consultant_name'] }} ({{ $data['consultant_position_name'] }})</td>
                 @endif
               </tr>
               @endforeach
