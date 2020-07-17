@@ -29,27 +29,35 @@ class CustomerController extends Controller
                   ->whereIn('student_department', $department_access)
                   ->where('student_contract_num', 0)
                   ->where('student_status', 1);
-
         // 搜索条件
+        $filters = array(
+                        "filter_department" => null,
+                        "filter_grade" => null,
+                        "filter_name" => null,
+                        "filter_consultant" => null,
+                    );
         // 客户校区
         if ($request->filled('filter_department')) {
             $rows = $rows->where('student_department', '=', $request->input("filter_department"));
+            $filters['filter_department']=$request->input("filter_department");
+        }
+        // 客户年级
+        if ($request->filled('filter_grade')) {
+            $rows = $rows->where('student_grade', '=', $request->input('filter_grade'));
+            $filters['filter_grade']=$request->input("filter_grade");
         }
         // 判断是否有搜索框内条件
         $filter_status = 0;
         // 客户名称
         if ($request->filled('filter_name')) {
             $rows = $rows->where('student_name', 'like', '%'.$request->input('filter_name').'%');
-            $filter_status = 1;
-        }
-        // 客户年级
-        if ($request->filled('filter_grade')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter_grade'));
+            $filters['filter_name']=$request->input("filter_name");
             $filter_status = 1;
         }
         // 课程顾问
-        if ($request->filled('filter_user')) {
-            $rows = $rows->where('student_consultant', '=', $request->input('filter_user'));
+        if ($request->filled('filter_consultant')) {
+            $rows = $rows->where('student_consultant', '=', $request->input('filter_consultant'));
+            $filters['filter_consultant']=$request->input("filter_consultant");
             $filter_status = 1;
         }
         // 保存数据总数
@@ -95,15 +103,16 @@ class CustomerController extends Controller
                           ->get();
         // 返回列表视图
         return view('market/customer/customer', ['rows' => $rows,
-                                           'currentPage' => $currentPage,
-                                           'totalPage' => $totalPage,
-                                           'startIndex' => $offset,
-                                           'request' => $request,
-                                           'totalNum' => $totalNum,
-                                           'filter_status' => $filter_status,
-                                           'filter_departments' => $filter_departments,
-                                           'filter_grades' => $filter_grades,
-                                           'filter_users' => $filter_users]);
+                                               'currentPage' => $currentPage,
+                                               'totalPage' => $totalPage,
+                                               'startIndex' => $offset,
+                                               'filters' => $filters,
+                                               'request' => $request,
+                                               'totalNum' => $totalNum,
+                                               'filter_status' => $filter_status,
+                                               'filter_departments' => $filter_departments,
+                                               'filter_grades' => $filter_grades,
+                                               'filter_users' => $filter_users]);
     }
 
     public function customerCreate(){

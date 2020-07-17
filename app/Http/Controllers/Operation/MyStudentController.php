@@ -36,23 +36,31 @@ class MyStudentController extends Controller
                   ->where('student_status', 1);
 
         // 搜索条件
+        $filters = array(
+                        "filter_department" => null,
+                        "filter_grade" => null,
+                        "filter_name" => null,
+                    );
+
+        // 客户校区
+        if ($request->filled('filter_department')) {
+            $rows = $rows->where('student_department', '=', $request->input("filter_department"));
+            $filters['filter_department']=$request->input("filter_department");
+        }
+        // 客户年级
+        if ($request->filled('filter_grade')) {
+            $rows = $rows->where('student_grade', '=', $request->input('filter_grade'));
+            $filters['filter_grade']=$request->input("filter_grade");
+        }
         // 判断是否有搜索条件
         $filter_status = 0;
-        // 学生姓名
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
+        // 客户名称
+        if ($request->filled('filter_name')) {
+            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter_name').'%');
+            $filters['filter_name']=$request->input("filter_name");
             $filter_status = 1;
         }
-        // 学生校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter2'));
-            $filter_status = 1;
-        }
-        // 学生年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
-            $filter_status = 1;
-        }
+
         // 保存数据总数
         $totalNum = $rows->count();
         // 计算分页信息
@@ -87,6 +95,7 @@ class MyStudentController extends Controller
                                                        'totalPage' => $totalPage,
                                                        'startIndex' => $offset,
                                                        'request' => $request,
+                                                       'filters' => $filters,
                                                        'totalNum' => $totalNum,
                                                        'filter_status' => $filter_status,
                                                        'filter_departments' => $filter_departments,

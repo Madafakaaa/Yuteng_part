@@ -35,27 +35,42 @@ class DocumentController extends Controller
                   ->join('grade', 'document.document_grade', '=', 'grade.grade_id')
                   ->join('user', 'document.document_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id');
+
         // 搜索条件
+        $filters = array(
+                        "filter_department" => null,
+                        "filter_grade" => null,
+                        "filter_name" => null,
+                        "filter_subject" => null,
+                        "filter_semester" => null,
+                    );
+
+        // 教案校区
+        if ($request->filled('filter_department')) {
+            $rows = $rows->where('document_department', '=', $request->input("filter_department"));
+            $filters['filter_department']=$request->input("filter_department");
+        }
+        // 教案年级
+        if ($request->filled('filter_grade')) {
+            $rows = $rows->where('document_grade', '=', $request->input('filter_grade'));
+            $filters['filter_grade']=$request->input("filter_grade");
+        }
+        // 教案科目
+        if ($request->filled('filter_subject')) {
+            $rows = $rows->where('document_subject', '=', $request->input('filter_subject'));
+            $filters['filter_subject']=$request->input("filter_subject");
+        }
+        // 教案学期
+        if ($request->filled('filter_semester')) {
+            $rows = $rows->where('document_semester', '=', $request->input('filter_semester'));
+            $filters['filter_semester']=$request->input("filter_semester");
+        }
         // 判断是否有搜索条件
         $filter_status = 0;
         // 教案名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('document_name', 'like', '%'.$request->input('filter1').'%');
-            $filter_status = 1;
-        }
-        // 年级
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('document_grade', '=', $request->input('filter2'));
-            $filter_status = 1;
-        }
-        // 科目
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('document_subject', '=', $request->input('filter3'));
-            $filter_status = 1;
-        }
-        // 科目
-        if ($request->filled('filter4')) {
-            $rows = $rows->where('document_semester', '=', $request->input('filter4'));
+        if ($request->filled('filter_name')) {
+            $rows = $rows->where('document_name', 'like', '%'.$request->input('filter_name').'%');
+            $filters['filter_name']=$request->input("filter_name");
             $filter_status = 1;
         }
 
@@ -82,6 +97,7 @@ class DocumentController extends Controller
                                                     'totalPage' => $totalPage,
                                                     'startIndex' => $offset,
                                                     'request' => $request,
+                                                    'filters' => $filters,
                                                     'totalNum' => $totalNum,
                                                     'filter_status' => $filter_status,
                                                     'filter_departments' => $filter_departments,

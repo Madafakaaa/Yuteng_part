@@ -35,31 +35,41 @@ class ClassController extends Controller
                   ->where('class_status', 1);
 
         // 搜索条件
+        $filters = array(
+                        "filter_department" => null,
+                        "filter_grade" => null,
+                        "filter_name" => null,
+                        "filter_subject" => null,
+                        "filter_teacher" => null,
+                    );
+
+        // 班级校区
+        if ($request->filled('filter_department')) {
+            $rows = $rows->where('class_department', '=', $request->input("filter_department"));
+            $filters['filter_department']=$request->input("filter_department");
+        }
+        // 班级年级
+        if ($request->filled('filter_grade')) {
+            $rows = $rows->where('class_grade', '=', $request->input('filter_grade'));
+            $filters['filter_grade']=$request->input("filter_grade");
+        }
+        // 班级科目
+        if ($request->filled('filter_subject')) {
+            $rows = $rows->where('class_subject', '=', $request->input('filter_subject'));
+            $filters['filter_subject']=$request->input("filter_subject");
+        }
         // 判断是否有搜索条件
         $filter_status = 0;
         // 班级名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('class_name', 'like', '%'.$request->input('filter1').'%');
-            $filter_status = 1;
-        }
-        // 班级校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('class_department', '=', $request->input('filter2'));
-            $filter_status = 1;
-        }
-        // 班级年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('class_grade', '=', $request->input('filter3'));
-            $filter_status = 1;
-        }
-        // 班级科目
-        if ($request->filled('filter4')) {
-            $rows = $rows->where('class_subject', '=', $request->input('filter4'));
+        if ($request->filled('filter_name')) {
+            $rows = $rows->where('class_name', 'like', '%'.$request->input('filter_name').'%');
+            $filters['filter_name']=$request->input("filter_name");
             $filter_status = 1;
         }
         // 负责教师
-        if ($request->filled('filter5')) {
-            $rows = $rows->where('class_teacher', '=', $request->input('filter5'));
+        if ($request->filled('filter_teacher')) {
+            $rows = $rows->where('class_teacher', '=', $request->input('filter_teacher'));
+            $filters['filter_teacher']=$request->input("filter_teacher");
             $filter_status = 1;
         }
 
@@ -131,6 +141,7 @@ class ClassController extends Controller
                                               'totalPage' => $totalPage,
                                               'startIndex' => $offset,
                                               'request' => $request,
+                                              'filters' => $filters,
                                               'totalNum' => $totalNum,
                                               'filter_status' => $filter_status,
                                               'filter_departments' => $filter_departments,

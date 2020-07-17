@@ -43,26 +43,48 @@ class AttendedScheduleController extends Controller
                   ->where('schedule_attended', '=', 1);
 
         // 搜索条件
+        $filters = array(
+                        "filter_department" => null,
+                        "filter_grade" => null,
+                        "filter_name" => null,
+                        "filter_subject" => null,
+                        "filter_teacher" => null,
+                        "filter_date" => null,
+                    );
+
+        // 班级校区
+        if ($request->filled('filter_department')) {
+            $rows = $rows->where('class_department', '=', $request->input("filter_department"));
+            $filters['filter_department']=$request->input("filter_department");
+        }
+        // 班级年级
+        if ($request->filled('filter_grade')) {
+            $rows = $rows->where('class_grade', '=', $request->input('filter_grade'));
+            $filters['filter_grade']=$request->input("filter_grade");
+        }
+        // 班级科目
+        if ($request->filled('filter_subject')) {
+            $rows = $rows->where('class_subject', '=', $request->input('filter_subject'));
+            $filters['filter_subject']=$request->input("filter_subject");
+        }
         // 判断是否有搜索条件
         $filter_status = 0;
-        // 学生名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('class_name', 'like', '%'.$request->input('filter1').'%');
+        // 班级名称
+        if ($request->filled('filter_name')) {
+            $rows = $rows->where('class_name', 'like', '%'.$request->input('filter_name').'%');
+            $filters['filter_name']=$request->input("filter_name");
             $filter_status = 1;
         }
-        // 学生校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('schedule_department', '=', $request->input('filter2'));
+        // 负责教师
+        if ($request->filled('filter_teacher')) {
+            $rows = $rows->where('class_teacher', '=', $request->input('filter_teacher'));
+            $filters['filter_teacher']=$request->input("filter_teacher");
             $filter_status = 1;
         }
-        // 学生年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('schedule_grade', '=', $request->input('filter3'));
-            $filter_status = 1;
-        }
-        // 学生科目
-        if ($request->filled('filter4')) {
-            $rows = $rows->where('schedule_subject', '=', $request->input('filter4'));
+        // 上课日期
+        if ($request->filled('filter_date')) {
+            $rows = $rows->where('schedule_date', '=', $request->input('filter_date'));
+            $filters['filter_date']=$request->input("filter_date");
             $filter_status = 1;
         }
 
@@ -97,6 +119,14 @@ class AttendedScheduleController extends Controller
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
+        $filter_users = DB::table('user')
+                          ->join('department', 'user.user_department', '=', 'department.department_id')
+                          ->join('position', 'user.user_position', '=', 'position.position_id')
+                          ->where('user_status', 1)
+                          ->whereIn('user_department', $department_access)
+                          ->orderBy('user_department', 'asc')
+                          ->orderBy('user_position', 'desc')
+                          ->get();
 
         // 返回列表视图
         return view('education/attendedSchedule/attendedSchedule', ['rows' => $rows,
@@ -104,11 +134,13 @@ class AttendedScheduleController extends Controller
                                                                    'totalPage' => $totalPage,
                                                                    'startIndex' => $offset,
                                                                    'request' => $request,
+                                                                   'filters' => $filters,
                                                                    'totalNum' => $totalNum,
                                                                    'filter_status' => $filter_status,
                                                                    'filter_departments' => $filter_departments,
                                                                    'filter_grades' => $filter_grades,
-                                                                   'filter_subjects' => $filter_subjects]);
+                                                                   'filter_subjects' => $filter_subjects,
+                                                                   'filter_users' => $filter_users]);
     }
 
 }

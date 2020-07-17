@@ -50,21 +50,13 @@
                 <div class="col-lg-8 col-md-8 col-sm-12 mb-1">
                   <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
-                      <input class="form-control" type="text" name="filter_name" placeholder="学生姓名..." autocomplete="off" @if($request->filled('filter_name')) value="{{ $request->filter1 }}" @endif>
+                      <input class="form-control" type="text" name="filter_name" placeholder="学生姓名..." autocomplete="off" @if(isset($filters['filter_name']))) value="{{ $filters['filter_name'] }}" @endif>
                     </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
-                      <select class="form-control" name="filter_grade" data-toggle="select">
-                        <option value=''>全部年级</option>
-                        @foreach ($filter_grades as $filter_grade)
-                          <option value="{{ $filter_grade->grade_id }}" @if($request->input('filter_grade')==$filter_grade->grade_id) selected @endif>{{ $filter_grade->grade_name }}</option>
-                        @endforeach
-                      </select>
-	                </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
                       <select class="form-control" name="filter_user" data-toggle="select">
                         <option value=''>课程顾问</option>
                         @foreach ($filter_users as $filter_user)
-                          <option value="{{ $filter_user->user_id }}" @if($request->input('filter_user')==$filter_user->user_id) selected @endif>{{$filter_user->department_name}} {{ $filter_user->user_name }}</option>
+                          <option value="{{ $filter_user->user_id }}" @if($filters['filter_consultant']==$filter_user->user_id) selected @endif>{{$filter_user->department_name}} {{ $filter_user->user_name }}</option>
                         @endforeach
                       </select>
 	                </div>
@@ -73,6 +65,8 @@
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-1">
                   <div class="row">
                     <div class="col-lg-6 col-md-12 col-sm-12 mb-1">
+                      <input type="hidden" name="filter_department" value="{{$filters['filter_department']}}">
+                      <input type="hidden" name="filter_grade" value="{{$filters['filter_grade']}}">
                       <input type="submit" class="btn btn-primary btn-block" value="查询">
                     </div>
                     <div class="col-lg-6 col-md-12 col-sm-12 mb-1">
@@ -87,12 +81,21 @@
       </div>
       <div class="card main_card mb-4" style="display:none">
         <div class="card-header p-2" style="border-bottom:0px;">
-          <small class="text-muted font-weight-bold px-2">校区</small>
-          <a href='?'>
-            <button type="button" class="btn btn-primary btn-sm" @if(!$request->filled('filter_department')) disabled @endif>全部</button>
+          <small class="text-muted font-weight-bold px-2">校区：</small>
+          <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach">
+            <button type="button" @if(!isset($filters['filter_department'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
           </a>
           @foreach($filter_departments as $filter_department)
-            <a href="?filter_department={{$filter_department->department_id}}"><button type="button" class="btn btn-primary btn-sm" @if($request->input('filter_department')==$filter_department->department_id) disabled @endif style="background-color:{{getColor($filter_department->department_id)}};border-color:{{getColor($filter_department->department_id)}};">{{$filter_department->department_name}}</button></a>
+            <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach &filter_department={{$filter_department->department_id}}"><button type="button" @if($filters['filter_department']==$filter_department->department_id) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>{{$filter_department->department_name}}</button></a>
+          @endforeach
+        </div>
+        <div class="card-header p-2" style="border-bottom:0px;">
+          <small class="text-muted font-weight-bold px-2">年级：</small>
+          <a href="?@foreach($filters as $key => $value) @if($key!='filter_grade') {{$key}}={{$value}}& @endif @endforeach">
+            <button type="button" @if(!isset($filters['filter_grade'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
+          </a>
+          @foreach($filter_grades as $filter_grade)
+            <a href="?@foreach($filters as $key => $value) @if($key!='filter_grade') {{$key}}={{$value}}& @endif @endforeach filter_grade={{$filter_grade->grade_id}}"><button type="button" @if($filters['filter_grade']==$filter_grade->grade_id) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>{{$filter_grade->grade_name}}</button></a>
           @endforeach
         </div>
         <div class="table-responsive freeze-table-4">
@@ -113,7 +116,7 @@
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="11">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="10">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
               <tr>
@@ -137,7 +140,7 @@
                   <a href="/market/customer/consultant/edit?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">修改课程顾问</button></a>
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/market/customer/delete?id={{encode($row->student_id, 'student_id')}}', '确认删除客户？')">删除</button>
                 </td>
-                <td><span style="color:{{getColor($row->department_id)}};">{{ $row->department_name }}</span></td>
+                <td>{{ $row->department_name }}</td>
                 <td>{{ $row->grade_name }}</td>
                 <td>{{ $row->student_phone }}</td>
                 @if($row->student_follow_level==1)

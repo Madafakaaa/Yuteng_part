@@ -38,26 +38,35 @@ class ContractController extends Controller
                   ->where('contract_section', '=', 0);
 
         // 搜索条件
+        $filters = array(
+                        "filter_department" => null,
+                        "filter_grade" => null,
+                        "filter_name" => null,
+                        "filter_user" => null,
+                    );
+
+        // 客户校区
+        if ($request->filled('filter_department')) {
+            $rows = $rows->where('student_department', '=', $request->input("filter_department"));
+            $filters['filter_department']=$request->input("filter_department");
+        }
+        // 客户年级
+        if ($request->filled('filter_grade')) {
+            $rows = $rows->where('student_grade', '=', $request->input('filter_grade'));
+            $filters['filter_grade']=$request->input("filter_grade");
+        }
         // 判断是否有搜索条件
         $filter_status = 0;
         // 客户名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
-            $filter_status = 1;
-        }
-        // 客户校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter2'));
-            $filter_status = 1;
-        }
-        // 客户年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
+        if ($request->filled('filter_name')) {
+            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter_name').'%');
+            $filters['filter_name']=$request->input("filter_name");
             $filter_status = 1;
         }
         // 签约人
-        if ($request->filled('filter4')) {
-            $rows = $rows->where('contract_createuser', '=', $request->input('filter4'));
+        if ($request->filled('filter_user')) {
+            $rows = $rows->where('contract_createuser', '=', $request->input('filter_user'));
+            $filters['filter_user']=$request->input("filter_user");
             $filter_status = 1;
         }
 
@@ -87,16 +96,17 @@ class ContractController extends Controller
 
         // 返回列表视图
         return view('market/contract/contract', ['rows' => $rows,
-                                           'currentPage' => $currentPage,
-                                           'totalPage' => $totalPage,
-                                           'startIndex' => $offset,
-                                           'request' => $request,
-                                           'totalNum' => $totalNum,
-                                           'filter_status' => $filter_status,
-                                           'filter_departments' => $filter_departments,
-                                           'filter_students' => $filter_students,
-                                           'filter_grades' => $filter_grades,
-                                           'filter_users' => $filter_users]);
+                                               'currentPage' => $currentPage,
+                                               'totalPage' => $totalPage,
+                                               'startIndex' => $offset,
+                                               'request' => $request,
+                                               'filters' => $filters,
+                                               'totalNum' => $totalNum,
+                                               'filter_status' => $filter_status,
+                                               'filter_departments' => $filter_departments,
+                                               'filter_students' => $filter_students,
+                                               'filter_grades' => $filter_grades,
+                                               'filter_users' => $filter_users]);
     }
 
     /**

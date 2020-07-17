@@ -36,33 +36,45 @@ class StudentController extends Controller
                   ->where('student_status', 1);
 
         // 搜索条件
+        $filters = array(
+                        "filter_department" => null,
+                        "filter_grade" => null,
+                        "filter_name" => null,
+                        "filter_consultant" => null,
+                        "filter_class_adviser" => null,
+                    );
+
+        // 客户校区
+        if ($request->filled('filter_department')) {
+            $rows = $rows->where('student_department', '=', $request->input("filter_department"));
+            $filters['filter_department']=$request->input("filter_department");
+        }
+        // 客户年级
+        if ($request->filled('filter_grade')) {
+            $rows = $rows->where('student_grade', '=', $request->input('filter_grade'));
+            $filters['filter_grade']=$request->input("filter_grade");
+        }
         // 判断是否有搜索条件
         $filter_status = 0;
         // 客户名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter1').'%');
-            $filter_status = 1;
-        }
-        // 客户校区
-        if ($request->filled('filter2')) {
-            $rows = $rows->where('student_department', '=', $request->input('filter2'));
-            $filter_status = 1;
-        }
-        // 客户年级
-        if ($request->filled('filter3')) {
-            $rows = $rows->where('student_grade', '=', $request->input('filter3'));
+        if ($request->filled('filter_name')) {
+            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter_name').'%');
+            $filters['filter_name']=$request->input("filter_name");
             $filter_status = 1;
         }
         // 课程顾问
-        if ($request->filled('filter4')) {
-            $rows = $rows->where('student_consultant', '=', $request->input('filter4'));
+        if ($request->filled('filter_consultant')) {
+            $rows = $rows->where('student_consultant', '=', $request->input('filter_consultant'));
+            $filters['filter_consultant']=$request->input("filter_consultant");
             $filter_status = 1;
         }
-        // 班主任
-        if ($request->filled('filter5')) {
-            $rows = $rows->where('student_class_adviser', '=', $request->input('filter5'));
+        // 课程顾问
+        if ($request->filled('filter_class_adviser')) {
+            $rows = $rows->where('student_class_adviser', '=', $request->input('filter_class_adviser'));
+            $filters['filter_class_adviser']=$request->input("filter_class_adviser");
             $filter_status = 1;
         }
+
         // 保存数据总数
         $totalNum = $rows->count();
         // 计算分页信息
@@ -101,15 +113,16 @@ class StudentController extends Controller
                           ->get();
         // 返回列表视图
         return view('market/student/student', ['rows' => $rows,
-                                           'currentPage' => $currentPage,
-                                           'totalPage' => $totalPage,
-                                           'startIndex' => $offset,
-                                           'request' => $request,
-                                           'totalNum' => $totalNum,
-                                           'filter_status' => $filter_status,
-                                           'filter_departments' => $filter_departments,
-                                           'filter_grades' => $filter_grades,
-                                           'filter_users' => $filter_users]);
+                                               'currentPage' => $currentPage,
+                                               'totalPage' => $totalPage,
+                                               'startIndex' => $offset,
+                                               'request' => $request,
+                                               'filters' => $filters,
+                                               'totalNum' => $totalNum,
+                                               'filter_status' => $filter_status,
+                                               'filter_departments' => $filter_departments,
+                                               'filter_grades' => $filter_grades,
+                                               'filter_users' => $filter_users]);
     }
 
     /**
