@@ -3,16 +3,14 @@
   <div class="container-fluid">
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-
+      @section('nav')
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
           <!-- Nav -->
-          @section('nav')
-            <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
-          @show
+          <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
         </ol>
       </nav>
-
+      @show
 
       <!-- Navbar links -->
       <ul class="navbar-nav align-items-center ml-md-auto">

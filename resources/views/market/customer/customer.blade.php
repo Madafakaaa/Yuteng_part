@@ -1,29 +1,18 @@
 @extends('main')
 
 @section('nav')
-    <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
+<h2 class="text-white d-inline-block mb-0">客户管理</h2>
+<nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+  <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+    <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
+    <li class="breadcrumb-item active">招生中心</li>
+    <li class="breadcrumb-item active">客户管理</li>
+  </ol>
+</nav>
 @endsection
 
 @section('content')
-<div class="header bg-primary">
-  <div class="container-fluid">
-    <div class="header-body">
-      <div class="row align-items-center py-4">
-        <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">客户管理</h6>
-          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
-            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-              <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-              <li class="breadcrumb-item active">招生中心</li>
-              <li class="breadcrumb-item active">客户管理</li>
-            </ol>
-          </nav>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="container-fluid mt-3">
+<div class="container-fluid mt-4">
   <div class="row mb-3">
     <div class="col-auto">
       <a href="/market/customer/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加客户">
@@ -137,7 +126,7 @@
                 </td>
                 <td>
                   <a href="/student?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
-                  <a href="/market/customer/consultant/edit?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">修改课程顾问</button></a>
+                  <a href="/market/customer/consultant/edit?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">修改负责人</button></a>
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/market/customer/delete?id={{encode($row->student_id, 'student_id')}}', '确认删除客户？')">删除</button>
                 </td>
                 <td>{{ $row->department_name }}</td>

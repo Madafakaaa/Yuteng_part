@@ -1,34 +1,27 @@
 @extends('main')
 
 @section('nav')
-    <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
+<h2 class="text-white d-inline-block mb-0">补缴合同</h2>
+<nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+  <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+    <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
+    <li class="breadcrumb-item active">招生中心</li>
+    <li class="breadcrumb-item"><a href="/market/contract">签约管理</a></li>
+    <li class="breadcrumb-item active">补缴合同</li>
+  </ol>
+</nav>
 @endsection
 
 @section('content')
-<div class="header bg-primary">
-  <div class="container-fluid">
-    <div class="header-body">
-      <div class="row align-items-center py-4">
-        <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">补缴合同费用</h6>
-          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
-            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-              <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-              <li class="breadcrumb-item active">招生中心</li>
-              <li class="breadcrumb-item active">补缴合同费用</li>
-            </ol>
-          </nav>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card main_card" style="display:none">
         <form action="/market/contract/update?id={{encode($contract->contract_id, 'contract_id')}}" method="post" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
+          <div class="card-header">
+            <h3 class="mb-0">补缴合同</h3>
+          </div>
           <!-- Card body -->
           <div class="card-body">
             <div class="row">

@@ -42,7 +42,6 @@ class ScheduleController extends Controller
                   ->whereIn('schedule_department', $department_access)
                   ->where('schedule_attended', '=', 0);
 
-
         // 搜索条件
         $filters = array(
                         "filter_department" => null,

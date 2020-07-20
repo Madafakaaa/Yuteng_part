@@ -17,19 +17,37 @@ class CalendarController extends Controller
         }
 
         // 获取用户校区权限
-        $current_department_id = 0;
-        if ($request->filled('department')) {
-            $current_department_id = decode($request->input("department"),'department_id');
-        }
         $department_ids = Session::get('department_access');
 
+        // 搜索条件
+        $filters = array(
+                        "filter_department" => null,
+                        "filter_grade" => null,
+                        "filter_subject" => null,
+                        "filter_date" => null,
+                    );
+
         // 获取日期
-        if ($request->filled('date')) {
-            $date = $request->input("date");
+        if ($request->filled('filter_date')) {
+            $date = $request->input("filter_date");
+            $filters['filter_date'] = $request->input("filter_date");
         }else{
             $date = date('Y-m-d');
         }
-        // 获取周一、日日期
+        // 班级校区
+        if ($request->filled('filter_department')) {
+            $filters['filter_department']=$request->input("filter_department");
+        }
+        // 班级年级
+        if ($request->filled('filter_grade')) {
+            $filters['filter_grade']=$request->input("filter_grade");
+        }
+        // 班级科目
+        if ($request->filled('filter_subject')) {
+            $filters['filter_subject']=$request->input("filter_subject");
+        }
+
+        // 获取周一、周日日期
         $diff = array(6, 0, 1, 2, 3, 4, 5);
         $first_day = date('Y-m-d', strtotime ("-".$diff[date("w",strtotime($date))]." day", strtotime($date)));
         $last_day = date('Y-m-d', strtotime ("+6 day", strtotime($first_day)));
@@ -39,13 +57,11 @@ class CalendarController extends Controller
         $first_day_next = date('Y-m-d', strtotime ("+7 day", strtotime($first_day)));
 
         // 生成（校区分类）颜色
-        // $colors = array('#BA55D3', '#6E7FE8', '#FF8C00', '#808080', '#FFB6C1', '#90EE90', '#F08080', '#90EE90');
         $attended_border_color = '#00FF7F';
         $unattended_border_color = '#FF4040';
 
         // 生成校区分类
         $calendars = array();
-        $department_links = array();
         $index = 0;
         foreach($department_ids as $department_id){
             $department = DB::table('department')
@@ -68,14 +84,8 @@ class CalendarController extends Controller
             $attended_calendar['dragBgColor']=getColor($index);
             $attended_calendar['borderColor']=$attended_border_color;
 
-            $department_link = array();
-            $department_link['department_id'] = $department_id;
-            $department_link['department_name'] = $department->department_name;
-            $department_link['department_color'] = getColor($index);
-
             $calendars[] = $unattended_calendar;
             $calendars[] = $attended_calendar;
-            $department_links[] = $department_link;
 
             $index++;
         }
@@ -94,9 +104,17 @@ class CalendarController extends Controller
                        ->where('schedule_attended', '=', 0)
                        ->where('schedule_date', '>=', $first_day)
                        ->where('schedule_date', '<=', $last_day);
-        // 获取校区
-        if ($current_department_id!=0) {
-            $schedules = $schedules->where('schedule_department', $current_department_id);
+        // 班级校区
+        if ($request->filled('filter_department')) {
+            $schedules = $schedules->where('schedule_department', '=', $request->input("filter_department"));
+        }
+        // 班级年级
+        if ($request->filled('filter_grade')) {
+            $schedules = $schedules->where('schedule_grade', '=', $request->input('filter_grade'));
+        }
+        // 班级科目
+        if ($request->filled('filter_subject')) {
+            $schedules = $schedules->where('schedule_subject', '=', $request->input('filter_subject'));
         }
         $schedules = $schedules->get();
 
@@ -137,9 +155,17 @@ class CalendarController extends Controller
                                 ->where('schedule_date', '>=', $first_day)
                                 ->where('schedule_date', '<=', $last_day);
 
-        // 获取校区
-        if ($current_department_id!=0) {
-            $attended_schedules = $attended_schedules->where('schedule_department', $current_department_id);
+        // 班级校区
+        if ($request->filled('filter_department')) {
+            $attended_schedules = $attended_schedules->where('schedule_department', '=', $request->input("filter_department"));
+        }
+        // 班级年级
+        if ($request->filled('filter_grade')) {
+            $attended_schedules = $attended_schedules->where('schedule_grade', '=', $request->input('filter_grade'));
+        }
+        // 班级科目
+        if ($request->filled('filter_subject')) {
+            $attended_schedules = $attended_schedules->where('schedule_subject', '=', $request->input('filter_subject'));
         }
         $attended_schedules = $attended_schedules->get();
 
@@ -166,14 +192,21 @@ class CalendarController extends Controller
             $rows[] = $temp;
         }
 
+        // 获取校区、学生、班级、年级、科目信息(筛选)
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_ids)->orderBy('department_id', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
+        $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
+
         return view('operation/calendar/week', ['calendars' => $calendars,
-                                                'department_links' => $department_links,
-                                                'current_department_id' => $current_department_id,
                                                 'rows' => $rows,
                                                 'first_day' => $first_day,
                                                 'last_day' => $last_day,
                                                 'first_day_prev' => $first_day_prev,
-                                                'first_day_next' => $first_day_next]);
+                                                'first_day_next' => $first_day_next,
+                                                'filters' => $filters,
+                                                'filter_departments' => $filter_departments,
+                                                'filter_grades' => $filter_grades,
+                                                'filter_subjects' => $filter_subjects]);
     }
 
 }

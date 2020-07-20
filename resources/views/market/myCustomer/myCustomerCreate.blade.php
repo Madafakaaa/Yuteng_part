@@ -1,29 +1,18 @@
 @extends('main')
 
 @section('nav')
-    <li class="breadcrumb-item"><h1 class="mb-0" style="color:white;">上海育藤教育</h1></li>
+<h2 class="text-white d-inline-block mb-0">添加客户</h2>
+<nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+  <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+    <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
+    <li class="breadcrumb-item active">招生中心</li>
+    <li class="breadcrumb-item"><a href="/market/myCustomer">我的客户</a></li>
+    <li class="breadcrumb-item active">添加客户</li>
+  </ol>
+</nav>
 @endsection
 
 @section('content')
-<div class="header bg-primary">
-  <div class="container-fluid">
-    <div class="header-body">
-      <div class="row align-items-center py-4">
-        <div class="col-6">
-          <h6 class="h2 text-white d-inline-block mb-0">添加客户</h6>
-          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
-            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-              <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-              <li class="breadcrumb-item active">招生中心</li>
-              <li class="breadcrumb-item"><a href="/market/myCustomer">我的客户</a></li>
-              <li class="breadcrumb-item active">添加客户</li>
-            </ol>
-          </nav>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">

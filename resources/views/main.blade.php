@@ -8,7 +8,6 @@
     @include('layout.topnav')
     <!-- Main content -->
     @section('content')
-
     @show
   </div>
   <!-- Script files -->
