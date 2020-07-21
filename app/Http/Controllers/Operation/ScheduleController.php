@@ -320,7 +320,6 @@ class ScheduleController extends Controller
                            'message' => '班级内没有学生，错误码:326']);
         }
 
-
         // 获取安排信息
         $schedule = DB::table('schedule')
                       ->where('schedule_id', $schedule_id)

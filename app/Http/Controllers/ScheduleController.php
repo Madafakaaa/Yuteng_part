@@ -70,8 +70,8 @@ class ScheduleController extends Controller
         $members = DB::table('participant')
                       ->join('schedule', 'participant.participant_schedule', '=', 'schedule.schedule_id')
                       ->join('student', 'participant.participant_student', '=', 'student.student_id')
-                      ->join('course', 'participant.participant_course', '=', 'course.course_id')
-                      ->join('hour', [
+                      ->leftJoin('course', 'participant.participant_course', '=', 'course.course_id')
+                      ->leftJoin('hour', [
                                        ['hour.hour_student', '=', 'participant.participant_student'],
                                        ['hour.hour_course', '=', 'participant.participant_course'],
                                      ])

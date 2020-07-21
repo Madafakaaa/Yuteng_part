@@ -108,9 +108,9 @@ class AttendedScheduleController extends Controller
                               'grade_name',
                               'classroom_name',
                               'course_name')
-                     ->orderBy('schedule_date', 'asc')
-                     ->orderBy('schedule_start', 'asc')
-                     ->orderBy('schedule_time', 'asc')
+                     ->orderBy('schedule_date', 'desc')
+                     ->orderBy('schedule_start', 'desc')
+                     ->orderBy('schedule_time', 'desc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();

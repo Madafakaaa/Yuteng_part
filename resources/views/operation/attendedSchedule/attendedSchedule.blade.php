@@ -19,7 +19,7 @@
         <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
         <span class="btn-inner--text">搜索</span>
       </a>
-      <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/operation/schedule/delete', '确认批量删除所选课程安排？')">
+      <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/operation/attendedSchedule/delete', '确认批量删除所选上课记录？')">
         <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
         <span class="btn-inner--text">批量删除</span>
       </button>

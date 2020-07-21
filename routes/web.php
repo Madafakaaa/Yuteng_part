@@ -227,6 +227,8 @@ Route::get('/operation/schedule', 'Operation\ScheduleController@schedule');
     Route::get('/operation/schedule/attend/success', 'Operation\ScheduleController@scheduleAttendSuccess');
 // 上课记录
 Route::get('/operation/attendedSchedule', 'Operation\AttendedScheduleController@attendedSchedule');
+    // 课程安排删除
+    Route::get('/operation/attendedSchedule/delete', 'Operation\AttendedScheduleController@attendedScheduleDelete');
 // 课程表
     // 周表
     Route::get('/operation/calendar/week', 'Operation\CalendarController@calendarWeek');
