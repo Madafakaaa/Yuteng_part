@@ -326,7 +326,7 @@ class MyStudentController extends Controller
         catch(Exception $e){
             DB::rollBack();
             // 返回购课界面
-            return redirect("/operation/myStudent/contract/create?student_id={$request_student_id}")
+            return redirect("/operation/myStudent/contract/create?id=".encode($request_student_id, 'student_id'))
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '购课添加失败',
@@ -636,7 +636,6 @@ class MyStudentController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
             return redirect("/operation/myStudent/schedule/create?id=".encode($schedule_student, 'student_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',

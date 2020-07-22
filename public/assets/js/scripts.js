@@ -172,7 +172,7 @@ function submitButtonDisable(button_id) {
     $('#'+button_id).attr("disabled", true);
 }
 
-function calendar_weekly(startDate, calendars, schedules){
+function calendar_weekly(startDate, calendars, schedules, dailyUrl){
 
     var COMMON_CUSTOM_THEME = {
 
@@ -200,13 +200,67 @@ function calendar_weekly(startDate, calendars, schedules){
             },
             time: function(schedule) {
                 return schedule.title + "<br>"
-                       + moment(schedule.start.getTime()).format('HH:mm') + "~" + moment(schedule.end.getTime()).format('HH:mm') + "<br>"
-                       + "<span class='fa fa-map-marker-alt'></span> " + schedule.location + "<br>"
-                       + "<span class='fa fa-user-tie'></span> " + schedule.raw.teacher + "<br>"
-                       + "<span class='fa fa-user-friends'></span> " + (schedule.attendees || []).join(', ') + "<br>";
+                    + moment(schedule.start.getTime()).format('HH:mm') + "~" + moment(schedule.end.getTime()).format('HH:mm') + "<br>"
+                    + "<span class='fa fa-map-marker-alt'></span> " + schedule.location + "<br>"
+                    + "<span class='fa fa-user-tie'></span> 教师： " + schedule.state + "<br>"
+                    + "<span class='fa fa-user-friends'></span> 学生： " + (schedule.attendees || []).join(', ') + "<br>";
             },
             popupDetailState: function(schedule) {
-                return '<span class="tui-full-calendar-icon tui-full-calendar-ic-user-b"></span>';
+                return '教师：' + schedule.state;
+            },
+            popupDetailUser: function(schedule) {
+                return '学生：' + (schedule.attendees || []).join(', ');
+            },
+            weekDayname: function(model) {
+                return "<a href='"+dailyUrl+"filter_date="+model.renderDate+"' style='text-decoration: none;color:inherit;'><span class='tui-full-calendar-dayname-date'>" + model.date + "</span>&nbsp;&nbsp;<span class='tui-full-calendar-dayname-name'>" + model.dayName + "</span></a>";
+            },
+        },
+        calendars: calendars,
+    });
+
+    calendar.createSchedules(schedules);
+
+    calendar.setDate(startDate);
+}
+
+function calendar_daily(startDate, calendars, schedules){
+
+    var COMMON_CUSTOM_THEME = {
+
+    };
+
+    var calendar = new tui.Calendar(document.getElementById('calendar'), {
+        defaultView: 'day',
+        taskView: false,
+        scheduleView: ['time'],
+        disableClick: true,
+        disableDblClick: true,
+        useDetailPopup: true,
+        usageStatistics: false,
+        theme: COMMON_CUSTOM_THEME, // set theme
+        week: {
+            daynames: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+            startDayOfWeek: 1,
+            narrowWeekend: false,
+            hourStart: 7,
+            hourEnd: 23,
+        },
+        template: {
+            timegridDisplayPrimaryTime: function(time) {
+                return time.hour + ':00';
+            },
+            time: function(schedule) {
+                return schedule.title + "<br>"
+                    + moment(schedule.start.getTime()).format('HH:mm') + "~" + moment(schedule.end.getTime()).format('HH:mm') + "<br>"
+                    + "<span class='fa fa-map-marker-alt'></span> " + schedule.location + "<br>"
+                    + "<span class='fa fa-user-tie'></span> 教师： " + schedule.state + "<br>"
+                    + "<span class='fa fa-user-friends'></span> 学生： " + (schedule.attendees || []).join(', ') + "<br>";
+            },
+            popupDetailState: function(schedule) {
+                return '教师：' + schedule.state;
+            },
+            popupDetailUser: function(schedule) {
+                return '学生：' + (schedule.attendees || []).join(', ');
             },
         },
         calendars: calendars,

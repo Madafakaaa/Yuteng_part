@@ -311,14 +311,14 @@ class UserController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return redirect("/company/user/access?id={$request->input('id')}")
+            return redirect("/company/user/access?id=".encode($user_id, 'user_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '用户权限修改失败',
                            'message' => '用户权限修改失败，错误码:114']);
         }
         DB::commit();
-        return redirect("/company/user/access?id={$request->input('id')}")
+        return redirect("/company/user/access?id=".encode($user_id, 'user_id'))
                ->with(['notify' => true,
                        'type' => 'success',
                        'title' => '用户权限修改成功',

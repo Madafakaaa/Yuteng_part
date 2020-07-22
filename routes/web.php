@@ -232,6 +232,8 @@ Route::get('/operation/attendedSchedule', 'Operation\AttendedScheduleController@
 // 课程表
     // 周表
     Route::get('/operation/calendar/week', 'Operation\CalendarController@calendarWeek');
+    // 日表
+    Route::get('/operation/calendar/day', 'Operation\CalendarController@calendarDay');
 // 我的学生课程安排
 Route::get('/operation/mySchedule', 'Operation\MyScheduleController@mySchedule');
     // 我的学生课程安排删除
@@ -274,6 +276,8 @@ Route::get('/education/attendedSchedule', 'Education\AttendedScheduleController@
 // 课程表
     // 周表
     Route::get('/education/calendar/week', 'Education\CalendarController@calendarWeek');
+    // 周表
+    Route::get('/education/calendar/day', 'Education\CalendarController@calendarDay');
 // 我的班级
 Route::get('/education/myClass', 'Education\MyClassController@myClass');
 // 我的课程安排
@@ -283,6 +287,8 @@ Route::get('/education/myAttendedSchedule', 'Education\MyAttendedScheduleControl
 // 我的课程表
     // 周表
     Route::get('/education/myCalendar/week', 'Education\MyCalendarController@calendarWeek');
+    // 周表
+    Route::get('/education/myCalendar/day', 'Education\MyCalendarController@calendarDay');
 // 教案中心
 Route::get('/education/document', 'Education\DocumentController@document');
     // 上传教案
@@ -341,5 +347,5 @@ Route::get('/attendedSchedule', 'ScheduleController@attendedSchedule');
 
 // 个人信息
 Route::get('/profile', 'ProfileController@show');
-Route::post('/user/{user_id}/password', 'ProfileController@password');
+Route::post('/profile/password/update', 'ProfileController@passwordUpdate');
 

@@ -329,7 +329,7 @@ class MyStudentController extends Controller
         catch(Exception $e){
             DB::rollBack();
             // 返回购课界面
-            return redirect("/market/myStudent/contract/create?student_id={$request_student_id}")
+            return redirect("/market/myStudent/contract/create?id=".encode($request_student_id, 'student_id'))
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '购课添加失败',

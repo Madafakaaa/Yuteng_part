@@ -112,7 +112,7 @@
               </div>
               <div class="row">
                 <div class="col-6">
-                  <a href="/user/{{ $user->user_id }}/edit"><button class="btn btn-block btn-primary">修改</button></a>
+                  <!-- <a href="/user/{{ $user->user_id }}/edit"><button class="btn btn-block btn-primary">修改</button></a> -->
                 </div>
               </div>
             </div>

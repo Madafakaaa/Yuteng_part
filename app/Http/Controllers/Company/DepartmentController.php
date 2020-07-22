@@ -148,7 +148,7 @@ class DepartmentController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("/company/department/edit?department_id={$request->input('id')}")
+            return redirect("/company/department/edit?id=".encode($department_id, 'department_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '校区修改失败',

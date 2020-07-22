@@ -89,14 +89,14 @@
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="password-card" role="tabpanel">
           <div class="card main_card mb-4" style="display:none">
-            <form action="/user/{{ $user->user_id }}/password" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
+            <form action="/profile/password/update" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
               @csrf
               <div class="card-body">
                 <div class="row justify-content-center">
                   <div class="col-8">
                     <div class="form-group">
                       <label class="form-control-label">原密码<span style="color:red">*</span></label>
-                      <input class="form-control" type="password" name="input1" autocomplete='off' required minlength="6" maxlength="15">
+                      <input class="form-control" type="password" name="input1" autocomplete='off' required minlength="0" maxlength="15">
                     </div>
                   </div>
                 </div>
@@ -120,6 +120,7 @@
                 <div class="row">
                   <div class="col-lg-8 col-md-7 col-sm-12 my-2"></div>
                   <div class="col-lg-3 col-md-5 col-sm-12">
+                    <input type="hidden" name="id" value="{{ encode($user->user_id, 'user_id') }}">
                     <input type="submit" id="submitButton1" class="btn btn-warning btn-block" value="修改">
                   </div>
                 </div>

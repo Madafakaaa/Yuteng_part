@@ -40,11 +40,12 @@ class ProfileController extends Controller
      * @param  $request->input('input3'): 新密码确认
      * @param  int  $user_id
      */
-    public function password(Request $request, $class_id){
+    public function passwordUpdate(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $user_id = decode($request->input('id'),'user_id');
         $user = DB::table('user')->where('user_id', Session::get('user_id'))->first();
          // 获取表单输入
         $password_old = $request->input('input1');

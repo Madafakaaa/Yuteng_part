@@ -154,7 +154,7 @@ class SectionController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("/company/section/?id={$request->input('id')}")
+            return redirect("/company/section/?id=".encode($section_id, 'section_id'))
                    ->with(['notify' => true,
                           'type' => 'danger',
                           'title' => '部门修改失败',
@@ -308,7 +308,7 @@ class SectionController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("/company/position?id={$request->input('id')}")
+            return redirect("/company/position?id=".encode($position_id, 'position_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '岗位修改失败',

@@ -191,7 +191,7 @@ class SchoolController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("company/school/edit?id={encode($school_id, 'school_id')}")
+            return redirect("company/school/edit?id=".encode($school_id, 'school_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '大区修改失败',

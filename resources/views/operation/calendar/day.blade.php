@@ -1,12 +1,12 @@
 @extends('main')
 
 @section('nav')
-<h2 class="text-white d-inline-block mb-0">我的课程表</h2>
+<h2 class="text-white d-inline-block mb-0">课程表</h2>
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">运营中心</li>
-    <li class="breadcrumb-item active">我的课程表</li>
+    <li class="breadcrumb-item active">课程表</li>
   </ol>
 </nav>
 @endsection
@@ -20,14 +20,15 @@
           <form action="" method="get" onsubmit="submitButtonDisable('submitButton1')">
             <div class="row">
               <div class="col-6">
-                <a href="?filter_date={{$first_day_prev}}&@foreach($filters as $key => $value) @if($key!='filter_date') {{$key}}={{$value}}& @endif @endforeach"><button type="button" class="btn btn-outline-primary btn-icon-only rounded-circle"><i class="fa fa-chevron-left"></i></button></a>
-                <a href="?filter_date={{$first_day_next}}&@foreach($filters as $key => $value) @if($key!='filter_date') {{$key}}={{$value}}& @endif @endforeach"><button type="button" class="btn btn-outline-primary btn-icon-only rounded-circle"><i class="fa fa-chevron-right"></i></button></a>
-                <span style="vertical-align: middle; font-size:26px; font-family: 'Noto Sans', sans-serif;" class="ml-3">{{ date('Y.m.d', strtotime($first_day)) }} ~ {{ date('m.d', strtotime($last_day)) }}</span>
+                <a href="?filter_date={{$day_prev}}&@foreach($filters as $key => $value) @if($key!='filter_date') {{$key}}={{$value}}& @endif @endforeach"><button type="button" class="btn btn-outline-primary btn-icon-only rounded-circle"><i class="fa fa-chevron-left"></i></button></a>
+                <a href="?filter_date={{$day_next}}&@foreach($filters as $key => $value) @if($key!='filter_date') {{$key}}={{$value}}& @endif @endforeach"><button type="button" class="btn btn-outline-primary btn-icon-only rounded-circle"><i class="fa fa-chevron-right"></i></button></a>
+                <span style="vertical-align: middle; font-size:26px; font-family: 'Noto Sans', sans-serif;" class="mx-3">{{ date('Y.m.d', strtotime($date)) }}</span>
+                <a href="/operation/calendar/week?@foreach($filters as $key => $value){{$key}}={{$value}}&@endforeach"><button type="button" class="btn btn-outline-primary btn-sm">返回周课程表</button></a>
               </div>
               <div class="col-3">
               </div>
               <div class="col-2 text-right">
-                <input class="form-control datepicker" name="filter_date" placeholder="选择日期" type="text" value="{{$first_day}}">
+                <input class="form-control datepicker" name="filter_date" placeholder="选择日期" type="text" value="{{$date}}">
               </div>
               <div class="col-1 text-right">
                 <input type="hidden" name="filter_department" value="{{$filters['filter_department']}}">
@@ -85,8 +86,8 @@
 @section('sidebar_status')
 <script>
 $(document).ready(function(){
-    calendar_weekly(
-      "{{ $first_day }}",
+    calendar_daily(
+      "{{ $date }}",
       [
         @foreach($calendars as $calendar)
           {
@@ -104,7 +105,7 @@ $(document).ready(function(){
           {
             calendarId: "{{$row['calendarId']}}",
             title: "{{$row['title']}}",
-            body: "",
+            body: "<a href='/operation/schedule/attend?id={{$row['schedule_id']}}'><button type='button' class='btn btn-primary btn-sm' @if($row['attended']==1) disabled @endif>点名</button></a>",
             category: "time",
             location: "{{$row['location']}}",
             start: "{{$row['start']}}",
@@ -119,11 +120,10 @@ $(document).ready(function(){
           },
         @endforeach
       ],
-      "/education/myCalendar/day?@foreach($filters as $key => $value) @if($key!='filter_date') {{$key}}={{$value}}& @endif @endforeach"
     );
 });
-  linkActive('link-education');
-  navbarActive('navbar-education');
-  linkActive('educationMyCalendarWeek');
+  linkActive('link-operation');
+  navbarActive('navbar-operation');
+  linkActive('operationCalendarWeek');
 </script>
 @endsection

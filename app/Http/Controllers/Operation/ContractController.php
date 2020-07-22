@@ -208,7 +208,6 @@ class ContractController extends Controller
             // 捕获异常
             catch(Exception $e){
                 DB::rollBack();
-                return $e;
                 return redirect("/operation/contract")
                        ->with(['notify' => true,
                                'type' => 'danger',
