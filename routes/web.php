@@ -301,7 +301,7 @@ Route::get('/education/document', 'Education\DocumentController@document');
 
 // 数据中心
 // 签约统计
-Route::any('/finance/contract', 'FinanceController@contract');
+Route::any('/finance/contract', 'Finance\ContractController@contract');
 // 课时消耗
 Route::any('/finance/consumption', 'FinanceController@consumption');
 // 退费统计

@@ -207,5 +207,48 @@
   linkActive('link-operation');
   navbarActive('navbar-operation');
   linkActive('operationClass');
+
+@if((count($teacher_schedules)+count($student_schedules))>0)
+  scheduleConflictAlert(
+      '课程冲突提示 <span style="color:#FFA07A;">({{(count($teacher_schedules)+count($student_schedules))}}节)</span>',
+      '<div class="table-responsive" style="max-height:400px;">'+
+          '<table class="table text-left table-flush">'+
+          '<thead class="thead-light">'+
+          '<th style="width:22%;">教师/学生</th>'+
+          '<th style="width:33%;">班级</th>'+
+          '<th style="width:30%;">上课时间</th>'+
+          '<th style="width:15%;">考勤</th>'+
+          '</thead>'+
+          '<tbody class="list">'+
+          @foreach($teacher_schedules as $teacher_schedule)
+          '<tr>'+
+          '<td>教师：{{$teacher_schedule[0]}}</td>'+
+          '<td>{{$teacher_schedule[1]}}</td>'+
+          '<td>{{date('m-d', strtotime($teacher_schedule[2]))}} {{date('H:i', strtotime($teacher_schedule[3]))}}~{{date('H:i', strtotime($teacher_schedule[4]))}}</td>'+
+          @if($teacher_schedule[5]==0)
+          '<td style="color:red">未点名</td>'+
+          @else
+          '<td style="color:green">已点名</td>'+
+          @endif
+          '</tr>'+
+          @endforeach
+          @foreach($student_schedules as $student_schedule)
+          '<tr>'+
+          '<td>学生：{{$student_schedule[0]}}</td>'+
+          '<td>{{$student_schedule[1]}}</td>'+
+          '<td>{{date('m-d', strtotime($student_schedule[2]))}} {{date('H:i', strtotime($student_schedule[3]))}}~{{date('H:i', strtotime($student_schedule[4]))}}</td>'+
+          @if($student_schedule[5]==0)
+          '<td style="color:red">未点名</td>'+
+          @else
+          '<td style="color:green">已点名</td>'+
+          @endif
+          '</tr>'+
+          @endforeach
+          '</tbody>'+
+          '</table>'+
+      '</div>',
+      "/operation/class/schedule/create?id={{encode($schedule_class->class_id,'class_id')}}"
+  );
+@endif
 </script>
 @endsection

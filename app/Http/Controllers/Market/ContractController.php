@@ -34,8 +34,7 @@ class ContractController extends Controller
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
-                  ->whereIn('contract_department', $department_access)
-                  ->where('contract_section', '=', 0);
+                  ->whereIn('contract_department', $department_access);
 
         // 搜索条件
         $filters = array(

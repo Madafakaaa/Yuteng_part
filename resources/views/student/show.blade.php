@@ -158,14 +158,14 @@
               <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th>序号</th>
-                    <th>班级</th>
-                    <th>教师</th>
-                    <th>科目</th>
-                    <th>年级</th>
-                    <th>日期</th>
-                    <th>时间</th>
-                    <th>地点</th>
+                    <th style="width:20px;">序号</th>
+                    <th style="width:100px;">班级</th>
+                    <th style="width:100px;">教师</th>
+                    <th style="width:30px;">科目</th>
+                    <th style="width:30px;">年级</th>
+                    <th style="width:60px;">日期</th>
+                    <th style="width:60px;">时间</th>
+                    <th style="width:60px;">地点</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -193,14 +193,14 @@
               <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th>序号</th>
-                    <th>班级</th>
-                    <th>教师</th>
-                    <th>科目</th>
-                    <th>年级</th>
-                    <th>日期</th>
-                    <th>时间</th>
-                    <th>地点</th>
+                    <th style="width:20px;">序号</th>
+                    <th style="width:100px;">班级</th>
+                    <th style="width:100px;">教师</th>
+                    <th style="width:30px;">科目</th>
+                    <th style="width:30px;">年级</th>
+                    <th style="width:60px;">日期</th>
+                    <th style="width:60px;">时间</th>
+                    <th style="width:60px;">地点</th>
                   </tr>
                 </thead>
                 <tbody>

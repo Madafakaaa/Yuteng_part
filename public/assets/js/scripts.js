@@ -50,6 +50,16 @@ $(document).ready(function(){
             }
         });
     });
+
+    // swal({
+    //     title:"Warning",
+    //     text:"<a href='/operation/schedule'>个人风格发动机号</a>",
+    //     type:"warning",
+    //     buttonsStyling:!1,
+    //     content: "<a href='/operation/schedule'>个人风格发动机号</a>",
+    //     confirmButtonClass:"btn btn-warning"
+    // });
+
 });
 
 
@@ -269,4 +279,22 @@ function calendar_daily(startDate, calendars, schedules){
     calendar.createSchedules(schedules);
 
     calendar.setDate(startDate);
+}
+
+
+function scheduleConflictAlert(title, table, backUrl){
+    Swal.fire({
+        title: title,
+        html: table,
+        showCloseButton: true,
+        showCancelButton: true,
+        focusConfirm: false,
+        confirmButtonText: "<i class='fa fa-caret-right'></i> 继续排课",
+        cancelButtonText: "<i class='fa fa-undo'></i> 返回",
+        allowOutsideClick: false
+    }).then((result) => {
+        if (!result.value) {
+            window.location.href = backUrl;
+        }
+    });
 }

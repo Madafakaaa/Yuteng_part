@@ -311,7 +311,7 @@
         <li class="nav-item">
           <a class="nav-link" href="#navbar-finance" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-finance" id="link-finance">
             <i class="ni ni-chart-pie-35 text-default"></i>
-            <span class="nav-link-text">数据中心</span>
+            <span class="nav-link-text">统计中心</span>
           </a>
           <div class="collapse" id="navbar-finance">
             <ul class="nav nav-sm flex-column">

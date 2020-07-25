@@ -447,6 +447,66 @@ class ClassController extends Controller
                            'title' => '请重新选择上课、下课时间',
                            'message' => '上课时间须在下课时间前，错误码:323']);
         }
+
+        // 判断是否有冲突课程
+        // 获取教师信息
+        $teacher = DB::table('user')
+                     ->where('user_id', '=', $schedule_teacher)
+                     ->first();
+        // 获取学生名单
+        $members = DB::table('member')
+                     ->join('class', 'member.member_class', '=', 'class.class_id')
+                     ->join('student', 'member.member_student', '=', 'student.student_id')
+                     ->where('member.member_class', $schedule_class)
+                     ->get();
+        // 教师冲突课程
+        $teacher_schedules = array();
+        // 学生冲突课程
+        $student_schedules = array();
+
+        foreach($schedule_dates as $schedule_date){
+            // 查询教师冲突课程
+            $teacher_schedules_temp = DB::table('schedule')
+                                        ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                                        ->where('schedule_teacher', $schedule_teacher)
+                                        ->where('schedule_date', $schedule_date)
+                                        ->where('schedule_start', '>=', $schedule_start)
+                                        ->where('schedule_start', '<', $schedule_end);
+            $teacher_schedules_temp = DB::table('schedule')
+                                        ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                                        ->where('schedule_teacher', $schedule_teacher)
+                                        ->where('schedule_date', $schedule_date)
+                                        ->where('schedule_end', '>', $schedule_start)
+                                        ->where('schedule_end', '<=', $schedule_end)
+                                        ->union($teacher_schedules_temp)
+                                        ->get();
+            foreach($teacher_schedules_temp as $teacher_schedule_temp){
+                $teacher_schedules[] = array($teacher->user_name, $teacher_schedule_temp->class_name, $teacher_schedule_temp->schedule_date, $teacher_schedule_temp->schedule_start, $teacher_schedule_temp->schedule_end, $teacher_schedule_temp->schedule_attended);
+            }
+            // 查询学生冲突课程
+            foreach($members as $member){
+                $student_schedules_temp = DB::table('schedule')
+                                            ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                                            ->join('member', 'member.member_class', '=', 'schedule.schedule_participant')
+                                            ->where('member_student', $member->student_id)
+                                            ->where('schedule_date', $schedule_date)
+                                            ->where('schedule_start', '>=', $schedule_start)
+                                            ->where('schedule_start', '<', $schedule_end);
+                $student_schedules_temp = DB::table('schedule')
+                                            ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                                            ->join('member', 'member.member_class', '=', 'schedule.schedule_participant')
+                                            ->where('member_student', $member->student_id)
+                                            ->where('schedule_date', $schedule_date)
+                                            ->where('schedule_end', '>', $schedule_start)
+                                            ->where('schedule_end', '<=', $schedule_end)
+                                            ->union($student_schedules_temp)
+                                            ->get();
+                foreach($student_schedules_temp as $student_schedule_temp){
+                    $student_schedules[] = array($member->student_name, $student_schedule_temp->class_name, $student_schedule_temp->schedule_date, $student_schedule_temp->schedule_start, $student_schedule_temp->schedule_end, $student_schedule_temp->schedule_attended);
+                }
+            }
+        }
+
         // 计算课程时长
         $schedule_time = 60*(intval(explode(':', $schedule_end)[0])-intval(explode(':', $schedule_start)[0]))+intval(explode(':', $schedule_end)[1])-intval(explode(':', $schedule_start)[1]);
 
@@ -472,7 +532,9 @@ class ClassController extends Controller
         $schedule_classroom = DB::table('classroom')
                                 ->where('classroom_id', $schedule_classroom)
                                 ->first();
-        return view('operation/class/classScheduleCreate2', ['schedule_class' => $schedule_class,
+        return view('operation/class/classScheduleCreate2', ['teacher_schedules' => $teacher_schedules,
+                                                             'student_schedules' => $student_schedules,
+                                                             'schedule_class' => $schedule_class,
                                                              'schedule_teacher' => $schedule_teacher,
                                                              'schedule_course' => $schedule_course,
                                                              'schedule_subject' => $schedule_subject,
