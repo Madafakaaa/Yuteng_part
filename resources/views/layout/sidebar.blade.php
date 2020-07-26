@@ -8,7 +8,7 @@
     </a>
     <div class="ml-auto">
       <!-- Sidenav toggler -->
-      <div class="sidenav-toggler d-none d-xl-block" data-action="sidenav-unpin" data-target="#sidenav-main">
+      <div class="sidenav-toggler d-none d-xl-block">
         <div class="sidenav-toggler-inner">
           <i class="sidenav-toggler-line"></i>
           <i class="sidenav-toggler-line"></i>
@@ -318,10 +318,10 @@
               <li class="nav-item">
                 <a href="/finance/contract" class="nav-link" id="financeContract">
                   <i class="ni ni-money-coins text-default"></i>
-                  <span class="nav-link-text">签约统计</span>
+                  <span class="nav-link-text">签约明细</span>
                 </a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href="/finance/consumption" class="nav-link" id="financeConsumption">
                   <i class="ni ni-book-bookmark text-default"></i>
                   <span class="nav-link-text">课时消耗</span>
@@ -332,7 +332,7 @@
                   <i class="ni ni-scissors text-default"></i>
                   <span class="nav-link-text">退费统计</span>
                 </a>
-              </li>
+              </li> -->
             </ul>
           </div>
         </li>

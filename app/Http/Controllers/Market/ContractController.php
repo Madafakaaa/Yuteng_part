@@ -42,6 +42,7 @@ class ContractController extends Controller
                         "filter_grade" => null,
                         "filter_name" => null,
                         "filter_user" => null,
+                        "filter_month" => date('Y-m')
                     );
 
         // 客户校区
@@ -54,6 +55,11 @@ class ContractController extends Controller
             $rows = $rows->where('student_grade', '=', $request->input('filter_grade'));
             $filters['filter_grade']=$request->input("filter_grade");
         }
+        // 月份
+        if ($request->filled('filter_month')) {
+            $filters['filter_month']=$request->input("filter_month");
+        }
+        $rows = $rows->where('contract_date', 'like', $filters['filter_month']."%");
         // 判断是否有搜索条件
         $filter_status = 0;
         // 客户名称
@@ -75,10 +81,48 @@ class ContractController extends Controller
         list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
-        $rows = $rows->orderBy('contract_date', 'asc')
+        $rows = $rows->orderBy('contract_date', 'desc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
+
+        // 转为数组并获取详细课程信息
+        $contracts = array();
+        foreach($rows as $row){
+            $temp=array();
+            $temp['student_id']=$row->student_id;
+            $temp['contract_id']=$row->contract_id;
+            $temp['department_name']=$row->department_name;
+            $temp['contract_date']=$row->contract_date;
+            $temp['user_name']=$row->user_name;
+            $temp['student_name']=$row->student_name;
+            $temp['student_gender']=$row->student_gender;
+            $temp['grade_name']=$row->grade_name;
+            $temp['contract_type']=$row->contract_type;
+            $temp['contract_total_price']=$row->contract_total_price;
+            $temp['contract_paid_price']=$row->contract_paid_price;
+            $temp['contract_courses']=array();
+            // 获取合同课程
+            $contract_courses = DB::table('contract_course')
+                                  ->join('course', 'contract_course.contract_course_course', '=', 'course.course_id')
+                                  ->where('contract_course_contract', $row->contract_id)
+                                  ->get();
+            foreach($contract_courses as $contract_course){
+                $temp_course = array();
+                $temp_course['course_name']=$contract_course->course_name;
+                $temp_course['course_type']=$contract_course->course_type;
+                $temp_course['contract_course_original_hour']=$contract_course->contract_course_original_hour;
+                $temp_course['contract_course_original_unit_price']=$contract_course->contract_course_original_unit_price;
+                $temp_course['contract_course_discount_rate']=$contract_course->contract_course_discount_rate;
+                $temp_course['contract_course_discount_amount']=$contract_course->contract_course_discount_amount;
+                $temp_course['contract_course_free_hour']=$contract_course->contract_course_free_hour;
+                $temp_course['contract_course_total_hour']=$contract_course->contract_course_total_hour;
+                $temp_course['contract_course_total_price']=$contract_course->contract_course_total_price;
+                $temp['contract_courses'][]=$temp_course;
+            }
+            $temp['contract_course_num']=count($temp['contract_courses']);
+            $contracts[]=$temp;
+        }
 
         // 获取校区、学生、课程、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
@@ -94,7 +138,7 @@ class ContractController extends Controller
                           ->get();
 
         // 返回列表视图
-        return view('market/contract/contract', ['rows' => $rows,
+        return view('market/contract/contract', ['contracts' => $contracts,
                                                'currentPage' => $currentPage,
                                                'totalPage' => $totalPage,
                                                'startIndex' => $offset,

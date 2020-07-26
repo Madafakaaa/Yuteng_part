@@ -6,44 +6,56 @@ $(document).ready(function(){
     $(".freeze-table-1").freezeTable({
         'columnNum' : 1,
         'shadow': true,
-        'freezeHead': false,
+        'freezeHead': true,
     });
 
     $(".freeze-table-2").freezeTable({
         'columnNum' : 2,
         'shadow': true,
-        'freezeHead': false,
+        'freezeHead': true,
     });
 
     $(".freeze-table-3").freezeTable({
         'columnNum' : 3,
         'shadow': true,
-        'freezeHead': false,
+        'freezeHead': true,
     });
 
     $(".freeze-table-4").freezeTable({
         'columnNum' : 4,
         'shadow': true,
-        'freezeHead': false,
+        'freezeHead': true,
     });
 
     $(".freeze-table-5").freezeTable({
         'columnNum' : 5,
         'shadow': true,
-        'freezeHead': false,
+        'freezeHead': true,
     });
 
     $(".freeze-table-6").freezeTable({
         'columnNum' : 6,
         'shadow': true,
-        'freezeHead': false,
+        'freezeHead': true,
+    });
+
+    $(".freeze-table-7").freezeTable({
+        'columnNum' : 7,
+        'shadow': true,
+        'freezeHead': true,
+    });
+
+    $(".freeze-table-8").freezeTable({
+        'columnNum' : 8,
+        'shadow': true,
+        'freezeHead': true,
     });
 
     $('.counter-value').each(function(){
         $(this).prop('Counter',0).animate({
             Counter: $(this).text()
         },{
-            duration: 600,
+            duration: 1000,
             easing: 'swing',
             step: function (now){
                 $(this).text(Math.ceil(now));
@@ -280,7 +292,6 @@ function calendar_daily(startDate, calendars, schedules){
 
     calendar.setDate(startDate);
 }
-
 
 function scheduleConflictAlert(title, table, backUrl){
     Swal.fire({

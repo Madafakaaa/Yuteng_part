@@ -1741,6 +1741,28 @@ var Datepicker = (function() {
 	}
 })();
 
+var Monthpicker = (function() {
+    // Variables
+    var $monthpicker = $('.monthpicker');
+    // Methods
+    function init($this) {
+        var options = {
+            disableTouchKeyboard: true,
+            autoclose: false,
+            format: "yyyy-mm",
+            viewMode: "months",
+            minViewMode: "months",
+        };
+        $this.datepicker(options);
+    }
+    // Events
+    if ($monthpicker.length) {
+        $monthpicker.each(function() {
+            init($(this));
+        });
+    }
+})();
+
 var Multidatepicker = (function() {
     // Variables
     var $multidatepicker = $('.multidatepicker');
