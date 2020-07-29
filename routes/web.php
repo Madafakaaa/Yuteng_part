@@ -301,11 +301,9 @@ Route::get('/education/document', 'Education\DocumentController@document');
 
 // 数据中心
 // 签约统计
-Route::any('/finance/contract', 'Finance\ContractController@contract');
-// 课时消耗
-Route::any('/finance/consumption', 'FinanceController@consumption');
-// 退费统计
-Route::any('/finance/refund', 'FinanceController@refund');
+Route::get('/finance/contract', 'Finance\ContractController@contract');
+// 签约统计
+Route::get('/finance/individualContract', 'Finance\IndividualContractController@individualContract');
 
 
 // 用户详情

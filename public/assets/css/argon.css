@@ -49,7 +49,7 @@
     --breakpoint-md: 768px;
     --breakpoint-lg: 992px;
     --breakpoint-xl: 1200px;
-    --font-family-sans-serif: Open Sans, sans-serif;
+    --font-family-sans-serif: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
     --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
@@ -62,7 +62,7 @@
 
 html
 {
-    font-family: sans-serif;
+    font-family: Helvetica,Arial,"Hiragino Sans GB","Microsoft Yahei","微软雅黑",STHeiti,"华文细黑",sans-serif;
     line-height: 1.15;
 
     -webkit-text-size-adjust: 100%;
@@ -85,7 +85,7 @@ section
 
 body
 {
-    font-family: Open Sans, sans-serif;
+    font-family: "Microsoft Yahei","微软雅黑",STHeiti,"华文细黑",sans-serif;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
@@ -17579,7 +17579,7 @@ a.text-darker:focus
 
 .text-muted
 {
-    color: #8898aa !important;
+    color: #646464 !important;
 }
 
 .text-black-50

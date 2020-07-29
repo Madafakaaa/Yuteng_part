@@ -58,7 +58,7 @@ $(document).ready(function(){
             duration: 1000,
             easing: 'swing',
             step: function (now){
-                $(this).text(Math.ceil(now));
+                $(this).text(now);
             }
         });
     });
@@ -106,48 +106,6 @@ function linkActive(id){
 }
 function navbarActive(id){
     document.getElementById(id).setAttribute("class", "collapse show");
-}
-
-
-function barChart(id,label,labels,data) {
-    var barChart = new Chart($("#" + id), {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: label,
-                data: data,
-                backgroundColor: ['rgba(153, 102, 255, 0.6)']
-            }]
-        },
-        options: {
-            hover: {
-                animationDuration: 0  // 防止鼠标移上去，数字闪烁
-            },
-            animation: {           // 这部分是数值显示的功能实现
-                onComplete: function () {
-                    var chartInstance = this.chart,
-
-                        ctx = chartInstance.ctx;
-                    // 以下属于canvas的属性（font、fillStyle、textAlign...）
-                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                    ctx.fillStyle = "black";
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'bottom';
-
-                    this.data.datasets.forEach(function (dataset, i) {
-                        var meta = chartInstance.controller.getDatasetMeta(i);
-                        meta.data.forEach(function (bar, index) {
-                            var data = dataset.data[index];
-                            if(data!=0){
-                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
-                            }
-                        });
-                    });
-                }
-            }
-        }
-    });
 }
 
 function deleteConfirm(button_id, url, msg) {
@@ -306,6 +264,66 @@ function scheduleConflictAlert(title, table, backUrl){
     }).then((result) => {
         if (!result.value) {
             window.location.href = backUrl;
+        }
+    });
+}
+
+function form_submit(id){
+    document.getElementById(id).submit();
+}
+
+function pieChart(id, label, data, backgroundColor, borderColor){
+    var ctx = document.getElementById(id).getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: label,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColor,
+                borderColor: borderColor,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display: true,
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    });
+}
+
+function lineChart(id, label, labels, data){
+    var ctx = document.getElementById(id).getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: label,
+                data: data,
+                backgroundColor: [
+                    'rgba(17, 205, 239, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(17, 205, 239, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
         }
     });
 }

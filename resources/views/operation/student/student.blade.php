@@ -98,53 +98,102 @@
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
                 <th style='width:110px;'>学生</th>
-                <th style='width:320px;'></th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:60px;'>年级</th>
                 <th style='width:145px;'>课程顾问</th>
                 <th style='width:145px;'>班主任</th>
+                <th style='width:145px;'>学生课时</th>
+                <th style='width:320px;'></th>
               </tr>
             </thead>
             <tbody>
-              @if(count($rows)==0)
+              @if(count($students)==0)
               <tr class="text-center"><td colspan="8">当前没有记录</td></tr>
               @endif
-              @foreach ($rows as $row)
+              @foreach ($students as $student)
               <tr>
                 <td>
                   <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($row->student_id, 'student_id')}}'>
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($student['student_id'], 'student_id')}}'>
                     <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
                   </div>
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>
-                  {{ $row->student_name }}&nbsp;
-                  @if($row->student_gender=="男")
+                  {{ $student['student_name'] }}&nbsp;
+                  @if($student['student_gender']=="男")
                     <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
                   @else
                     <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
                   @endif
                 </td>
+                <td>{{ $student['department_name'] }}</td>
+                <td>{{ $student['grade_name'] }}</td>
+                @if($student['consultant_name']=="")
+                  <td><span style="color:red;">无</span></td>
+                @else
+                  <td>{{ $student['consultant_name'] }} ({{ $student['consultant_position_name'] }})</td>
+                @endif
+                @if($student['class_adviser_name']=="")
+                  <td><span style="color:red;">无</span></td>
+                @else
+                  <td>{{ $student['class_adviser_name'] }} ({{ $student['class_adviser_position_name'] }})</td>
+                @endif
                 <td>
-                  <a href="/student?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
-                  <a href="/operation/student/follower/edit?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">修改负责人</button></a>
-                  <a href="/operation/student/schedule/create?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">一对一排课</button></a>
-                  <a href="/operation/student/joinClass?student_id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">加入班级</button></a>
-                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/student/delete?id={{encode($row->student_id, 'student_id')}}', '确认删除学生？')">删除</button>
+                  {{ $student['student_hour_num'] }} 课程
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-{{$loop->iteration}}-1">查看列表</button>
+                  <div class="modal fade" id="modal-{{$loop->iteration}}-1" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+                    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h6 class="modal-title">{{ $student['student_name'] }} {{ $student['student_id'] }}</h6>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <ul class="list-group list-group-flush list my--3">
+                            @if($student['student_hour_num']==0)
+                              <li class="list-group-item px-0">
+                                <div class="row align-items-center">
+                                  <div class="col ml--2">
+                                    <h4 class="mb-0">
+                                      <a href="#!">无</a>
+                                    </h4>
+                                  </div>
+                                </div>
+                              </li>
+                            @endif
+                            @foreach ($student['student_hours'] as $student_hour)
+                            <li class="checklist-entry list-group-item flex-column align-items-start p-3">
+                              <div class="checklist-item @if($student_hour['hour_remain']>0) checklist-item-success @else checklist-item-warning @endif ">
+                                <div class="checklist-info">
+                                  <h5 class="checklist-title mb-0">{{ $student_hour['course_name'] }}</h5>
+                                  <small>剩余:{{ $student_hour['hour_remain'] }} 课时</small>
+                                </div>
+                                <div class="custom-control">
+                                  <a href="/operation/hour/edit?student_id={{encode($student['student_id'], 'student_id')}}&course_id={{encode($student_hour['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-primary btn-sm">修改课时</button></a>
+                                  <a href="/operation/hour/refund/create?student_id={{encode($student['student_id'], 'student_id')}}&course_id={{encode($student_hour['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-danger btn-sm">退费</button></a>
+                                </div>
+                              </div>
+                            </li>
+                            @endforeach
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">关闭</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
-                <td>{{ $row->department_name }}</td>
-                <td>{{ $row->grade_name }}</td>
-                @if($row->consultant_name=="")
-                  <td><span style="color:red;">无</span></td>
-                @else
-                  <td>{{ $row->consultant_name }} ({{ $row->consultant_position_name }})</td>
-                @endif
-                @if($row->class_adviser_name=="")
-                  <td><span style="color:red;">无</span></td>
-                @else
-                  <td>{{ $row->class_adviser_name }} ({{ $row->class_adviser_position_name }})</td>
-                @endif
+                <td>
+                  <a href="/student?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
+                  <a href="/operation/student/follower/edit?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">修改负责人</button></a>
+                  <a href="/operation/student/schedule/create?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">一对一排课</button></a>
+                  <a href="/operation/student/joinClass?student_id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">加入班级</button></a>
+                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/student/delete?id={{encode($student['student_id'], 'student_id')}}', '确认删除学生？')">删除</button>
+                </td>
               </tr>
               @endforeach
             </tbody>

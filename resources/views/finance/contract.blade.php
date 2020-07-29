@@ -1,17 +1,34 @@
 @extends('main')
 
 @section('nav')
-<h2 class="text-white d-inline-block mb-0">签约明细</h2>
+<h2 class="text-white d-inline-block mb-0">签约统计</h2>
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">统计中心</li>
-    <li class="breadcrumb-item active">签约明细</li>
+    <li class="breadcrumb-item active">签约统计</li>
   </ol>
 </nav>
 @endsection
 
 @section('content')
+<div class="header bg-primary">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-3">
+        <div class="col-3 text-left">
+          <a href="?month={{ date('Y-m', strtotime ('-1 month', strtotime($month))) }}"><button type="button" class="btn btn-secondary btn-icon-only rounded-circle"><i class="fa fa-chevron-left"></i></button></a>
+        </div>
+        <div class="col-6 text-center">
+          <h1 class="text-white mb-0">{{date('Y.m', strtotime($month))}}</h1>
+        </div>
+        <div class="col-3 text-right">
+          <a href="?month={{ date('Y-m', strtotime ('+1 month', strtotime($month))) }}"><button type="button" class="btn btn-secondary btn-icon-only rounded-circle"><i class="fa fa-chevron-right"></i></button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="container-fluid mt-3">
   <div class="row">
     <div class="col-lg-3 col-md-6 col-sm-12">
@@ -20,21 +37,27 @@
         <div class="card-body">
           <div class="row">
             <div class="col">
-              <h5 class="card-title text-uppercase text-muted mb-1">签单总数</h5>
-              <span class="h2 font-weight-bold mb-1 counter-value">{{$dashboard['dashboard_contract_num']}}</span>
+              <h4 class="card-title text-uppercase mb-1 text-muted">签单金额</h4>
+              <span class="h2 font-weight-bold mb-1 text-blue">{{$dashboard['sum_contract_price']}}</span>
+            </div>
+            <div class="col-auto">
+              <div class="icon icon-shape bg-blue text-white rounded-circle shadow">
+                <i class="ni ni-money-coins"></i>
+              </div>
             </div>
           </div>
-          @if($dashboard['dashboard_contract_num_today']>0)
-          <p class="mt-1 mb-0 text-sm">
-            <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{$dashboard['dashboard_contract_num_today']}}</span>
-            <span class="text-nowrap">今日新增</span>
+          <p class="mt-2 mb-0 text-sm">
+            @if($dashboard['sum_contract_price_change']>0)
+            <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ $dashboard['sum_contract_price_change'] }}%</span>
+            <span class="text-nowrap text-muted">较上月</span>
+            @elseif($dashboard['sum_contract_price_change']==0)
+            <span class="text-info mr-2"><i class="fa fa-minus"></i> 0%</span>
+            <span class="text-nowrap text-muted">较上月</span>
+            @else
+            <span class="text-danger mr-2"><i class="fa fa-arrow-down"></i> {{ $dashboard['sum_contract_price_change'] }}%</span>
+            <span class="text-nowrap text-muted">较上月</span>
+            @endif
           </p>
-          @else
-          <p class="mt-1 mb-0 text-sm">
-            <span class="text-default mr-2"><i class="fa fa-minus"></i> 0</span>
-            <span class="text-nowrap">今日新增</span>
-          </p>
-          @endif
         </div>
       </div>
     </div>
@@ -44,136 +67,114 @@
         <div class="card-body">
           <div class="row">
             <div class="col">
-              <h5 class="card-title text-uppercase text-muted mb-1">签单金额</h5>
-              <span class="h2 font-weight-bold mb-1 counter-value">{{$dashboard['dashboard_price_total']}}</span>
+              <h4 class="card-title text-uppercase mb-1 text-muted">售出课时</h4>
+              <span class="h2 font-weight-bold mb-1 text-blue">{{$dashboard['sum_hour_num']}}</span>
+            </div>
+            <div class="col-auto">
+              <div class="icon icon-shape bg-blue text-white rounded-circle shadow">
+                <i class="ni ni-ruler-pencil"></i>
+              </div>
             </div>
           </div>
-          @if($dashboard['dashboard_price_total_today']>0)
-          <p class="mt-1 mb-0 text-sm">
-            <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{$dashboard['dashboard_price_total_today']}}</span>
-            <span class="text-nowrap">今日新增</span>
+          <p class="mt-2 mb-0 text-sm">
+            @if($dashboard['sum_hour_num_change']>0)
+            <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ $dashboard['sum_hour_num_change'] }}%</span>
+            <span class="text-nowrap text-muted">较上月</span>
+            @elseif($dashboard['sum_contract_num_change']==0)
+            <span class="text-info mr-2"><i class="fa fa-minus"></i> 0%</span>
+            <span class="text-nowrap text-muted">较上月</span>
+            @else
+            <span class="text-danger mr-2"><i class="fa fa-arrow-down"></i> {{ $dashboard['sum_hour_num_change'] }}%</span>
+            <span class="text-nowrap text-muted">较上月</span>
+            @endif
           </p>
-          @else
-          <p class="mt-1 mb-0 text-sm">
-            <span class="text-default mr-2"><i class="fa fa-minus"></i> 0</span>
-            <span class="text-nowrap">今日新增</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+      <div class="card card-stats mb-2">
+        <!-- Card body -->
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h4 class="card-title text-uppercase mb-1 text-muted">签单数量</h4>
+              <span class="h2 font-weight-bold mb-1 text-blue">{{$dashboard['sum_contract_num']}}</span>
+            </div>
+            <div class="col-auto">
+              <div class="icon icon-shape bg-blue text-white rounded-circle shadow">
+                <i class="ni ni-single-copy-04"></i>
+              </div>
+            </div>
+          </div>
+          <p class="mt-2 mb-0 text-sm">
+            @if($dashboard['sum_contract_num_change']>0)
+            <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ $dashboard['sum_contract_num_change'] }}%</span>
+            <span class="text-nowrap text-muted">较上月</span>
+            @elseif($dashboard['sum_contract_num_change']==0)
+            <span class="text-info mr-2"><i class="fa fa-minus"></i> 0%</span>
+            <span class="text-nowrap text-muted">较上月</span>
+            @else
+            <span class="text-danger mr-2"><i class="fa fa-arrow-down"></i> {{ $dashboard['sum_contract_num_change'] }}%</span>
+            <span class="text-nowrap text-muted">较上月</span>
+            @endif
           </p>
-          @endif
         </div>
       </div>
     </div>
   </div>
   <div class="row justify-content-center">
     <div class="col-12">
-      <div class="card main_card mb-4" style="display:none">
-        <div class="card-header py-3" style="border-bottom:0px;">
-          <form action="" method="get" onsubmit="submitButtonDisable('submitButton1')">
-            <div class="row">
-              <div class="col-6">
-                <a href="?filter_month={{ date('Y-m', strtotime ('-1 month', strtotime($filters['filter_month']))) }}&@foreach($filters as $key => $value) @if($key!='filter_month') {{$key}}={{$value}}& @endif @endforeach"><button type="button" class="btn btn-outline-primary btn-icon-only rounded-circle"><i class="fa fa-chevron-left"></i></button></a>
-                <a href="?filter_month={{ date('Y-m', strtotime ('+1 month', strtotime($filters['filter_month']))) }}&@foreach($filters as $key => $value) @if($key!='filter_month') {{$key}}={{$value}}& @endif @endforeach"><button type="button" class="btn btn-outline-primary btn-icon-only rounded-circle"><i class="fa fa-chevron-right"></i></button></a>
-                <span style="vertical-align: middle; font-size:26px; font-family: 'Noto Sans', sans-serif;" class="ml-3">{{ date('Y.m', strtotime($filters['filter_month'])) }}</span>
-              </div>
-              <div class="col-3">
-              </div>
-              <div class="col-2 text-right">
-                <input class="form-control monthpicker" name="filter_month" placeholder="选择月份" type="text" value="{{$filters['filter_month']}}" autocomplete="off">
-              </div>
-              <div class="col-1 text-right">
-                <input type="hidden" name="filter_department" value="{{$filters['filter_department']}}">
-                <input type="hidden" name="filter_grade" value="{{$filters['filter_grade']}}">
-                <input type="submit" id="submitButton1" class="btn btn-primary btn-block" value="查询">
-              </div>
-            </div>
-          </form>
-        </div>
-        <hr class="mb-1 mt-0">
-        <div class="card-header p-2" style="border-bottom:0px;">
-          <small class="text-muted font-weight-bold px-2">校区：</small>
-          <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach">
-            <button type="button" @if(!isset($filters['filter_department'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
-          </a>
-          @foreach($filter_departments as $filter_department)
-            <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach &filter_department={{$filter_department->department_id}}"><button type="button" @if($filters['filter_department']==$filter_department->department_id) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>{{$filter_department->department_name}}</button></a>
-          @endforeach
-        </div>
-        <div class="table-responsive"  style="max-height:600px;">
-          <table class="table align-items-center table-hover text-left">
+      <div class="card my-2">
+        <div class="table-responsive py-4">
+          <table class="table table-flush datatable-basic">
             <thead class="thead-light">
               <tr>
-                <th style='width:50px;'>序号</th>
-                <th style='width:70px;'>校区</th>
-                <th style='width:70px;'>日期</th>
-                <th style='width:80px;'>签约人</th>
-                <th style='width:100px;'>学生</th>
-                <th style='width:55px;'>年级</th>
-                <th style='width:55px;'>类型</th>
-                <th style='width:120px;'>课程</th>
-                <th style='width:60px;'>类型</th>
-                <th style='width:60px;' class="text-right">课时数量</th>
-                <th style='width:60px;' class="text-right">单价</th>
-                <th style='width:50px;' class="text-right">折扣</th>
-                <th style='width:70px;' class="text-right">优惠金额</th>
-                <th style='width:60px;' class="text-right">赠送课时</th>
-                <th style='width:60px;' class="text-right">总课时</th>
-                <th style='width:80px;' class="text-right">课程应收</th>
-                <th style='width:100px;' class="text-right">合计金额</th>
-                <th style='width:100px;' class="text-right">实付金额</th>
+                <th>序号</th>
+                <th>校区</th>
+                <th>签约金额</th>
+                <th>售出课时</th>
+                <th>签约数量</th>
               </tr>
             </thead>
             <tbody>
-              @if(count($contracts)==0)
-              <tr class="text-center"><td colspan="14">当前没有记录</td></tr>
-              @endif
-              @foreach ($contracts as $contract)
-              <tr>
-                <td rowspan="{{$contract['contract_course_num']}}">{{ $loop->iteration }}</td>
-                <td rowspan="{{$contract['contract_course_num']}}">{{ $contract['department_name'] }}</td>
-                <td rowspan="{{$contract['contract_course_num']}}">{{ date('m-d', strtotime($contract['contract_date'])) }}</td>
-                <td rowspan="{{$contract['contract_course_num']}}">{{ $contract['user_name'] }}</td>
-                <td rowspan="{{$contract['contract_course_num']}}">
-                  {{ $contract['student_name'] }}&nbsp;
-                  @if($contract['student_gender']=="男")
-                    <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
-                  @else
-                    <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
-                  @endif
-                </td>
-                <td rowspan="{{$contract['contract_course_num']}}">{{ $contract['grade_name'] }}</td>
-                @if($contract['contract_type']==0)
-                  <td rowspan="{{$contract['contract_course_num']}}"><span style="color:red;">首签</span></td>
-                @else
-                  <td rowspan="{{$contract['contract_course_num']}}"><span style="color:green;">续签</span></td>
-                @endif
-                <td>{{$contract['contract_courses'][0]['course_name']}}</td>
-                <td>{{$contract['contract_courses'][0]['course_type']}}</td>
-                <td class="text-right">{{$contract['contract_courses'][0]['contract_course_original_hour']}}</td>
-                <td class="text-right">{{$contract['contract_courses'][0]['contract_course_original_unit_price']}}</td>
-                <td class="text-right">{{$contract['contract_courses'][0]['contract_course_discount_rate']}}</td>
-                <td class="text-right">{{$contract['contract_courses'][0]['contract_course_discount_amount']}}</td>
-                <td class="text-right">{{$contract['contract_courses'][0]['contract_course_free_hour']}}</td>
-                <td class="text-right">{{$contract['contract_courses'][0]['contract_course_total_hour']}}</td>
-                <td class="text-right">{{$contract['contract_courses'][0]['contract_course_total_price']}}</td>
-                <td rowspan="{{$contract['contract_course_num']}}" class="text-right" title="{{ number_format($contract['contract_total_price'], 2) }} 元"><strong>{{ number_format($contract['contract_total_price'], 2) }} 元</strong></td>
-                @if($contract['contract_total_price']==$contract['contract_paid_price'])
-                  <td rowspan="{{$contract['contract_course_num']}}" class="text-right" title="{{ number_format($contract['contract_paid_price'], 2) }} 元"><span style="color:green;"><strong>{{ number_format($contract['contract_paid_price'], 2) }} 元</strong></span></td>
-                @else
-                  <td rowspan="{{$contract['contract_course_num']}}" class="text-right" title="{{ number_format($contract['contract_paid_price'], 2) }} 元"><span style="color:red;"><strong>{{ number_format($contract['contract_paid_price'], 2) }} 元</strong></span></td>
-                @endif
-              </tr>
-              @for ($i = 1; $i < $contract['contract_course_num']; $i++)
+              @foreach($department_contracts as $department_contract)
                 <tr>
-                  <td>{{$contract['contract_courses'][$i]['course_name']}}</td>
-                  <td>{{$contract['contract_courses'][$i]['course_type']}}</td>
-                  <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_original_hour']}}</td>
-                  <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_original_unit_price']}}</td>
-                  <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_discount_rate']}}</td>
-                  <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_discount_amount']}}</td>
-                  <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_free_hour']}}</td>
-                  <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_total_hour']}}</td>
-                  <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_total_price']}}</td>
+                  <td>{{ $loop->iteration }}</td>
+                  <td>{{$department_contract->department_name}}</td>
+                  <td>{{$department_contract->department_total_price}}</td>
+                  <td>{{$department_contract->department_total_hour}}</td>
+                  <td>{{$department_contract->department_contract_num}}</td>
                 </tr>
-              @endfor
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="card my-2">
+        <div class="table-responsive py-4">
+          <table class="table table-flush datatable-basic">
+            <thead class="thead-light">
+              <tr>
+                <th>序号</th>
+                <th>用户</th>
+                <th>签约金额</th>
+                <th>售出课时</th>
+                <th>签约数量</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($user_contracts as $user_contract)
+                <tr>
+                  <td>{{ $loop->iteration }}</td>
+                  <td>{{$user_contract->user_name}}</td>
+                  <td>{{$user_contract->user_total_price}}</td>
+                  <td>{{$user_contract->user_total_hour}}</td>
+                  <td>{{$user_contract->user_contract_num}}</td>
+                </tr>
               @endforeach
             </tbody>
           </table>

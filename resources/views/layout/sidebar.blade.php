@@ -318,13 +318,13 @@
               <li class="nav-item">
                 <a href="/finance/contract" class="nav-link" id="financeContract">
                   <i class="ni ni-money-coins text-default"></i>
-                  <span class="nav-link-text">签约明细</span>
+                  <span class="nav-link-text">部门签约</span>
                 </a>
               </li>
               <!-- <li class="nav-item">
                 <a href="/finance/consumption" class="nav-link" id="financeConsumption">
                   <i class="ni ni-book-bookmark text-default"></i>
-                  <span class="nav-link-text">课时消耗</span>
+                  <span class="nav-link-text">个人签约</span>
                 </a>
               </li>
               <li class="nav-item">
