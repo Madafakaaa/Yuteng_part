@@ -105,7 +105,7 @@ $(document).ready(function(){
           {
             calendarId: "{{$row['calendarId']}}",
             title: "{{$row['title']}}",
-            body: "<a href='/operation/schedule/attend?id={{$row['schedule_id']}}'><button type='button' class='btn btn-primary btn-sm' @if($row['attended']==1) disabled @endif>点名</button></a>",
+            body: "<a target='_blank' href='/operation/schedule/attend?id={{$row['schedule_id']}}'><button type='button' class='btn btn-primary btn-sm' @if($row['attended']==1) disabled @endif>点名</button></a>",
             category: "time",
             location: "{{$row['location']}}",
             start: "{{$row['start']}}",

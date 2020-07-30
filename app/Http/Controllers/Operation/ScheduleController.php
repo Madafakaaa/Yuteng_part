@@ -98,6 +98,7 @@ class ScheduleController extends Controller
                               'schedule_date',
                               'schedule_start',
                               'schedule_end',
+                              'class_id',
                               'class_name',
                               'class_max_num',
                               'class_current_num',

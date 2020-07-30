@@ -209,7 +209,7 @@
                       <option value=''>请选择课程...</option>
                       @foreach ($student_course[1] as $course)
                         <option value="{{ $course->course_id }}" @if($student_course[2]==$course->course_id) selected @endif>
-                          {{ $course->course_name }} ({{ $course->hour_remain }} 课时)
+                          {{ $course->course_name }} [{{ $course->course_time }}分钟/课时, 剩余：{{ $course->hour_remain }} 课时]
                         </option>
                       @endforeach
                     </select>

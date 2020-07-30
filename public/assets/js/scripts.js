@@ -58,7 +58,7 @@ $(document).ready(function(){
             duration: 1000,
             easing: 'swing',
             step: function (now){
-                $(this).text(now);
+                $(this).text(Math.ceil(now));
             }
         });
     });

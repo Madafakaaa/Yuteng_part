@@ -1,12 +1,13 @@
 @extends('main')
 
 @section('nav')
-<h2 class="text-white d-inline-block mb-0">个人签约</h2>
+<h2 class="text-white d-inline-block mb-0">校区签约</h2>
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">统计中心</li>
-    <li class="breadcrumb-item active">个人签约</li>
+    <li class="breadcrumb-item"><a href="/finance/contract">签约统计</a></li>
+    <li class="breadcrumb-item active">校区签约</li>
   </ol>
 </nav>
 @endsection
@@ -80,8 +81,7 @@
                 <input class="form-control monthpicker" name="filter_month" placeholder="选择月份" type="text" value="{{$filters['filter_month']}}" autocomplete="off">
               </div>
               <div class="col-1 text-right">
-                <input type="hidden" name="filter_user" value="{{$filters['filter_user']}}">
-                <input type="hidden" name="filter_grade" value="{{$filters['filter_grade']}}">
+                <input type="hidden" name="filter_department" value="{{$filters['filter_department']}}">
                 <input type="submit" id="submitButton1" class="btn btn-primary btn-block" value="查询">
               </div>
             </div>
@@ -89,39 +89,21 @@
         </div>
         <hr class="mb-1 mt-0">
         <div class="card-header p-2" style="border-bottom:0px;">
-          <div class="row">
-            <div class="col-lg-1 col-md-2 col-sm-3">
-              <small class="text-muted font-weight-bold px-2">用户：</small>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-              <div class="form-group mb-0">
-                <form action="" method="get" onsubmit="submitButtonDisable('submitButton1')" id='form2'>
-                  <select class="form-control form-control-sm" name="filter_user" data-toggle="select" onChange="form_submit('form2')">
-                    <option value=''>全部用户</option>
-                    @foreach ($filter_users as $filter_user)
-                      <option value="{{ $filter_user->user_id }}" @if($filter_user->user_id==$filters['filter_user']) selected @endif>{{ $filter_user->user_name }} {{ $filter_user->department_name }}</option>
-                    @endforeach
-                  </select>
-                  <input type="hidden" name="filter_month" value="{{$filters['filter_month']}}">
-                  <input type="hidden" name="filter_grade" value="{{$filters['filter_grade']}}">
-                </form>
-              </div>
-            </div>
-          </div>
+          <small class="text-muted font-weight-bold px-2">校区：</small>
+          <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach">
+            <button type="button" @if(!isset($filters['filter_department'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
+          </a>
+          @foreach($filter_departments as $filter_department)
+            <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach &filter_department={{$filter_department->department_id}}"><button type="button" @if($filters['filter_department']==$filter_department->department_id) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>{{$filter_department->department_name}}</button></a>
+          @endforeach
         </div>
         <div class="card-header p-2" style="border-bottom:0px;">
-          <div class="row">
-            <div class="col-lg-1 col-md-2 col-sm-3">
-              <small class="text-muted font-weight-bold px-2">类型：</small>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-              <a href="?@foreach($filters as $key => $value) @if($key!='filter_type') {{$key}}={{$value}}& @endif @endforeach">
-                <button type="button" @if(!isset($filters['filter_type'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
-              </a>
-              <a href="?@foreach($filters as $key => $value) @if($key!='filter_type') {{$key}}={{$value}}& @endif @endforeach &filter_type=1"><button type="button" @if($filters['filter_type']==1) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>首签</button></a>
-              <a href="?@foreach($filters as $key => $value) @if($key!='filter_type') {{$key}}={{$value}}& @endif @endforeach &filter_type=2"><button type="button" @if($filters['filter_type']==2) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>续签</button></a>
-            </div>
-          </div>
+          <small class="text-muted font-weight-bold px-2">类型：</small>
+          <a href="?@foreach($filters as $key => $value) @if($key!='filter_type') {{$key}}={{$value}}& @endif @endforeach">
+            <button type="button" @if(!isset($filters['filter_type'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
+          </a>
+          <a href="?@foreach($filters as $key => $value) @if($key!='filter_type') {{$key}}={{$value}}& @endif @endforeach &filter_type=1"><button type="button" @if($filters['filter_type']==1) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>首签</button></a>
+          <a href="?@foreach($filters as $key => $value) @if($key!='filter_type') {{$key}}={{$value}}& @endif @endforeach &filter_type=2"><button type="button" @if($filters['filter_type']==2) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>续签</button></a>
         </div>
         <div class="table-responsive"  style="max-height:600px;">
           <table class="table align-items-center table-hover text-left">
@@ -214,6 +196,6 @@
 <script>
   linkActive('link-finance');
   navbarActive('navbar-finance');
-  linkActive('financeIndividualContract');
+  linkActive('financeContract');
 </script>
 @endsection

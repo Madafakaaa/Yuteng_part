@@ -302,8 +302,16 @@ Route::get('/education/document', 'Education\DocumentController@document');
 // 数据中心
 // 签约统计
 Route::get('/finance/contract', 'Finance\ContractController@contract');
-// 签约统计
-Route::get('/finance/individualContract', 'Finance\IndividualContractController@individualContract');
+    // 部门签约明细
+    Route::get('/finance/contract/department', 'Finance\ContractController@contractDepartment');
+    // 个人签约明细
+    Route::get('/finance/contract/user', 'Finance\ContractController@contractUser');
+// 课消统计
+Route::get('/finance/hour', 'Finance\HourController@hour');
+    // 部门课消明细
+    Route::get('/finance/hour/department', 'Finance\HourController@hourDepartment');
+    // 个人课消明细
+    Route::get('/finance/hour/user', 'Finance\HourController@hourUser');
 
 
 // 用户详情

@@ -318,7 +318,13 @@
               <li class="nav-item">
                 <a href="/finance/contract" class="nav-link" id="financeContract">
                   <i class="ni ni-money-coins text-default"></i>
-                  <span class="nav-link-text">部门签约</span>
+                  <span class="nav-link-text">签约统计</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/finance/hour" class="nav-link" id="financeHour">
+                  <i class="ni ni-single-copy-04 text-default"></i>
+                  <span class="nav-link-text">课消统计</span>
                 </a>
               </li>
               <!-- <li class="nav-item">
