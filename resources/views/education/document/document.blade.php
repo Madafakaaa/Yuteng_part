@@ -57,7 +57,7 @@
           </div>
         </div>
       </div>
-      <div class="card main_card mb-4" style="display:none">
+      <div class="card mb-4">
         <div class="card-header p-2" style="border-bottom:0px;">
           <small class="text-muted font-weight-bold px-2">校区：</small>
           <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach">

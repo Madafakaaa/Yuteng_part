@@ -16,7 +16,7 @@
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12">
-      <div class="card main_card" style="display:none">
+      <div class="card">
         <form action="/operation/student/follower/update" method="post" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">

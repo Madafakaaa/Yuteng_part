@@ -16,7 +16,7 @@
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-9 col-sm-12">
-      <div class="card main_card" style="display:none">
+      <div class="card">
         <form action="/education/document/store" method="post" id="form1" name="form1" enctype="multipart/form-data" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <!-- Card body -->

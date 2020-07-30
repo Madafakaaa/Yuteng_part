@@ -88,7 +88,7 @@
       </div>
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="password-card" role="tabpanel">
-          <div class="card main_card mb-4" style="display:none">
+          <div class="card mb-4">
             <form action="/profile/password/update" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
               @csrf
               <div class="card-body">

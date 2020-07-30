@@ -76,7 +76,7 @@
           </div>
         </div>
       </div>
-      <div class="card main_card mb-4" style="display:none">
+      <div class="card mb-4">
         <div class="table-responsive freeze-table-4">
           <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">

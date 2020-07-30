@@ -153,7 +153,7 @@
       </div>
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="schedule-card" role="tabpanel">
-          <div class="card main_card mb-4" style="display:none">
+          <div class="card mb-4">
             <div class="table-responsive py-4">
               <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
@@ -188,7 +188,7 @@
         </div>
 
         <div class="tab-pane fade" id="attended-schedule-card" role="tabpanel">
-          <div class="card main_card mb-4" style="display:none">
+          <div class="card mb-4">
             <div class="table-responsive py-4">
               <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
@@ -223,7 +223,7 @@
         </div>
 
         <div class="tab-pane fade" id="class-card" role="tabpanel">
-          <div class="card main_card mb-4" style="display:none">
+          <div class="card mb-4">
             <div class="table-responsive py-4">
               <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
@@ -256,7 +256,7 @@
         </div>
 
         <div class="tab-pane fade" id="hour-card" role="tabpanel">
-          <div class="card main_card mb-4" style="display:none">
+          <div class="card mb-4">
             <div class="table-responsive py-4">
               <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
@@ -285,7 +285,7 @@
         </div>
 
         <div class="tab-pane fade" id="contract-card" role="tabpanel">
-          <div class="card main_card mb-4" style="display:none">
+          <div class="card mb-4">
             <div class="table-responsive py-4">
               <table class="table table-flush datatable-basic">
                 <thead class="thead-light">

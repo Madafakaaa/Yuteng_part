@@ -16,7 +16,7 @@
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
-      <div class="card main_card" style="display:none">
+      <div class="card">
         <form action="/company/user/store" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">

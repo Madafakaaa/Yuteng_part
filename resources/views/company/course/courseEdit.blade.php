@@ -16,7 +16,7 @@
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
-      <div class="card main_card" style="display:none">
+      <div class="card">
         <form action="/company/course/update?id={{encode($course->course_id, 'course_id')}}" method="post" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
           <div class="card-header">

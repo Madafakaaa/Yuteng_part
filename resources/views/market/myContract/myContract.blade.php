@@ -60,7 +60,7 @@
           </div>
         </div>
       </div>
-      <div class="card main_card mb-4" style="display:none">
+      <div class="card mb-4">
         <div class="card-header py-3" style="border-bottom:0px;">
           <form action="" method="get" onsubmit="submitButtonDisable('submitButton1')">
             <div class="row">

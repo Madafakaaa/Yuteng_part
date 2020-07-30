@@ -14,7 +14,7 @@
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="card main_card" style="display:none">
+      <div class="card">
           @csrf
           <div class="card-header">
             <h3 class="mb-0">课程安排详情</h3>

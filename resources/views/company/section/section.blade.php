@@ -67,7 +67,7 @@
       </div>
     </div>
     <div class="col-lg-8 col-md-12 col-sm-12 card-wrapper ct-example">
-      <div class="card main_card mb-4" style="display:none">
+      <div class="card mb-4">
         <!-- Card header -->
         <div class="card-header">
           <div class="row">
