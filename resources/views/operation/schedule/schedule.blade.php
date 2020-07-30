@@ -45,9 +45,6 @@
                         @endforeach
                       </select>
 	                </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
-                      <input class="form-control datepicker" name="filter_date" placeholder="上课日期" autocomplete="off" type="text" @if(isset($filters['filter_date']))) value="{{ $filters['filter_date'] }}" @endif>
-	                </div>
                   </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-1">
@@ -69,6 +66,29 @@
         </div>
       </div>
       <div class="card mb-4">
+        <div class="card-header py-3" style="border-bottom:0px;">
+          <form action="" method="get" onsubmit="submitButtonDisable('submitButton1')">
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-12">
+                <a href="?filter_date={{$first_day_prev}}&@foreach($filters as $key => $value) @if($key!='filter_date') {{$key}}={{$value}}& @endif @endforeach"><button type="button" class="btn btn-outline-primary btn-icon-only rounded-circle"><i class="fa fa-chevron-left"></i></button></a>
+                <a href="?filter_date={{$first_day_next}}&@foreach($filters as $key => $value) @if($key!='filter_date') {{$key}}={{$value}}& @endif @endforeach"><button type="button" class="btn btn-outline-primary btn-icon-only rounded-circle"><i class="fa fa-chevron-right"></i></button></a>
+                <span style="vertical-align: middle; font-size:26px; font-family: 'Noto Sans', sans-serif;" class="ml-3">{{ date('Y.m.d', strtotime($first_day)) }} ~ {{ date('m.d', strtotime($last_day)) }}</span>
+              </div>
+              <div class="col-lg-3 col-md-1 col-sm-12">
+              </div>
+              <div class="col-lg-2 col-md-3 col-sm-8 text-right">
+                <input class="form-control datepicker" name="filter_date" placeholder="选择日期" type="text" value="{{$first_day}}">
+              </div>
+              <div class="col-lg-1 col-md-2 col-sm-4 text-right">
+                <input type="hidden" name="filter_department" value="{{$filters['filter_department']}}">
+                <input type="hidden" name="filter_grade" value="{{$filters['filter_grade']}}">
+                <input type="hidden" name="filter_subject" value="{{$filters['filter_subject']}}">
+                <input type="submit" id="submitButton1" class="btn btn-primary btn-block" value="查询">
+              </div>
+            </div>
+          </form>
+        </div>
+        <hr class="mb-1 mt-0">
         <div class="card-header p-2" style="border-bottom:0px;">
           <small class="text-muted font-weight-bold px-2">校区：</small>
           <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach">
