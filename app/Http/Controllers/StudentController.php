@@ -99,17 +99,17 @@ class StudentController extends Controller
                        ->get();
 
         // 获取所有上课记录
-        $attended_schedules = DB::table('schedule')
+        $attended_schedules = DB::table('participant')
+                                ->join('schedule', 'schedule.schedule_id', '=', 'participant.participant_schedule')
                                 ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
                                 ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
                                 ->join('position', 'user.user_position', '=', 'position.position_id')
-                                ->join('course', 'schedule.schedule_course', '=', 'course.course_id')
+                                ->join('course', 'participant.participant_course', '=', 'course.course_id')
                                 ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                                 ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                                 ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                                 ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
-                                ->where('schedule_attended', '=', 1)
-                                ->whereIn('schedule_participant', $class_ids)
+                                ->where('participant_student', $student_id)
                                 ->get();
 
         // 获取剩余课时

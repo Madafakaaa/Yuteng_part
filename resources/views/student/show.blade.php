@@ -172,7 +172,7 @@
                   @foreach ($schedules as $schedule)
                     <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
                       <td>{{ $loop->iteration }}</td>
-                      <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
+                      <td><a href="/class?id={{encode($schedule->class_id,'class_id')}}">{{ $schedule->class_name }}</a></td>
                       <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
                       <td>{{ $schedule->subject_name }}</td>
                       <td>{{ $schedule->grade_name }}</td>
@@ -194,8 +194,10 @@
                 <thead class="thead-light">
                   <tr>
                     <th style="width:20px;">序号</th>
-                    <th style="width:100px;">班级</th>
-                    <th style="width:100px;">教师</th>
+                    <th style="width:110px;">班级</th>
+                    <th style="width:30px;">状态</th>
+                    <th style="width:150px;">使用课时</th>
+                    <th style="width:90px;">教师</th>
                     <th style="width:30px;">科目</th>
                     <th style="width:30px;">年级</th>
                     <th style="width:60px;">日期</th>
@@ -205,9 +207,17 @@
                 </thead>
                 <tbody>
                   @foreach ($attended_schedules as $schedule)
-                    <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
+                    <tr>
                       <td>{{ $loop->iteration }}</td>
-                      <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
+                      <td><a href="/class?id={{encode($schedule->class_id,'class_id')}}">{{ $schedule->class_name }}</a></td>
+                      @if($schedule->participant_attend_status==1)
+                      <td><span class="text-success">正常</span></td>
+                      @elseif($schedule->participant_attend_status==2)
+                      <td><span class="text-warning">请假</span></td>
+                      @else
+                      <td><span class="text-danger">旷课</span></td>
+                      @endif
+                      <td>{{ $schedule->course_name }} - {{ $schedule->participant_amount }}课时</td>
                       <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
                       <td>{{ $schedule->subject_name }}</td>
                       <td>{{ $schedule->grade_name }}</td>

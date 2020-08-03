@@ -25,25 +25,6 @@
       </button>
     </div>
   </div>
-  <div class="row">
-    <div class="col-xl-3 col-md-6">
-      <div class="card card-stats">
-        <!-- Card body -->
-        <div class="card-body">
-          <div class="row">
-            <div class="col">
-              <h5 class="card-title text-uppercase text-muted mb-1">校区总数</h5>
-              <span class="h2 font-weight-bold mb-1 counter-value">4</span>
-            </div>
-          </div>
-          <p class="mt-1 mb-0 text-sm">
-            <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 1</span>
-            <span class="text-nowrap">本月新增</span>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="row justify-content-center">
     <div class="col-12">
       <div class="card mb-4">
