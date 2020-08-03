@@ -173,7 +173,7 @@
                     <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
                       <td>{{ $loop->iteration }}</td>
                       <td><a href="/class?id={{encode($schedule->class_id,'class_id')}}">{{ $schedule->class_name }}</a></td>
-                      <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                      <td><a href="/user?id={{encode($schedule->user_id,'user_id')}}">{{ $schedule->user_name }}</a> ({{ $schedule->position_name }})</td>
                       <td>{{ $schedule->subject_name }}</td>
                       <td>{{ $schedule->grade_name }}</td>
                       <td>{{ $schedule->schedule_date }}</td>
@@ -217,8 +217,8 @@
                       @else
                       <td><span class="text-danger">旷课</span></td>
                       @endif
-                      <td>{{ $schedule->course_name }} - {{ $schedule->participant_amount }}课时</td>
-                      <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                      <td>[ {{ $schedule->participant_amount }}课时 ] {{ $schedule->course_name }}</td>
+                      <td><a href="/user?id={{encode($schedule->user_id,'user_id')}}">{{ $schedule->user_name }}</a> ({{ $schedule->position_name }})</td>
                       <td>{{ $schedule->subject_name }}</td>
                       <td>{{ $schedule->grade_name }}</td>
                       <td>{{ $schedule->schedule_date }}</td>
@@ -238,22 +238,22 @@
               <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th>序号</th>
-                    <th>班级</th>
-                    <th>使用课程</th>
-                    <th>教师</th>
-                    <th>科目</th>
-                    <th>人数</th>
-                    <th>已排课程</th>
+                    <th style="width:20px;">序号</th>
+                    <th style="width:130px;">班级</th>
+                    <th style="width:130px;">使用课程</th>
+                    <th style="width:120px;">教师</th>
+                    <th style="width:50px;">科目</th>
+                    <th style="width:60px;">人数</th>
+                    <th style="width:50px;">已排课程</th>
                   </tr>
                 </thead>
                 <tbody>
                   @foreach ($classes as $class)
                     <tr>
                       <td>{{ $loop->iteration }}</td>
-                      <td>{{ $class->class_name }}</td>
+                      <td><a href="/class?id={{encode($class->class_id,'class_id')}}">{{ $class->class_name }}</td>
                       <td>{{ $class->course_name }}</td>
-                      <td>{{ $class->user_name }}</td>
+                      <td><a href="/user?id={{encode($class->user_id,'user_id')}}">{{ $class->user_name }}</a></td>
                       <td>{{ $class->subject_name }}</td>
                       <td>{{ $class->class_current_num }} / {{ $class->class_max_num }} 人</td>
                       <td>{{ $class->class_schedule_num }} 节</td>
@@ -300,14 +300,14 @@
               <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th>序号</th>
-                    <th>类型</th>
-                    <th>合计课时</th>
-                    <th>实付金额</th>
-                    <th>签约人</th>
-                    <th>支付方式</th>
-                    <th>购课日期</th>
-                    <th>操作</th>
+                    <th style="width:20px;">序号</th>
+                    <th style="width:60px;">类型</th>
+                    <th style="width:70px;">合计课时</th>
+                    <th style="width:80px;">实付金额</th>
+                    <th style="width:90px;">签约人</th>
+                    <th style="width:40px;">支付方式</th>
+                    <th style="width:90px;">购课日期</th>
+                    <th style="width:90px;">操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -319,11 +319,11 @@
                       @else
                         <td><span style="color:green;">续签</span></td>
                       @endif
-                      <td title="{{ $contract->contract_total_hour }} 课时"><strong>{{ $contract->contract_total_hour }} 课时</strong></td>
-                      <td title="{{ number_format($contract->contract_total_price, 1) }} 元"><strong>{{ number_format($contract->contract_total_price, 1) }} 元</strong></td>
-                      <td title="{{ $contract->user_name }} ({{ $contract->position_name }})">{{ $contract->user_name }} ({{ $contract->position_name }})</td>
-                      <td title="{{ $contract->contract_payment_method }}">{{ $contract->contract_payment_method }}</td>
-                      <td title="{{ $contract->contract_date }}">{{ $contract->contract_date }}</td>
+                      <td><strong>{{ $contract->contract_total_hour }} 课时</strong></td>
+                      <td><strong>{{ number_format($contract->contract_total_price, 1) }} 元</strong></td>
+                      <td><a href="/user?id={{encode($contract->user_id,'user_id')}}">{{ $contract->user_name }}</a> ({{ $contract->position_name }})</td>
+                      <td>{{ $contract->contract_payment_method }}</td>
+                      <td>{{ $contract->contract_date }}</td>
                       <td><a href="/contract?id={{encode($contract->contract_id, 'contract_id')}}" target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a></td>
                     </tr>
                   @endforeach

@@ -116,8 +116,8 @@
                   @foreach ($schedules as $schedule)
                     <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
                       <td>{{ $loop->iteration }}</td>
-                      <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
-                      <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                      <td><a href="/class?id={{encode($schedule->class_id,'class_id')}}">{{ $schedule->class_name }}</a></span></td>
+                      <td><a href="/user?id={{encode($schedule->user_id,'user_id')}}">{{ $schedule->user_name }}</a> ({{ $schedule->position_name }})</td>
                       <td>{{ $schedule->subject_name }}</td>
                       <td>{{ $schedule->grade_name }}</td>
                       <td>{{ $schedule->schedule_date }}</td>
@@ -151,8 +151,8 @@
                   @foreach ($attended_schedules as $schedule)
                     <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
                       <td>{{ $loop->iteration }}</td>
-                      <td><span style="color:red;">{{ $schedule->class_name }}</span></td>
-                      <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                      <td><a href="/class?id={{encode($schedule->class_id,'class_id')}}">{{ $schedule->class_name }}</a></span></td>
+                      <td><a href="/user?id={{encode($schedule->user_id,'user_id')}}">{{ $schedule->user_name }}</a> ({{ $schedule->position_name }})</td>
                       <td>{{ $schedule->subject_name }}</td>
                       <td>{{ $schedule->grade_name }}</td>
                       <td>{{ $schedule->schedule_date }}</td>
@@ -184,7 +184,7 @@
                   @foreach ($students as $student)
                     <tr>
                       <td>{{ $loop->iteration }}</td>
-                      <td>{{ $student->student_name }}</td>
+                      <td><a href="/student?id={{encode($student->student_id,'student_id')}}">{{ $student->student_name }}</a></td>
                       <td>{{ $student->department_name }}</td>
                       <td>{{ $student->grade_name }}</td>
                       @if($student->consultant_name=="")
@@ -223,7 +223,7 @@
                   @foreach ($classes as $class)
                     <tr>
                       <td>{{ $loop->iteration }}</td>
-                      <td>{{ $class->class_name }}</td>
+                      <td><a href="/class?id={{encode($class->class_id,'class_id')}}">{{ $class->class_name }}</a></td>
                       <td>{{ $class->subject_name }}</td>
                       <td>{{ $class->class_current_num }} / {{ $class->class_max_num }} 人</td>
                       <td>{{ $class->class_schedule_num }} 节</td>

@@ -68,6 +68,7 @@
                     <small>{{ $member->student_id }}</small>
                   </div>
                   <div class="col-auto">
+                    <a href="/student?id={{encode($member->student_id,'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
                     <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/class/memberDelete?class_id={{ encode($class->class_id, 'class_id') }}&student_id={{ encode($member->student_id, 'student_id') }}', '确认删除学生？')">删除</button>
                   </div>
                 </div>
@@ -125,15 +126,14 @@
               <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th>序号</th>
-                    <th>校区</th>
-                    <th>课程</th>
-                    <th>教师</th>
-                    <th>科目</th>
-                    <th>年级</th>
-                    <th>日期</th>
-                    <th>时间</th>
-                    <th>地点</th>
+                    <th style="width:20px;">序号</th>
+                    <th style="width:40px;">校区</th>
+                    <th style="width:90px;">教师</th>
+                    <th style="width:40px;">科目</th>
+                    <th style="width:40px;">年级</th>
+                    <th style="width:70px;">日期</th>
+                    <th style="width:70px;">时间</th>
+                    <th style="width:60px;">地点</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -141,8 +141,7 @@
                     <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
                       <td>{{ $loop->iteration }}</td>
                       <td>{{ $schedule->department_name }}</td>
-                      <td>{{ $schedule->course_name }}</td>
-                      <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                      <td><a href="/user?id={{encode($schedule->user_id,'user_id')}}">{{ $schedule->user_name }}</a> ({{ $schedule->position_name }})</td>
                       <td>{{ $schedule->subject_name }}</td>
                       <td>{{ $schedule->grade_name }}</td>
                       <td>{{ $schedule->schedule_date }}</td>
@@ -162,15 +161,15 @@
               <table class="table table-flush datatable-basic">
                 <thead class="thead-light">
                   <tr>
-                    <th>序号</th>
-                    <th>校区</th>
-                    <th>课程</th>
-                    <th>教师</th>
-                    <th>科目</th>
-                    <th>年级</th>
-                    <th>日期</th>
-                    <th>时间</th>
-                    <th>教室</th>
+                    <th style="width:20px;">序号</th>
+                    <th style="width:40px;">校区</th>
+                    <th style="width:90px;">教师</th>
+                    <th style="width:40px;">科目</th>
+                    <th style="width:40px;">年级</th>
+                    <th style="width:70px;">日期</th>
+                    <th style="width:70px;">时间</th>
+                    <th style="width:60px;">教室</th>
+                    <th style="width:50px;">操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -178,13 +177,15 @@
                     <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
                       <td>{{ $loop->iteration }}</td>
                       <td>{{ $schedule->department_name }}</td>
-                      <td>{{ $schedule->course_name }}</td>
-                      <td>{{ $schedule->user_name }} ({{ $schedule->position_name }})</td>
+                      <td><a href="/user?id={{encode($schedule->user_id,'user_id')}}">{{ $schedule->user_name }}</a> ({{ $schedule->position_name }})</td>
                       <td>{{ $schedule->subject_name }}</td>
                       <td>{{ $schedule->grade_name }}</td>
                       <td>{{ $schedule->schedule_date }}</td>
                       <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
                       <td>{{ $schedule->classroom_name }}</td>
+                      <td>
+                        <a href="/attendedSchedule?id={{encode($schedule->schedule_id,'schedule_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>&nbsp;
+                      </td>
                     </tr>
                   @endforeach
                 </tbody>
