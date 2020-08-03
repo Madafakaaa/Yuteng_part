@@ -99,7 +99,6 @@
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
                 <th style='width:150px;'>班级</th>
-                <th style='width:120px;'></th>
                 <th style='width:100px;'>校区</th>
                 <th style='width:160px;'>日期</th>
                 <th style='width:110px;'>时间</th>
@@ -108,7 +107,7 @@
                 <th style='width:70px;'>科目</th>
                 <th style='width:70px;'>年级</th>
                 <th style='width:110px;'>教室</th>
-                <th style='width:170px;'>课程</th>
+                <th style='width:150px;'>课程</th>
                 <th style='width:100px;'>排课用户</th>
               </tr>
             </thead>
@@ -125,12 +124,7 @@
                   </div>
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>
-                  {{ $row->class_name }}
-                </td>
-                <td>
-                  <a href="/schedule?id={{encode($row->schedule_id,'schedule_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>&nbsp;
-                </td>
+                <td><a href="/class?id={{encode($row->class_id,'class_id')}}">{{ $row->class_name }}</td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->schedule_date }}&nbsp;{{ dateToDay($row->schedule_date) }}</td>
                 <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
@@ -141,12 +135,12 @@
                     <span style="color:red;">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
                   @endif
                 </td>
-                <td>{{ $row->teacher_name }}</td>
+                <td><a href="/user?id={{encode($row->teacher_id,'user_id')}}">{{ $row->teacher_name }}</a></td>
                 <td>{{ $row->subject_name }}</td>
                 <td>{{ $row->grade_name }}</td>
                 <td>{{ $row->classroom_name }}</td>
                 <td>{{ $row->course_name }}</td>
-                <td>{{ $row->creator_name }}</td>
+                <td><a href="/user?id={{encode($row->creator_id,'user_id')}}">{{ $row->creator_name }}</a></td>
               </tr>
               @endforeach
             </tbody>

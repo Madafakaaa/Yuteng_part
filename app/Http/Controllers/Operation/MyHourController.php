@@ -79,8 +79,10 @@ class MyHourController extends Controller
                               'student.student_gender AS student_gender',
                               'department.department_name AS department_name',
                               'grade.grade_name AS grade_name',
+                              'consultant.user_id AS consultant_id',
                               'consultant.user_name AS consultant_name',
                               'consultant_position.position_name AS consultant_position_name',
+                              'class_adviser.user_id AS class_adviser_id',
                               'class_adviser.user_name AS class_adviser_name',
                               'class_adviser_position.position_name AS class_adviser_position_name')
                      ->orderBy('student_department', 'asc')
@@ -103,8 +105,10 @@ class MyHourController extends Controller
             $temp['student_gender'] = $row->student_gender;
             $temp['department_name'] = $row->department_name;
             $temp['grade_name'] = $row->grade_name;
+            $temp['consultant_id'] = $row->consultant_id;
             $temp['consultant_name'] = $row->consultant_name;
             $temp['consultant_position_name'] = $row->consultant_position_name;
+            $temp['class_adviser_id'] = $row->class_adviser_id;
             $temp['class_adviser_name'] = $row->class_adviser_name;
             $temp['class_adviser_position_name'] = $row->class_adviser_position_name;
             // 获取课程安排信息

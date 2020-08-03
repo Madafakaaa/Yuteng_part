@@ -128,16 +128,16 @@
             </thead>
             <tbody>
               @if(count($contracts)==0)
-              <tr class="text-center"><td colspan="14">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="19">当前没有记录</td></tr>
               @endif
               @foreach ($contracts as $contract)
               <tr>
                 <td rowspan="{{$contract['contract_course_num']}}">{{ $loop->iteration }}</td>
                 <td rowspan="{{$contract['contract_course_num']}}">{{ $contract['department_name'] }}</td>
                 <td rowspan="{{$contract['contract_course_num']}}">{{ date('m-d', strtotime($contract['contract_date'])) }}</td>
-                <td rowspan="{{$contract['contract_course_num']}}">{{ $contract['user_name'] }}</td>
+                <td rowspan="{{$contract['contract_course_num']}}"><a href="/user?id={{encode($contract['user_id'],'user_id')}}">{{ $contract['user_name'] }}</a></td>
                 <td rowspan="{{$contract['contract_course_num']}}">
-                  {{ $contract['student_name'] }}&nbsp;
+                  <a href="/student?id={{encode($contract['student_id'], 'student_id')}}">{{ $contract['student_name'] }}</a>&nbsp;
                   @if($contract['student_gender']=="男")
                     <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
                   @else

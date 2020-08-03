@@ -128,9 +128,8 @@
                   </div>
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->class_name }}</td>
+                <td><a href="/class?id={{encode($row->class_id, 'class_id')}}">{{ $row->class_name }}</a></td>
                 <td>
-                  <a href="/class?id={{encode($row->class_id, 'class_id')}}"><button type="button" class="btn btn-primary btn-sm">班级详情</button></a>
                   <a href="/operation/class/schedule/create?id={{encode($row->class_id, 'class_id')}}"><button type="button" class="btn btn-warning btn-sm">排课</button></a>
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/class/delete?id={{encode($row->class_id, 'class_id')}}', '确认删除班级？')">删除</button>
                 </td>
@@ -246,7 +245,7 @@
                   </div>
                 </td>
                 <td>{{ $row->class_attended_num }} 节</td>
-                <td>{{ $row->user_name }} ({{ $row->position_name }})</td>
+                <td><a href="/user?id={{encode($row->user_id,'user_id')}}">{{ $row->user_name }}</a> ({{ $row->position_name }})</td>
               </tr>
               @endforeach
             </tbody>

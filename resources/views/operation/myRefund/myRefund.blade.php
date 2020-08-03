@@ -96,7 +96,7 @@
                 <td></td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>
-                  {{ $row->student_name }}&nbsp;
+                  <a href="/student?id={{encode($row->student_id, 'student_id')}}">{{ $row->student_name }}</a>&nbsp;
                   @if($row->student_gender=="男")
                     <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
                   @else
@@ -112,7 +112,7 @@
                 <td class="text-right">{{ $row->refund_remain }} 课时</td>
                 <td class="text-right"><strong>{{ number_format($row->refund_amount, 2) }} 元</strong></td>
                 <td>{{ $row->refund_date }}</td>
-                <td>{{ $row->createuser_name }} ({{ $row->createuser_position_name }})</td>
+                <td><a href="/user?id={{encode($row->createuser_id,'user_id')}}">{{ $row->createuser_name }}</a> ({{ $row->createuser_position_name }})</td>
               </tr>
               @endforeach
             </tbody>

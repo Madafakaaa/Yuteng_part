@@ -83,6 +83,7 @@ class RefundController extends Controller
                               'student.student_gender',
                               'department.department_name AS department_name',
                               'course.course_name AS course_name',
+                              'createuser.user_id AS createuser_id',
                               'createuser.user_name AS createuser_name',
                               'createuser_position.position_name AS createuser_position_name',
                               'checked_user.user_name AS checked_user_name',

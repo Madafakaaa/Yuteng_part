@@ -76,6 +76,7 @@ class CustomerController extends Controller
                               'department.department_id AS department_id',
                               'department.department_name AS department_name',
                               'grade.grade_name AS grade_name',
+                              'consultant.user_id AS consultant_id',
                               'consultant.user_name AS consultant_name',
                               'consultant_position.position_name AS consultant_position_name',
                               'class_adviser.user_name AS class_adviser_name',

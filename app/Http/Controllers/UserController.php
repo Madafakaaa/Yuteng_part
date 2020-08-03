@@ -14,32 +14,109 @@ class UserController extends Controller
      * URL: GET /user/{id}
      * @param  int  $user_id
      */
-    public function show($user_id){
+    public function show(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $user_id = decode($request->input('id'), 'user_id');
         // 获取用户数据信息
         $user = DB::table('user')
                   ->join('department', 'user.user_department', '=', 'department.department_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
                   ->join('section', 'position.position_section', '=', 'section.section_id')
                   ->where('user_id', $user_id)
-                  ->get();
-        if($user->count()!==1){
-            // 未获取到数据
-            return redirect()->action('UserController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '用户显示失败',
-                                     'message' => '用户显示失败，请联系系统管理员']);
-        }
-        $user = $user[0];
-        // 获取档案数据
-        $rows = DB::table('archive')
-                  ->where('archive_user', $user_id)
-                  ->get();
-        return view('user/show', ['user' => $user, 'rows' => $rows]);
+                  ->first();
+        // 获取所有课程安排
+        $schedules = DB::table('schedule')
+                       ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
+                       ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                       ->join('position', 'user.user_position', '=', 'position.position_id')
+                       ->join('course', 'schedule.schedule_course', '=', 'course.course_id')
+                       ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
+                       ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
+                       ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                       ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                       ->where('schedule_attended', '=', 0)
+                       ->where('schedule_teacher', $user_id)
+                       ->get();
+
+        // 获取所有上课记录
+        $attended_schedules = DB::table('schedule')
+                                ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
+                                ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                                ->join('position', 'user.user_position', '=', 'position.position_id')
+                                ->join('course', 'schedule.schedule_course', '=', 'course.course_id')
+                                ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
+                                ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
+                                ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                                ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                                ->where('schedule_attended', '=', 1)
+                                ->where('schedule_teacher', $user_id)
+                                ->get();
+
+        // 获取教师所有负责学生
+        $students = DB::table('student')
+                      ->join('department', 'student.student_department', '=', 'department.department_id')
+                      ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
+                      ->leftJoin('user AS consultant', 'student.student_consultant', '=', 'consultant.user_id')
+                      ->leftJoin('position AS consultant_position', 'consultant.user_position', '=', 'consultant_position.position_id')
+                      ->leftJoin('user AS class_adviser', 'student.student_class_adviser', '=', 'class_adviser.user_id')
+                      ->leftJoin('position AS class_adviser_position', 'class_adviser.user_position', '=', 'class_adviser_position.position_id')
+                      ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
+                      ->where('student.student_consultant', '=', $user_id)
+                      ->orWhere('student.student_class_adviser', '=', $user_id)
+                      ->select('student.student_id AS student_id',
+                               'student.student_name AS student_name',
+                               'student.student_gender AS student_gender',
+                               'student.student_guardian AS student_guardian',
+                               'department.department_name AS department_name',
+                               'grade.grade_name AS grade_name',
+                               'consultant.user_name AS consultant_name',
+                               'consultant_position.position_name AS consultant_position_name',
+                               'class_adviser.user_name AS class_adviser_name',
+                               'class_adviser_position.position_name AS class_adviser_position_name')
+                      ->get();
+
+        // 获取教师所有负责班级
+        $classes = DB::table('class')
+                     ->join('user', 'class.class_teacher', '=', 'user.user_id')
+                     ->join('subject', 'subject.subject_id', '=', 'class.class_subject')
+                     ->where('class.class_teacher', '=', $user_id)
+                     ->get();
+
+        // 获取签约合同
+        $contracts = DB::table('contract')
+                       ->join('department', 'contract.contract_department', '=', 'department.department_id')
+                       ->join('student', 'contract.contract_student', '=', 'student.student_id')
+                       ->where('contract_createuser', '=', $user_id)
+                       ->get();
+
+        // 获取用户统计数据
+        $dashboard=array();
+        $dashboard['schedule_num']=DB::table('schedule')
+                                     ->where('schedule_teacher', $user_id)
+                                     ->where('schedule_date', 'like', date('Y-m').'%')
+                                     ->count();
+
+        $dashboard['attended_schedule_num']=DB::table('schedule')
+                                              ->where('schedule_attended', '=', 1)
+                                              ->where('schedule_teacher', $user_id)
+                                              ->where('schedule_date', 'like', date('Y-m').'%')
+                                              ->count();
+
+        $dashboard['contract_num']=DB::table('contract')
+                                     ->where('contract_createuser', '=', $user_id)
+                                     ->where('contract_date', 'like', date('Y-m').'%')
+                                     ->count();
+
+        return view('user/show', ['user' => $user,
+                                  'schedules' => $schedules,
+                                  'attended_schedules' => $attended_schedules,
+                                  'students' => $students,
+                                  'classes' => $classes,
+                                  'contracts' => $contracts,
+                                  'dashboard' => $dashboard]);
     }
 
     /**

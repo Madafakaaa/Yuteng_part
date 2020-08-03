@@ -136,7 +136,7 @@
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>
-                  {{ $row->user_name }}&nbsp;
+                  <a href="/user?id={{encode($row->user_id,'user_id')}}">{{ $row->user_name }}</a>&nbsp;
                   @if($row->user_gender=="男")
                     <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
                   @else
@@ -144,7 +144,6 @@
                   @endif
                 </td>
                 <td>
-                  <a href='/user/{{$row->user_id}}'><button type="button" class="btn btn-primary btn-sm">详情</button></a>
                   <a href='/company/user/access?id={{encode($row->user_id, 'user_id')}}'><button type="button" class="btn btn-primary btn-sm">权限</button></a>
                   <a href='/company/user/password/restore?id={{encode($row->user_id, 'user_id')}}'><button type="button" class="btn btn-primary btn-sm">密码重置</button></a>
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/company/user/delete?id={{encode($row->user_id, 'user_id')}}', '确认删除用户？')">删除</button>

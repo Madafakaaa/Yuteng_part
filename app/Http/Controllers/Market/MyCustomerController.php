@@ -28,8 +28,6 @@ class MyCustomerController extends Controller
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
                   ->leftJoin('user AS consultant', 'student.student_consultant', '=', 'consultant.user_id')
                   ->leftJoin('position AS consultant_position', 'consultant.user_position', '=', 'consultant_position.position_id')
-                  ->leftJoin('user AS class_adviser', 'student.student_class_adviser', '=', 'class_adviser.user_id')
-                  ->leftJoin('position AS class_adviser_position', 'class_adviser.user_position', '=', 'class_adviser_position.position_id')
                   ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
                   ->where('student_consultant', Session::get('user_id'))
                   ->where('student_contract_num', 0)
@@ -75,10 +73,9 @@ class MyCustomerController extends Controller
                               'student.student_last_follow_date AS student_last_follow_date',
                               'department.department_name AS department_name',
                               'grade.grade_name AS grade_name',
+                              'consultant.user_id AS consultant_id',
                               'consultant.user_name AS consultant_name',
-                              'consultant_position.position_name AS consultant_position_name',
-                              'class_adviser.user_name AS class_adviser_name',
-                              'class_adviser_position.position_name AS class_adviser_position_name')
+                              'consultant_position.position_name AS consultant_position_name')
                      ->orderBy('student_follow_level', 'desc')
                      ->orderBy('student_grade', 'desc')
                      ->offset($offset)

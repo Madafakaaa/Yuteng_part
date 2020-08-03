@@ -94,6 +94,7 @@ class ContractController extends Controller
             $temp['contract_id']=$row->contract_id;
             $temp['department_name']=$row->department_name;
             $temp['contract_date']=$row->contract_date;
+            $temp['user_id']=$row->user_id;
             $temp['user_name']=$row->user_name;
             $temp['student_name']=$row->student_name;
             $temp['student_gender']=$row->student_gender;

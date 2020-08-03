@@ -315,11 +315,11 @@ Route::get('/finance/hour', 'Finance\HourController@hour');
 
 
 // 用户详情
-Route::get('/user/{user_id}', 'UserController@show');
+Route::get('/user', 'UserController@show');
     // 修改用户
-    Route::get('/user/{user_id}/edit', 'UserController@edit');
+    Route::get('/user/edit', 'UserController@edit');
     // 更新用户
-    Route::put('/user/{user_id}', 'UserController@update');
+    Route::get('/user/update', 'UserController@update');
 
 
 // 学生详情

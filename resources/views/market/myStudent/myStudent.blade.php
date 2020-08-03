@@ -94,7 +94,7 @@
                 <td></td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>
-                  {{ $row->student_name }}&nbsp;
+                  <a href="/student?id={{encode($row->student_id, 'student_id')}}">{{ $row->student_name }}</a>&nbsp;
                   @if($row->student_gender=="男")
                     <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
                   @else
@@ -102,7 +102,6 @@
                   @endif
                 </td>
                 <td>
-                  <a href="/student?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
                   <a href="/market/myStudent/contract/create?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">签约</button></a>
                 </td>
                 <td>{{ $row->department_name }}</td>
@@ -110,12 +109,12 @@
                 @if($row->consultant_name=="")
                   <td><span style="color:red;">无</span></td>
                 @else
-                  <td>{{ $row->consultant_name }} ({{ $row->consultant_position_name }})</td>
+                  <td><a href="/user?id={{encode($row->consultant_id,'user_id')}}">{{ $row->consultant_name }}</a> ({{ $row->consultant_position_name }})</td>
                 @endif
                 @if($row->class_adviser_name=="")
                   <td><span style="color:red;">无</span></td>
                 @else
-                  <td>{{ $row->class_adviser_name }} ({{ $row->class_adviser_position_name }})</td>
+                  <td><a href="/user?id={{encode($row->class_adviser_id,'user_id')}}">{{ $row->class_adviser_name }}</a> ({{ $row->class_adviser_position_name }})</td>
                 @endif
               </tr>
               @endforeach

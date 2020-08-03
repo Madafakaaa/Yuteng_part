@@ -96,7 +96,6 @@
                 <th style='width:40px;'></th>
                 <th style='width:80px;'>序号</th>
                 <th style='width:150px;'>班级</th>
-                <th style='width:210px;'></th>
                 <th style='width:100px;'>校区</th>
                 <th style='width:120px;'>班号</th>
                 <th style='width:90px;'>年级</th>
@@ -120,10 +119,7 @@
                   </div>
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->class_name }}</td>
-                <td>
-                  <a href="/class?id={{encode($row->class_id, 'class_id')}}"><button type="button" class="btn btn-primary btn-sm">班级详情</button></a>
-                </td>
+                <td><a href="/class?id={{encode($row->class_id, 'class_id')}}">{{ $row->class_name }}</a></td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->class_id }}</td>
                 <td>{{ $row->grade_name }}</td>
@@ -161,7 +157,7 @@
                   </div>
                 </td>
                 <td>{{ $row->class_attended_num }} 节</td>
-                <td>{{ $row->user_name }} ({{ $row->position_name }})</td>
+                <td><a href="/user?id={{encode($row->user_id,'user_id')}}">{{ $row->user_name }}</a> ({{ $row->position_name }})</td>
               </tr>
               @endforeach
             </tbody>

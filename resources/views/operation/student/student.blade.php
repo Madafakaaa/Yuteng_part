@@ -120,7 +120,7 @@
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>
-                  {{ $student['student_name'] }}&nbsp;
+                  <a href="/student?id={{encode($student['student_id'], 'student_id')}}">{{ $student['student_name'] }}</a>&nbsp;
                   @if($student['student_gender']=="男")
                     <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
                   @else
@@ -132,12 +132,12 @@
                 @if($student['consultant_name']=="")
                   <td><span style="color:red;">无</span></td>
                 @else
-                  <td>{{ $student['consultant_name'] }} ({{ $student['consultant_position_name'] }})</td>
+                  <td><a href="/user?id={{encode($student['consultant_id'],'user_id')}}">{{ $student['consultant_name'] }}</a> ({{ $student['consultant_position_name'] }})</td>
                 @endif
                 @if($student['class_adviser_name']=="")
                   <td><span style="color:red;">无</span></td>
                 @else
-                  <td>{{ $student['class_adviser_name'] }} ({{ $student['class_adviser_position_name'] }})</td>
+                  <td><a href="/user?id={{encode($student['class_adviser_id'],'user_id')}}">{{ $student['class_adviser_name'] }}</a> ({{ $student['class_adviser_position_name'] }})</td>
                 @endif
                 <td>
                   {{ $student['student_hour_num'] }} 课程
@@ -188,7 +188,6 @@
                   </div>
                 </td>
                 <td>
-                  <a href="/student?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
                   <a href="/operation/student/follower/edit?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">修改负责人</button></a>
                   <a href="/operation/student/schedule/create?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">一对一排课</button></a>
                   <a href="/operation/student/joinClass?student_id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">加入班级</button></a>

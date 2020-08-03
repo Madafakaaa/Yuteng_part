@@ -8,7 +8,7 @@
     </a>
     <div class="ml-auto">
       <!-- Sidenav toggler -->
-      <div class="sidenav-toggler d-none d-xl-block">
+      <div class="sidenav-toggler d-none d-xl-block" data-action="sidenav-unpin" data-target="#sidenav-main">
         <div class="sidenav-toggler-inner">
           <i class="sidenav-toggler-line"></i>
           <i class="sidenav-toggler-line"></i>
@@ -315,6 +315,7 @@
           </a>
           <div class="collapse" id="navbar-finance">
             <ul class="nav nav-sm flex-column">
+              @if(Session::get('user_id')=='yuto2018')
               <li class="nav-item">
                 <a href="/finance/contract" class="nav-link" id="financeContract">
                   <i class="ni ni-money-coins text-default"></i>
@@ -327,6 +328,7 @@
                   <span class="nav-link-text">课消统计</span>
                 </a>
               </li>
+              @endif
               <!-- <li class="nav-item">
                 <a href="/finance/consumption" class="nav-link" id="financeConsumption">
                   <i class="ni ni-book-bookmark text-default"></i>

@@ -138,7 +138,7 @@
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->document_file_size }}MB</td>
                 <td>{{ $row->document_download_time }}</td>
-                <td>{{ $row->user_name }} ({{ $row->position_name }})</td>
+                <td><a href="/user?id={{encode($row->user_id,'user_id')}}">{{ $row->user_name }}</a> ({{ $row->position_name }})</td>
                 <td>{{ date('Y-m-d', strtotime($row->document_createtime)) }}</td>
               </tr>
               @endforeach

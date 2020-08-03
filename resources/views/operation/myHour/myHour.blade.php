@@ -104,7 +104,7 @@
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>
-                  {{ $data['student_name'] }}&nbsp;
+                  <a href="/student?id={{encode($data['student_id'], 'student_id')}}">{{ $data['student_name'] }}</a>&nbsp;
                   @if($data['student_gender']=="男")
                     <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
                   @else
@@ -115,7 +115,6 @@
                 <td>{{ $data['grade_name'] }}</td>
                 <td><strong>{{ $data['course_name'] }}</strong></td>
                 <td>
-                  <a href="/student?id={{encode($data['student_id'], 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
                   <a href="/operation/student/joinClass?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-warning btn-sm">加入班级</button></a>
                   <a href="/operation/student/schedule/create?id={{encode($data['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">一对一排课</button></a>
                   <a href="/operation/hour/refund/create?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-danger btn-sm">退费</button></a>
@@ -140,12 +139,12 @@
                 @if($data['class_adviser_name']=="")
                   <td><span style="color:red;">无</span></td>
                 @else
-                  <td>{{ $data['class_adviser_name'] }} ({{ $data['class_adviser_position_name'] }})</td>
+                  <td><a href="/user?id={{encode($data['class_adviser_id'],'user_id')}}">{{ $data['class_adviser_name'] }}</a> ({{ $data['class_adviser_position_name'] }})</td>
                 @endif
                 @if($data['consultant_name']=="")
                   <td><span style="color:red;">无</span></td>
                 @else
-                  <td>{{ $data['consultant_name'] }} ({{ $data['consultant_position_name'] }})</td>
+                  <td><a href="/user?id={{encode($data['consultant_id'],'user_id')}}">{{ $data['consultant_name'] }}</a> ({{ $data['consultant_position_name'] }})</td>
                 @endif
               </tr>
               @endforeach
