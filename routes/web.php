@@ -307,11 +307,11 @@ Route::get('/finance/contract', 'Finance\ContractController@contract');
     // 个人签约明细
     Route::get('/finance/contract/user', 'Finance\ContractController@contractUser');
 // 课消统计
-Route::get('/finance/hour', 'Finance\HourController@hour');
+Route::get('/finance/consumption', 'Finance\ConsumptionController@consumption');
     // 部门课消明细
-    Route::get('/finance/hour/department', 'Finance\HourController@hourDepartment');
+    Route::get('/finance/consumption/department', 'Finance\ConsumptionController@consumptionDepartment');
     // 个人课消明细
-    Route::get('/finance/hour/user', 'Finance\HourController@hourUser');
+    Route::get('/finance/consumption/user', 'Finance\ConsumptionController@consumptionUser');
 
 
 // 用户详情

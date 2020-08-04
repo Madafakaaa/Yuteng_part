@@ -187,5 +187,7 @@
   linkActive('link-operation');
   navbarActive('navbar-operation');
   linkActive('operationSchedule');
+
+  console.log(navigator);
 </script>
 @endsection

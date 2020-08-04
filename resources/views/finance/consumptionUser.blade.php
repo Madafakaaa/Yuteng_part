@@ -1,13 +1,13 @@
 @extends('main')
 
 @section('nav')
-<h2 class="text-white d-inline-block mb-0">校区签约</h2>
+<h2 class="text-white d-inline-block mb-0">个人签约</h2>
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">统计中心</li>
     <li class="breadcrumb-item"><a href="/finance/contract">签约统计</a></li>
-    <li class="breadcrumb-item active">校区签约</li>
+    <li class="breadcrumb-item active">个人签约</li>
   </ol>
 </nav>
 @endsection
@@ -81,7 +81,8 @@
                 <input class="form-control monthpicker" name="filter_month" placeholder="选择月份" type="text" value="{{$filters['filter_month']}}" autocomplete="off">
               </div>
               <div class="col-1 text-right">
-                <input type="hidden" name="filter_department" value="{{$filters['filter_department']}}">
+                <input type="hidden" name="filter_user" value="{{$filters['filter_user']}}">
+                <input type="hidden" name="filter_grade" value="{{$filters['filter_grade']}}">
                 <input type="submit" id="submitButton1" class="btn btn-primary btn-block" value="查询">
               </div>
             </div>
@@ -89,45 +90,62 @@
         </div>
         <hr class="mb-1 mt-0">
         <div class="card-header p-2" style="border-bottom:0px;">
-          <small class="text-muted font-weight-bold px-2">校区：</small>
-          <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach">
-            <button type="button" @if(!isset($filters['filter_department'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
-          </a>
-          @foreach($filter_departments as $filter_department)
-            <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach &filter_department={{$filter_department->department_id}}"><button type="button" @if($filters['filter_department']==$filter_department->department_id) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>{{$filter_department->department_name}}</button></a>
-          @endforeach
+          <div class="row">
+            <div class="col-lg-1 col-md-2 col-sm-3">
+              <small class="text-muted font-weight-bold px-2">用户：</small>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+              <div class="form-group mb-0">
+                <form action="" method="get" onsubmit="submitButtonDisable('submitButton1')" id='form2'>
+                  <select class="form-control form-control-sm" name="filter_user" data-toggle="select" onChange="form_submit('form2')">
+                    <option value=''>全部用户</option>
+                    @foreach ($filter_users as $filter_user)
+                      <option value="{{ $filter_user->user_id }}" @if($filter_user->user_id==$filters['filter_user']) selected @endif>{{ $filter_user->user_name }} {{ $filter_user->department_name }}</option>
+                    @endforeach
+                  </select>
+                  <input type="hidden" name="filter_month" value="{{$filters['filter_month']}}">
+                  <input type="hidden" name="filter_grade" value="{{$filters['filter_grade']}}">
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="card-header p-2" style="border-bottom:0px;">
-          <small class="text-muted font-weight-bold px-2">类型：</small>
-          <a href="?@foreach($filters as $key => $value) @if($key!='filter_type') {{$key}}={{$value}}& @endif @endforeach">
-            <button type="button" @if(!isset($filters['filter_type'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
-          </a>
-          <a href="?@foreach($filters as $key => $value) @if($key!='filter_type') {{$key}}={{$value}}& @endif @endforeach &filter_type=1"><button type="button" @if($filters['filter_type']==1) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>首签</button></a>
-          <a href="?@foreach($filters as $key => $value) @if($key!='filter_type') {{$key}}={{$value}}& @endif @endforeach &filter_type=2"><button type="button" @if($filters['filter_type']==2) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>续签</button></a>
+          <div class="row">
+            <div class="col-lg-1 col-md-2 col-sm-3">
+              <small class="text-muted font-weight-bold px-2">类型：</small>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+              <a href="?@foreach($filters as $key => $value) @if($key!='filter_type') {{$key}}={{$value}}& @endif @endforeach">
+                <button type="button" @if(!isset($filters['filter_type'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
+              </a>
+              <a href="?@foreach($filters as $key => $value) @if($key!='filter_type') {{$key}}={{$value}}& @endif @endforeach &filter_type=1"><button type="button" @if($filters['filter_type']==1) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>首签</button></a>
+              <a href="?@foreach($filters as $key => $value) @if($key!='filter_type') {{$key}}={{$value}}& @endif @endforeach &filter_type=2"><button type="button" @if($filters['filter_type']==2) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>续签</button></a>
+            </div>
+          </div>
         </div>
         <div class="table-responsive"  style="max-height:600px;">
-          <table class="table align-items-center table-hover table-bordered text-left">
+          <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
-                <th style='width:45px;'>序号</th>
+                <th style='width:40px;'>序号</th>
                 <th style='width:70px;'>校区</th>
-                <th style='width:55px;'>日期</th>
-                <th style='width:75px;'>签约人</th>
-                <th style='width:75px;'>学生</th>
+                <th style='width:60px;'>日期</th>
+                <th style='width:80px;'>签约人</th>
+                <th style='width:100px;'>学生</th>
                 <th style='width:55px;'>年级</th>
                 <th style='width:55px;'>类型</th>
-                <th style='width:130px;'>课程</th>
-                <th style='width:70px;'>课程类型</th>
-                <th style='width:70px;' class="text-right">课时数量</th>
-                <th style='width:65px;' class="text-right">单价</th>
+                <th style='width:120px;'>课程</th>
+                <th style='width:60px;'>类型</th>
+                <th style='width:60px;' class="text-right">课时数量</th>
+                <th style='width:60px;' class="text-right">单价</th>
                 <th style='width:50px;' class="text-right">折扣</th>
                 <th style='width:70px;' class="text-right">优惠金额</th>
-                <th style='width:70px;' class="text-right">赠送课时</th>
-                <th style='width:70px;' class="text-right">总课时</th>
-                <th style='width:90px;' class="text-right">课程应收</th>
-                <th style='width:110px;' class="text-right">合计金额</th>
-                <th style='width:110px;' class="text-right">实付金额</th>
-                <th style='width:80px;'>操作</th>
+                <th style='width:60px;' class="text-right">赠送课时</th>
+                <th style='width:60px;' class="text-right">总课时</th>
+                <th style='width:80px;' class="text-right">课程应收</th>
+                <th style='width:100px;' class="text-right">合计金额</th>
+                <th style='width:100px;' class="text-right">实付金额</th>
               </tr>
             </thead>
             <tbody>
@@ -139,9 +157,14 @@
                 <td rowspan="{{$contract['contract_course_num']}}">{{ $loop->iteration }}</td>
                 <td rowspan="{{$contract['contract_course_num']}}">{{ $contract['department_name'] }}</td>
                 <td rowspan="{{$contract['contract_course_num']}}">{{ date('m-d', strtotime($contract['contract_date'])) }}</td>
-                <td rowspan="{{$contract['contract_course_num']}}"><a href="/user?id={{encode($contract['user_id'],'user_id')}}">{{ $contract['user_name'] }}</a></td>
+                <td rowspan="{{$contract['contract_course_num']}}">{{ $contract['user_name'] }}</td>
                 <td rowspan="{{$contract['contract_course_num']}}">
-                  <a href="/student?id={{encode($contract['student_id'],'student_id')}}">{{ $contract['student_name'] }}</a>
+                  {{ $contract['student_name'] }}&nbsp;
+                  @if($contract['student_gender']=="男")
+                    <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
+                  @else
+                    <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
+                  @endif
                 </td>
                 <td rowspan="{{$contract['contract_course_num']}}">{{ $contract['grade_name'] }}</td>
                 @if($contract['contract_type']==0)
@@ -164,7 +187,6 @@
                 @else
                   <td rowspan="{{$contract['contract_course_num']}}" class="text-right" title="{{ number_format($contract['contract_paid_price'], 2) }} 元"><span style="color:red;"><strong>{{ number_format($contract['contract_paid_price'], 2) }} 元</strong></span></td>
                 @endif
-                <td rowspan="{{$contract['contract_course_num']}}"><a href="/contract?id={{encode($contract['contract_id'],'contract_id')}}">查看合同</a></td>
               </tr>
               @for ($i = 1; $i < $contract['contract_course_num']; $i++)
                 <tr>
@@ -193,6 +215,6 @@
 <script>
   linkActive('link-finance');
   navbarActive('navbar-finance');
-  linkActive('financeContract');
+  linkActive('financeIndividualContract');
 </script>
 @endsection

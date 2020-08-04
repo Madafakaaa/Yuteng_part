@@ -157,15 +157,44 @@
               </div>
             </div>
             <hr>
+            <div class="row">
+              <div class="col-2 text-right">
+                <label class="form-control-label">统一扣除课时</label>
+              </div>
+              <div class="col-4 px-2 mb-2">
+                <div class="form-group mb-1">
+                  <input class="form-control form-control-sm datepicker" type="text" name="input_date" value="{{ $schedule->schedule_date }}" required>
+                </div>
+              </div>
+                <div class="col-4 px-2 mb-2">
+                  <div class="form-group mb-1">
+                    <select class="form-control form-control-sm" id="sc">
+                      <option value='0.5'>0.5 课时</option>
+                      <option value='1'>1 课时</option>
+                      <option value='1.5'>1.5 课时</option>
+                      <option value='2'>2 课时</option>
+                      <option value='2.5'>2.5 课时</option>
+                      <option value='3' selected>3 课时</option>
+                      <option value='3.5'>3.5 课时</option>
+                      <option value='4'>4 课时</option>
+                      <option value='4.5'>4.5 课时</option>
+                      <option value='5'>5 课时</option>
+                      <option value='5.5'>5.5 课时</option>
+                      <option value='6'>6 课时</option>
+                    </select>
+                  </div>
+                </div>
+            </div>
+            <hr>
             @foreach ($student_courses as $student_course)
               <div class="row">
                 <div class="col-2 text-right">
-                  <label class="form-control-label">上课学生{{ $loop->iteration }}</label>
+                  <label class="form-control-label">上课学生 {{ $loop->iteration }}</label>
                 </div>
                 <div class="col-4 px-2 mb-2">
                   <div class="form-group mb-1">
                     <label>
-                      {{ $student_course[0]->student_name }} (学号：{{ $student_course[0]->student_id }})&nbsp;
+                      <a href="/student?id={{encode($student_course[0]->student_id,'student_id')}}">{{ $student_course[0]->student_name }}</a> (学号：{{ $student_course[0]->student_id }})&nbsp;
                       @if($student_course[0]->student_gender=="男")
                         <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
                       @else

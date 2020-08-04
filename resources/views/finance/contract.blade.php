@@ -167,6 +167,7 @@
                 <th>签约金额</th>
                 <th>售出课时</th>
                 <th>签约数量</th>
+                <th>操作</th>
               </tr>
             </thead>
             <tbody>
@@ -177,6 +178,11 @@
                   <td>{{$department_contract->department_total_price}}</td>
                   <td>{{$department_contract->department_total_hour}}</td>
                   <td>{{$department_contract->department_contract_num}}</td>
+                  <td>
+                    <a href="/finance/contract/department?filter_department={{$department_contract->department_id}}&filter_month={{$month}}">
+                      <button type="button" class="btn btn-outline-primary btn-sm">查看明细</button>
+                    </a>
+                  </td>
                 </tr>
               @endforeach
             </tbody>
@@ -201,17 +207,23 @@
                 <th>签约金额</th>
                 <th>售出课时</th>
                 <th>签约数量</th>
+                <th>操作</th>
               </tr>
             </thead>
             <tbody>
               @foreach($user_contracts as $user_contract)
                 <tr>
                   <td>{{ $loop->iteration }}</td>
-                  <td>{{$user_contract->user_name}}</td>
+                  <td><a href="/user?id={{encode($user_contract->user_id,'user_id')}}">{{$user_contract->user_name}}</a></td>
                   <td>{{$user_contract->department_name}}</td>
                   <td>{{$user_contract->user_total_price}}</td>
                   <td>{{$user_contract->user_total_hour}}</td>
                   <td>{{$user_contract->user_contract_num}}</td>
+                  <td>
+                    <a href="/finance/contract/user?filter_user={{$user_contract->user_id}}&filter_month={{$month}}">
+                      <button type="button" class="btn btn-outline-primary btn-sm">查看明细</button>
+                    </a>
+                  </td>
                 </tr>
               @endforeach
             </tbody>

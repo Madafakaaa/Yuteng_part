@@ -98,6 +98,7 @@ class ContractController extends Controller
         }else{
             $dashboard['sum_new_contract_num_change'] = round(100*($dashboard['sum_new_contract_num']-$sum_new_contract_num_last)/$sum_new_contract_num_last, 2);
         }
+
         // 获取每个校区签约信息
         $department_contracts = DB::table('department')
                                   ->leftJoin('contract', 'contract.contract_department', '=', 'department.department_id')
@@ -106,6 +107,8 @@ class ContractController extends Controller
                                   ->where('contract_date', 'like', $month."%")
                                   ->groupBy('contract_department')
                                   ->orderBy('department_total_price', 'desc')
+                                  ->orderBy('department_contract_num', 'desc')
+                                  ->orderBy('department_total_hour', 'desc')
                                   ->get();
         // 获取每个用户签约信息
         $user_contracts = DB::table('contract')
@@ -116,6 +119,8 @@ class ContractController extends Controller
                             ->where('contract_date', 'like', $month."%")
                             ->groupBy('contract_createuser')
                             ->orderBy('user_total_price', 'desc')
+                            ->orderBy('user_contract_num', 'desc')
+                            ->orderBy('user_total_hour', 'desc')
                             ->get();
         // 返回列表视图
         return view('finance/contract', ['dashboard' => $dashboard,
@@ -176,8 +181,11 @@ class ContractController extends Controller
         foreach($rows as $row){
             $temp=array();
             $temp['department_name']=$row->department_name;
+            $temp['contract_id']=$row->contract_id;
             $temp['contract_date']=$row->contract_date;
+            $temp['user_id']=$row->user_id;
             $temp['user_name']=$row->user_name;
+            $temp['student_id']=$row->student_id;
             $temp['student_name']=$row->student_name;
             $temp['student_gender']=$row->student_gender;
             $temp['grade_name']=$row->grade_name;
@@ -285,8 +293,11 @@ class ContractController extends Controller
         foreach($rows as $row){
             $temp=array();
             $temp['department_name']=$row->department_name;
+            $temp['contract_id']=$row->contract_id;
             $temp['contract_date']=$row->contract_date;
+            $temp['user_id']=$row->user_id;
             $temp['user_name']=$row->user_name;
+            $temp['student_id']=$row->student_id;
             $temp['student_name']=$row->student_name;
             $temp['student_gender']=$row->student_gender;
             $temp['grade_name']=$row->grade_name;

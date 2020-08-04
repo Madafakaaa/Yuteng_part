@@ -323,7 +323,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/finance/hour" class="nav-link" id="financeHour">
+                <a href="/finance/consumption" class="nav-link" id="financeConsumption">
                   <i class="ni ni-single-copy-04 text-default"></i>
                   <span class="nav-link-text">课消统计</span>
                 </a>

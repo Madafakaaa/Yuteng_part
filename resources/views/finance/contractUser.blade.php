@@ -125,27 +125,28 @@
           </div>
         </div>
         <div class="table-responsive"  style="max-height:600px;">
-          <table class="table align-items-center table-hover text-left">
+          <table class="table align-items-center table-hover table-bordered text-left">
             <thead class="thead-light">
               <tr>
-                <th style='width:40px;'>序号</th>
+                <th style='width:45px;'>序号</th>
                 <th style='width:70px;'>校区</th>
-                <th style='width:60px;'>日期</th>
-                <th style='width:80px;'>签约人</th>
-                <th style='width:100px;'>学生</th>
+                <th style='width:55px;'>日期</th>
+                <th style='width:75px;'>签约人</th>
+                <th style='width:75px;'>学生</th>
                 <th style='width:55px;'>年级</th>
                 <th style='width:55px;'>类型</th>
-                <th style='width:120px;'>课程</th>
-                <th style='width:60px;'>类型</th>
-                <th style='width:60px;' class="text-right">课时数量</th>
-                <th style='width:60px;' class="text-right">单价</th>
+                <th style='width:130px;'>课程</th>
+                <th style='width:70px;'>课程类型</th>
+                <th style='width:70px;' class="text-right">课时数量</th>
+                <th style='width:65px;' class="text-right">单价</th>
                 <th style='width:50px;' class="text-right">折扣</th>
                 <th style='width:70px;' class="text-right">优惠金额</th>
-                <th style='width:60px;' class="text-right">赠送课时</th>
-                <th style='width:60px;' class="text-right">总课时</th>
-                <th style='width:80px;' class="text-right">课程应收</th>
-                <th style='width:100px;' class="text-right">合计金额</th>
-                <th style='width:100px;' class="text-right">实付金额</th>
+                <th style='width:70px;' class="text-right">赠送课时</th>
+                <th style='width:70px;' class="text-right">总课时</th>
+                <th style='width:90px;' class="text-right">课程应收</th>
+                <th style='width:110px;' class="text-right">合计金额</th>
+                <th style='width:110px;' class="text-right">实付金额</th>
+                <th style='width:80px;'>操作</th>
               </tr>
             </thead>
             <tbody>
@@ -157,14 +158,9 @@
                 <td rowspan="{{$contract['contract_course_num']}}">{{ $loop->iteration }}</td>
                 <td rowspan="{{$contract['contract_course_num']}}">{{ $contract['department_name'] }}</td>
                 <td rowspan="{{$contract['contract_course_num']}}">{{ date('m-d', strtotime($contract['contract_date'])) }}</td>
-                <td rowspan="{{$contract['contract_course_num']}}">{{ $contract['user_name'] }}</td>
+                <td rowspan="{{$contract['contract_course_num']}}"><a href="/user?id={{encode($contract['user_id'],'user_id')}}">{{ $contract['user_name'] }}</a></td>
                 <td rowspan="{{$contract['contract_course_num']}}">
-                  {{ $contract['student_name'] }}&nbsp;
-                  @if($contract['student_gender']=="男")
-                    <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
-                  @else
-                    <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
-                  @endif
+                  <a href="/student?id={{encode($contract['student_id'],'student_id')}}">{{ $contract['student_name'] }}</a>
                 </td>
                 <td rowspan="{{$contract['contract_course_num']}}">{{ $contract['grade_name'] }}</td>
                 @if($contract['contract_type']==0)
@@ -187,6 +183,7 @@
                 @else
                   <td rowspan="{{$contract['contract_course_num']}}" class="text-right" title="{{ number_format($contract['contract_paid_price'], 2) }} 元"><span style="color:red;"><strong>{{ number_format($contract['contract_paid_price'], 2) }} 元</strong></span></td>
                 @endif
+                <td rowspan="{{$contract['contract_course_num']}}"><a href="/contract?id={{encode($contract['contract_id'],'contract_id')}}">查看合同</a></td>
               </tr>
               @for ($i = 1; $i < $contract['contract_course_num']; $i++)
                 <tr>
@@ -215,6 +212,6 @@
 <script>
   linkActive('link-finance');
   navbarActive('navbar-finance');
-  linkActive('financeIndividualContract');
+  linkActive('financeContract');
 </script>
 @endsection
