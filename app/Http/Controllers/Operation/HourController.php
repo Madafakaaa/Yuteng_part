@@ -330,12 +330,7 @@ class HourController extends Controller
                   ->where('hour_student', $student_id)
                   ->where('hour_course', $course_id)
                   ->first();
-        if($hour->hour_remain<=0){
-            return redirect("/operation/hour")->with(['notify' => true,
-                                                     'type' => 'danger',
-                                                     'title' => '课时清理失败',
-                                                     'message' => '学生没有可清理课时，错误码:314']);
-        }
+
         // 获取学生信息
         $student = DB::table('student')
                   ->where('student_id', $student_id)

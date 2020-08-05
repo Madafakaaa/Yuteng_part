@@ -118,6 +118,14 @@ class StudentController extends Controller
                    ->where('hour_student', '=', $student_id)
                    ->get();
 
+        // 获取课时更新记录
+        $hour_update_records = DB::table('hour_update_record')
+                                 ->join('course', 'hour_update_record.hour_update_record_course', '=', 'course.course_id')
+                                 ->join('user', 'hour_update_record.hour_update_record_createuser', '=', 'user.user_id')
+                                 ->join('student', 'hour_update_record.hour_update_record_student', '=', 'student.student_id')
+                                 ->where('hour_update_record_student', '=', $student_id)
+                                 ->get();
+
         // 获取签约合同
         $contracts = DB::table('contract')
                        ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
@@ -141,6 +149,7 @@ class StudentController extends Controller
                                      'schedules' => $schedules,
                                      'attended_schedules' => $attended_schedules,
                                      'hours' => $hours,
+                                     'hour_update_records' => $hour_update_records,
                                      'contracts' => $contracts,
                                      'student_records' => $student_records,]);
     }

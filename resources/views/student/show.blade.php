@@ -144,6 +144,9 @@
             <a class="nav-link mb-3" id="hour-tab" data-toggle="tab" href="#hour-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>剩余课时</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link mb-3" id="hour-update-record-tab" data-toggle="tab" href="#hour-update-record-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>课时修改记录</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link mb-3" id="contract-tab" data-toggle="tab" href="#contract-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>学生合同</a>
           </li>
           <li class="nav-item">
@@ -286,6 +289,37 @@
                       <td>{{ $hour->hour_remain }} 课时</td>
                       <td>{{ $hour->hour_used }} 课时</td>
                       <td>{{ $hour->hour_average_price }} 元/课时</td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="hour-update-record-card" role="tabpanel">
+          <div class="card mb-4">
+            <div class="table-responsive py-4">
+              <table class="table table-flush datatable-basic">
+                <thead class="thead-light">
+                  <tr>
+                    <th style="width:20px;">序号</th>
+                    <th style="width:90px;">课程</th>
+                    <th style="width:45px;">修改前剩余</th>
+                    <th style="width:45px;">修改后剩余</th>
+                    <th style="width:200px;">修改备注</th>
+                    <th style="width:70px;">修改用户</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($hour_update_records as $hour_update_record)
+                    <tr>
+                      <td>{{ $loop->iteration }}</td>
+                      <td>{{ $hour_update_record->course_name }}</td>
+                      <td>{{ $hour_update_record->hour_update_record_remain_before }} 课时</td>
+                      <td>{{ $hour_update_record->hour_update_record_remain_after }} 课时</td>
+                      <td>{{ $hour_update_record->hour_update_record_remark }}</td>
+                      <td><a href="/user?id={{encode($hour_update_record->user_id,'user_id')}}">{{ $hour_update_record->user_name }}</a></td>
                     </tr>
                   @endforeach
                 </tbody>
