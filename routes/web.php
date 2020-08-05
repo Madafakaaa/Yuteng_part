@@ -154,9 +154,6 @@ Route::get('/market/myContract', 'Market\MyContractController@myContract');
 // 运营中心 ********************************************************************************
 // 学生管理
 Route::get('/operation/student', 'Operation\StudentController@student');
-    // 插入班级
-    Route::get('/operation/student/member/add', 'Operation\StudentController@studentMemberAdd');
-    Route::post('/operation/student/member/store', 'Operation\StudentController@studentMemberStore');
     // 修改学生负责人
     Route::get('/operation/student/follower/edit', 'Operation\StudentController@followerEdit');
     Route::post('/operation/student/follower/update', 'Operation\StudentController@followerUpdate');
@@ -319,7 +316,7 @@ Route::get('/user', 'UserController@show');
     // 修改用户
     Route::get('/user/edit', 'UserController@edit');
     // 更新用户
-    Route::get('/user/update', 'UserController@update');
+    Route::post('/user/update', 'UserController@update');
 
 
 // 学生详情

@@ -15,7 +15,7 @@
 @section('content')
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-7 col-sm-12 card-wrapper ct-example">
+    <div class="col-lg-8 col-md-8 col-sm-12 card-wrapper ct-example">
       <div class="card">
         <form action="/operation/student/joinClass/store" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submitButton1')">
           @csrf
@@ -30,7 +30,7 @@
               </div>
               <div class="col-4 px-2 mb-2">
                 <div class="form-group mb-1">
-                  <label>{{ $student->student_name }}</label>
+                  <label><a href="/student?id={{encode($student->student_id,'student_id')}}">{{ $student->student_name }}</a></label>
                   <input type="hidden" name="input1" value="{{ $student->student_id }}">
                 </div>
               </div>
@@ -59,7 +59,7 @@
                   <select class="form-control form-control-sm" name="input3" data-toggle="select" required>
                     <option value=''>请选择班级...</option>
                     @foreach ($classes as $class)
-                      <option value="{{ $class->class_id }}">{{ $class->class_name }}  （ {{ $class->subject_name }}，{{ $class->class_current_num }}/{{ $class->class_max_num }}人，教师：{{ $class->user_name }}，已安排课程{{ $class->class_schedule_num }}节，已上{{ $class->class_attended_num }}节 ）</option>
+                      <option value="{{ $class->class_id }}">{{ $class->class_name }}  [ {{ $class->class_current_num }}/{{ $class->class_max_num }}人，教师：{{ $class->user_name }}，已排{{ $class->class_schedule_num }}节，已上{{ $class->class_attended_num }}节 ]</option>
                     @endforeach
                   </select>
                 </div>

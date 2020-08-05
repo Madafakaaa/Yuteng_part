@@ -1,11 +1,12 @@
 @extends('main')
 
 @section('nav')
-<h2 class="text-white d-inline-block mb-0">用户管理</h2>
+<h2 class="text-white d-inline-block mb-0">修改用户</h2>
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">用户管理</li>
+    <li class="breadcrumb-item active">修改用户</li>
   </ol>
 </nav>
 @endsection
@@ -15,9 +16,11 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-9 col-sm-12 card-wrapper ct-example">
       <div class="card">
-        <form action="/user/{{ $user->user_id }}" method="post">
-          @method('PUT')
+        <form action="/user/update?id={{encode($user->user_id,'user_id')}}" method="post">
           @csrf
+          <div class="card-header">
+            <h3 class="mb-0">修改用户</h3>
+          </div>
           <!-- Card body -->
           <div class="card-body">
             <div class="row">

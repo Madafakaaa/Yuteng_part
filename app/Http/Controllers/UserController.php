@@ -124,22 +124,23 @@ class UserController extends Controller
      * URL: GET /user/{id}/edit
      * @param  int  $user_id
      */
-    public function edit($user_id){
+    public function edit(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        // 获取数据信息
-        $user = DB::table('user')->where('user_id', $user_id)->get();
-        if($user->count()!==1){
-            // 未获取到数据
-            return redirect()->action('UserController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '用户显示失败',
-                                     'message' => '用户显示失败，请联系系统管理员']);
+
+        if(Session::get('user_level')>3){
+            return redirect("/user?id=".$request->input('id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '用户权限不足',
+                           'message' => '用户权限不足']);
         }
-        $user = $user[0];
+
+        $user_id = decode($request->input('id'), 'user_id');
+        // 获取数据信息
+        $user = DB::table('user')->where('user_id', $user_id)->first();
         // 获取校区、岗位信息
         $departments = DB::table('department')->where('department_status', 1)->orderBy('department_id', 'asc')->get();
         $positions = DB::table('position')
@@ -165,11 +166,12 @@ class UserController extends Controller
      * @param  $request->input('input8'): 用户微信
      * @param  int  $user_id: 用户id
      */
-    public function update(Request $request, $user_id){
+    public function update(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        $user_id = decode($request->input('id'), 'user_id');
         // 获取表单输入
         $user_name = $request->input('input1');
         $user_gender = $request->input('input2');
@@ -202,15 +204,15 @@ class UserController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("/user/{$user_id}/edit")->with(['notify' => true,
+            return redirect("/user/edit?id=".$request->input('id'))->with(['notify' => true,
                                                             'type' => 'danger',
                                                             'title' => '用户修改失败',
                                                             'message' => '用户修改失败，请重新输入信息']);
         }
-        return redirect("/user/{$user_id}")->with(['notify' => true,
+        return redirect("/user?id=".$request->input('id'))->with(['notify' => true,
                                                    'type' => 'success',
                                                    'title' => '用户修改成功',
-                                                   'message' => '用户修改成功，用户序号: '.$user_id.', 用户名称: '.$user_name]);
+                                                   'message' => '用户修改成功']);
     }
 
 }
