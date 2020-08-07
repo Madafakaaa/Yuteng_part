@@ -63,15 +63,6 @@ $(document).ready(function(){
         });
     });
 
-    // swal({
-    //     title:"Warning",
-    //     text:"<a href='/operation/schedule'>个人风格发动机号</a>",
-    //     type:"warning",
-    //     buttonsStyling:!1,
-    //     content: "<a href='/operation/schedule'>个人风格发动机号</a>",
-    //     confirmButtonClass:"btn btn-warning"
-    // });
-
 });
 
 

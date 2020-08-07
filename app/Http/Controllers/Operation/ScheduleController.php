@@ -29,31 +29,6 @@ class ScheduleController extends Controller
         // 获取用户校区权限
         $department_access = Session::get('department_access');
 
-        // 搜索条件
-        $filters = array(
-                        "filter_department" => null,
-                        "filter_grade" => null,
-                        "filter_name" => null,
-                        "filter_subject" => null,
-                        "filter_teacher" => null,
-                        "filter_date" => null,
-                    );
-        // 获取日期
-        if ($request->filled('filter_date')) {
-            $date = $request->input("filter_date");
-            $filters['filter_date'] = $request->input("filter_date");
-        }else{
-            $date = date('Y-m-d');
-        }
-        // 获取周一、周日日期
-        $diff = array(6, 0, 1, 2, 3, 4, 5);
-        $first_day = date('Y-m-d', strtotime ("-".$diff[date("w",strtotime($date))]." day", strtotime($date)));
-        $last_day = date('Y-m-d', strtotime ("+6 day", strtotime($first_day)));
-        // 获取上周周一日期
-        $first_day_prev = date('Y-m-d', strtotime ("-7 day", strtotime($first_day)));
-        // 获取下周周一日期
-        $first_day_next = date('Y-m-d', strtotime ("+7 day", strtotime($first_day)));
-
         // 获取数据
         $rows = DB::table('schedule')
                   ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
@@ -65,9 +40,17 @@ class ScheduleController extends Controller
                   ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                   ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                   ->whereIn('schedule_department', $department_access)
-                  ->where('schedule_attended', '=', 0)
-                  ->where('schedule_date', '>=', $first_day)
-                  ->where('schedule_date', '<=', $last_day);
+                  ->where('schedule_attended', '=', 0);
+
+        // 搜索条件
+        $filters = array(
+                        "filter_department" => null,
+                        "filter_grade" => null,
+                        "filter_class" => null,
+                        "filter_subject" => null,
+                        "filter_teacher" => null,
+                        "filter_date" => null,
+                    );
 
         // 班级校区
         if ($request->filled('filter_department')) {
@@ -84,21 +67,21 @@ class ScheduleController extends Controller
             $rows = $rows->where('class_subject', '=', $request->input('filter_subject'));
             $filters['filter_subject']=$request->input("filter_subject");
         }
-        // 判断是否有搜索条件
-        $filter_status = 0;
-        // 班级名称
-        if ($request->filled('filter_name')) {
-            $rows = $rows->where('class_name', 'like', '%'.$request->input('filter_name').'%');
-            $filters['filter_name']=$request->input("filter_name");
-            $filter_status = 1;
+        // 班级
+        if ($request->filled('filter_class')) {
+            $rows = $rows->where('class_id', '=', $request->input('filter_class'));
+            $filters['filter_class']=$request->input("filter_class");
         }
         // 负责教师
         if ($request->filled('filter_teacher')) {
             $rows = $rows->where('class_teacher', '=', $request->input('filter_teacher'));
             $filters['filter_teacher']=$request->input("filter_teacher");
-            $filter_status = 1;
         }
-
+        // 上课日期
+        if ($request->filled('filter_date')) {
+            $rows = $rows->where('schedule_date', '=', $request->input('filter_date'));
+            $filters['filter_date']=$request->input("filter_date");
+        }
 
         // 保存数据总数
         $totalNum = $rows->count();
@@ -142,23 +125,26 @@ class ScheduleController extends Controller
                           ->orderBy('user_department', 'asc')
                           ->orderBy('user_position', 'desc')
                           ->get();
+        $filter_classes = DB::table('class')
+                          ->join('department', 'class.class_department', '=', 'department.department_id')
+                          ->where('class_status', 1)
+                          ->whereIn('class_department', $department_access)
+                          ->orderBy('class_department', 'asc')
+                          ->orderBy('class_grade', 'asc')
+                          ->get();
 
         // 返回列表视图
         return view('operation/schedule/schedule', ['rows' => $rows,
-                                                    'first_day' => $first_day,
-                                                    'last_day' => $last_day,
-                                                    'first_day_prev' => $first_day_prev,
-                                                    'first_day_next' => $first_day_next,
                                                    'currentPage' => $currentPage,
                                                    'totalPage' => $totalPage,
                                                    'startIndex' => $offset,
                                                    'request' => $request,
                                                    'filters' => $filters,
                                                    'totalNum' => $totalNum,
-                                                   'filter_status' => $filter_status,
                                                    'filter_departments' => $filter_departments,
                                                    'filter_grades' => $filter_grades,
                                                    'filter_subjects' => $filter_subjects,
+                                                   'filter_classes' => $filter_classes,
                                                    'filter_users' => $filter_users]);
     }
 
@@ -455,6 +441,7 @@ class ScheduleController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
+            return $e;
             // 返回第一步
             return redirect("/operation/schedule/attend?id=".encode($schedule_id, 'schedule_id'))
                    ->with(['notify' => true,

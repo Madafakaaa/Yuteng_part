@@ -158,32 +158,30 @@
             </div>
             <hr>
             <div class="row">
-              <div class="col-2 text-right">
-                <label class="form-control-label">统一扣除课时</label>
+              <div class="col-8 text-right">
+                <div class="custom-control custom-checkbox mt-1">
+                  <input class="custom-control-input" id="checkbox1" type="checkbox" onClick="updateSelectStatus({{ count($student_courses) }})">
+                  <label class="custom-control-label form-control-label" for="checkbox1">统一扣除课时</label>
+                </div>
               </div>
               <div class="col-4 px-2 mb-2">
                 <div class="form-group mb-1">
-                  <input class="form-control form-control-sm datepicker" type="text" name="input_date" value="{{ $schedule->schedule_date }}" required>
+                  <select class="form-control form-control-sm" id="hour_amount" readonly onChange="updateSelectAmount({{ count($student_courses) }})">
+                    <option value='0.5'>0.5 课时</option>
+                    <option value='1'>1 课时</option>
+                    <option value='1.5'>1.5 课时</option>
+                    <option value='2'>2 课时</option>
+                    <option value='2.5'>2.5 课时</option>
+                    <option value='3' selected>3 课时</option>
+                    <option value='3.5'>3.5 课时</option>
+                    <option value='4'>4 课时</option>
+                    <option value='4.5'>4.5 课时</option>
+                    <option value='5'>5 课时</option>
+                    <option value='5.5'>5.5 课时</option>
+                    <option value='6'>6 课时</option>
+                  </select>
                 </div>
               </div>
-                <div class="col-4 px-2 mb-2">
-                  <div class="form-group mb-1">
-                    <select class="form-control form-control-sm" id="sc">
-                      <option value='0.5'>0.5 课时</option>
-                      <option value='1'>1 课时</option>
-                      <option value='1.5'>1.5 课时</option>
-                      <option value='2'>2 课时</option>
-                      <option value='2.5'>2.5 课时</option>
-                      <option value='3' selected>3 课时</option>
-                      <option value='3.5'>3.5 课时</option>
-                      <option value='4'>4 课时</option>
-                      <option value='4.5'>4.5 课时</option>
-                      <option value='5'>5 课时</option>
-                      <option value='5.5'>5.5 课时</option>
-                      <option value='6'>6 课时</option>
-                    </select>
-                  </div>
-                </div>
             </div>
             <hr>
             @foreach ($student_courses as $student_course)
@@ -303,5 +301,36 @@ function disableInput(a){
     $("#input"+a+"_3").removeAttr("disabled");
   }
 }
+
+function updateSelectStatus(a){
+  if($("#checkbox1").is(':checked')){
+    //关闭单独选择
+    for (var i=1;i<=a;i++){
+      $("#input"+i+"_3").attr("readonly","readonly");
+    }
+    //打开统一选择
+    $("#hour_amount").removeAttr("readonly");
+  }else{
+    //关闭统一选择
+    $("#hour_amount").attr("readonly","readonly");
+    //打开单独选择
+    for (var i=1;i<=a;i++){
+      $("#input"+i+"_3").removeAttr("readonly");
+    }
+  }
+}
+
+function updateSelectAmount(a){
+  if($("#checkbox1").is(':checked')){
+    // 获取选取统一值
+    var selectedValue=$("#hour_amount").val();
+    // 赋值
+    for (var i=1;i<=a;i++){
+      $("#input"+i+"_3 option[value='"+selectedValue+"']").attr("selected", true);
+    }
+  }
+}
+
+
 </script>
 @endsection
