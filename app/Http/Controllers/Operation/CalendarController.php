@@ -26,6 +26,8 @@ class CalendarController extends Controller
                         "filter_subject" => null,
                         "filter_date" => null,
                         "filter_attended" => null,
+                        "filter_class" => null,
+                        "filter_teacher" => null,
                     );
 
         // 获取日期
@@ -50,6 +52,14 @@ class CalendarController extends Controller
         // 点名状态
         if ($request->filled('filter_attended')) {
             $filters['filter_attended']=$request->input("filter_attended");
+        }
+        // 上课班级
+        if ($request->filled('filter_class')) {
+            $filters['filter_class']=$request->input("filter_class");
+        }
+        // 任课老师
+        if ($request->filled('filter_teacher')) {
+            $filters['filter_teacher']=$request->input("filter_teacher");
         }
 
         // 获取周一、周日日期
@@ -122,6 +132,14 @@ class CalendarController extends Controller
             if ($request->filled('filter_subject')) {
                 $schedules = $schedules->where('schedule_subject', '=', $request->input('filter_subject'));
             }
+            // 上课班级
+            if ($request->filled('filter_class')) {
+                $schedules = $schedules->where('schedule_participant', '=', $request->input('filter_class'));
+            }
+            // 任课老师
+            if ($request->filled('filter_teacher')) {
+                $schedules = $schedules->where('schedule_teacher', '=', $request->input('filter_teacher'));
+            }
             $schedules = $schedules->get();
 
             foreach($schedules as $schedule){
@@ -176,6 +194,14 @@ class CalendarController extends Controller
             if ($request->filled('filter_subject')) {
                 $attended_schedules = $attended_schedules->where('schedule_subject', '=', $request->input('filter_subject'));
             }
+            // 上课班级
+            if ($request->filled('filter_class')) {
+                $attended_schedules = $attended_schedules->where('schedule_participant', '=', $request->input('filter_class'));
+            }
+            // 任课老师
+            if ($request->filled('filter_teacher')) {
+                $attended_schedules = $attended_schedules->where('schedule_teacher', '=', $request->input('filter_teacher'));
+            }
             $attended_schedules = $attended_schedules->get();
 
             foreach($attended_schedules as $schedule){
@@ -206,6 +232,21 @@ class CalendarController extends Controller
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_ids)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
+        $filter_users = DB::table('user')
+                          ->join('department', 'user.user_department', '=', 'department.department_id')
+                          ->join('position', 'user.user_position', '=', 'position.position_id')
+                          ->where('user_status', 1)
+                          ->whereIn('user_department', $department_ids)
+                          ->orderBy('user_department', 'asc')
+                          ->orderBy('user_position', 'desc')
+                          ->get();
+        $filter_classes = DB::table('class')
+                          ->join('department', 'class.class_department', '=', 'department.department_id')
+                          ->where('class_status', 1)
+                          ->whereIn('class_department', $department_ids)
+                          ->orderBy('class_department', 'asc')
+                          ->orderBy('class_grade', 'asc')
+                          ->get();
 
         return view('operation/calendar/week', ['calendars' => $calendars,
                                                 'rows' => $rows,
@@ -216,7 +257,9 @@ class CalendarController extends Controller
                                                 'filters' => $filters,
                                                 'filter_departments' => $filter_departments,
                                                 'filter_grades' => $filter_grades,
-                                                'filter_subjects' => $filter_subjects]);
+                                                'filter_subjects' => $filter_subjects,
+                                                'filter_classes' => $filter_classes,
+                                                'filter_users' => $filter_users]);
     }
 
     public function calendarDay(Request $request)
@@ -236,6 +279,8 @@ class CalendarController extends Controller
                         "filter_subject" => null,
                         "filter_date" => null,
                         "filter_attended" => null,
+                        "filter_class" => null,
+                        "filter_teacher" => null,
                     );
 
         // 获取日期
@@ -260,6 +305,14 @@ class CalendarController extends Controller
         // 点名状态
         if ($request->filled('filter_attended')) {
             $filters['filter_attended']=$request->input("filter_attended");
+        }
+        // 上课班级
+        if ($request->filled('filter_class')) {
+            $filters['filter_class']=$request->input("filter_class");
+        }
+        // 任课老师
+        if ($request->filled('filter_teacher')) {
+            $filters['filter_teacher']=$request->input("filter_teacher");
         }
 
         // 获取上周周一日期
@@ -327,6 +380,14 @@ class CalendarController extends Controller
             if ($request->filled('filter_subject')) {
                 $schedules = $schedules->where('schedule_subject', '=', $request->input('filter_subject'));
             }
+            // 上课班级
+            if ($request->filled('filter_class')) {
+                $schedules = $schedules->where('schedule_participant', '=', $request->input('filter_class'));
+            }
+            // 任课老师
+            if ($request->filled('filter_teacher')) {
+                $schedules = $schedules->where('schedule_teacher', '=', $request->input('filter_teacher'));
+            }
             $schedules = $schedules->get();
 
             foreach($schedules as $schedule){
@@ -379,6 +440,14 @@ class CalendarController extends Controller
             if ($request->filled('filter_subject')) {
                 $attended_schedules = $attended_schedules->where('schedule_subject', '=', $request->input('filter_subject'));
             }
+            // 上课班级
+            if ($request->filled('filter_class')) {
+                $attended_schedules = $attended_schedules->where('schedule_participant', '=', $request->input('filter_class'));
+            }
+            // 任课老师
+            if ($request->filled('filter_teacher')) {
+                $attended_schedules = $attended_schedules->where('schedule_teacher', '=', $request->input('filter_teacher'));
+            }
             $attended_schedules = $attended_schedules->get();
 
             foreach($attended_schedules as $schedule){
@@ -409,6 +478,21 @@ class CalendarController extends Controller
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_ids)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
+        $filter_users = DB::table('user')
+                          ->join('department', 'user.user_department', '=', 'department.department_id')
+                          ->join('position', 'user.user_position', '=', 'position.position_id')
+                          ->where('user_status', 1)
+                          ->whereIn('user_department', $department_ids)
+                          ->orderBy('user_department', 'asc')
+                          ->orderBy('user_position', 'desc')
+                          ->get();
+        $filter_classes = DB::table('class')
+                          ->join('department', 'class.class_department', '=', 'department.department_id')
+                          ->where('class_status', 1)
+                          ->whereIn('class_department', $department_ids)
+                          ->orderBy('class_department', 'asc')
+                          ->orderBy('class_grade', 'asc')
+                          ->get();
 
         return view('operation/calendar/day', ['calendars' => $calendars,
                                                 'rows' => $rows,
@@ -418,7 +502,9 @@ class CalendarController extends Controller
                                                 'filters' => $filters,
                                                 'filter_departments' => $filter_departments,
                                                 'filter_grades' => $filter_grades,
-                                                'filter_subjects' => $filter_subjects]);
+                                                'filter_subjects' => $filter_subjects,
+                                                'filter_classes' => $filter_classes,
+                                                'filter_users' => $filter_users]);
     }
 
 }

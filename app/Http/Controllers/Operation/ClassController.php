@@ -38,7 +38,7 @@ class ClassController extends Controller
         $filters = array(
                         "filter_department" => null,
                         "filter_grade" => null,
-                        "filter_name" => null,
+                        "filter_class" => null,
                         "filter_subject" => null,
                         "filter_teacher" => null,
                     );
@@ -58,19 +58,15 @@ class ClassController extends Controller
             $rows = $rows->where('class_subject', '=', $request->input('filter_subject'));
             $filters['filter_subject']=$request->input("filter_subject");
         }
-        // 判断是否有搜索条件
-        $filter_status = 0;
         // 班级名称
-        if ($request->filled('filter_name')) {
-            $rows = $rows->where('class_name', 'like', '%'.$request->input('filter_name').'%');
-            $filters['filter_name']=$request->input("filter_name");
-            $filter_status = 1;
+        if ($request->filled('filter_class')) {
+            $rows = $rows->where('class_id', '=', $request->input('filter_class'));
+            $filters['filter_class']=$request->input("filter_class");
         }
         // 负责教师
         if ($request->filled('filter_teacher')) {
             $rows = $rows->where('class_teacher', '=', $request->input('filter_teacher'));
             $filters['filter_teacher']=$request->input("filter_teacher");
-            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -95,6 +91,13 @@ class ClassController extends Controller
                           ->whereIn('user_department', $department_access)
                           ->orderBy('user_department', 'asc')
                           ->orderBy('user_position', 'desc')
+                          ->get();
+        $filter_classes = DB::table('class')
+                          ->join('department', 'class.class_department', '=', 'department.department_id')
+                          ->where('class_status', 1)
+                          ->whereIn('class_department', $department_access)
+                          ->orderBy('class_department', 'asc')
+                          ->orderBy('class_grade', 'asc')
                           ->get();
 
         $members = array();
@@ -143,10 +146,10 @@ class ClassController extends Controller
                                               'request' => $request,
                                               'filters' => $filters,
                                               'totalNum' => $totalNum,
-                                              'filter_status' => $filter_status,
                                               'filter_departments' => $filter_departments,
                                               'filter_grades' => $filter_grades,
                                               'filter_subjects' => $filter_subjects,
+                                              'filter_classes' => $filter_classes,
                                               'filter_users' => $filter_users]);
     }
 

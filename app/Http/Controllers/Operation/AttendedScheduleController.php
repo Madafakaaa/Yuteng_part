@@ -201,7 +201,6 @@ class AttendedScheduleController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return $e;
             return redirect("/operation/attendedSchedule")
                    ->with(['notify' => true,
                          'type' => 'danger',
