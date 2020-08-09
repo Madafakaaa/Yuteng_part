@@ -315,20 +315,18 @@
           </a>
           <div class="collapse" id="navbar-finance">
             <ul class="nav nav-sm flex-column">
-              @if(Session::get('user_id')=='yuto2018')
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('financeContract', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/finance/contract" class="nav-link" id="financeContract">
                   <i class="ni ni-money-coins text-default"></i>
                   <span class="nav-link-text">签约统计</span>
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" @if(!in_array('financeConsumption', Session::get('page_access'))) style="display:none;" @endif>
                 <a href="/finance/consumption" class="nav-link" id="financeConsumption">
                   <i class="ni ni-single-copy-04 text-default"></i>
                   <span class="nav-link-text">课消统计</span>
                 </a>
               </li>
-              @endif
               <!-- <li class="nav-item">
                 <a href="/finance/consumption" class="nav-link" id="financeConsumption">
                   <i class="ni ni-book-bookmark text-default"></i>

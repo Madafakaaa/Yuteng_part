@@ -15,61 +15,55 @@
 <div class="container-fluid mt-4">
   <div class="row mb-3">
     <div class="col-auto">
-      <a class="btn btn-sm btn-neutral btn-round btn-icon"data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
-        <span class="btn-inner--icon"><i class="fas fa-search"></i></span>
-        <span class="btn-inner--text">搜索</span>
+      <a href="?">
+        <button class="btn btn-sm btn-outline-primary btn-round btn-icon">
+          <span class="btn-inner--icon"><i class="fas fa-redo"></i></span>
+          <span class="btn-inner--text">重置</span>
+        </button>
       </a>
     </div>
   </div>
   <div class="row justify-content-center">
     <div class="col-12">
-      <div class="collapse @if($filter_status==1) show @endif" id="filter">
-        <div class="card mb-4">
-          <div class="card-body border-1 p-0 my-1">
-            <form action="" method="get">
-              <div class="row m-2">
-                <div class="col-lg-8 col-md-8 col-sm-12 mb-1">
-                  <div class="row">
-                    <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
-                      <input class="form-control" type="text" name="filter_name" placeholder="学生姓名..." autocomplete="off" @if(isset($filters['filter_name']))) value="{{ $filters['filter_name'] }}" @endif>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-12 mb-1">
-                  <div class="row">
-                    <div class="col-lg-6 col-md-12 col-sm-12 mb-1">
-                      <input type="hidden" name="filter_department" value="{{$filters['filter_department']}}">
-                      <input type="hidden" name="filter_grade" value="{{$filters['filter_grade']}}">
-                      <input type="submit" class="btn btn-primary btn-block" value="查询">
-                    </div>
-                    <div class="col-lg-6 col-md-12 col-sm-12 mb-1">
-                      <a href="?"><button type="button" class="form-control btn btn-outline-primary btn-block" style="white-space:nowrap; overflow:hidden;">重置</button></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
       <div class="card mb-4">
-        <div class="card-header p-2" style="border-bottom:0px;">
-          <small class="text-muted font-weight-bold px-2">校区：</small>
-          <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach">
-            <button type="button" @if(!isset($filters['filter_department'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
-          </a>
-          @foreach($filter_departments as $filter_department)
-            <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach &filter_department={{$filter_department->department_id}}"><button type="button" @if($filters['filter_department']==$filter_department->department_id) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>{{$filter_department->department_name}}</button></a>
-          @endforeach
-        </div>
-        <div class="card-header p-2" style="border-bottom:0px;">
-          <small class="text-muted font-weight-bold px-2">年级：</small>
-          <a href="?@foreach($filters as $key => $value) @if($key!='filter_grade') {{$key}}={{$value}}& @endif @endforeach">
-            <button type="button" @if(!isset($filters['filter_grade'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
-          </a>
-          @foreach($filter_grades as $filter_grade)
-            <a href="?@foreach($filters as $key => $value) @if($key!='filter_grade') {{$key}}={{$value}}& @endif @endforeach filter_grade={{$filter_grade->grade_id}}"><button type="button" @if($filters['filter_grade']==$filter_grade->grade_id) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>{{$filter_grade->grade_name}}</button></a>
-          @endforeach
+        <div class="card-header p-1" style="border-bottom:0px;">
+          <form action="" method="get" id="filterForm">
+            <input type="hidden" name="filter_department" value="{{$filters['filter_department']}}">
+            <input type="hidden" name="filter_grade" value="{{$filters['filter_grade']}}">
+            <div class="row m-2">
+              <div class="col-12">
+                <small class="text-muted font-weight-bold px-2">校区：</small>
+                <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach">
+                  <button type="button" @if(!isset($filters['filter_department'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
+                </a>
+                @foreach($filter_departments as $filter_department)
+                  <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach &filter_department={{$filter_department->department_id}}"><button type="button" @if($filters['filter_department']==$filter_department->department_id) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>{{$filter_department->department_name}}</button></a>
+                @endforeach
+              </div>
+            </div>
+            <div class="row m-2">
+              <div class="col-12">
+                <small class="text-muted font-weight-bold px-2">年级：</small>
+                <a href="?@foreach($filters as $key => $value) @if($key!='filter_grade') {{$key}}={{$value}}& @endif @endforeach">
+                  <button type="button" @if(!isset($filters['filter_grade'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
+                </a>
+                @foreach($filter_grades as $filter_grade)
+                  <a href="?@foreach($filters as $key => $value) @if($key!='filter_grade') {{$key}}={{$value}}& @endif @endforeach filter_grade={{$filter_grade->grade_id}}"><button type="button" @if($filters['filter_grade']==$filter_grade->grade_id) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>{{$filter_grade->grade_name}}</button></a>
+                @endforeach
+              </div>
+            </div>
+            <hr>
+            <div class="row m-2">
+              <div class="col-3">
+                <select class="form-control form-control-sm" name="filter_student" data-toggle="select" onChange="form_submit('filterForm')">
+                  <option value=''>搜索学生...</option>
+                  @foreach ($filter_students as $filter_student)
+                    <option value="{{ $filter_student->student_id }}" @if($filters['filter_student']==$filter_student->student_id) selected @endif>[ {{ $filter_student->department_name }} ] {{ $filter_student->student_name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </form>
         </div>
         <div class="table-responsive freeze-table-4">
           <table class="table align-items-center table-hover text-left">
@@ -89,7 +83,7 @@
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="11">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="10">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
               <tr>

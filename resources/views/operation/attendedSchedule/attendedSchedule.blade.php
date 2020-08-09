@@ -36,7 +36,7 @@
             <input type="hidden" name="filter_grade" value="{{$filters['filter_grade']}}">
             <input type="hidden" name="filter_subject" value="{{$filters['filter_subject']}}">
             <div class="row m-2">
-              <div class="col-7">
+              <div class="col-12">
                 <small class="text-muted font-weight-bold px-2">校区：</small>
                 <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach">
                   <button type="button" @if(!isset($filters['filter_department'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
@@ -45,20 +45,9 @@
                   <a href="?@foreach($filters as $key => $value) @if($key!='filter_department') {{$key}}={{$value}}& @endif @endforeach &filter_department={{$filter_department->department_id}}"><button type="button" @if($filters['filter_department']==$filter_department->department_id) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>{{$filter_department->department_name}}</button></a>
                 @endforeach
               </div>
-              <div class="col-2 text-right">
-                <small class="text-muted font-weight-bold px-2">班级：</small>
-              </div>
-              <div class="col-3">
-                <select class="form-control form-control-sm" name="filter_class" data-toggle="select" onChange="form_submit('filterForm')">
-                  <option value=''>选择班级...</option>
-                  @foreach ($filter_classes as $filter_class)
-                    <option value="{{ $filter_class->class_id }}" @if($filters['filter_class']==$filter_class->class_id) selected @endif>[ {{ $filter_class->department_name }} ] {{ $filter_class->class_name }}</option>
-                  @endforeach
-                </select>
-              </div>
             </div>
             <div class="row m-2">
-              <div class="col-7">
+              <div class="col-12">
                 <small class="text-muted font-weight-bold px-2">年级：</small>
                 <a href="?@foreach($filters as $key => $value) @if($key!='filter_grade') {{$key}}={{$value}}& @endif @endforeach">
                   <button type="button" @if(!isset($filters['filter_grade'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
@@ -67,20 +56,9 @@
                   <a href="?@foreach($filters as $key => $value) @if($key!='filter_grade') {{$key}}={{$value}}& @endif @endforeach filter_grade={{$filter_grade->grade_id}}"><button type="button" @if($filters['filter_grade']==$filter_grade->grade_id) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>{{$filter_grade->grade_name}}</button></a>
                 @endforeach
               </div>
-              <div class="col-2 text-right">
-                <small class="text-muted font-weight-bold px-2">教师：</small>
-              </div>
-              <div class="col-3">
-                <select class="form-control form-control-sm" name="filter_teacher" data-toggle="select" onChange="form_submit('filterForm')">
-                  <option value=''>选择教师...</option>
-                  @foreach ($filter_users as $filter_user)
-                    <option value="{{ $filter_user->user_id }}" @if($filters['filter_teacher']==$filter_user->user_id) selected @endif>[ {{$filter_user->department_name}} ] {{ $filter_user->user_name }}</option>
-                  @endforeach
-                </select>
-              </div>
             </div>
             <div class="row m-2">
-              <div class="col-7">
+              <div class="col-12">
                 <small class="text-muted font-weight-bold px-2">科目：</small>
                 <a href="?@foreach($filters as $key => $value) @if($key!='filter_subject') {{$key}}={{$value}}& @endif @endforeach">
                   <button type="button" @if(!isset($filters['filter_subject'])) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>全部</button>
@@ -89,11 +67,27 @@
                   <a href="?@foreach($filters as $key => $value) @if($key!='filter_subject') {{$key}}={{$value}}& @endif @endforeach filter_subject={{$filter_subject->subject_id}}"><button type="button" @if($filters['filter_subject']==$filter_subject->subject_id) class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>{{$filter_subject->subject_name}}</button></a>
                 @endforeach
               </div>
-              <div class="col-2 text-right">
-                <small class="text-muted font-weight-bold px-2">日期：</small>
+            </div>
+            <hr>
+            <div class="row m-2">
+              <div class="col-3">
+                <select class="form-control form-control-sm" name="filter_class" data-toggle="select" onChange="form_submit('filterForm')">
+                  <option value=''>搜素班级...</option>
+                  @foreach ($filter_classes as $filter_class)
+                    <option value="{{ $filter_class->class_id }}" @if($filters['filter_class']==$filter_class->class_id) selected @endif>[ {{ $filter_class->department_name }} ] {{ $filter_class->class_name }}</option>
+                  @endforeach
+                </select>
               </div>
               <div class="col-3">
-                <input class="form-control form-control-sm datepicker" name="filter_date" placeholder="选择日期..." autocomplete="off" type="text" @if(isset($filters['filter_date']))) value="{{ $filters['filter_date'] }}" @endif onChange="form_submit('filterForm')">
+                <select class="form-control form-control-sm" name="filter_teacher" data-toggle="select" onChange="form_submit('filterForm')">
+                  <option value=''>搜索教师...</option>
+                  @foreach ($filter_users as $filter_user)
+                    <option value="{{ $filter_user->user_id }}" @if($filters['filter_teacher']==$filter_user->user_id) selected @endif>[ {{$filter_user->department_name}} ] {{ $filter_user->user_name }}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="col-3">
+                <input class="form-control form-control-sm datepicker" name="filter_date" placeholder="搜索日期..." autocomplete="off" type="text" @if(isset($filters['filter_date']))) value="{{ $filters['filter_date'] }}" @endif onChange="form_submit('filterForm')">
               </div>
             </div>
           </form>

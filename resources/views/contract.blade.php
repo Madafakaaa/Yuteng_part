@@ -52,7 +52,7 @@
           <div class="col-12">
             <h2 class="m-0">
               <span style="font-family: 华文中宋; font-weight:normal;">
-                乙方法定监护人：{{ $contract->student_guardian }}
+                乙方联系方式：{{ $contract->student_phone }}
               </span>
             </h2>
           </div>
@@ -214,22 +214,27 @@
           <div class="col-12">
             <h4 class="mb-1 mx-4">
               <span style="font-family: 华文中宋; font-weight:normal;">
-                六、<u>为保证教学质量及其他同学学习效果，甲方正常排课后，乙方不得中途请假或者改变时间，如遇特殊原因未能到校上课，甲方正常扣除课时费后，甲乙双方协商与周中时间安排补课，补课时间不再安排在周末，如乙方不参与补课，视同放弃。
-              </u></span>
+                六、
+                <u>
+                  <strong>
+                    为保证教学质量及其他同学学习效果，甲方正常排课后，乙方不得中途请假或者改变时间，如遇特殊原因未能到校上课，甲方正常扣除课时费后，甲乙双方协商与周中时间安排补课，补课时间不再安排在周末，如乙方不参与补课，视同放弃。
+                  </strong>
+                </u>
+              </span>
             </h4>
           </div>
           <div class="col-12">
             <h4 class="mb-1 mx-4">
               <span style="font-family: 华文中宋; font-weight:normal;">
-                七、<u>周中补课需提前一天与班主任预约，便于老师备课，乙方在甲方晚托陪读或上课期间需遵守甲方纪律，如果乙方学员扰乱陪读秩序或者影响其他同学学习，甲方有权取消乙方陪读资格。
-              </u></span>
+                七、周中补课需提前一天与班主任预约，便于老师备课，乙方在甲方晚托陪读或上课期间需遵守甲方纪律，如果乙方学员扰乱陪读秩序或者影响其他同学学习，甲方有权取消乙方陪读资格。
+              </span>
             </h4>
           </div>
           <div class="col-12 mb-4">
             <h4 class="mb-1 mx-4">
               <span style="font-family: 华文中宋; font-weight:normal;">
-                八、<u>为保证乙方学员上学放学途中安全，学生离校需家长亲自接送，若乙方需单独上学放学，需乙方监护人同意，甲方不承担任何路途安全责任。
-              </u></span>
+                八、为保证乙方学员上学放学途中安全，学生离校需家长亲自接送，若乙方需单独上学放学，需乙方监护人同意，甲方不承担任何路途安全责任。
+              </span>
             </h4>
           </div>
         </div>
@@ -270,7 +275,12 @@
           <div class="col-12">
             <h4 class="mb-1 mx-4">
               <span style="font-family: 华文中宋; font-weight:normal;">
-                三、退费处理，甲方将扣除乙方一次性建档费、税费、拉卡手续费和已消耗原价课时费用（其计算方法为：原价收费标准 * 已完成辅导的课时数量），退费时，已完成课时数不再享受任何折扣优惠，赠送课时不退费，剩余费用将在7-30个工作日全部退还给乙方。
+                三、
+                <u>
+                  <strong>
+                    退费处理，甲方将扣除乙方一次性建档费、税费、拉卡手续费和已消耗原价课时费用（其计算方法为：原价收费标准 * 已完成辅导的课时数量），退费时，已完成课时数不再享受任何折扣优惠，赠送课时不退费，剩余费用将在7-30个工作日全部退还给乙方。
+                  </strong>
+                </u>
               </span>
             </h4>
           </div>
@@ -316,72 +326,60 @@
               </span>
             </h4>
           </div>
-          <div class="col-12 mb-4">
+          <div class="col-12 mb-6">
             <h4 class="mb-1 mx-4">
               <span style="font-family: 华文中宋; font-weight:normal;">
-                三、对本协议的未尽事宜，经双方协商，在此说明：
+                三、对本协议的未尽事宜，经双方协商，在此说明<b>（电子合同，除签字部分外手写无效）</b>：
               </span>
             </h4>
           </div>
-          <div class="col-12 mb-2">
-            <h3 class="m-0">
-              <span style="font-family: 华文中宋;">
-                第六条、合同备注
+          <div class="col-12 my-2">
+            <h2 class="mb-1 mx-4" style="z-index:2;position:relative;">
+              <span style="font-family: 华文中宋; font-weight:normal;white-space: pre-warp;">
+                <u>
+                  {{ $contract->contract_remark }}
+                  @for ($i = 0; $i < 282-strlen($contract->contract_remark); $i++)
+                    &nbsp;
+                  @endfor
+                </u>
               </span>
-            </h3>
+            </h2>
           </div>
-          <div class="col-12">
-            <h4 class="mb-1 mx-4">
-              <span style="font-family: 华文中宋; font-weight:normal;">
-                {{ $contract->contract_remark }}
-              </span>
-            </h4>
-          </div>
+        </div>
+        <div style="text-align:center;transform:translate(0%,-80%);">
+          <img style="height:220px;" src='{{ asset(_ASSETS_.'/img/brand/watermarker.png') }}'>
         </div>
         <div class="row mx-1 my-6 px-2">
-          <div class="col-6">
+          <div class="col-4 ml-2" style="z-index:2;position:relative;">
             <h3 class="m-0">
               <span style="font-family: 华文中宋; font-weight:normal;">
-                甲方：上海育藤培训学校有限公司{{ $contract->department_name }}
+                甲方代表盖章：
               </span>
             </h3>
-          </div>
-          <div class="col-6">
-            <h3 class="m-0">
+            <h3 class="mt-5">
               <span style="font-family: 华文中宋; font-weight:normal;">
-                乙方学员签字：
-              </span>
-            </h3>
-          </div>
-        </div>
-        <div class="row mx-1 my-6 px-2">
-          <div class="col-6">
-            <h3 class="m-0">
-              <span style="font-family: 华文中宋; font-weight:normal;">
-                甲方代表签字：
-              </span>
-            </h3>
-          </div>
-          <div class="col-6">
-            <h3 class="m-0">
-              <span style="font-family: 华文中宋; font-weight:normal;">
-                乙方监护人签字：
-              </span>
-            </h3>
-          </div>
-        </div>
-        <div class="row mx-1 my-3 px-2">
-          <div class="col-6">
-            <img style="height:200px; float:left;" src='{{ asset(_ASSETS_.'/img/brand/seal.png') }}'>
-          </div>
-          <div class="col-6">
-            <h3 class="m-0">
-              <span style="font-family: 华文中宋; font-weight:normal;">
-                本协议于
                 <u>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</u>年
                 <u>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</u>月
                 <u>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</u>日
-                签订
+              </span>
+            </h3>
+          </div>
+          <div class="col-2">
+            <div class="ml--6" style="z-index:1;position:relative;">
+              <img style="height:200px; transform:translate(-30%,-50%);" src='{{ asset(_ASSETS_.'/img/brand/seal.png') }}'>
+            </div>
+          </div>
+          <div class="col-5 ml-4">
+            <h3 class="m-0">
+              <span style="font-family: 华文中宋; font-weight:normal;">
+                乙方签字：
+              </span>
+            </h3>
+            <h3 class="mt-5">
+              <span style="font-family: 华文中宋; font-weight:normal;">
+                <u>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</u>年
+                <u>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</u>月
+                <u>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</u>日
               </span>
             </h3>
           </div>
