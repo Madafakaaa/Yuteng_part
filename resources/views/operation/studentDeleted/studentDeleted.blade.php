@@ -87,14 +87,15 @@
               <tr>
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:120px;'>学生</th>
-                <th style='width:200px;'></th>
+                <th style='width:100px;'>学生</th>
+                <th style='width:100px;'>学号</th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:60px;'>年级</th>
                 <th style='width:130px;'>监护人</th>
                 <th style='width:110px;'>电话</th>
                 <th style='width:145px;'>课程顾问</th>
                 <th style='width:145px;'>班主任</th>
+                <th style='width:200px;'></th>
               </tr>
             </thead>
             <tbody>
@@ -118,10 +119,7 @@
                     <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
                   @endif
                 </td>
-                <td>
-                  <a href='/operation/student/deleted/restore?id={{encode($row->student_id, 'student_id')}}'><button type="button" class="btn btn-outline-primary btn-sm">恢复</button></a>
-                  <!-- <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/student/deleted/delete?id={{encode($row->student_id, 'student_id')}}', '确认彻底删除学生？')">删除</button> -->
-                </td>
+                <td>{{ $row->student_id }}</td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->grade_name }}</td>
                 <td>{{ $row->student_guardian_relationship }}：{{ $row->student_guardian }}</td>
@@ -136,6 +134,10 @@
                 @else
                   <td><a href="/user?id={{encode($row->class_adviser_id,'user_id')}}">{{ $row->class_adviser_name }}</a> ({{ $row->class_adviser_position_name }})</td>
                 @endif
+                <td>
+                  <a href='/operation/student/deleted/restore?id={{encode($row->student_id, 'student_id')}}'><button type="button" class="btn btn-outline-primary btn-sm">恢复</button></a>
+                  <!-- <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/student/deleted/delete?id={{encode($row->student_id, 'student_id')}}', '确认彻底删除学生？')">删除</button> -->
+                </td>
               </tr>
               @endforeach
             </tbody>

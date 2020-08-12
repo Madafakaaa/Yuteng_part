@@ -162,24 +162,22 @@
                 <thead class="thead-light">
                   <tr>
                     <th style="width:20px;">序号</th>
-                    <th style="width:100px;">班级</th>
+                    <th style="width:170px;">班级</th>
                     <th style="width:100px;">教师</th>
                     <th style="width:30px;">科目</th>
-                    <th style="width:30px;">年级</th>
-                    <th style="width:60px;">日期</th>
+                    <th style="width:90px;">日期</th>
                     <th style="width:60px;">时间</th>
                     <th style="width:60px;">地点</th>
                   </tr>
                 </thead>
                 <tbody>
                   @foreach ($schedules as $schedule)
-                    <tr title="创建时间：{{ $schedule->schedule_createtime }}。">
+                    <tr>
                       <td>{{ $loop->iteration }}</td>
-                      <td><a href="/class?id={{encode($schedule->class_id,'class_id')}}">{{ $schedule->class_name }}</a></td>
+                      <td><a href="/class?id={{encode($schedule->class_id,'class_id')}}">{{ $schedule->class_name }} [ {{ $schedule->class_id }} ]</a></td>
                       <td><a href="/user?id={{encode($schedule->user_id,'user_id')}}">{{ $schedule->user_name }}</a> ({{ $schedule->position_name }})</td>
                       <td>{{ $schedule->subject_name }}</td>
-                      <td>{{ $schedule->grade_name }}</td>
-                      <td>{{ $schedule->schedule_date }}</td>
+                      <td>{{ $schedule->schedule_date }}&nbsp;{{ dateToDay($schedule->schedule_date) }}</td>
                       <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
                       <td>{{ $schedule->classroom_name }}</td>
                     </tr>
@@ -197,13 +195,12 @@
                 <thead class="thead-light">
                   <tr>
                     <th style="width:20px;">序号</th>
-                    <th style="width:110px;">班级</th>
+                    <th style="width:170px;">班级</th>
                     <th style="width:30px;">状态</th>
                     <th style="width:150px;">使用课时</th>
                     <th style="width:90px;">教师</th>
                     <th style="width:30px;">科目</th>
-                    <th style="width:30px;">年级</th>
-                    <th style="width:60px;">日期</th>
+                    <th style="width:100px;">日期</th>
                     <th style="width:60px;">时间</th>
                     <th style="width:60px;">地点</th>
                   </tr>
@@ -212,7 +209,7 @@
                   @foreach ($attended_schedules as $schedule)
                     <tr>
                       <td>{{ $loop->iteration }}</td>
-                      <td><a href="/class?id={{encode($schedule->class_id,'class_id')}}">{{ $schedule->class_name }}</a></td>
+                      <td><a href="/class?id={{encode($schedule->class_id,'class_id')}}">{{ $schedule->class_name }} [ {{ $schedule->class_id }} ]</a></td>
                       @if($schedule->participant_attend_status==1)
                       <td><span class="text-success">正常</span></td>
                       @elseif($schedule->participant_attend_status==2)
@@ -223,8 +220,7 @@
                       <td>[ {{ $schedule->participant_amount }}课时 ] {{ $schedule->course_name }}</td>
                       <td><a href="/user?id={{encode($schedule->user_id,'user_id')}}">{{ $schedule->user_name }}</a> ({{ $schedule->position_name }})</td>
                       <td>{{ $schedule->subject_name }}</td>
-                      <td>{{ $schedule->grade_name }}</td>
-                      <td>{{ $schedule->schedule_date }}</td>
+                      <td>{{ $schedule->schedule_date }}&nbsp;{{ dateToDay($schedule->schedule_date) }}</td>
                       <td>{{ date('H:i', strtotime($schedule->schedule_start)) }} - {{ date('H:i', strtotime($schedule->schedule_end)) }}</td>
                       <td>{{ $schedule->classroom_name }}</td>
                     </tr>
@@ -242,24 +238,32 @@
                 <thead class="thead-light">
                   <tr>
                     <th style="width:20px;">序号</th>
-                    <th style="width:130px;">班级</th>
-                    <th style="width:130px;">使用课程</th>
-                    <th style="width:120px;">教师</th>
+                    <th style="width:170px;">班级</th>
+                    <th style="width:55px;">人数</th>
+                    <th style="width:120px;">使用课程</th>
+                    <th style="width:50px;">教师</th>
+                    <th style="width:50px;">待上课程</th>
+                    <th style="width:50px;">已上课程</th>
+                    <th style="width:50px;">班级状态</th>
                     <th style="width:50px;">科目</th>
-                    <th style="width:60px;">人数</th>
-                    <th style="width:50px;">已排课程</th>
                   </tr>
                 </thead>
                 <tbody>
                   @foreach ($classes as $class)
                     <tr>
                       <td>{{ $loop->iteration }}</td>
-                      <td><a href="/class?id={{encode($class->class_id,'class_id')}}">{{ $class->class_name }}</td>
+                      <td><a href="/class?id={{encode($class->class_id,'class_id')}}">{{ $class->class_name }} [ {{ $class->class_id }} ]</td>
+                      <td>{{ $class->class_current_num }} / {{ $class->class_max_num }} 人</td>
                       <td>{{ $class->course_name }}</td>
                       <td><a href="/user?id={{encode($class->user_id,'user_id')}}">{{ $class->user_name }}</a></td>
-                      <td>{{ $class->subject_name }}</td>
-                      <td>{{ $class->class_current_num }} / {{ $class->class_max_num }} 人</td>
                       <td>{{ $class->class_schedule_num }} 节</td>
+                      <td>{{ $class->class_attended_num }} 节</td>
+                      @if($class->class_status==1)
+                        <td><span class="text-success">正常</span></td>
+                      @else
+                        <td><span class="text-danger">已删除</span></td>
+                      @endif
+                      <td>{{ $class->subject_name }}</td>
                     </tr>
                   @endforeach
                 </tbody>

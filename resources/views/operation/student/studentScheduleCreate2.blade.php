@@ -155,14 +155,14 @@
             <hr>
             <div class="row">
               <div class="col-3 text-right">
-                <label class="form-control-label"><span style="color:red">*</span>自动生成班级名称</label>
+                <label class="form-control-label">自动生成班级名称</label>
               </div>
               <div class="col-9">
                 <div class="form-group mb-1">
                   <div class="row">
                     <div class="col-6 pl-2 pr-2 mb-2">
                       <div class="form-group">
-                        <input class="form-control form-control-sm" type="text" name="input_class_name" value="{{ $class_name }}" required>
+                        <input class="form-control form-control-sm" type="text" name="input_class_name" value="{{ $class_name }}" required readonly>
                       </div>
                     </div>
                   </div>

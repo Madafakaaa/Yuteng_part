@@ -69,17 +69,18 @@
           <table class="table align-items-center table-hover text-left">
             <thead class="thead-light">
               <tr>
-                <th style='width:40px;'></th>
+                <th style='width:30px;'></th>
                 <th style='width:70px;'>序号</th>
                 <th style='width:100px;'>学生</th>
+                <th style='width:100px;'>学号</th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:60px;'>年级</th>
                 <th style='width:140px;'>课程</th>
-                <th style='width:330px;'></th>
+                <th style='width:290px;'></th>
                 <th style='width:100px;'>剩余</th>
                 <th style='width:100px;'>已消耗</th>
-                <th style='width:130px;'>课时使用班级</th>
-                <th style='width:130px;'>共计排课数量</th>
+                <th style='width:140px;'>课时使用班级</th>
+                <th style='width:80px;'>待点名</th>
                 <th style='width:145px;'>班主任</th>
                 <th style='width:145px;'>课程顾问</th>
               </tr>
@@ -105,6 +106,7 @@
                     <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
                   @endif
                 </td>
+                <td>{{ $data['student_id'] }}</td>
                 <td>{{ $data['department_name'] }}</td>
                 <td>{{ $data['grade_name'] }}</td>
                 <td><strong>{{ $data['course_name'] }}</strong></td>

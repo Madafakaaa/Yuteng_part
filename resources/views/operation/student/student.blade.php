@@ -91,8 +91,9 @@
               <tr>
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:110px;'>学生</th>
-                <th style='width:90px;'>校区</th>
+                <th style='width:80px;'>学生</th>
+                <th style='width:90px;'>学号</th>
+                <th style='width:80px;'>校区</th>
                 <th style='width:60px;'>年级</th>
                 <th style='width:145px;'>课程顾问</th>
                 <th style='width:145px;'>班主任</th>
@@ -121,6 +122,7 @@
                     <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
                   @endif
                 </td>
+                <td>{{ $student['student_id'] }}</td>
                 <td>{{ $student['department_name'] }}</td>
                 <td>{{ $student['grade_name'] }}</td>
                 @if($student['consultant_name']=="")

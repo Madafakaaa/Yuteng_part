@@ -284,6 +284,7 @@ class ClassController extends Controller
         try{
             foreach ($class_ids as $class_id){
                 DB::table('class')->where('class_id', $class_id)->update(['class_status' => 0]);
+                DB::table('class')->where('class_id', $class_id)->update(['class_schedule_num' => 0]);
                 //删除上课安排
                 DB::table('schedule')
                   ->where('schedule_participant', $class_id)

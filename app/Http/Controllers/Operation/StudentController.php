@@ -519,7 +519,7 @@ class StudentController extends Controller
                                 ->first();
 
         // 生成班级名称
-        $class_name = $schedule_student->student_name." 1v1".$schedule_subject->subject_name;
+        $class_name = $schedule_student->student_name." 1v1 ".$schedule_subject->subject_name;
 
         return view('operation/student/studentScheduleCreate2', ['teacher_schedules' => $teacher_schedules,
                                                                  'student_schedules' => $student_schedules,

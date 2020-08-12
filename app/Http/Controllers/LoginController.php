@@ -43,7 +43,9 @@ class LoginController extends Controller
                      ->join('department', 'user.user_department', '=', 'department.department_id')
                      ->join('position', 'user.user_position', '=', 'position.position_id')
                      ->join('section', 'position.position_section', '=', 'section.section_id')
-                     ->where('user_id', $request_user_id)->get();
+                     ->where('user_id', $request_user_id)
+                     ->where('user_status', 1)
+                     ->get();
         // 未在数据库中获得对应用户数据，返回到主页
         if($db_user->count()!==1){
             return redirect()->action('LoginController@index')
