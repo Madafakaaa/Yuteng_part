@@ -46,6 +46,33 @@
               </div>
             </div>
             <hr>
+            @if(count($classes)>0)
+              <div class="row">
+                <div class="col-6 text-left">
+                  <label class="form-control-label">已有一对一班级：</label>
+                </div>
+              </div>
+              @foreach($classes as $class)
+              <div class="row">
+                <div class="col-3">
+                  <label class="form-control-label">{{$loop->iteration}}. <a href="/class?id={{encode($class->class_id,'class_id')}}">班级：{{ $class->class_name }}</a></label>
+                </div>
+                <div class="col-2">
+                  <label class="form-control-label">科目：{{ $class->subject_name }}</label>
+                </div>
+                <div class="col-2">
+                  <label class="form-control-label">教师：{{ $class->user_name }}</label>
+                </div>
+                <div class="col-3">
+                  <label class="form-control-label">已上：{{ $class->class_attended_num }} 节 / 待上：{{ $class->class_schedule_num }} 节</label>
+                </div>
+                <div class="col-2">
+                  <a href="/operation/class/schedule/create?id={{encode($class->class_id,'class_id')}}"><button type="button" class="btn btn-sm btn-outline-primary">排课</button></a>
+                </div>
+              </div>
+              @endforeach
+              <hr>
+            @endif
             <div class="row">
               <div class="col-3 text-right">
                 <div class="form-group">

@@ -225,7 +225,6 @@
   navbarActive('navbar-operation');
   linkActive('operationStudent');
 
-
 @if((count($teacher_schedules)+count($student_schedules))>0)
   scheduleConflictAlert(
       '课程冲突提示 <span style="color:#FFA07A;">({{(count($teacher_schedules)+count($student_schedules))}}节)</span>',

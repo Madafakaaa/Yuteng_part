@@ -336,10 +336,22 @@ class StudentController extends Controller
                      ->join('course', 'hour.hour_course', '=', 'course.course_id')
                      ->where('hour_student', $student->student_id)
                      ->get();
+
+        // 获取已有一对一班级
+        $classes = DB::table('member')
+                     ->join('class', 'member.member_class', '=', 'class.class_id')
+                     ->join('subject', 'subject.subject_id', '=', 'class.class_subject')
+                     ->join('user', 'user.user_id', '=', 'class.class_teacher')
+                     ->where('member.member_student', '=', $student_id)
+                     ->where('class.class_max_num', '=', 1)
+                     ->where('class.class_status', '=', 1)
+                     ->get();
+
         // 获取年级、科目、用户信息
         return view('operation/student/studentScheduleCreate', ['student' => $student,
                                                                 'teachers' => $teachers,
                                                                 'classrooms' => $classrooms,
+                                                                'classes' => $classes,
                                                                 'subjects' => $subjects,
                                                                 'courses' => $courses]);
     }
@@ -435,6 +447,9 @@ class StudentController extends Controller
                            'title' => '请重新选择上课、下课时间',
                            'message' => '上课时间须在下课时间前，错误码:307']);
         }
+
+        // 判断是否已有一对一班级
+        // $classes = DB::table('member')->join('class', 'member.member_class', '=', 'class.class_id')->where('class.class_subject', '=', $schedule_subject)->where('member.member_student', '=', $schedule_student)->where('class.class_max_num', '=', 1)->where('class.class_status', '=', 1)->get();
 
         // 判断是否有冲突课程
         // 获取教师信息

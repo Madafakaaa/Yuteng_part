@@ -104,7 +104,7 @@ class StudentController extends Controller
                                 ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
                                 ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
                                 ->join('position', 'user.user_position', '=', 'position.position_id')
-                                ->join('course', 'participant.participant_course', '=', 'course.course_id')
+                                ->leftJoin('course', 'participant.participant_course', '=', 'course.course_id')
                                 ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                                 ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                                 ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
