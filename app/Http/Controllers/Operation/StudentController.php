@@ -598,13 +598,28 @@ class StudentController extends Controller
         $schedule_date_num = count($schedule_dates);
         // 获取上课成员类型
         $schedule_participant_type = 1;
-        // 生成新班级ID
-        $class_num = DB::table('class')
-                       ->where('class_department', $schedule_department)
-                       ->whereYear('class_createtime', date('Y'))
-                       ->whereMonth('class_createtime', date('m'))
-                       ->count()+1;
-        $class_id = "C".substr(date('Ym'),2).sprintf("%02d", $schedule_department).sprintf("%03d", $class_num);
+        // 生成班级ID
+        if(DB::table('class')->where('class_department', '=', $schedule_department)->exists()){
+            // 获取上一个班级班号
+            $pre_class_id = DB::table('class')
+                                ->where('class_department', '=', $schedule_department)
+                                ->orderBy('class_id', 'desc')
+                                ->limit(1)
+                                ->first();
+            if(intval(substr($pre_class_id->class_id , 7 , 10))==999){
+                return redirect("/education/class/create")
+                       ->with(['notify' => true,
+                               'type' => 'danger',
+                               'title' => '客户添加失败',
+                               'message' => '本校本月添加学生数量已超过超出上限，错误码:201']);
+            }
+            $new_class_num = intval(substr($pre_class_id->class_id , 7 , 10))+1;
+            $class_id = "C".substr(date('Ym'),2).sprintf("%02d", $schedule_department).sprintf("%03d", $new_class_num);
+        }else{
+            // 生成新班级ID
+            $class_id = "C".substr(date('Ym'),2).sprintf("%02d", $schedule_department).sprintf("%03d", 1);
+        }
+
         // 插入数据库
         DB::beginTransaction();
         try{
@@ -651,6 +666,7 @@ class StudentController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
+            return $e;
             return redirect("/operation/student/schedule/create?id=".encode($schedule_student, 'student_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
