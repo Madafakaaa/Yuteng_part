@@ -343,13 +343,37 @@ class MyCustomerController extends Controller
                    ->get();
 
         // 获取课程信息
-        $courses = DB::table('course')
+        $courses_same_grade = DB::table('course')
                      ->join('course_type', 'course.course_type', '=', 'course_type.course_type_name')
-                     ->join('grade', 'course.course_grade', '=', 'grade.grade_id')
+                     ->leftJoin('grade', 'course.course_grade', '=', 'grade.grade_id')
                      ->leftJoin('subject', 'course.course_subject', '=', 'subject.subject_id')
                      ->where('course_grade', $student->student_grade)
                      ->whereIn('course_department', [0, $student->student_department])
                      ->where('course_status', 1)
+                     ->orderBy('course_type', 'asc')
+                     ->orderBy('course_time', 'asc')
+                     ->get();
+
+        $courses_all_grade = DB::table('course')
+                     ->join('course_type', 'course.course_type', '=', 'course_type.course_type_name')
+                     ->leftJoin('grade', 'course.course_grade', '=', 'grade.grade_id')
+                     ->leftJoin('subject', 'course.course_subject', '=', 'subject.subject_id')
+                     ->where('course_grade', 0)
+                     ->whereIn('course_department', [0, $student->student_department])
+                     ->where('course_status', 1)
+                     ->orderBy('course_type', 'asc')
+                     ->orderBy('course_time', 'asc')
+                     ->get();
+
+        $courses_diff_grade = DB::table('course')
+                     ->join('course_type', 'course.course_type', '=', 'course_type.course_type_name')
+                     ->leftJoin('grade', 'course.course_grade', '=', 'grade.grade_id')
+                     ->leftJoin('subject', 'course.course_subject', '=', 'subject.subject_id')
+                     ->where('course_grade', "!=", $student->student_grade)
+                     ->where('course_grade', "!=", 0)
+                     ->whereIn('course_department', [0, $student->student_department])
+                     ->where('course_status', 1)
+                     ->orderBy('course_grade', 'asc')
                      ->orderBy('course_type', 'asc')
                      ->orderBy('course_time', 'asc')
                      ->get();
@@ -370,7 +394,9 @@ class MyCustomerController extends Controller
 
         return view('market/myCustomer/myCustomerContractCreate', ['student' => $student,
                                                                    'hours' => $hours,
-                                                                   'courses' => $courses,
+                                                                   'courses_same_grade' => $courses_same_grade,
+                                                                   'courses_all_grade' => $courses_all_grade,
+                                                                   'courses_diff_grade' => $courses_diff_grade,
                                                                    'payment_methods' => $payment_methods,
                                                                    'users' => $users]);
     }

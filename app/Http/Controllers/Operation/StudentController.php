@@ -666,7 +666,6 @@ class StudentController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
             return redirect("/operation/student/schedule/create?id=".encode($schedule_student, 'student_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',

@@ -93,59 +93,111 @@
           </form>
         </div>
         <div class="table-responsive freeze-table-4">
-          <table class="table align-items-center table-hover text-left">
+          <table class="table align-items-center table-hover text-left table-bordered">
             <thead class="thead-light">
               <tr>
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:150px;'>班级</th>
-                <th style='width:120px;'></th>
-                <th style='width:100px;'>校区</th>
-                <th style='width:160px;'>日期</th>
+                <th style='width:180px;'>班级</th>
+                <th style='width:80px;'>校区</th>
+                <th style='width:130px;'>日期</th>
                 <th style='width:110px;'>时间</th>
-                <th style='width:110px;'>班级人数</th>
-                <th style='width:100px;'>教师</th>
-                <th style='width:70px;'>科目</th>
-                <th style='width:70px;'>年级</th>
-                <th style='width:110px;'>教室</th>
-                <th style='width:170px;'>课程</th>
-                <th style='width:100px;'>排课用户</th>
+                <th style='width:110px;'>实到/应到人数</th>
+                <th style='width:80px;'>教师</th>
+                <th style='width:60px;'>科目</th>
+                <th style='width:60px;'>年级</th>
+                <th style='width:100px;'>教室</th>
+                <th style='width:120px;'>操作</th>
               </tr>
             </thead>
             <tbody>
-              @if(count($rows)==0)
-                <tr class="text-center"><td colspan="12">当前没有记录</td></tr>
-              @endif
-              @foreach ($rows as $row)
+              @foreach ($schedules as $schedule)
               <tr>
                 <td>
                   <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($row->schedule_id, 'schedule_id')}}'>
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($schedule['schedule_id'], 'schedule_id')}}'>
                     <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
                   </div>
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td><a href="/class?id={{encode($row->class_id ,'class_id')}}">{{ $row->class_name }}</a> </td>
+                <td><a href="/class?id={{encode($schedule['class_id'] ,'class_id')}}">{{ $schedule['class_name'] }}</a> </td>
+                <td>{{ $schedule['department_name'] }}</td>
+                <td>{{ $schedule['schedule_date'] }}&nbsp;{{ dateToDay($schedule['schedule_date']) }}</td>
+                <td>{{ date('H:i', strtotime($schedule['schedule_start'])) }} - {{ date('H:i', strtotime($schedule['schedule_end'])) }}</td>
                 <td>
-                  <a href="/attendedSchedule?id={{encode($row->schedule_id,'schedule_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>&nbsp;
-                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/attendedSchedule/delete?id={{encode($row->schedule_id, 'schedule_id')}}', '确认删除上课记录？')">删除</button>
-                </td>
-                <td>{{ $row->department_name }}</td>
-                <td>{{ $row->schedule_date }}&nbsp;{{ dateToDay($row->schedule_date) }}</td>
-                <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
-                <td>
-                  @if($row->class_current_num==$row->class_max_num)
-                    <span style="color:green;">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
+                  @if($schedule['schedule_attended_num']==$schedule['schedule_student_num'])
+                    <span style="color:green;">{{ $schedule['schedule_attended_num'] }} / {{ $schedule['schedule_student_num'] }} 人</span>
                   @else
-                    <span style="color:red;">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
+                    <span style="color:red;">{{ $schedule['schedule_attended_num'] }} / {{ $schedule['schedule_student_num'] }} 人</span>
                   @endif
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-{{$loop->iteration}}-1">查看</button>
+                  <div class="modal fade" id="modal-{{$loop->iteration}}-1" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+                    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h6 class="modal-title">{{ $schedule['class_name'] }}</h6>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <ul class="list-group list-group-flush list my--3">
+                            @if(count($schedule['participants'])==0)
+                              <li class="list-group-item px-0">
+                                <div class="row align-items-center">
+                                  <div class="col ml--2">
+                                    <h4 class="mb-0">
+                                      <a href="#!">无</a>
+                                    </h4>
+                                  </div>
+                                </div>
+                              </li>
+                            @endif
+                            @foreach ($schedule['participants'] as $participant)
+                              <li class="list-group-item px-0">
+                                <div class="row align-items-center">
+                                  <div class="col-auto">
+                                    <a href="#" class="avatar rounded-circle">
+                                      <img alt="..." src="{{ asset(_ASSETS_.'/avatar/student.png') }}">
+                                    </a>
+                                  </div>
+                                  <div class="col ml--2">
+                                    <h4 class="mb-1">
+                                      <a href="/student?id={{encode($participant['student_id'], 'student_id')}}">{{ $participant['student_name'] }}</a>
+                                    </h4>
+                                    @if($participant['participant_attend_status']==1)
+                                      <span class="text-success">● <small>正常</small></span>
+                                      <small>[ {{ $participant['course_name'] }} - {{ $participant['participant_amount'] }} 课时 ]</small>
+                                    @elseif($participant['participant_attend_status']==2)
+                                      <span class="text-warning">● <small>请假</small></span>
+                                    @else
+                                      <span class="text-danger">● <small>旷课</small></span>
+                                      <small>[ {{ $participant['course_name'] }} - {{ $participant['participant_amount'] }} 课时 ]</small>
+                                    @endif
+                                  </div>
+                                  <div class="col-auto">
+                                    <a href="/student?id={{encode($participant['student_id'], 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>
+                                  </div>
+                                </div>
+                              </li>
+                            @endforeach
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">关闭</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
-                <td><a href="/user?id={{encode($row->teacher_id ,'user_id')}}">{{ $row->teacher_name }}</a></td>
-                <td>{{ $row->subject_name }}</td>
-                <td>{{ $row->grade_name }}</td>
-                <td>{{ $row->classroom_name }}</td>
-                <td>{{ $row->course_name }}</td>
-                <td><a href="/user?id={{encode($row->creator_id ,'user_id')}}">{{ $row->creator_name }}</a></td>
+                <td><a href="/user?id={{encode($schedule['user_id'] ,'user_id')}}">{{ $schedule['user_name'] }}</a></td>
+                <td>{{ $schedule['subject_name'] }}</td>
+                <td>{{ $schedule['grade_name'] }}</td>
+                <td>{{ $schedule['classroom_name'] }}</td>
+                <td>
+                  <!-- <a href="/attendedSchedule?id={{encode($schedule['schedule_id'],'schedule_id')}}"><button type="button" class="btn btn-primary btn-sm">详情</button></a>&nbsp; -->
+                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/attendedSchedule/delete?id={{encode($schedule['schedule_id'], 'schedule_id')}}', '确认删除上课记录？')">删除</button>
+                </td>
               </tr>
               @endforeach
             </tbody>

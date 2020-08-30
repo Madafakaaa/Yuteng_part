@@ -108,7 +108,6 @@
                 <th style='width:70px;'>科目</th>
                 <th style='width:70px;'>年级</th>
                 <th style='width:110px;'>教室</th>
-                <th style='width:170px;'>课程</th>
                 <th style='width:100px;'>排课用户</th>
               </tr>
             </thead>
@@ -144,7 +143,6 @@
                 <td>{{ $row->subject_name }}</td>
                 <td>{{ $row->grade_name }}</td>
                 <td>{{ $row->classroom_name }}</td>
-                <td>{{ $row->course_name }}</td>
                 <td><a href="/user?id={{encode($row->creator_id ,'user_id')}}">{{ $row->creator_name }}</a></td>
               </tr>
               @endforeach

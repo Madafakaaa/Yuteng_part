@@ -315,30 +315,38 @@
           </a>
           <div class="collapse" id="navbar-finance">
             <ul class="nav nav-sm flex-column">
-              <li class="nav-item" @if(!in_array('financeContract', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/finance/contract" class="nav-link" id="financeContract">
-                  <i class="ni ni-money-coins text-default"></i>
-                  <span class="nav-link-text">签约统计</span>
-                </a>
-              </li>
-              <li class="nav-item" @if(!in_array('financeConsumption', Session::get('page_access'))) style="display:none;" @endif>
-                <a href="/finance/consumption" class="nav-link" id="financeConsumption">
-                  <i class="ni ni-single-copy-04 text-default"></i>
-                  <span class="nav-link-text">课消统计</span>
-                </a>
-              </li>
-              <!-- <li class="nav-item">
-                <a href="/finance/consumption" class="nav-link" id="financeConsumption">
-                  <i class="ni ni-book-bookmark text-default"></i>
-                  <span class="nav-link-text">个人签约</span>
-                </a>
-              </li>
+              @if(in_array('financeContractDepartment', Session::get('page_access')))
               <li class="nav-item">
-                <a href="/finance/refund" class="nav-link" id="financeRefund">
-                  <i class="ni ni-scissors text-default"></i>
-                  <span class="nav-link-text">退费统计</span>
+                <a href="/finance/contract/department" class="nav-link" id="financeContractDepartment">
+                  <i class="ni ni-money-coins text-default"></i>
+                  <span class="nav-link-text">校区签约统计</span>
                 </a>
-              </li> -->
+              </li>
+              @endif
+              @if(in_array('financeContractUser', Session::get('page_access')))
+              <li class="nav-item">
+                <a href="/finance/contract/user" class="nav-link" id="financeContractUser">
+                  <i class="ni ni-money-coins text-default"></i>
+                  <span class="nav-link-text">个人签约统计</span>
+                </a>
+              </li>
+              @endif
+              @if(in_array('financeConsumptionDepartment', Session::get('page_access')))
+              <li class="nav-item">
+                <a href="/finance/consumption/department" class="nav-link" id="financeConsumptionDepartment">
+                  <i class="ni ni-single-copy-04 text-default"></i>
+                  <span class="nav-link-text">校区课消统计</span>
+                </a>
+              </li>
+              @endif
+              @if(in_array('financeConsumptionUser', Session::get('page_access')))
+              <li class="nav-item">
+                <a href="/finance/consumption/user" class="nav-link" id="financeConsumptionUser">
+                  <i class="ni ni-single-copy-04 text-default"></i>
+                  <span class="nav-link-text">个人课消统计</span>
+                </a>
+              </li>
+              @endif
             </ul>
           </div>
         </li>

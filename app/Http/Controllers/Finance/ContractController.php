@@ -140,7 +140,8 @@ class ContractController extends Controller
         $filters = array(
                         "filter_department" => null,
                         "filter_type" => null,
-                        "filter_month" => date('Y-m')
+                        "filter_date_start" => date('Y-m')."-01",
+                        "filter_date_end" => date('Y-m-d')
                     );
         // 获取数据
         $rows = DB::table('contract')
@@ -160,12 +161,15 @@ class ContractController extends Controller
             $rows = $rows->where('contract_type', '=', $request->input('filter_type')-1);
             $filters['filter_type']=$request->input("filter_type");
         }
-
-        // 月份
-        if ($request->filled('filter_month')) {
-            $filters['filter_month']=$request->input("filter_month");
+        // 期限
+        if ($request->filled('filter_date_start')) {
+            $filters['filter_date_start']=$request->input("filter_date_start");
         }
-        $rows = $rows->where('contract_date', 'like', $filters['filter_month']."%");
+        if ($request->filled('filter_date_end')) {
+            $filters['filter_date_end']=$request->input("filter_date_end");
+        }
+        $rows = $rows->where('contract_date', '>=', $filters['filter_date_start']);
+        $rows = $rows->where('contract_date', '<=', $filters['filter_date_end']);
         // 排序并获取数据对象
         $rows = $rows->orderBy('contract_date', 'desc')
                      ->get();
@@ -173,9 +177,9 @@ class ContractController extends Controller
         // 转为数组并获取详细课程信息
         $dashboard = array(
                              "dashboard_contract_num" => 0,
-                             "dashboard_contract_num_today" => 0,
+                             "dashboard_hour_total" => 0,
                              "dashboard_price_total" => 0,
-                             "dashboard_price_total_today" => 0
+                             "dashboard_paid_total" => 0,
                            );
         $contracts = array();
         foreach($rows as $row){
@@ -210,16 +214,14 @@ class ContractController extends Controller
                 $temp_course['contract_course_total_hour']=$contract_course->contract_course_total_hour;
                 $temp_course['contract_course_total_price']=$contract_course->contract_course_total_price;
                 $temp['contract_courses'][]=$temp_course;
+                $dashboard['dashboard_hour_total']+=$contract_course->contract_course_total_hour;
             }
             $temp['contract_course_num']=count($temp['contract_courses']);
             $contracts[]=$temp;
             // 更新dashboard
             $dashboard['dashboard_contract_num']++;
             $dashboard['dashboard_price_total']+=$temp['contract_total_price'];
-            if($temp['contract_date']==date('Y-m-d')){
-                $dashboard['dashboard_contract_num_today']++;
-                $dashboard['dashboard_price_total_today']+=$temp['contract_total_price'];
-            }
+            $dashboard['dashboard_paid_total']+=$temp['contract_paid_price'];
         }
 
         // 获取校区、学生、课程、年级信息(筛选)
@@ -228,10 +230,10 @@ class ContractController extends Controller
 
         // 返回列表视图
         return view('finance/contractDepartment', ['contracts' => $contracts,
-                                         'dashboard' => $dashboard,
-                                         'filters' => $filters,
-                                         'filter_departments' => $filter_departments,
-                                         'filter_grades' => $filter_grades]);
+                                                   'dashboard' => $dashboard,
+                                                   'filters' => $filters,
+                                                   'filter_departments' => $filter_departments,
+                                                   'filter_grades' => $filter_grades]);
     }
 
     public function contractUser(Request $request){
@@ -244,9 +246,9 @@ class ContractController extends Controller
         // 搜索条件
         $filters = array(
                         "filter_user" => null,
-                        "filter_grade" => null,
                         "filter_type" => null,
-                        "filter_month" => date('Y-m')
+                        "filter_date_start" => date('Y-m')."-01",
+                        "filter_date_end" => date('Y-m-d')
                     );
         // 获取数据
         $rows = DB::table('contract')
@@ -256,27 +258,25 @@ class ContractController extends Controller
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
                   ->whereIn('contract_department', $department_access);
-        // 签约人
+        // 用户
         if ($request->filled('filter_user')) {
             $rows = $rows->where('contract_createuser', '=', $request->input("filter_user"));
             $filters['filter_user']=$request->input("filter_user");
         }
         // 类型
         if ($request->filled('filter_type')) {
-            $rows = $rows->where('contract_type', '=', $request->input("filter_type")-1);
+            $rows = $rows->where('contract_type', '=', $request->input('filter_type')-1);
             $filters['filter_type']=$request->input("filter_type");
         }
-        // 年级
-        //if ($request->filled('filter_grade')) {
-            //$rows = $rows->where('student_grade', '=', $request->input('filter_grade'));
-            //$filters['filter_grade']=$request->input("filter_grade");
-        //}
-
-        // 月份
-        if ($request->filled('filter_month')) {
-            $filters['filter_month']=$request->input("filter_month");
+        // 期限
+        if ($request->filled('filter_date_start')) {
+            $filters['filter_date_start']=$request->input("filter_date_start");
         }
-        $rows = $rows->where('contract_date', 'like', $filters['filter_month']."%");
+        if ($request->filled('filter_date_end')) {
+            $filters['filter_date_end']=$request->input("filter_date_end");
+        }
+        $rows = $rows->where('contract_date', '>=', $filters['filter_date_start']);
+        $rows = $rows->where('contract_date', '<=', $filters['filter_date_end']);
         // 排序并获取数据对象
         $rows = $rows->orderBy('contract_date', 'desc')
                      ->get();
@@ -284,11 +284,10 @@ class ContractController extends Controller
         // 转为数组并获取详细课程信息
         $dashboard = array(
                              "dashboard_contract_num" => 0,
-                             "dashboard_contract_num_today" => 0,
+                             "dashboard_hour_total" => 0,
                              "dashboard_price_total" => 0,
-                             "dashboard_price_total_today" => 0
+                             "dashboard_paid_total" => 0,
                            );
-
         $contracts = array();
         foreach($rows as $row){
             $temp=array();
@@ -322,32 +321,26 @@ class ContractController extends Controller
                 $temp_course['contract_course_total_hour']=$contract_course->contract_course_total_hour;
                 $temp_course['contract_course_total_price']=$contract_course->contract_course_total_price;
                 $temp['contract_courses'][]=$temp_course;
+                $dashboard['dashboard_hour_total']+=$contract_course->contract_course_total_hour;
             }
             $temp['contract_course_num']=count($temp['contract_courses']);
             $contracts[]=$temp;
             // 更新dashboard
             $dashboard['dashboard_contract_num']++;
             $dashboard['dashboard_price_total']+=$temp['contract_total_price'];
-            if($temp['contract_date']==date('Y-m-d')){
-                $dashboard['dashboard_contract_num_today']++;
-                $dashboard['dashboard_price_total_today']+=$temp['contract_total_price'];
-            }
+            $dashboard['dashboard_paid_total']+=$temp['contract_paid_price'];
         }
 
         // 获取校区、学生、课程、年级信息(筛选)
+        $filter_users = DB::table('user')->where('user_status', 1)->whereIn('user_department', $department_access)->orderBy('user_department', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
-        $filter_users = DB::table('user')
-                          ->join('department', 'user.user_department', '=', 'department.department_id')
-                          ->where('user_status', 1)
-                          ->orderBy('user_department', 'asc')
-                          ->get();
 
         // 返回列表视图
         return view('finance/contractUser', ['contracts' => $contracts,
-                                               'dashboard' => $dashboard,
-                                               'filters' => $filters,
-                                               'filter_users' => $filter_users,
-                                               'filter_grades' => $filter_grades]);
+                                                   'dashboard' => $dashboard,
+                                                   'filters' => $filters,
+                                                   'filter_users' => $filter_users,
+                                                   'filter_grades' => $filter_grades]);
     }
 
 }

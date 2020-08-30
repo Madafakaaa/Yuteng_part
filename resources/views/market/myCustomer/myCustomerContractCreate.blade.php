@@ -109,7 +109,7 @@
                 </div>
                 <div class="modal-body p--3" style="border-bottom:1px solid #DDD;border-top:1px solid #DDD;max-height:400px; overflow-x:auto;">
                   <ul class="list-group list-group-flush list my--3" id="ul_courses">
-                    @foreach ($courses as $course)
+                    @foreach ($courses_same_grade as $course)
                     <li class="list-group-item px-0" id="li_{{ $course->course_id }}">
                       <div class="row align-items-center">
                         <div class="col-auto">
@@ -120,7 +120,45 @@
                             {{ $course->course_name }}
                           </h4>
                           <span class="text-success">●</span>
-                          <small>{{ $course->course_unit_price }}元/课时</small>
+                          <small>[{{ $course->grade_name }}] {{ $course->course_unit_price }}元/课时</small>
+                        </div>
+                        <div class="col-2">
+                          <button type="button" class="btn btn-sm btn-warning" onclick="addCourse('{{ $course->course_id }}', '{{ $course->course_name }}', '{{ $course->course_type }}', '{{ $course->course_unit_price }}', '{{ asset(_ASSETS_.$course->course_type_icon_path) }}');">添加</button>
+                        </div>
+                      </div>
+                    </li>
+                    @endforeach
+                    @foreach ($courses_all_grade as $course)
+                    <li class="list-group-item px-0" id="li_{{ $course->course_id }}">
+                      <div class="row align-items-center">
+                        <div class="col-auto">
+                            <img src="{{ asset(_ASSETS_.$course->course_type_icon_path) }}" />
+                        </div>
+                        <div class="col-8 ml--2">
+                          <h4 class="mb-0">
+                            {{ $course->course_name }}
+                          </h4>
+                          <span class="text-success">●</span>
+                          <small>[全年级] {{ $course->course_unit_price }}元/课时</small>
+                        </div>
+                        <div class="col-2">
+                          <button type="button" class="btn btn-sm btn-warning" onclick="addCourse('{{ $course->course_id }}', '{{ $course->course_name }}', '{{ $course->course_type }}', '{{ $course->course_unit_price }}', '{{ asset(_ASSETS_.$course->course_type_icon_path) }}');">添加</button>
+                        </div>
+                      </div>
+                    </li>
+                    @endforeach
+                    @foreach ($courses_diff_grade as $course)
+                    <li class="list-group-item px-0" id="li_{{ $course->course_id }}">
+                      <div class="row align-items-center">
+                        <div class="col-auto">
+                            <img src="{{ asset(_ASSETS_.$course->course_type_icon_path) }}" />
+                        </div>
+                        <div class="col-8 ml--2">
+                          <h4 class="mb-0">
+                            {{ $course->course_name }}
+                          </h4>
+                          <span class="text-success">●</span>
+                          <small>[{{ $course->grade_name }}] {{ $course->course_unit_price }}元/课时</small>
                         </div>
                         <div class="col-2">
                           <button type="button" class="btn btn-sm btn-warning" onclick="addCourse('{{ $course->course_id }}', '{{ $course->course_name }}', '{{ $course->course_type }}', '{{ $course->course_unit_price }}', '{{ asset(_ASSETS_.$course->course_type_icon_path) }}');">添加</button>

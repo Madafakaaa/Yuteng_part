@@ -63,6 +63,7 @@
                   <label class="form-control-label">课程年级<span style="color:red">*</span></label>
                   <select class="form-control" name="input4" data-toggle="select" required>
                     <option value=''>请选择年级...</option>
+                    <option value='0' @if($course->course_grade==0) selected @endif>全年级</option>
                     @foreach ($grades as $grade)
                       <option value="{{ $grade->grade_id }}" @if($course->course_grade==$grade->grade_id) selected @endif>{{ $grade->grade_name }}</option>
                     @endforeach
