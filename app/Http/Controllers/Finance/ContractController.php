@@ -332,7 +332,7 @@ class ContractController extends Controller
         }
 
         // 获取校区、学生、课程、年级信息(筛选)
-        $filter_users = DB::table('user')->where('user_status', 1)->whereIn('user_department', $department_access)->orderBy('user_department', 'asc')->get();
+        $filter_users = DB::table('user')->join('department', 'user.user_department', '=', 'department.department_id')->where('user_status', 1)->whereIn('user_department', $department_access)->orderBy('user_department', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
 
         // 返回列表视图

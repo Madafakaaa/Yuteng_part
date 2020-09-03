@@ -38,7 +38,7 @@
                 <select class="form-control form-control-sm" name="filter_user" data-toggle="select">
                   <option value=''>全部用户</option>
                   @foreach ($filter_users as $user)
-                    <option value="{{ $user->user_id }}" @if($filters['filter_user']==$user->user_id) selected @endif>{{ $user->user_name }}</option>
+                    <option value="{{ $user->user_id }}" @if($filters['filter_user']==$user->user_id) selected @endif>[{{$user->department_name}}] {{ $user->user_name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -61,11 +61,11 @@
           <div class="row">
             <div class="col">
               <h5 class="card-title text-uppercase text-muted mb-0">签单总数</h5>
-              <span class="h1 font-weight-bold mb-0 counter-value text-green">{{$dashboard['dashboard_contract_num']}}</span>
+              <span class="h1 font-weight-bold mb-0 counter-value text-primary">{{$dashboard['dashboard_contract_num']}}</span>
             </div>
             <div class="col-auto">
-              <div class="icon icon-shape bg-green text-white rounded-circle shadow">
-                <i class="ni ni-money-coins"></i>
+              <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
+                <i class="ni ni-single-copy-04"></i>
               </div>
             </div>
           </div>
@@ -82,11 +82,11 @@
           <div class="row">
             <div class="col">
               <h5 class="card-title text-uppercase text-muted mb-0">课时总数</h5>
-              <span class="h1 font-weight-bold mb-0 counter-value text-green">{{$dashboard['dashboard_hour_total']}}</span>
+              <span class="h1 font-weight-bold mb-0 counter-value text-primary">{{$dashboard['dashboard_hour_total']}}</span>
             </div>
             <div class="col-auto">
-              <div class="icon icon-shape bg-green text-white rounded-circle shadow">
-                <i class="ni ni-money-coins"></i>
+              <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
+                <i class="fa fa-user-clock"></i>
               </div>
             </div>
           </div>
@@ -103,10 +103,10 @@
           <div class="row">
             <div class="col">
               <h5 class="card-title text-uppercase text-muted mb-0">签单金额</h5>
-              <span class="h1 font-weight-bold mb-0 counter-value text-green">{{$dashboard['dashboard_price_total']}}</span>
+              <span class="h1 font-weight-bold mb-0 counter-value text-primary">{{$dashboard['dashboard_price_total']}}</span>
             </div>
             <div class="col-auto">
-              <div class="icon icon-shape bg-green text-white rounded-circle shadow">
+              <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
                 <i class="ni ni-money-coins"></i>
               </div>
             </div>
