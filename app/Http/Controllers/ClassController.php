@@ -168,7 +168,9 @@ class ClassController extends Controller
             $class_remark = '无';
         }
         // 更新数据库
+        DB::beginTransaction();
         try{
+            // 更新班级信息
             DB::table('class')
               ->where('class_id', $class_id)
               ->update(['class_name' => $class_name,
@@ -177,15 +179,22 @@ class ClassController extends Controller
                         'class_teacher' => $class_teacher,
                         'class_max_num' => $class_max_num,
                         'class_remark' => $class_remark]);
+            // 更新课程安排教师
+            DB::table('schedule')
+              ->where('schedule_participant', $class_id)
+              ->where('schedule_attended', 0)
+              ->update(['schedule_teacher' => $class_teacher]);
         }
         // 捕获异常
         catch(Exception $e){
+            DB::rollBack();
             return redirect("/class/edit?id=".encode($class_id, 'class_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',
                            'title' => '班级修改失败',
                            'message' => '班级修改失败，请重新输入信息']);
         }
+        DB::commit();
         return redirect("/class?id=".encode($class_id, 'class_id'))
                ->with(['notify' => true,
                          'type' => 'success',
