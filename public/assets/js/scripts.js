@@ -318,3 +318,19 @@ function lineChart(id, label, labels, data){
         }
     });
 }
+
+function table_export(tableId, fileName) {
+  var table = $('#'+tableId);
+  if(table && table.length){
+    $(table).table2excel({
+      exclude: ".noExl",
+      name: fileName,
+      filename: fileName + ".xls",
+      fileext: ".xls",
+      exclude_img: true,
+      exclude_links: true,
+      exclude_inputs: true,
+      preserveColors: true
+    });
+  }
+}

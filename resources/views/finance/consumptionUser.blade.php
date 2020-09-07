@@ -6,7 +6,7 @@
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">统计中心</li>
-    <li class="breadcrumb-item active">校区课消统计</li>
+    <li class="breadcrumb-item active">个人课消统计</li>
   </ol>
 </nav>
 @endsection
@@ -32,10 +32,10 @@
                 <input class="form-control form-control-sm datepicker" name="filter_date_end" type="text" value="{{$filters['filter_date_end']}}" autocomplete="off">
               </div>
               <div class="col-1 text-center">
-                <small class="text-muted font-weight-bold px-2">校区</small>
+                <small class="text-muted font-weight-bold px-2">教师</small>
               </div>
               <div class="col-2">
-                <select class="form-control form-control-sm" name="filter_department" data-toggle="select">
+                <select class="form-control form-control-sm" name="filter_user" data-toggle="select">
                   <option value=''>全部教师</option>
                   @foreach ($filter_users as $user)
                     <option value="{{ $user->user_id }}" @if($filters['filter_user']==$user->user_id) selected @endif>[{{$user->department_name}}] {{ $user->user_name }}</option>
@@ -143,69 +143,101 @@
     <div class="col-12">
       <div class="card mb-4">
         <div class="table-responsive"  style="max-height:600px;">
-          <table class="table align-items-center table-hover table-bordered text-left">
+          <button type="button" class="btn btn-waring btn-block" onclick="table_export('table-1', '课消统计-{{$dashboard['dashboard_user_name']}} ({{date('Y.m.d', strtotime($filters['filter_date_start']))}}-{{date('Y.m.d', strtotime($filters['filter_date_end']))}})')">导出表格</button>
+          <table class="table align-items-center table-hover table-bordered text-center" id="table-1">
             <thead class="thead-light">
               <tr>
                 <th style='width:40px;'>序号</th>
+                <th style='width:60px;'>校区</th>
                 <th style='width:110px;'>班级</th>
-                <th style='width:60px;'>班级校区</th>
-                <th style='width:40px;'>上课人数</th>
-                <th style='width:40px;'>请假人数</th>
-                <th style='width:40px;'>旷课人数</th>
                 <th style='width:40px;'>年级</th>
                 <th style='width:40px;'>科目</th>
-                <th style='width:60px;'>日期</th>
-                <th style='width:60px;'>时间</th>
-                <th style='width:60px;'>共计消耗课时</th>
-                <th style='width:60px;'>授课教师</th>
-                <th style='width:60px;'>操作</th>
+                <th style='width:60px;'>班级规模</th>
+                <th style='width:60px;'>应到/实到</th>
+                <th style='width:50px;'>学生</th>
+                <th style='width:50px;'>签到</th>
+                <th style='width:100px;'>扣除课时</th>
+                <th style='width:40px;'>数量</th>
+                <th style='width:50px;'>转化小时</th>
+                <th style='width:80px;'>日期</th>
+                <th style='width:80px;'>时间</th>
+                <th style='width:60px;'>教师</th>
+                <th style='width:60px;'>工资小时</th>
               </tr>
             </thead>
             <tbody>
               @foreach($schedules as $schedule)
-              <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td><a href="/class?id={{encode($schedule['class_id'],'class_id')}}">{{ $schedule['class_name'] }}</a></td>
-                <td>{{ $schedule['department_name'] }}</td>
-                <td>
+                <tr>
+                  <td rowspan="{{ $schedule['student_num'] }}">{{ $loop->iteration }}</td>
+                  <td rowspan="{{ $schedule['student_num'] }}">{{ $schedule['department_name'] }}</td>
+                  <td rowspan="{{ $schedule['student_num'] }}"><a href="/class?id={{encode($schedule['class_id'],'class_id')}}">{{ $schedule['class_name'] }}</a></td>
+                  <td rowspan="{{ $schedule['student_num'] }}">{{ $schedule['grade_name'] }}</td>
+                  <td rowspan="{{ $schedule['student_num'] }}">{{ $schedule['subject_name'] }}</td>
+                  <td rowspan="{{ $schedule['student_num'] }}">{{ $schedule['class_max_num'] }} 人班</td>
                   @if($schedule['schedule_attended_num']==0)
-                    -
+                    <td rowspan="{{ $schedule['student_num'] }}" class="text-danger">
+                      {{ $schedule['schedule_attended_num'] }} / {{ $schedule['schedule_attended_num']+$schedule['schedule_leave_num']+$schedule['schedule_absence_num'] }} 人
+                    </td>
+                  @elseif($schedule['schedule_attended_num']==$schedule['schedule_attended_num']+$schedule['schedule_leave_num']+$schedule['schedule_absence_num'])
+                    <td rowspan="{{ $schedule['student_num'] }}" class="text-success">
+                      {{ $schedule['schedule_attended_num'] }} / {{ $schedule['schedule_attended_num']+$schedule['schedule_leave_num']+$schedule['schedule_absence_num'] }} 人
+                    </td>
                   @else
-                    {{ $schedule['schedule_attended_num'] }}
+                    <td rowspan="{{ $schedule['student_num'] }}" class="text-warning">
+                      {{ $schedule['schedule_attended_num'] }} / {{ $schedule['schedule_attended_num']+$schedule['schedule_leave_num']+$schedule['schedule_absence_num'] }} 人
+                    </td>
                   @endif
-                </td>
-                <td>
-                  @if($schedule['schedule_leave_num']==0)
-                    -
+                  <td>{{ $schedule['participants'][0]['student_name'] }}</td>
+                  @if($schedule['participants'][0]['participant_attend_status']==1)
+                    <td><span class="text-success">正常</span></td>
+                  @elseif($schedule['participants'][0]['participant_attend_status']==2)
+                    <td><span class="text-warning">请假</span></td>
                   @else
-                    {{ $schedule['schedule_leave_num'] }}
+                    <td><span class="text-danger">旷课</span></td>
                   @endif
-                </td>
-                <td>
-                  @if($schedule['schedule_absence_num']==0)
-                    -
-                  @else
-                    {{ $schedule['schedule_absence_num'] }}
-                  @endif
-                </td>
-                <td>{{ $schedule['grade_name'] }}</td>
-                <td>{{ $schedule['subject_name'] }}</td>
-                <td>{{ date('m-d', strtotime($schedule['schedule_date'])) }}&nbsp;{{ dateToDay($schedule['schedule_date']) }}</td>
-                <td>{{ date('H:i', strtotime($schedule['schedule_start'])) }} - {{ date('H:i', strtotime($schedule['schedule_end'])) }}</td>
-                <td>
-                  @if($schedule['total_hour']==0)
-                    -
-                  @else
-                    {{ $schedule['total_hour'] }}
-                  @endif
-                </td>
-                <td><a href="/user?id={{encode($schedule['user_id'],'user_id')}}">{{ $schedule['user_name'] }}</a></td>
-                <td>
-                  <a href="/attendedSchedule?id={{encode($schedule['schedule_id'],'schedule_id')}}">
-                    查看上课详情
-                  </a>
-                </td>
-              </tr>
+                  <td>{{ $schedule['participants'][0]['course_name'] }}</td>
+                  <td>
+                    @if($schedule['participants'][0]['participant_amount']>0)
+                      {{ $schedule['participants'][0]['participant_amount'] }}
+                    @endif
+                  </td>
+                  <td>
+                    @if($schedule['participants'][0]['participant_hour']>0)
+                      {{ $schedule['participants'][0]['participant_hour'] }}
+                    @endif
+                  </td>
+                  <td rowspan="{{ $schedule['student_num'] }}">{{ date('m-d', strtotime($schedule['schedule_date'])) }}&nbsp;{{ dateToDay($schedule['schedule_date']) }}</td>
+                  <td rowspan="{{ $schedule['student_num'] }}">{{ date('H:i', strtotime($schedule['schedule_start'])) }} - {{ date('H:i', strtotime($schedule['schedule_end'])) }}</td>
+                  <td rowspan="{{ $schedule['student_num'] }}"><a href="/user?id={{encode($schedule['user_id'],'user_id')}}">{{ $schedule['user_name'] }}</a></td>
+                  <td rowspan="{{ $schedule['student_num'] }}">
+                    @if($schedule['schedule_attended_num']>0)
+                      {{ $schedule['duration'] }}
+                    @endif
+                  </td>
+                </tr>
+                @for ($i = 1; $i < $schedule['student_num']; $i++)
+                  <tr>
+                    <td>{{ $schedule['participants'][$i]['student_name'] }}</td>
+                    @if($schedule['participants'][$i]['participant_attend_status']==1)
+                      <td><span class="text-success">正常</span></td>
+                    @elseif($schedule['participants'][$i]['participant_attend_status']==2)
+                      <td><span class="text-warning">请假</span></td>
+                    @else
+                      <td><span class="text-danger">旷课</span></td>
+                    @endif
+                    <td>{{ $schedule['participants'][$i]['course_name'] }}</td>
+                  <td>
+                    @if($schedule['participants'][$i]['participant_amount']>0)
+                      {{ $schedule['participants'][$i]['participant_amount'] }}
+                    @endif
+                  </td>
+                  <td>
+                    @if($schedule['participants'][$i]['participant_hour']>0)
+                      {{ $schedule['participants'][$i]['participant_hour'] }}
+                    @endif
+                  </td>
+                  </tr>
+                @endfor
               @endforeach
             </tbody>
           </table>
