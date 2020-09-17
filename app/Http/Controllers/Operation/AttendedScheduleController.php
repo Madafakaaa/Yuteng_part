@@ -25,7 +25,10 @@ class AttendedScheduleController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-
+        // 检测用户权限
+        if(!in_array("/operation/attendedSchedule", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
         // 获取用户校区权限
         $department_access = Session::get('department_access');
 
@@ -33,7 +36,8 @@ class AttendedScheduleController extends Controller
         $db_schedules = DB::table('schedule')
                           ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
                           ->Join('class', 'schedule.schedule_participant', '=', 'class.class_id')
-                          ->join('user AS teacher', 'schedule.schedule_teacher', '=', 'teacher.user_id')
+                          ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                          ->join('position', 'user.user_position', '=', 'position.position_id')
                           ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                           ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
                           ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
@@ -106,6 +110,7 @@ class AttendedScheduleController extends Controller
             $temp['schedule_end']=$db_schedule->schedule_end;
             $temp['user_id']=$db_schedule->user_id;
             $temp['user_name']=$db_schedule->user_name;
+            $temp['position_name']=$db_schedule->position_name;
             $temp['subject_name']=$db_schedule->subject_name;
             $temp['grade_name']=$db_schedule->grade_name;
             $temp['classroom_name']=$db_schedule->classroom_name;
@@ -168,6 +173,10 @@ class AttendedScheduleController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/operation/attendedSchedule/delete", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 获取schedule_id
         $request_ids=$request->input('id');

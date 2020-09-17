@@ -5,7 +5,7 @@
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">运营中心</li>
+    <li class="breadcrumb-item active">招生中心</li>
     <li class="breadcrumb-item active">学生管理</li>
   </ol>
 </nav>
@@ -18,7 +18,7 @@
       <a href="?">
         <button class="btn btn-sm btn-outline-primary btn-round btn-icon">
           <span class="btn-inner--icon"><i class="fas fa-redo"></i></span>
-          <span class="btn-inner--text">重置</span>
+          <span class="btn-inner--text">重置搜索</span>
         </button>
       </a>
       <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/operation/student/delete', '确认批量删除所选学生？')">
@@ -86,19 +86,19 @@
           </form>
         </div>
         <div class="table-responsive freeze-table-4">
-          <table class="table align-items-center table-hover text-left">
+          <table class="table align-items-center table-hover table-bordered text-left">
             <thead class="thead-light">
               <tr>
                 <th style='width:40px;'></th>
-                <th style='width:70px;'>序号</th>
-                <th style='width:80px;'>学生</th>
+                <th style='width:60px;'>序号</th>
+                <th style='width:100px;'>学生</th>
                 <th style='width:90px;'>学号</th>
                 <th style='width:80px;'>校区</th>
                 <th style='width:60px;'>年级</th>
                 <th style='width:145px;'>课程顾问</th>
                 <th style='width:145px;'>班主任</th>
                 <th style='width:145px;'>学生课时</th>
-                <th style='width:320px;'></th>
+                <th style='width:240px;'>操作管理</th>
               </tr>
             </thead>
             <tbody>
@@ -128,12 +128,12 @@
                 @if($student['consultant_name']=="")
                   <td><span style="color:red;">无</span></td>
                 @else
-                  <td><a href="/user?id={{encode($student['consultant_id'],'user_id')}}">{{ $student['consultant_name'] }}</a> ({{ $student['consultant_position_name'] }})</td>
+                  <td><a href="/user?id={{encode($student['consultant_id'],'user_id')}}">{{ $student['consultant_name'] }}</a> [ {{ $student['consultant_position_name'] }} ]</td>
                 @endif
                 @if($student['class_adviser_name']=="")
                   <td><span style="color:red;">无</span></td>
                 @else
-                  <td><a href="/user?id={{encode($student['class_adviser_id'],'user_id')}}">{{ $student['class_adviser_name'] }}</a> ({{ $student['class_adviser_position_name'] }})</td>
+                  <td><a href="/user?id={{encode($student['class_adviser_id'],'user_id')}}">{{ $student['class_adviser_name'] }}</a> [ {{ $student['class_adviser_position_name'] }} ]</td>
                 @endif
                 <td>
                   {{ $student['student_hour_num'] }} 课程
@@ -167,10 +167,10 @@
                                   <h5 class="checklist-title mb-0">{{ $student_hour['course_name'] }}</h5>
                                   <small>剩余:{{ $student_hour['hour_remain'] }} 课时</small>
                                 </div>
-                                <div class="custom-control">
+                                <!-- <div class="custom-control">
                                   <a href="/operation/hour/edit?student_id={{encode($student['student_id'], 'student_id')}}&course_id={{encode($student_hour['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-primary btn-sm">修改课时</button></a>
                                   <a href="/operation/hour/refund/create?student_id={{encode($student['student_id'], 'student_id')}}&course_id={{encode($student_hour['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-danger btn-sm">退费</button></a>
-                                </div>
+                                </div> -->
                               </div>
                             </li>
                             @endforeach
@@ -184,9 +184,8 @@
                   </div>
                 </td>
                 <td>
-                  <a href="/operation/student/follower/edit?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">修改负责人</button></a>
+                  <a href="/operation/student/contract/create?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">签约合同</button></a>
                   <a href="/operation/student/schedule/create?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">一对一排课</button></a>
-                  <a href="/operation/student/joinClass?student_id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">加入班级</button></a>
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/student/delete?id={{encode($student['student_id'], 'student_id')}}', '确认删除学生？')">删除</button>
                 </td>
               </tr>

@@ -11,7 +11,7 @@ class ContractController extends Controller
 {
     /**
      * 签约管理视图
-     * URL: GET /market/contract
+     * URL: GET /operation/contract
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      * @param  $request->input('filter1'): 校区
@@ -22,6 +22,10 @@ class ContractController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/market/contract", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
 
         // 获取用户校区权限
@@ -40,9 +44,9 @@ class ContractController extends Controller
         $filters = array(
                         "filter_department" => null,
                         "filter_grade" => null,
-                        "filter_name" => null,
+                        "filter_student" => null,
                         "filter_user" => null,
-                        "filter_month" => date('Y-m')
+                        "filter_date" => null
                     );
 
         // 客户校区
@@ -55,24 +59,20 @@ class ContractController extends Controller
             $rows = $rows->where('student_grade', '=', $request->input('filter_grade'));
             $filters['filter_grade']=$request->input("filter_grade");
         }
-        // 月份
-        if ($request->filled('filter_month')) {
-            $filters['filter_month']=$request->input("filter_month");
+        // 签约日期
+        if ($request->filled('filter_date')) {
+            $rows = $rows->where('contract_date', '=', $request->input('filter_date'));
+            $filters['filter_date']=$request->input("filter_date");
         }
-        $rows = $rows->where('contract_date', 'like', $filters['filter_month']."%");
-        // 判断是否有搜索条件
-        $filter_status = 0;
         // 客户名称
-        if ($request->filled('filter_name')) {
-            $rows = $rows->where('student_name', 'like', '%'.$request->input('filter_name').'%');
-            $filters['filter_name']=$request->input("filter_name");
-            $filter_status = 1;
+        if ($request->filled('filter_student')) {
+            $rows = $rows->where('student_id', '=', $request->input('filter_student'));
+            $filters['filter_student']=$request->input("filter_student");
         }
         // 签约人
         if ($request->filled('filter_user')) {
             $rows = $rows->where('contract_createuser', '=', $request->input('filter_user'));
             $filters['filter_user']=$request->input("filter_user");
-            $filter_status = 1;
         }
 
         // 保存数据总数
@@ -127,7 +127,6 @@ class ContractController extends Controller
 
         // 获取校区、学生、课程、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
-        $filter_students = DB::table('student')->where('student_status', 1)->orderBy('student_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         $filter_users = DB::table('user')
                           ->join('department', 'user.user_department', '=', 'department.department_id')
@@ -137,6 +136,14 @@ class ContractController extends Controller
                           ->orderBy('user_department', 'asc')
                           ->orderBy('user_position', 'desc')
                           ->get();
+        $filter_students = DB::table('student')
+                             ->join('department', 'student.student_department', '=', 'department.department_id')
+                             ->where('student_status', 1)
+                             ->where('student_contract_num', '>', 0)
+                             ->whereIn('student_department', $department_access)
+                             ->orderBy('student_department', 'asc')
+                             ->orderBy('student_grade', 'asc')
+                             ->get();
 
         // 返回列表视图
         return view('market/contract/contract', ['contracts' => $contracts,
@@ -146,7 +153,6 @@ class ContractController extends Controller
                                                'request' => $request,
                                                'filters' => $filters,
                                                'totalNum' => $totalNum,
-                                               'filter_status' => $filter_status,
                                                'filter_departments' => $filter_departments,
                                                'filter_students' => $filter_students,
                                                'filter_grades' => $filter_grades,
@@ -162,6 +168,10 @@ class ContractController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/market/contract/delete", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         $contract_id = decode($request->input('id'), 'contract_id');
         // 获取学生信息

@@ -18,7 +18,7 @@
       <a href="?">
         <button class="btn btn-sm btn-outline-primary btn-round btn-icon">
           <span class="btn-inner--icon"><i class="fas fa-redo"></i></span>
-          <span class="btn-inner--text">重置</span>
+          <span class="btn-inner--text">重置搜索</span>
         </button>
       </a>
     </div>
@@ -77,28 +77,26 @@
           </form>
         </div>
         <div class="table-responsive freeze-table-7">
-          <table class="table align-items-center table-hover text-left">
+          <table class="table align-items-center table-hover table-bordered text-left">
             <thead class="thead-light">
               <tr>
                 <th style='width:50px;'>序号</th>
-                <th style='width:70px;'>校区</th>
+                <th style='width:100px;'>校区</th>
                 <th style='width:70px;'>日期</th>
                 <th style='width:80px;'>签约人</th>
-                <th style='width:100px;'>学生</th>
+                <th style='width:80px;'>学生</th>
                 <th style='width:55px;'>年级</th>
                 <th style='width:55px;'>类型</th>
-                <th style='width:120px;'>课程</th>
-                <th style='width:60px;'>类型</th>
-                <th style='width:60px;' class="text-right">课时数量</th>
-                <th style='width:60px;' class="text-right">单价</th>
-                <th style='width:50px;' class="text-right">折扣</th>
-                <th style='width:70px;' class="text-right">优惠金额</th>
-                <th style='width:60px;' class="text-right">赠送课时</th>
-                <th style='width:60px;' class="text-right">总课时</th>
-                <th style='width:80px;' class="text-right">课程应收</th>
-                <th style='width:100px;' class="text-right">合计金额</th>
-                <th style='width:100px;' class="text-right">实付金额</th>
-                <th style='width:250px;'>操作管理</th>
+                <th style='width:150px;'>课程</th>
+                <!-- <th style='width:60px;' class="text-right">单价</th> -->
+                <!-- <th style='width:50px;' class="text-right">折扣</th> -->
+                <!-- <th style='width:70px;' class="text-right">优惠金额</th> -->
+                <!-- <th style='width:60px;' class="text-right">赠送课时</th> -->
+                <th style='width:80px;' class="text-right">课时数量</th>
+                <!-- <th style='width:80px;' class="text-right">总课时</th> -->
+                <th style='width:90px;' class="text-right">课程应收</th>
+                <th style='width:140px;' class="text-right">实付金额</th>
+                <th style='width:240px;'>操作管理</th>
               </tr>
             </thead>
             <tbody>
@@ -112,12 +110,7 @@
                 <td rowspan="{{$contract['contract_course_num']}}">{{ date('m-d', strtotime($contract['contract_date'])) }}</td>
                 <td rowspan="{{$contract['contract_course_num']}}"><a href="/user?id={{encode($contract['user_id'],'user_id')}}">{{ $contract['user_name'] }}</a></td>
                 <td rowspan="{{$contract['contract_course_num']}}">
-                  <a href="/student?id={{encode($contract['student_id'], 'student_id')}}">{{ $contract['student_name'] }}</a>&nbsp;
-                  @if($contract['student_gender']=="男")
-                    <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
-                  @else
-                    <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
-                  @endif
+                  <a href="/student?id={{encode($contract['student_id'], 'student_id')}}">{{ $contract['student_name'] }}</a>
                 </td>
                 <td rowspan="{{$contract['contract_course_num']}}">{{ $contract['grade_name'] }}</td>
                 @if($contract['contract_type']==0)
@@ -126,38 +119,35 @@
                   <td rowspan="{{$contract['contract_course_num']}}"><span style="color:green;">续签</span></td>
                 @endif
                 <td>{{$contract['contract_courses'][0]['course_name']}}</td>
-                <td>{{$contract['contract_courses'][0]['course_type']}}</td>
-                <td class="text-right">{{$contract['contract_courses'][0]['contract_course_original_hour']}}</td>
-                <td class="text-right">{{$contract['contract_courses'][0]['contract_course_original_unit_price']}}</td>
-                <td class="text-right">{{$contract['contract_courses'][0]['contract_course_discount_rate']}}</td>
-                <td class="text-right">{{$contract['contract_courses'][0]['contract_course_discount_amount']}}</td>
-                <td class="text-right">{{$contract['contract_courses'][0]['contract_course_free_hour']}}</td>
+                <!-- <td class="text-right">{{floatval($contract['contract_courses'][0]['contract_course_original_hour'])}}</td> -->
+                <!-- <td class="text-right">{{floatval($contract['contract_courses'][0]['contract_course_original_unit_price'])}}</td> -->
+                <!-- <td class="text-right">{{$contract['contract_courses'][0]['contract_course_discount_rate']}}</td> -->
+                <!-- <td class="text-right">{{$contract['contract_courses'][0]['contract_course_discount_amount']}}</td> -->
+                <!-- <td class="text-right">{{$contract['contract_courses'][0]['contract_course_free_hour']}}</td> -->
                 <td class="text-right">{{$contract['contract_courses'][0]['contract_course_total_hour']}}</td>
                 <td class="text-right">{{$contract['contract_courses'][0]['contract_course_total_price']}}</td>
-                <td rowspan="{{$contract['contract_course_num']}}" class="text-right" title="{{ number_format($contract['contract_total_price'], 2) }} 元"><strong>{{ number_format($contract['contract_total_price'], 2) }} 元</strong></td>
                 @if($contract['contract_total_price']==$contract['contract_paid_price'])
-                  <td rowspan="{{$contract['contract_course_num']}}" class="text-right" title="{{ number_format($contract['contract_paid_price'], 2) }} 元"><span style="color:green;"><strong>{{ number_format($contract['contract_paid_price'], 2) }} 元</strong></span></td>
+                  <td rowspan="{{$contract['contract_course_num']}}" class="text-right"><span style="color:green;"><strong>{{ floatval($contract['contract_paid_price']) }} 元</strong></span></td>
                 @else
-                  <td rowspan="{{$contract['contract_course_num']}}" class="text-right" title="{{ number_format($contract['contract_paid_price'], 2) }} 元"><span style="color:red;"><strong>{{ number_format($contract['contract_paid_price'], 2) }} 元</strong></span></td>
+                  <td rowspan="{{$contract['contract_course_num']}}" class="text-right"><span style="color:red;"><strong>{{ floatval($contract['contract_paid_price']) }} / {{ floatval($contract['contract_total_price']) }} 元</strong></span></td>
                 @endif
                 <td rowspan="{{$contract['contract_course_num']}}">
-                  @if($contract['contract_total_price']!=$contract['contract_paid_price'])
-                    <a href='/operation/contract/edit?id={{encode($contract['contract_id'], 'contract_id')}}'><button type="button" class="btn btn-info btn-sm">补缴</button></a>
-                  @endif
                   <a href="/student?id={{encode($contract['student_id'], 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
                   <a href="/contract?id={{encode($contract['contract_id'], 'contract_id')}}" target="_blank"><button type="button" class="btn btn-primary btn-sm">合同</button></a>
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/contract/delete?id={{encode($contract['contract_id'], 'contract_id')}}', '确认删除合同？')">删除</button>
+                  @if($contract['contract_total_price']!=$contract['contract_paid_price'])
+                    <a href='/operation/contract/edit?id={{encode($contract['contract_id'], 'contract_id')}}'><button type="button" class="btn btn-info btn-sm">补缴</button></a>
+                  @endif
                 </td>
               </tr>
               @for ($i = 1; $i < $contract['contract_course_num']; $i++)
                 <tr>
                   <td>{{$contract['contract_courses'][$i]['course_name']}}</td>
-                  <td>{{$contract['contract_courses'][$i]['course_type']}}</td>
-                  <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_original_hour']}}</td>
-                  <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_original_unit_price']}}</td>
-                  <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_discount_rate']}}</td>
-                  <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_discount_amount']}}</td>
-                  <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_free_hour']}}</td>
+                  <!-- <td class="text-right">{{floatval($contract['contract_courses'][$i]['contract_course_original_hour'])}}</td> -->
+                  <!-- <<td class="text-right">{{floatval($contract['contract_courses'][$i]['contract_course_original_unit_price'])}}</td> -->
+                  <!-- <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_discount_rate']}}</td> -->
+                  <!-- <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_discount_amount']}}</td> -->
+                  <!-- <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_free_hour']}}</td> -->
                   <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_total_hour']}}</td>
                   <td class="text-right">{{$contract['contract_courses'][$i]['contract_course_total_price']}}</td>
                 </tr>

@@ -83,7 +83,7 @@
           </div>
         </div>
         <div class="table-responsive">
-          <table class="table align-items-center table-hover text-left">
+          <table class="table align-items-center table-hover table-bordered text-left">
             <thead class="thead-light">
               <tr>
                 <th style='width:70px;'>序号</th>

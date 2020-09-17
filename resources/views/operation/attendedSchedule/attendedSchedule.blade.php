@@ -18,7 +18,7 @@
       <a href="?">
         <button class="btn btn-sm btn-outline-primary btn-round btn-icon">
           <span class="btn-inner--icon"><i class="fas fa-redo"></i></span>
-          <span class="btn-inner--text">重置</span>
+          <span class="btn-inner--text">重置搜索</span>
         </button>
       </a>
       <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/operation/attendedSchedule/delete', '确认批量删除所选上课记录？')">
@@ -98,16 +98,16 @@
               <tr>
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:180px;'>班级</th>
-                <th style='width:80px;'>校区</th>
+                <th style='width:200px;'>班级</th>
+                <th style='width:90px;'>校区</th>
                 <th style='width:130px;'>日期</th>
                 <th style='width:110px;'>时间</th>
-                <th style='width:110px;'>实到/应到人数</th>
-                <th style='width:80px;'>教师</th>
+                <th style='width:120px;' class="text-left">实到/应到人数</th>
+                <th style='width:140px;'>教师</th>
                 <th style='width:60px;'>科目</th>
                 <th style='width:60px;'>年级</th>
                 <th style='width:100px;'>教室</th>
-                <th style='width:120px;'>操作</th>
+                <th style='width:90px;'>操作</th>
               </tr>
             </thead>
             <tbody>
@@ -124,13 +124,13 @@
                 <td>{{ $schedule['department_name'] }}</td>
                 <td>{{ $schedule['schedule_date'] }}&nbsp;{{ dateToDay($schedule['schedule_date']) }}</td>
                 <td>{{ date('H:i', strtotime($schedule['schedule_start'])) }} - {{ date('H:i', strtotime($schedule['schedule_end'])) }}</td>
-                <td>
+                <td class="text-right">
                   @if($schedule['schedule_attended_num']==$schedule['schedule_student_num'])
                     <span style="color:green;">{{ $schedule['schedule_attended_num'] }} / {{ $schedule['schedule_student_num'] }} 人</span>
                   @else
                     <span style="color:red;">{{ $schedule['schedule_attended_num'] }} / {{ $schedule['schedule_student_num'] }} 人</span>
                   @endif
-                  <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-{{$loop->iteration}}-1">查看</button>
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-{{$loop->iteration}}-1">查看</button>&nbsp;
                   <div class="modal fade" id="modal-{{$loop->iteration}}-1" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
                     <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
                       <div class="modal-content">
@@ -167,12 +167,12 @@
                                     </h4>
                                     @if($participant['participant_attend_status']==1)
                                       <span class="text-success">● <small>正常</small></span>
-                                      <small>[ {{ $participant['course_name'] }} - {{ $participant['participant_amount'] }} 课时 ]</small>
+                                      <small>[ 扣除： {{ $participant['course_name'] }} - {{ $participant['participant_amount'] }} 课时 ]</small>
                                     @elseif($participant['participant_attend_status']==2)
                                       <span class="text-warning">● <small>请假</small></span>
                                     @else
                                       <span class="text-danger">● <small>旷课</small></span>
-                                      <small>[ {{ $participant['course_name'] }} - {{ $participant['participant_amount'] }} 课时 ]</small>
+                                      <small>[ 扣除： {{ $participant['course_name'] }} - {{ $participant['participant_amount'] }} 课时 ]</small>
                                     @endif
                                   </div>
                                   <div class="col-auto">
@@ -190,7 +190,7 @@
                     </div>
                   </div>
                 </td>
-                <td><a href="/user?id={{encode($schedule['user_id'] ,'user_id')}}">{{ $schedule['user_name'] }}</a></td>
+                <td><a href="/user?id={{encode($schedule['user_id'] ,'user_id')}}">{{ $schedule['user_name'] }}</a> [ {{ $schedule['position_name'] }} ]</td>
                 <td>{{ $schedule['subject_name'] }}</td>
                 <td>{{ $schedule['grade_name'] }}</td>
                 <td>{{ $schedule['classroom_name'] }}</td>

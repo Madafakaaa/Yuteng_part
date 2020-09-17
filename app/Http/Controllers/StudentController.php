@@ -15,10 +15,14 @@ class StudentController extends Controller
      * URL: GET /student/{id}
      * @param  int  $student_id
      */
-    public function show(Request $request){
+    public function student(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/student", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         $student_id = decode($request->input('id'), 'student_id');
         if($request->filled('selected')) {
@@ -37,12 +41,15 @@ class StudentController extends Controller
                      ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
                      ->select('student.student_id AS student_id',
                               'student.student_name AS student_name',
+                              'student.student_department AS student_department',
                               'student.student_gender AS student_gender',
                               'student.student_guardian AS student_guardian',
                               'student.student_guardian_relationship AS student_guardian_relationship',
                               'student.student_phone AS student_phone',
                               'student.student_wechat AS student_wechat',
                               'student.student_source AS student_source',
+                              'student.student_consultant AS student_consultant',
+                              'student.student_class_adviser AS student_class_adviser',
                               'student.student_birthday AS student_birthday',
                               'student.student_remark AS student_remark',
                               'student.student_createtime AS student_createtime',
@@ -52,6 +59,7 @@ class StudentController extends Controller
                               'student.student_last_follow_date AS student_last_follow_date',
                               'department.department_name AS department_name',
                               'grade.grade_name AS grade_name',
+                              'student.student_grade AS student_grade',
                               'school.school_name AS school_name',
                               'consultant.user_name AS consultant_name',
                               'consultant_position.position_name AS consultant_position_name',
@@ -72,7 +80,6 @@ class StudentController extends Controller
         $classes = DB::table('member')
                      ->join('student', 'member.member_student', '=', 'student.student_id')
                      ->join('class', 'member.member_class', '=', 'class.class_id')
-                     ->join('course', 'member.member_course', '=', 'course.course_id')
                      ->join('user', 'class.class_teacher', '=', 'user.user_id')
                      ->join('subject', 'subject.subject_id', '=', 'class.class_subject')
                      ->where('member.member_student', '=', $student_id)
@@ -83,6 +90,28 @@ class StudentController extends Controller
         foreach($classes as $class){
             $class_ids[] = $class->class_id;
         }
+
+        // 获取可添加班级信息
+        $same_grade_classes = DB::table('class')
+                      ->join('grade', 'class.class_grade', '=', 'grade.grade_id')
+                      ->where('class_department', $student->student_department)
+                      ->where('class_grade', $student->student_grade)
+                      ->where('class_status', 1)
+                      ->whereColumn('class_current_num', '<', 'class_max_num')
+                      ->whereNotIn('class_id', $class_ids)
+                      ->orderBy('class_id', 'asc')
+                      ->get();
+
+        $diff_grade_classes = DB::table('class')
+                      ->join('grade', 'class.class_grade', '=', 'grade.grade_id')
+                      ->where('class_department', $student->student_department)
+                      ->where('class_grade', '!=', $student->student_grade)
+                      ->where('class_status', 1)
+                      ->whereColumn('class_current_num', '<', 'class_max_num')
+                      ->whereNotIn('class_id', $class_ids)
+                      ->orderBy('class_grade', 'asc')
+                      ->orderBy('class_id', 'asc')
+                      ->get();
 
         // 获取所有课程安排
         $schedules = DB::table('schedule')
@@ -143,55 +172,31 @@ class StudentController extends Controller
                              ->limit(50)
                              ->get();
 
-        return view('student/show', ['selected' => $selected,
-                                     'student' => $student,
-                                     'classes' => $classes,
-                                     'schedules' => $schedules,
-                                     'attended_schedules' => $attended_schedules,
-                                     'hours' => $hours,
-                                     'hour_update_records' => $hour_update_records,
-                                     'contracts' => $contracts,
-                                     'student_records' => $student_records,]);
-    }
-
-    /**
-     * 修改学生信息
-     * URL: GET /customer/{student_id}/edit
-     * @param  int  $student_id        : 学生id
-     */
-    public function edit(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        $student_id = decode($request->input('id'), 'student_id');
-        // 获取数据信息
-        $student = DB::table('student')->where('student_id', $student_id)->get();
-        if($student->count()!==1){
-            // 未获取到数据
-            return redirect()->action('CustomerController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '客户显示失败',
-                                     'message' => '客户显示失败，请联系系统管理员']);
-        }
-        $student = $student[0];
-        // 获取用户校区权限
-        $department_access = Session::get('department_access');
-        // 获取校区、来源、课程、用户、年级信息
-        $departments = DB::table('department')
-                         ->where('department_status', 1)
-                         ->whereIn('department_id', $department_access)
-                         ->orderBy('department_id', 'asc')
-                         ->get();
         $sources = DB::table('source')->where('source_status', 1)->orderBy('source_id', 'asc')->get();
         $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         $schools = DB::table('school')->where('school_status', 1)->orderBy('school_id', 'asc')->get();
-        return view('student/edit', ['student' => $student,
-                                      'departments' => $departments,
-                                      'sources' => $sources,
-                                      'grades' => $grades,
-                                      'schools' => $schools]);
+        $users = DB::table('user')
+                    ->join('position', 'user.user_position', '=', 'position.position_id')
+                    ->where('user_department', $student->student_department)
+                    ->where('user_status', 1)
+                    ->orderBy('user_position', 'desc')
+                    ->get();
+
+        return view('student/student', ['selected' => $selected,
+                                       'student' => $student,
+                                       'same_grade_classes' => $same_grade_classes,
+                                       'diff_grade_classes' => $diff_grade_classes,
+                                       'classes' => $classes,
+                                       'schedules' => $schedules,
+                                       'attended_schedules' => $attended_schedules,
+                                       'hours' => $hours,
+                                       'hour_update_records' => $hour_update_records,
+                                       'contracts' => $contracts,
+                                       'student_records' => $student_records,
+                                       'sources' => $sources,
+                                       'grades' => $grades,
+                                       'users' => $users,
+                                       'schools' => $schools]);
     }
 
     /**
@@ -218,7 +223,6 @@ class StudentController extends Controller
         $student_id = $request->input('id');
         // 获取表单输入
         $student_name = $request->input('input1');
-        $student_department = $request->input('input2');
         $student_gender = $request->input('input3');
         $student_grade = $request->input('input4');
         if($request->filled('input5')) {
@@ -236,6 +240,8 @@ class StudentController extends Controller
         }
         $student_source = $request->input('input10');
         $student_birthday = $request->input('input11');
+        $student_consultant = $request->input('input12');
+        $student_class_adviser = $request->input('input13');
         // 更新数据库
         DB::beginTransaction();
         try{
@@ -243,7 +249,6 @@ class StudentController extends Controller
             DB::table('student')
               ->where('student_id', $student_id)
               ->update(['student_name' => $student_name,
-                        'student_department' => $student_department,
                         'student_gender' => $student_gender,
                         'student_grade' => $student_grade,
                         'student_school' => $student_school,
@@ -252,7 +257,9 @@ class StudentController extends Controller
                         'student_phone' => $student_phone,
                         'student_wechat' => $student_wechat,
                         'student_source' => $student_source,
-                        'student_birthday' => $student_birthday]);
+                        'student_birthday' => $student_birthday,
+                        'student_consultant' => $student_consultant,
+                        'student_class_adviser' => $student_class_adviser]);
             // 添加学生动态
             DB::table('student_record')->insert(
                 ['student_record_student' => $student_id,
@@ -264,7 +271,7 @@ class StudentController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return redirect("/student/edit?id=".encode($student_id, 'student_id'))
+            return redirect("/student?id=".encode($student_id, 'student_id'))
                    ->with(['notify' => true,
                             'type' => 'danger',
                             'title' => '学生修改失败',
@@ -389,5 +396,94 @@ class StudentController extends Controller
                        'message' => '添加跟进动态成功']);
     }
 
+    /**
+     * 插入班级提交
+     * URL: GET /operation/member/store
+     */
+    public function memberAdd(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $student_id = $request->input('input_student_id');
+        $class_id = $request->input('input_class_id');
+        // 插入数据库
+        DB::beginTransaction();
+        try{
+            // 添加班级成员
+            DB::table('member')->insert(
+                ['member_class' => $class_id,
+                 'member_student' => $student_id,
+                 'member_createuser' => Session::get('user_id')]
+            );
+            // 更新班级人数
+            DB::table('class')
+              ->where('class_id', $class_id)
+              ->increment('class_current_num');
+            // 插入学生动态
+            //
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return $e;
+            return redirect("/student?id=".encode($student_id, 'student_id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '添加学生失败',
+                           'message' => '添加学生失败，请重新输入信息']);
+        }
+        DB::commit();
+        // 返回客户列表
+        return redirect("/student?id=".encode($student_id, 'student_id'))
+               ->with(['notify' => true,
+                      'type' => 'success',
+                      'title' => '添加学生成功',
+                      'message' => '添加学生成功']);
+    }
+
+    /**
+     * 班级成员删除
+     * URL: DELETE/student/member/delete
+     */
+    public function memberDelete(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $class_id = decode($request->input('input_class_id'), 'class_id');
+        $student_id = decode($request->input('input_student_id'), 'student_id');
+        // 插入数据库
+        DB::beginTransaction();
+        try{
+            // 删除班级成员
+            DB::table('member')
+              ->where('member_class', $class_id)
+              ->where('member_student', $student_id)
+              ->delete();
+            // 更新班级人数
+            DB::table('class')
+              ->where('class_id', $class_id)
+              ->decrement('class_current_num');
+            // 插入学生动态
+            //
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return redirect("/student?id=".encode($student_id, 'student_id'))
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '删除成员失败',
+                           'message' => '删除成员失败，请联系系统管理员']);
+        }
+        DB::commit();
+        // 返回客户列表
+        return redirect("/student?id=".encode($student_id, 'student_id'))
+               ->with(['notify' => true,
+                      'type' => 'success',
+                      'title' => '删除成员成功',
+                      'message' => '删除成员成功']);
+    }
 
 }

@@ -97,26 +97,25 @@
           <a href="?@foreach($filters as $key => $value) @if($key!='filter_semester') {{$key}}={{$value}}& @endif @endforeach filter_semester=其它"><button type="button" @if($filters['filter_semester']=='其它') class="btn btn-primary btn-sm" disabled @else class="btn btn-sm" @endif>其它</button></a>
         </div>
         <div class="table-responsive freeze-table-4">
-          <table class="table align-items-center table-hover text-left">
+          <table class="table align-items-center table-hover table-bordered text-left">
             <thead class="thead-light">
               <tr>
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:200px;'>教案名称</th>
-                <th style='width:130px;'></th>
-                <th style='width:80px;'>科目</th>
-                <th style='width:80px;'>年级</th>
-                <th style='width:100px;'>学期</th>
+                <th style='width:300px;'>教案名称</th>
+                <th style='width:90px;'>年级</th>
+                <th style='width:90px;'>学期</th>
+                <th style='width:90px;'>科目</th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:100px;'>文件大小</th>
-                <th style='width:100px;'>下载次数</th>
                 <th style='width:140px;'>上传用户</th>
                 <th style='width:110px;'>上传日期</th>
+                <th style='width:150px;'>操作管理</th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="12">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="11">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
               <tr>
@@ -128,18 +127,17 @@
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>{{ $row->document_name }}</td>
-                <td>
-                  <a href="/education/document/download?id={{encode($row->document_id, 'document_id')}}"><button type="button" class="btn btn-primary btn-sm">下载教案</button></a>
-                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/education/document/delete?id={{encode($row->document_id, 'document_id')}}', '确认删除教案？')">删除</button>
-                </td>
                 <td>{{ $row->subject_name }}</td>
                 <td>{{ $row->grade_name }}</td>
                 <td>{{ $row->document_semester }}</td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->document_file_size }}MB</td>
-                <td>{{ $row->document_download_time }}</td>
-                <td><a href="/user?id={{encode($row->user_id,'user_id')}}">{{ $row->user_name }}</a> ({{ $row->position_name }})</td>
+                <td><a href="/user?id={{encode($row->user_id,'user_id')}}">{{ $row->user_name }}</a> [ {{ $row->position_name }} ]</td>
                 <td>{{ date('Y-m-d', strtotime($row->document_createtime)) }}</td>
+                <td>
+                  <a href="/education/document/download?id={{encode($row->document_id, 'document_id')}}"><button type="button" class="btn btn-primary btn-sm">下载教案</button></a>
+                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/education/document/delete?id={{encode($row->document_id, 'document_id')}}', '确认删除教案？')">删除</button>
+                </td>
               </tr>
               @endforeach
             </tbody>

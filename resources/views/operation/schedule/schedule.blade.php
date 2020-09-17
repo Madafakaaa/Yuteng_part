@@ -18,7 +18,7 @@
       <a href="?">
         <button class="btn btn-sm btn-outline-primary btn-round btn-icon">
           <span class="btn-inner--icon"><i class="fas fa-redo"></i></span>
-          <span class="btn-inner--text">重置</span>
+          <span class="btn-inner--text">重置搜索</span>
         </button>
       </a>
       <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/operation/schedule/delete', '确认批量删除所选课程安排？')">
@@ -93,27 +93,27 @@
           </form>
         </div>
         <div class="table-responsive freeze-table-4">
-          <table class="table align-items-center table-hover text-left">
+          <table class="table align-items-center table-hover table-bordered text-left">
             <thead class="thead-light">
               <tr>
                 <th style='width:40px;'></th>
-                <th style='width:70px;'>序号</th>
-                <th style='width:150px;'>班级</th>
-                <th style='width:120px;'></th>
-                <th style='width:100px;'>校区</th>
-                <th style='width:160px;'>日期</th>
-                <th style='width:110px;'>时间</th>
-                <th style='width:110px;'>班级人数</th>
-                <th style='width:100px;'>教师</th>
-                <th style='width:70px;'>科目</th>
+                <th style='width:60px;'>序号</th>
+                <th style='width:190px;'>班级</th>
+                <th style='width:90px;'>校区</th>
+                <th style='width:130px;'>日期</th>
+                <th style='width:100px;'>时间</th>
+                <th style='width:90px;'>班级人数</th>
+                <th style='width:90px;'>教师</th>
                 <th style='width:70px;'>年级</th>
-                <th style='width:110px;'>教室</th>
-                <th style='width:100px;'>排课用户</th>
+                <th style='width:70px;'>科目</th>
+                <th style='width:90px;'>教室</th>
+                <th style='width:90px;'>排课用户</th>
+                <th style='width:110px;'>操作管理</th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-                <tr class="text-center"><td colspan="12">当前没有记录</td></tr>
+                <tr class="text-center"><td colspan="13">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
               <tr>
@@ -125,10 +125,6 @@
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td><a href="/class?id={{encode($row->class_id ,'class_id')}}">{{ $row->class_name }}</a> </td>
-                <td>
-                  <a href="/operation/schedule/attend?id={{encode($row->schedule_id, 'schedule_id')}}"><button type="button" class="btn btn-warning btn-sm">点名</button></a>&nbsp;
-                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/schedule/delete?id={{encode($row->schedule_id, 'schedule_id')}}', '确认删除课程安排？')">删除</button>
-                </td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->schedule_date }}&nbsp;{{ dateToDay($row->schedule_date) }}</td>
                 <td>{{ date('H:i', strtotime($row->schedule_start)) }} - {{ date('H:i', strtotime($row->schedule_end)) }}</td>
@@ -140,10 +136,14 @@
                   @endif
                 </td>
                 <td><a href="/user?id={{encode($row->teacher_id ,'user_id')}}">{{ $row->teacher_name }}</a></td>
-                <td>{{ $row->subject_name }}</td>
                 <td>{{ $row->grade_name }}</td>
+                <td>{{ $row->subject_name }}</td>
                 <td>{{ $row->classroom_name }}</td>
                 <td><a href="/user?id={{encode($row->creator_id ,'user_id')}}">{{ $row->creator_name }}</a></td>
+                <td>
+                  <a href="/operation/schedule/attend?id={{encode($row->schedule_id, 'schedule_id')}}"><button type="button" class="btn btn-warning btn-sm">点名</button></a>&nbsp;
+                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/schedule/delete?id={{encode($row->schedule_id, 'schedule_id')}}', '确认删除课程安排？')">删除</button>
+                </td>
               </tr>
               @endforeach
             </tbody>

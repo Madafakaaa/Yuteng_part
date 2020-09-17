@@ -14,10 +14,14 @@ class UserController extends Controller
      * URL: GET /user/{id}
      * @param  int  $user_id
      */
-    public function show(Request $request){
+    public function user(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/user", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         $user_id = decode($request->input('id'), 'user_id');
         // 获取用户数据信息
@@ -110,38 +114,6 @@ class UserController extends Controller
                                      ->where('contract_date', 'like', date('Y-m').'%')
                                      ->count();
 
-        return view('user/show', ['user' => $user,
-                                  'schedules' => $schedules,
-                                  'attended_schedules' => $attended_schedules,
-                                  'students' => $students,
-                                  'classes' => $classes,
-                                  'contracts' => $contracts,
-                                  'dashboard' => $dashboard]);
-    }
-
-    /**
-     * 修改单个用户
-     * URL: GET /user/{id}/edit
-     * @param  int  $user_id
-     */
-    public function edit(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-
-        if(Session::get('user_level')>3){
-            return redirect("/user?id=".$request->input('id'))
-                   ->with(['notify' => true,
-                           'type' => 'danger',
-                           'title' => '用户权限不足',
-                           'message' => '用户权限不足']);
-        }
-
-        $user_id = decode($request->input('id'), 'user_id');
-        // 获取数据信息
-        $user = DB::table('user')->where('user_id', $user_id)->first();
-        // 获取校区、岗位信息
         $departments = DB::table('department')->where('department_status', 1)->orderBy('department_id', 'asc')->get();
         $positions = DB::table('position')
                        ->join('section', 'position.position_section', '=', 'section.section_id')
@@ -149,7 +121,15 @@ class UserController extends Controller
                        ->where('section_status', 1)
                        ->orderBy('position_id', 'asc')
                        ->get();
-        return view('user/edit', ['user' => $user, 'departments' => $departments, 'positions' => $positions]);
+        return view('user/user', ['user' => $user,
+                                  'schedules' => $schedules,
+                                  'attended_schedules' => $attended_schedules,
+                                  'students' => $students,
+                                  'classes' => $classes,
+                                  'contracts' => $contracts,
+                                  'dashboard' => $dashboard,
+                                  'departments' => $departments,
+                                  'positions' => $positions]);
     }
 
     /**
@@ -204,7 +184,7 @@ class UserController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("/user/edit?id=".$request->input('id'))->with(['notify' => true,
+            return redirect("/user?id=".$request->input('id'))->with(['notify' => true,
                                                             'type' => 'danger',
                                                             'title' => '用户修改失败',
                                                             'message' => '用户修改失败，请重新输入信息']);

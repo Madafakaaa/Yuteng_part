@@ -22,7 +22,7 @@
       <a href="?">
         <button class="btn btn-sm btn-outline-primary btn-round btn-icon">
           <span class="btn-inner--icon"><i class="fas fa-redo"></i></span>
-          <span class="btn-inner--text">重置</span>
+          <span class="btn-inner--text">重置搜索</span>
         </button>
       </a>
       <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/operation/class/delete', '确认批量删除所选班级？')">
@@ -94,21 +94,20 @@
           </form>
         </div>
         <div class="table-responsive freeze-table-3">
-          <table class="table align-items-center table-hover text-left">
+          <table class="table align-items-center table-hover table-bordered text-left">
             <thead class="thead-light">
               <tr>
                 <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:150px;'>班级</th>
-                <th style='width:100px;'>班号</th>
+                <th style='width:200px;'>班级</th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:70px;'>年级</th>
                 <th style='width:70px;'>科目</th>
-                <th style='width:150px;'>班级人数</th>
-                <th style='width:120px;'>已排课</th>
-                <th style='width:80px;'>已上课</th>
+                <th style='width:140px;' class="text-right">班级人数</th>
+                <th style='width:140px;' class="text-right">已排课</th>
+                <th style='width:100px;' class="text-right">已上课</th>
                 <th style='width:130px;'>负责教师</th>
-                <th style='width:130px;'></th>
+                <th style='width:130px;'>操作管理</th>
               </tr>
             </thead>
             <tbody>
@@ -125,11 +124,10 @@
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td><a href="/class?id={{encode($row->class_id, 'class_id')}}">{{ $row->class_name }}</a></td>
-                <td>{{ $row->class_id }}</td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->grade_name }}</td>
                 <td>@if($row->class_subject==0) 全科目 @else{{ $row->subject_name }}@endif</td>
-                <td>
+                <td class="text-right">
                   @if($row->class_current_num==$row->class_max_num)
                     <span style="color:green;">{{ $row->class_current_num }} / {{ $row->class_max_num }} 人</span>
                   @else
@@ -188,7 +186,7 @@
                     </div>
                   </div>
                 </td>
-                <td>
+                <td class="text-right">
                   {{ $row->class_schedule_num }} 节
                   <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-{{$loop->iteration}}-2">查看列表</button>
                   <div class="modal fade" id="modal-{{$loop->iteration}}-2" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
@@ -236,8 +234,8 @@
                     </div>
                   </div>
                 </td>
-                <td>{{ $row->class_attended_num }} 节</td>
-                <td><a href="/user?id={{encode($row->user_id,'user_id')}}">{{ $row->user_name }}</a> ({{ $row->position_name }})</td>
+                <td class="text-right">{{ $row->class_attended_num }} 节</td>
+                <td><a href="/user?id={{encode($row->user_id,'user_id')}}">{{ $row->user_name }}</a> [ {{ $row->position_name }} ]</td>
                 <td>
                   <a href="/operation/class/schedule/create?id={{encode($row->class_id, 'class_id')}}"><button type="button" class="btn btn-warning btn-sm">排课</button></a>
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/class/delete?id={{encode($row->class_id, 'class_id')}}', '确认删除班级？')">删除</button>

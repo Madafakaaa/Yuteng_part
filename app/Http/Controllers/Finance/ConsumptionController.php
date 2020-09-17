@@ -16,6 +16,10 @@ class ConsumptionController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 检测用户权限
+        if(!in_array("/finance/consumption/department", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
         // 获取用户校区权限
         $department_access = Session::get('department_access');
         // 搜索条件
@@ -128,6 +132,10 @@ class ConsumptionController extends Controller
          if(!Session::has('login')){
              return loginExpired(); // 未登录，返回登陆视图
          }
+        // 检测用户权限
+        if(!in_array("/finance/consumption/user", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
          // 获取用户校区权限
          $department_access = Session::get('department_access');
          // 搜索条件

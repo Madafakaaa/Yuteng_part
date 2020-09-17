@@ -25,10 +25,10 @@
         </div>
         <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
           <div class="d-flex justify-content-between">
-            <a href="#" class="btn btn-sm btn-default mr-4">修改头像</a>
+            <!-- <a href="#" class="btn btn-sm btn-default mr-4">修改头像</a> -->
           </div>
         </div>
-        <div class="card-body pt-0">
+        <div class="card-body pt-5">
           <div class="text-center">
             <h5 class="h3">
               {{ $user->user_name }}

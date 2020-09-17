@@ -20,6 +20,10 @@ class HourController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 检测用户权限
+        if(!in_array("/operation/hour", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
         // 获取用户校区权限
         $department_access = Session::get('department_access');
         // 获取数据
@@ -28,10 +32,8 @@ class HourController extends Controller
                   ->join('course', 'course.course_id', '=', 'hour.hour_course')
                   ->join('department', 'student.student_department', '=', 'department.department_id')
                   ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
-                  ->leftJoin('user AS consultant', 'student.student_consultant', '=', 'consultant.user_id')
-                  ->leftJoin('position AS consultant_position', 'consultant.user_position', '=', 'consultant_position.position_id')
-                  ->leftJoin('user AS class_adviser', 'student.student_class_adviser', '=', 'class_adviser.user_id')
-                  ->leftJoin('position AS class_adviser_position', 'class_adviser.user_position', '=', 'class_adviser_position.position_id')
+                  ->leftJoin('user', 'student.student_class_adviser', '=', 'user.user_id')
+                  ->leftJoin('position', 'user.user_position', '=', 'position.position_id')
                   ->leftJoin('school', 'student.student_school', '=', 'school.school_id')
                   ->whereIn('student_department', $department_access)
                   ->where('student_status', 1);
@@ -60,12 +62,7 @@ class HourController extends Controller
             $rows = $rows->where('student_id', '=', $request->input('filter_student'));
             $filters['filter_student']=$request->input("filter_student");
         }
-        // 课程顾问
-        if ($request->filled('filter_consultant')) {
-            $rows = $rows->where('student_consultant', '=', $request->input('filter_consultant'));
-            $filters['filter_consultant']=$request->input("filter_consultant");
-        }
-        // 课程顾问
+        // 班主任
         if ($request->filled('filter_class_adviser')) {
             $rows = $rows->where('student_class_adviser', '=', $request->input('filter_class_adviser'));
             $filters['filter_class_adviser']=$request->input("filter_class_adviser");
@@ -76,23 +73,7 @@ class HourController extends Controller
         // 计算分页信息
         list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
         // 排序并获取数据对象
-        $rows = $rows->select('course.course_name AS course_name',
-                              'course.course_id AS course_id',
-                              'hour.hour_remain AS hour_remain',
-                              'hour.hour_used AS hour_used',
-                              'hour.hour_average_price AS hour_average_price',
-                              'student.student_id AS student_id',
-                              'student.student_name AS student_name',
-                              'student.student_gender AS student_gender',
-                              'department.department_name AS department_name',
-                              'grade.grade_name AS grade_name',
-                              'consultant.user_id AS consultant_id',
-                              'consultant.user_name AS consultant_name',
-                              'consultant_position.position_name AS consultant_position_name',
-                              'class_adviser.user_id AS class_adviser_id',
-                              'class_adviser.user_name AS class_adviser_name',
-                              'class_adviser_position.position_name AS class_adviser_position_name')
-                     ->orderBy('student_department', 'asc')
+        $rows = $rows->orderBy('student_department', 'asc')
                      ->orderBy('student_follow_level', 'desc')
                      ->orderBy('student_grade', 'desc')
                      ->offset($offset)
@@ -112,30 +93,9 @@ class HourController extends Controller
             $temp['student_gender'] = $row->student_gender;
             $temp['department_name'] = $row->department_name;
             $temp['grade_name'] = $row->grade_name;
-            $temp['consultant_id']=$row->consultant_id;
-            $temp['consultant_name']=$row->consultant_name;
-            $temp['consultant_position_name']=$row->consultant_position_name;
-            $temp['class_adviser_id']=$row->class_adviser_id;
-            $temp['class_adviser_name'] = $row->class_adviser_name;
-            $temp['class_adviser_position_name'] = $row->class_adviser_position_name;
-            // 获取课程安排信息
-            $schedule_count = 0;
-            $classes = DB::table('member')
-                         ->join('class', 'member.member_class', '=', 'class.class_id')
-                         ->where('member_student', $row->student_id)
-                         ->where('member_course', $row->course_id)
-                         ->get();
-            $schedule_classes = array();
-            foreach($classes as $class){
-                $temp2 = array();
-                $temp2['class_name'] = $class->class_name;
-                $temp2['class_id'] = $class->class_id;
-                $temp2['class_schedule_num'] = $class->class_schedule_num;
-                $schedule_classes[] = $temp2;
-                $schedule_count+=$class->class_schedule_num;
-            }
-            $temp['schedule_count']=$schedule_count;
-            $temp['schedule_classes']=$schedule_classes;
+            $temp['class_adviser_id']=$row->user_id;
+            $temp['class_adviser_name'] = $row->user_name;
+            $temp['class_adviser_position_name'] = $row->position_name;
             $datas[] = $temp;
         }
         // 获取校区、年级信息(筛选)
@@ -180,6 +140,10 @@ class HourController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/operation/hour/refund/create", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 获取学生id
         $student_id = decode($request->input('student_id'), 'student_id');
@@ -318,6 +282,10 @@ class HourController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/operation/hour/edit", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 获取学生id
         $student_id = decode($request->input('student_id'), 'student_id');

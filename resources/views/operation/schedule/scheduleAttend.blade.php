@@ -248,18 +248,18 @@
                 <div class="col-4 px-2 mb-2">
                   <div class="form-group mb-1">
                     <select class="form-control form-control-sm" name="input{{ $loop->iteration }}_3" id="input{{ $loop->iteration }}_3" required>
-                      <option value='0.5'>0.5 课时</option>
-                      <option value='1'>1 课时</option>
-                      <option value='1.5'>1.5 课时</option>
-                      <option value='2'>2 课时</option>
-                      <option value='2.5'>2.5 课时</option>
-                      <option value='3' selected>3 课时</option>
-                      <option value='3.5'>3.5 课时</option>
-                      <option value='4'>4 课时</option>
-                      <option value='4.5'>4.5 课时</option>
-                      <option value='5'>5 课时</option>
-                      <option value='5.5'>5.5 课时</option>
-                      <option value='6'>6 课时</option>
+                      <option value='0.5' @if($student_course[3]=='0.5') selected @endif>0.5 课时</option>
+                      <option value='1' @if($student_course[3]=='1') selected @endif>1 课时</option>
+                      <option value='1.5' @if($student_course[3]=='1.5') selected @endif>1.5 课时</option>
+                      <option value='2' @if($student_course[3]=='2') selected @endif>2 课时</option>
+                      <option value='2.5' @if($student_course[3]=='2.5') selected @endif>2.5 课时</option>
+                      <option value='3' @if($student_course[3]=='3') selected @endif>3 课时</option>
+                      <option value='3.5' @if($student_course[3]=='3.5') selected @endif>3.5 课时</option>
+                      <option value='4' @if($student_course[3]=='4') selected @endif>4 课时</option>
+                      <option value='4.5' @if($student_course[3]=='4.5') selected @endif>4.5 课时</option>
+                      <option value='5' @if($student_course[3]=='5') selected @endif>5 课时</option>
+                      <option value='5.5' @if($student_course[3]=='5.5') selected @endif>5.5 课时</option>
+                      <option value='6' @if($student_course[3]=='6') selected @endif>6 课时</option>
                     </select>
                   </div>
                 </div>

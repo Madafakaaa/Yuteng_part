@@ -23,6 +23,10 @@ class ClassroomController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 检测用户权限
+        if(!in_array("/company/classroom", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
 
         // 获取用户校区权限
         $department_access = Session::get('department_access');
@@ -34,22 +38,13 @@ class ClassroomController extends Controller
                   ->where('classroom_status', 1);
 
         // 搜索条件
-        // 判断是否有搜索条件
-        $filter_status = 0;
-        // 教室名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('classroom_name', 'like', '%'.$request->input('filter1').'%');
-            $filter_status = 1;
-        }
+        $filters = array(
+                        "filter_department" => null,
+                    );
         // 所属校区
-        if($request->filled('filter2')){
-            $rows = $rows->where('classroom_department', '=', $request->input('filter2'));
-            $filter_status = 1;
-        }
-        // 教室类型
-        if($request->filled('filter3')){
-            $rows = $rows->where('classroom_type', '=', $request->input('filter3'));
-            $filter_status = 1;
+        if($request->filled('filter_department')){
+            $rows = $rows->where('classroom_department', '=', $request->input('filter_department'));
+            $filters['filter_department']=$request->input("filter_department");
         }
 
         // 保存数据总数
@@ -59,6 +54,8 @@ class ClassroomController extends Controller
 
         // 排序并获取数据对象
         $rows = $rows->orderBy('classroom_department', 'asc')
+                     ->orderBy('classroom_type', 'asc')
+                     ->orderBy('classroom_student_num', 'asc')
                      ->orderBy('classroom_id', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
@@ -69,13 +66,13 @@ class ClassroomController extends Controller
 
         // 返回列表视图
         return view('company/classroom/classroom', ['rows' => $rows,
-                                           'currentPage' => $currentPage,
-                                           'totalPage' => $totalPage,
-                                           'startIndex' => $offset,
-                                           'request' => $request,
-                                           'totalNum' => $totalNum,
-                                           'filter_status' => $filter_status,
-                                           'filter_departments' => $filter_departments]);
+                                                   'currentPage' => $currentPage,
+                                                   'totalPage' => $totalPage,
+                                                   'startIndex' => $offset,
+                                                   'request' => $request,
+                                                   'totalNum' => $totalNum,
+                                                   'filters' => $filters,
+                                                   'filter_departments' => $filter_departments]);
     }
 
     /**
@@ -86,6 +83,10 @@ class ClassroomController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/company/classroom/create", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 获取用户校区权限
         $department_access = Session::get('department_access');
@@ -150,6 +151,10 @@ class ClassroomController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/company/classroom/edit", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 获取classroom_id
         $classroom_id = decode($request->input('id'), 'classroom_id');
@@ -219,6 +224,10 @@ class ClassroomController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/company/classroom/delete", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 获取classroom_id
         $request_ids=$request->input('id');

@@ -19,9 +19,19 @@ class CourseController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 检测用户权限
+        if(!in_array("/company/course", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
         // 获取用户校区权限
         $department_access = Session::get('department_access');
         $department_access[]=0;
+
+        // 搜索条件
+        $filters = array(
+                        "filter_grade" => null,
+                        "filter_subject" => null,
+                    );
         // 获取数据
         $rows = DB::table('course')
                   ->join('course_type', 'course.course_type', '=', 'course_type.course_type_name')
@@ -30,40 +40,28 @@ class CourseController extends Controller
                   ->leftJoin('subject', 'course.course_subject', '=', 'subject.subject_id')
                   ->whereIn('course_department', $department_access)
                   ->where('course_status', 1);
-        // 搜索条件
-        // 判断是否有搜索条件
-        $filter_status = 0;
-        // 课程名称
-        if ($request->filled('filter1')) {
-            $rows = $rows->where('course_name', 'like', '%'.$request->input('filter1').'%');
-            $filter_status = 1;
-        }
-        // 开课校区
-        if($request->filled('filter2')){
-            $rows = $rows->where('course_department', '=', $request->input('filter2'));
-            $filter_status = 1;
-        }
         // 课程年级
-        if($request->filled('filter3')){
-            $rows = $rows->where('course_grade', '=', $request->input('filter3'));
-            $filter_status = 1;
+        if($request->filled('filter_grade')){
+            $rows = $rows->where('course_grade', '=', $request->input('filter_grade'));
+            $filters['filter_grade']=$request->input("filter_grade");
         }
         // 课程科目
-        if($request->filled('filter4')){
-            $rows = $rows->where('course_subject', '=', $request->input('filter4'));
-            $filter_status = 1;
+        if($request->filled('filter_subject')){
+            $rows = $rows->where('course_subject', '=', $request->input('filter_subject'));
+            $filters['filter_subject']=$request->input("filter_subject");
         }
         // 保存数据总数
         $totalNum = $rows->count();
         // 计算分页信息
         list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
         // 排序并获取数据对象
-        $rows = $rows->orderBy('course_id', 'asc')
+        $rows = $rows->orderBy('course_type', 'asc')
+                     ->orderBy('course_grade', 'asc')
+                     ->orderBy('course_subject', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
         // 获取校区、年级、科目信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
         $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
         // 返回列表视图
@@ -73,8 +71,7 @@ class CourseController extends Controller
                                                'startIndex' => $offset,
                                                'request' => $request,
                                                'totalNum' => $totalNum,
-                                               'filter_status' => $filter_status,
-                                               'filter_departments' => $filter_departments,
+                                               'filters' => $filters,
                                                'filter_grades' => $filter_grades,
                                                'filter_subjects' => $filter_subjects]);
     }
@@ -87,6 +84,10 @@ class CourseController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/company/course/create", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 获取年级、科目信息、课程类型
         $departments = DB::table('department')->where('department_status', 1)->orderBy('department_id', 'asc')->get();
@@ -163,6 +164,10 @@ class CourseController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/company/course/edit", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 获取course_id
         $course_id = decode($request->input('id'), 'course_id');
@@ -245,6 +250,10 @@ class CourseController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/company/course/delete", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 获取course_id
         $request_ids=$request->input('id');

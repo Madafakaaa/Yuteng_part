@@ -18,7 +18,7 @@
       <a href="?">
         <button class="btn btn-sm btn-outline-primary btn-round btn-icon">
           <span class="btn-inner--icon"><i class="fas fa-redo"></i></span>
-          <span class="btn-inner--text">重置</span>
+          <span class="btn-inner--text">重置搜索</span>
         </button>
       </a>
     </div>
@@ -66,28 +66,26 @@
           </form>
         </div>
         <div class="table-responsive freeze-table-4">
-          <table class="table align-items-center table-hover text-left">
+          <table class="table align-items-center table-hover table-bordered text-left">
             <thead class="thead-light">
               <tr>
-                <th style='width:40px;'></th>
                 <th style='width:70px;'>序号</th>
-                <th style='width:130px;'>学生</th>
-                <th style='width:200px;'></th>
+                <th style='width:100px;'>学生</th>
                 <th style='width:90px;'>校区</th>
-                <th style='width:123px;'>课程</th>
+                <th style='width:150px;'>课程</th>
                 <th style='width:100px;' class="text-right">退费课时</th>
                 <th style='width:120px;' class="text-right">退款金额</th>
                 <th style='width:110px;'>日期</th>
-                <th style='width:140px;'>退费人</th>
+                <th style='width:140px;'>退费用户</th>
+                <th style='width:200px;'>操作管理</th>
               </tr>
             </thead>
             <tbody>
               @if(count($rows)==0)
-              <tr class="text-center"><td colspan="10">当前没有记录</td></tr>
+              <tr class="text-center"><td colspan="9">当前没有记录</td></tr>
               @endif
               @foreach ($rows as $row)
               <tr>
-                <td></td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>
                   <a href="/student?id={{encode($row->student_id, 'student_id')}}">{{ $row->student_name }}</a>&nbsp;
@@ -97,16 +95,16 @@
                     <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
                   @endif
                 </td>
-                <td>
-                  <a href="/student?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
-                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/refund/delete?id={{encode($row->refund_id, 'refund_id')}}', '确认删除退费记录？')">删除</button>
-                </td>
                 <td>{{ $row->department_name }}</td>
                 <td>{{ $row->course_name }}</td>
                 <td class="text-right">{{ $row->refund_remain }} 课时</td>
                 <td class="text-right"><strong>{{ number_format($row->refund_amount, 2) }} 元</strong></td>
                 <td>{{ $row->refund_date }}</td>
-                <td><a href="/user?id={{encode($row->createuser_id,'user_id')}}">{{ $row->createuser_name }}</a> ({{ $row->createuser_position_name }})</td>
+                <td><a href="/user?id={{encode($row->createuser_id,'user_id')}}">{{ $row->createuser_name }}</a> [ {{ $row->createuser_position_name }} ]</td>
+                <td>
+                  <a href="/student?id={{encode($row->student_id, 'student_id')}}"><button type="button" class="btn btn-primary btn-sm">学生详情</button></a>
+                  <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/refund/delete?id={{encode($row->refund_id, 'refund_id')}}', '确认删除退费记录？')">删除</button>
+                </td>
               </tr>
               @endforeach
             </tbody>

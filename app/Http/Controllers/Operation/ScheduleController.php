@@ -25,6 +25,10 @@ class ScheduleController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 检测用户权限
+        if(!in_array("/operation/schedule", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
 
         // 获取用户校区权限
         $department_access = Session::get('department_access');
@@ -153,6 +157,10 @@ class ScheduleController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 检测用户权限
+        if(!in_array("/operation/schedule/delete", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
         // 获取schedule_id
         $request_ids=$request->input('id');
         $schedule_ids = array();
@@ -202,6 +210,10 @@ class ScheduleController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/operation/schedule/attend", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         $schedule_id = decode($request->input('id'), 'schedule_id');
         // 获取数据信息
@@ -276,7 +288,7 @@ class ScheduleController extends Controller
                              ['hour.hour_remain', '>', '0'],
                          ])
                          ->get();
-            $student_courses[] = array($student, $courses, $member->member_course);
+            $student_courses[] = array($student, $courses, $member->member_course, $member->member_amount);
         }
         return view('operation/schedule/scheduleAttend', ['schedule' => $schedule,
                                                           'teachers' => $teachers,
@@ -405,6 +417,12 @@ class ScheduleController extends Controller
                       ->where('hour_course', $participant_course)
                       ->where('hour_student', $participant_student)
                       ->increment('hour_used', $participant_amount);
+                    // 更新班级成员信息
+                    DB::table('member')
+                      ->where('member_student', $participant_student)
+                      ->where('member_class', $schedule->schedule_participant)
+                      ->update(['member_course' => $participant_course,
+                                'member_amount' => $participant_amount]);
                 }
                 // 添加上课成员表
                 DB::table('participant')->insert(

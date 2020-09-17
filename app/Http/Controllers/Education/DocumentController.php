@@ -24,6 +24,10 @@ class DocumentController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 检测用户权限
+        if(!in_array("/education/document", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
 
         // 获取用户校区权限
         $department_access = Session::get('department_access');
@@ -82,6 +86,7 @@ class DocumentController extends Controller
         // 排序并获取数据对象
         $rows = $rows->orderBy('document_grade', 'asc')
                      ->orderBy('document_subject', 'asc')
+                     ->orderBy('document_department', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();
@@ -113,6 +118,10 @@ class DocumentController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/education/document/create", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 获取年级、科目信息
         $grades = DB::table('grade')->orderBy('grade_id', 'asc')->get();
@@ -200,6 +209,10 @@ class DocumentController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
+        // 检测用户权限
+        if(!in_array("/education/document/download", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
         // 获取教案id
         $document_id = decode($request->input('id'), 'document_id');
         // 获取教案数据信息
@@ -230,6 +243,10 @@ class DocumentController extends Controller
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/education/document/delete", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 获取教案id
         $document_id = decode($request->input('id'), 'document_id');

@@ -29,16 +29,16 @@
     <div class="col-12">
       <div class="card mb-4">
         <div class="table-responsive freeze-table-4">
-          <table class="table align-items-center table-hover text-left">
+          <table class="table align-items-center table-hover table-bordered text-left">
             <thead class="thead-light">
               <tr>
                 <th style='width:40px;'></th>
-                <th style='width:70px;'>序号</th>
+                <th style='width:40px;'>序号</th>
                 <th style='width:100px;'>校区</th>
-                <th style='width:120px;'></th>
-                <th style='width:205px;'>电话1</th>
-                <th style='width:205px;'>电话2</th>
-                <th style='width:500px;'>地址</th>
+                <th style='width:120px;'>电话1</th>
+                <th style='width:120px;'>电话2</th>
+                <th style='width:250px;'>地址</th>
+                <th style='width:150px;'>操作管理</th>
               </tr>
             </thead>
             <tbody>
@@ -53,21 +53,15 @@
                     <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
                   </div>
                 </td>
-
                 <td>{{ $startIndex+$loop->iteration }}</td>
-
                 <td>{{ $row->department_name }}</td>
-
+                <td>{{ $row->department_phone1 }}</td>
+                <td>{{ $row->department_phone2 }}</td>
+                <td>{{ $row->department_location }}</td>
                 <td>
                   <a href='/company/department/edit?id={{encode($row->department_id, 'department_id')}}'><button type="button" class="btn btn-primary btn-sm">修改</button></a>
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/company/department/delete?id={{encode($row->department_id, 'department_id')}}', '确认删除校区？')">删除</button>
                 </td>
-
-                <td>{{ $row->department_phone1 }}</td>
-
-                <td>{{ $row->department_phone2 }}</td>
-
-                <td>{{ $row->department_location }}</td>
               </tr>
               @endforeach
             </tbody>

@@ -15,10 +15,14 @@ class ClassController extends Controller
      * URL: GET /class/{id}
      * @param  int  $class_id
      */
-    public function show(Request $request){
+    public function class(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/class", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         $class_id = decode($request->input('id'), 'class_id');
         // 获取数据信息
@@ -45,14 +49,33 @@ class ClassController extends Controller
                   ->join('student', 'member.member_student', '=', 'student.student_id')
                   ->where('member.member_class', $class_id)
                   ->get();
+
+        // 生成已有学生ID数组
+        $member_student_ids = array();
+        foreach($members as $member){
+            $member_student_ids[] = $member->member_student;
+        }
+
         // 获取学生信息
-        $students = DB::table('student')
-                      ->where('student_grade', $class->class_grade)
-                      ->where('student_department', $class->class_department)
-                      ->where('student_contract_num', '>', 0)
-                      ->where('student_status', 1)
-                      ->orderBy('student_id', 'asc')
-                      ->get();
+        $same_grade_students = DB::table('student')
+                                  ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
+                                  ->where('student_grade', $class->class_grade)
+                                  ->where('student_department', $class->class_department)
+                                  ->where('student_contract_num', '>', 0)
+                                  ->where('student_status', 1)
+                                  ->whereNotIn('student_id', $member_student_ids)
+                                  ->orderBy('student_id', 'asc')
+                                  ->get();
+        $diff_grade_students = DB::table('student')
+                                  ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
+                                  ->where('student_grade', '!=',$class->class_grade)
+                                  ->where('student_department', $class->class_department)
+                                  ->where('student_contract_num', '>', 0)
+                                  ->where('student_status', 1)
+                                  ->whereNotIn('student_id', $member_student_ids)
+                                  ->orderBy('student_grade', 'asc')
+                                  ->orderBy('student_id', 'asc')
+                                  ->get();
 
         // 获取所有课程安排
         $schedules = DB::table('schedule')
@@ -80,62 +103,35 @@ class ClassController extends Controller
                                       ->where('schedule_participant', '=', $class_id)
                                       ->get();
 
-        return view('class/show', ['class' => $class,
-                                   'students' => $students,
-                                   'members' => $members,
-                                   'schedules' =>$schedules,
-                                   'attended_schedules' =>$attended_schedules]);
-    }
-
-    /**
-     * 修改班级视图
-     * URL: GET /class/{id}/edit
-     * @param  int  $class_id
-     */
-    public function edit(Request $request){
-        // 检查登录状态
-        if(!Session::has('login')){
-            return loginExpired(); // 未登录，返回登陆视图
-        }
-        $class_id = decode($request->input('id'), 'class_id');
-        // 获取数据信息
-        $class = DB::table('class')
-                   ->join('department', 'class.class_department', '=', 'department.department_id')
-                   ->join('grade', 'class.class_grade', '=', 'grade.grade_id')
-                   ->where('class_id', $class_id)
-                   ->get();
-        if($class->count()!==1){
-            // 未获取到数据
-            return redirect()->action('ClassController@index')
-                             ->with(['notify' => true,
-                                     'type' => 'danger',
-                                     'title' => '班级显示失败',
-                                     'message' => '班级显示失败，请联系系统管理员']);
-        }
-        $class = $class[0];
         // 获取年级、科目、用户信息
         $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
         $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
-        $users = DB::table('user')
-                   ->join('position', 'user.user_position', '=', 'position.position_id')
-                   ->join('department', 'user.user_department', '=', 'department.department_id')
-                   ->where('user_cross_teaching', '=', 1)
-                   ->where('user_department', '<>', Session::get('user_department'))
-                   ->where('user_status', 1)
-                   ->orderBy('position_level', 'desc')
-                   ->orderBy('user_department', 'asc');
-        $users = DB::table('user')
-                   ->join('position', 'user.user_position', '=', 'position.position_id')
-                   ->join('department', 'user.user_department', '=', 'department.department_id')
-                   ->where('user_department', '=', Session::get('user_department'))
-                   ->where('user_status', 1)
-                   ->orderBy('position_level', 'desc')
-                   ->union($users)
-                   ->get();
-        return view('class/edit', ['class' => $class,
-                                    'grades' => $grades,
-                                    'subjects' => $subjects,
-                                    'users' => $users]);
+        $same_department_users = DB::table('user')
+                                   ->join('position', 'user.user_position', '=', 'position.position_id')
+                                   ->join('department', 'user.user_department', '=', 'department.department_id')
+                                   ->where('user_department', '=', $class->class_department)
+                                   ->where('user_status', 1)
+                                   ->orderBy('position_level', 'desc')
+                                   ->get();
+        $diff_department_users = DB::table('user')
+                                   ->join('position', 'user.user_position', '=', 'position.position_id')
+                                   ->join('department', 'user.user_department', '=', 'department.department_id')
+                                   ->where('user_cross_teaching', 1)
+                                   ->where('user_department', '<>', $class->class_department)
+                                   ->where('user_status', 1)
+                                   ->orderBy('user_department', 'desc')
+                                   ->orderBy('position_level', 'desc')
+                                   ->get();
+        return view('class/class', ['class' => $class,
+                                   'same_grade_students' => $same_grade_students,
+                                   'diff_grade_students' => $diff_grade_students,
+                                   'members' => $members,
+                                   'schedules' =>$schedules,
+                                   'attended_schedules' =>$attended_schedules,
+                                   'grades' => $grades,
+                                   'subjects' => $subjects,
+                                   'same_department_users' => $same_department_users,
+                                   'diff_department_users' => $diff_department_users]);
     }
 
     /**
@@ -211,8 +207,8 @@ class ClassController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        $class_id = decode($request->input('id'), 'class_id');
-        $student_id = $request->input('input1');
+        $student_id = $request->input('input_student_id');
+        $class_id = $request->input('input_class_id');
         // 插入数据库
         DB::beginTransaction();
         try{
@@ -256,8 +252,8 @@ class ClassController extends Controller
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
         }
-        $class_id = decode($request->input('class_id'), 'class_id');
-        $student_id = decode($request->input('student_id'), 'student_id');
+        $class_id = decode($request->input('input_class_id'), 'class_id');
+        $student_id = decode($request->input('input_student_id'), 'student_id');
         // 插入数据库
         DB::beginTransaction();
         try{
