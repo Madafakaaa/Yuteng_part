@@ -68,14 +68,6 @@
                 </a>
               </li>
               @endif
-              @if(in_array("/company/student/deleted", Session::get('user_accesses')))
-              <li class="nav-item">
-                <a href="/company/student/deleted" class="nav-link" id="companyStudentDeleted">
-                  <i class="fa fa-user-slash text-green"></i>
-                  <span class="nav-link-text">离校学生</span>
-                </a>
-              </li>
-              @endif
             </ul>
           </div>
         </li>
@@ -232,6 +224,14 @@
                 </a>
               </li>
               @endif
+              @if(in_array("/operation/student/deleted", Session::get('user_accesses')))
+              <li class="nav-item">
+                <a href="/operation/student/deleted" class="nav-link" id="operationStudentDeleted">
+                  <i class="fa fa-user-slash text-green"></i>
+                  <span class="nav-link-text">离校学生</span>
+                </a>
+              </li>
+              @endif
             </ul>
           </div>
         </li>
@@ -340,6 +340,71 @@
           </div>
         </li>
         @endif
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="#navbar-self" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-self" id="link-self">
+            <i class="ni ni-circle-08 text-teal"></i>
+            <span class="nav-link-text">个人中心</span>
+          </a>
+          <div class="collapse" id="navbar-self">
+            <ul class="nav nav-sm flex-column">
+              <li class="nav-item">
+                <a href="/self/customer" class="nav-link" id="selfCustomer">
+                  <i class="fa fa-user-plus text-teal"></i>
+                  <span class="nav-link-text">我的未签约客户</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/self/consultant/student" class="nav-link" id="selfConsultantStudent">
+                  <i class="fa fa-user-graduate text-teal"></i>
+                  <span class="nav-link-text">我的学生（课程顾问）</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/self/adviser/student" class="nav-link" id="selfCustomer">
+                  <i class="fa fa-user-graduate text-teal"></i>
+                  <span class="nav-link-text">我的学生（班主任）</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/self/contract" class="nav-link" id="selfCustomer">
+                  <i class="ni ni-money-coins text-teal"></i>
+                  <span class="nav-link-text">我的签约</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/self/refund" class="nav-link" id="selfCustomer">
+                  <i class="ni ni-cart text-teal"></i>
+                  <span class="nav-link-text">我的退费</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/self/class" class="nav-link" id="selfCustomer">
+                  <i class="fa fa-users text-teal"></i>
+                  <span class="nav-link-text">我的班级</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/self/schedule" class="nav-link" id="selfCustomer">
+                  <i class="ni ni-bullet-list-67 text-teal"></i>
+                  <span class="nav-link-text">我的课程安排</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/self/attendedSchedule" class="nav-link" id="selfCustomer">
+                  <i class="fa fa-chalkboard-teacher text-teal"></i>
+                  <span class="nav-link-text">我的上课记录</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/self/calendar/week" class="nav-link" id="selfCustomer">
+                  <i class="ni ni-calendar-grid-58 text-teal"></i>
+                  <span class="nav-link-text">我的课程表</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        -->
       </ul>
       <!-- Divider -->
       <hr class="my-3">
@@ -357,7 +422,7 @@
         -->
         <li class="nav-item">
           <a class="nav-link" href="/profile" id="profile">
-            <i class="ni ni-circle-08"></i>
+            <i class="fa fa-user"></i>
             <span class="nav-link-text">个人信息</span>
           </a>
         </li>

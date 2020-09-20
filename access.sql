@@ -56,11 +56,6 @@ CREATE TABLE `user_access` (
 	-- 部门架构 --
 	INSERT INTO `access`(access_category, access_page, access_feature, access_url) 
 	VALUES ('公司管理', '部门架构', '全部', '/company/section');
-	-- 离校学生 --
-	INSERT INTO `access`(access_category, access_page, access_feature, access_url) 
-	VALUES ('公司管理', '离校学生', '查看', '/company/student/deleted');
-	INSERT INTO `access`(access_category, access_page, access_feature, access_url) 
-	VALUES ('公司管理', '离校学生', '恢复', '/company/student/deleted/restore');
 	
 -- 人事管理 --
 	-- 用户管理 --
@@ -172,6 +167,11 @@ CREATE TABLE `user_access` (
 	VALUES ('运营中心', '退费管理', '查看', '/operation/refund');
 	INSERT INTO `access`(access_category, access_page, access_feature, access_url) 
 	VALUES ('运营中心', '退费管理', '删除', '/operation/refund/delete');
+	-- 离校学生 --
+	INSERT INTO `access`(access_category, access_page, access_feature, access_url) 
+	VALUES ('运营中心', '离校学生', '查看', '/operation/student/deleted');
+	INSERT INTO `access`(access_category, access_page, access_feature, access_url) 
+	VALUES ('运营中心', '离校学生', '恢复', '/operation/student/deleted/restore');
 	
 -- 教学中心 --
 	-- 学生管理 --

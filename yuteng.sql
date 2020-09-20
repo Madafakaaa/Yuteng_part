@@ -512,7 +512,7 @@ CREATE TABLE `candidate`  (
   `candidate_wechat` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '无' COMMENT '微信',
   `candidate_interviewer` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '候选人面试官',
   `candidate_comment` varchar(140) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '面试意见',
-  `candidate_resume` int(10) UNSIGNED NOT NULL '候选人简历',
+  `candidate_resume` int(10) UNSIGNED NOT NULL COMMENT '候选人简历',
   `candidate_status` tinyint(4) NOT NULL DEFAULT 1 COMMENT '用户可用状态(0：已转正，1：未转正)',
   `candidate_createuser` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户创建用户',
   `candidate_createtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户创建时间',

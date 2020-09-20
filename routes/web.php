@@ -69,13 +69,6 @@ Route::get('/home', 'HomeController@home');
       Route::post('/company/position/update', 'Company\SectionController@positionUpdate');
       // 删除岗位
       Route::get('/company/position/delete', 'Company\SectionController@positionDelete');
-  // 离校学生
-      // 查看离校学生
-      Route::get('/company/student/deleted', 'Company\StudentDeletedController@studentDeleted');
-      // 离校学生恢复
-      Route::get('/company/student/deleted/restore', 'Company\StudentDeletedController@studentDeletedRestore');
-      // 离校学生删除
-      Route::get('/company/student/deleted/delete', 'Company\StudentDeletedController@studentDeletedDelete');
 
 // 人事中心 ********************************************************************************
   // 用户管理
@@ -224,6 +217,13 @@ Route::get('/home', 'HomeController@home');
         Route::get('/operation/refund', 'Operation\RefundController@refund');
         // 退费删除
         Route::get('/operation/refund/delete', 'Operation\RefundController@refundDelete');
+  // 离校学生
+      // 查看离校学生
+      Route::get('/operation/student/deleted', 'Operation\StudentDeletedController@studentDeleted');
+      // 离校学生恢复
+      Route::get('/operation/student/deleted/restore', 'Operation\StudentDeletedController@studentDeletedRestore');
+      // 离校学生删除
+      Route::get('/operation/student/deleted/delete', 'Operation\StudentDeletedController@studentDeletedDelete');
 
 // 教学中心
     // 学生管理
@@ -259,6 +259,42 @@ Route::get('/home', 'HomeController@home');
     Route::get('/finance/consumption/department', 'Finance\ConsumptionController@consumptionDepartment');
     // 个人课消明细
     Route::get('/finance/consumption/user', 'Finance\ConsumptionController@consumptionUser');
+
+// 个人中心 ********************************************************************************
+    // 我的未签约学生
+        // 查看我的未签约学生
+        Route::get('/self/customer', 'Self\CustomerController@customer');
+        // 添加新未签约学生
+        Route::get('/self/customer/create', 'Self\CustomerController@customerCreate');
+        Route::post('/self/customer/store', 'Self\CustomerController@customerStore');
+        Route::get('/self/customer/success', 'Self\CustomerController@customerSuccess');
+        // 未签约学生删除
+        Route::get('/self/customer/delete', 'Self\CustomerController@customerDelete');
+        // 签约合同
+        Route::get('/self/customer/contract/create', 'Self\CustomerController@customerContractCreate');
+        Route::post('/self/customer/contract/store', 'Self\CustomerController@customerContractStore');
+        Route::get('/self/customer/contract/success', 'Self\CustomerController@customerContractSuccess');
+    // 我的学生(课程顾问)
+        // 查看我的学生（课程顾问）
+        Route::get('/self/consultant/student', 'Self\ConsultantStudentController@student');
+        // 签约合同
+        Route::get('/self/consultant/student/contract/create', 'Self\ConsultantStudentController@studentContractCreate');
+        Route::post('/self/consultant/student/contract/store', 'Self\ConsultantStudentController@studentContractStore');
+        Route::get('/self/consultant/student/contract/success', 'Self\ConsultantStudentController@studentContractSuccess');
+    // 我的学生（班主任）
+        // 查看我的学生（班主任）
+        Route::get('/self/adviser/student', 'Self\AdviserStudentController@student');
+        // 学生一对一排课
+        Route::get('/self/adviser/student/schedule/create', 'Self\AdviserStudentController@studentScheduleCreate');
+        Route::post('/self/adviser/student/schedule/create2', 'Self\AdviserStudentController@studentScheduleCreate2');
+        Route::post('/self/adviser/student/schedule/store', 'Self\AdviserStudentController@studentScheduleStore');
+        Route::get('/self/adviser/student/schedule/success', 'Self\AdviserStudentController@studentScheduleCreateSuccess');
+        // 签约合同
+        Route::get('/self/adviser/student/contract/create', 'Self\AdviserStudentController@studentContractCreate');
+        Route::post('/self/adviser/student/contract/store', 'Self\AdviserStudentController@studentContractStore');
+        Route::get('/self/adviser/student/contract/success', 'Self\AdviserStudentController@studentContractSuccess');
+
+
 
 // 用户详情
 Route::get('/user', 'UserController@user');

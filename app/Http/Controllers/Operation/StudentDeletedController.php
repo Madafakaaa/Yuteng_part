@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Company;
+namespace App\Http\Controllers\Operarion;
 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +11,7 @@ class StudentDeletedController extends Controller
 {
     /**
      * 离校学生管理视图
-     * URL: GET /company/student/deleted
+     * URL: GET /operation/student/deleted
      * @param  Request  $request
      * @param  $request->input('page'): 页数
      */
@@ -21,7 +21,7 @@ class StudentDeletedController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 检测用户权限
-        if(!in_array("/company/student/deleted", Session::get('user_accesses'))){
+        if(!in_array("/operation/student/deleted", Session::get('user_accesses'))){
            return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 获取用户校区权限
@@ -116,7 +116,7 @@ class StudentDeletedController extends Controller
                           ->orderBy('user_position', 'desc')
                           ->get();
         // 返回列表视图
-        return view('company/studentDeleted/studentDeleted', ['rows' => $rows,
+        return view('operation/studentDeleted/studentDeleted', ['rows' => $rows,
                                                              'currentPage' => $currentPage,
                                                              'totalPage' => $totalPage,
                                                              'startIndex' => $offset,
@@ -131,7 +131,7 @@ class StudentDeletedController extends Controller
 
     /**
      * 离校学生恢复
-     * URL: GET /company/student/deleted/restore
+     * URL: GET /operation/student/deleted/restore
      * @param  int  $student_id
      */
     public function studentDeletedRestore(Request $request){
@@ -140,7 +140,7 @@ class StudentDeletedController extends Controller
             return loginExpired(); // 未登录，返回登陆视图
         }
         // 检测用户权限
-        if(!in_array("/company/student/deleted/restore", Session::get('user_accesses'))){
+        if(!in_array("/operation/student/deleted/restore", Session::get('user_accesses'))){
            return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         $student_id = decode($request->input('id'), 'student_id');
@@ -150,14 +150,14 @@ class StudentDeletedController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("/company/student/deleted")
+            return redirect("/operation/student/deleted")
                      ->with(['notify' => true,
                              'type' => 'danger',
                              'title' => '学生恢复失败',
                              'message' => '学生恢复失败，错误码:207']);
         }
         // 返回岗位列表
-        return redirect("/company/student/deleted")
+        return redirect("/operation/student/deleted")
                  ->with(['notify' => true,
                          'type' => 'success',
                          'title' => '学生恢复成功',
@@ -166,7 +166,7 @@ class StudentDeletedController extends Controller
 
     /**
      * 离校学生删除
-     * URL: DELETE /company/student/deleted/delete
+     * URL: DELETE /operation/student/deleted/delete
      * @param  int  $student_id
      */
     public function studentDeletedDelete(Request $request){
@@ -194,14 +194,14 @@ class StudentDeletedController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
-            return redirect("/company/student/deleted")
+            return redirect("/operation/student/deleted")
                    ->with(['notify' => true,
                          'type' => 'danger',
                          'title' => '学生删除失败',
                          'message' => '学生删除失败，错误码:208']);
         }
         // 返回课程列表
-        return redirect("/company/student/deleted")
+        return redirect("/operation/student/deleted")
                ->with(['notify' => true,
                        'type' => 'success',
                        'title' => '学生删除成功',

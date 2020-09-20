@@ -71,7 +71,7 @@
                 <td title="{{$candidate->candidate_comment}}">{{ $candidate->candidate_comment }}</td>
                 <td>
                   <a href='/files/archive/{{$candidate->archive_path}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看简历</button></a>
-                  <a href='/humanResource/candidate/upgrade?id={{encode($candidate->candidate_id, 'candidate_id')}}'><button type="button" class="btn btn-primary btn-sm">转正</button></a>
+                  <a href='/humanResource/candidate/upgrade?id={{encode($candidate->candidate_id, 'candidate_id')}}'><button type="button" class="btn btn-primary btn-sm">入职</button></a>
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/humanResource/candidate/delete?id={{encode($candidate->candidate_id, 'candidate_id')}}', '确认删除该候选人？')">删除</button>
                 </td>
               </tr>

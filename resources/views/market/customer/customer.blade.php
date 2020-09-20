@@ -15,6 +15,10 @@
 <div class="container-fluid mt-4">
   <div class="row mb-3">
     <div class="col-auto">
+      <a href="?@foreach($filters as $key => $value) @if($key!='filter_consultant') {{$key}}={{$value}}& @endif @endforeach&filter_consultant={{Session::get('user_id')}}" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加客户">
+        <span class="btn-inner--icon"><i class="fas fa-user-circle"></i></span>
+        <span class="btn-inner--text">我的客户</span>
+      </a>
       <a href="/market/customer/create" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加客户">
         <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
         <span class="btn-inner--text">添加客户</span>

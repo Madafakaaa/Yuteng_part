@@ -1,12 +1,12 @@
 @extends('main')
 
 @section('nav')
-<h2 class="text-white d-inline-block mb-0">学生课时</h2>
+<h2 class="text-white d-inline-block mb-0">我的学生（课程顾问）</h2>
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">运营中心</li>
-    <li class="breadcrumb-item active">学生课时</li>
+    <li class="breadcrumb-item active">个人中心</li>
+    <li class="breadcrumb-item active">我的学生（课程顾问）</li>
   </ol>
 </nav>
 @endsection
@@ -15,10 +15,6 @@
 <div class="container-fluid mt-3">
   <div class="row mb-3">
     <div class="col-auto">
-      <a href="?@foreach($filters as $key => $value) @if($key!='filter_class_adviser') {{$key}}={{$value}}& @endif @endforeach&filter_class_adviser={{Session::get('user_id')}}" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加客户">
-        <span class="btn-inner--icon"><i class="fas fa-user-circle"></i></span>
-        <span class="btn-inner--text">我的学生</span>
-      </a>
       <a href="?">
         <button class="btn btn-sm btn-outline-primary btn-round btn-icon">
           <span class="btn-inner--icon"><i class="fas fa-redo"></i></span>
@@ -67,6 +63,14 @@
                 </select>
               </div>
               <div class="col-3">
+                <select class="form-control form-control-sm" name="filter_consultant" data-toggle="select" onChange="form_submit('filterForm')">
+                  <option value=''>搜索课程顾问...</option>
+                  @foreach ($filter_users as $filter_user)
+                    <option value="{{ $filter_user->user_id }}" @if($filters['filter_consultant']==$filter_user->user_id) selected @endif>[ {{$filter_user->department_name}} ] {{ $filter_user->user_name }}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="col-3">
                 <select class="form-control form-control-sm" name="filter_class_adviser" data-toggle="select" onChange="form_submit('filterForm')">
                   <option value=''>搜索班主任...</option>
                   @foreach ($filter_users as $filter_user)
@@ -77,60 +81,104 @@
             </div>
           </form>
         </div>
-        <div class="table-responsive freeze-table-5">
+        <div class="table-responsive freeze-table-4">
           <table class="table align-items-center table-hover table-bordered text-left">
             <thead class="thead-light">
               <tr>
                 <th style='width:40px;'></th>
-                <th style='width:60px;'>序号</th>
-                <th style='width:120px;'>学生</th>
-                <th style='width:90px;'>校区</th>
+                <th style='width:50px;'>序号</th>
+                <th style='width:100px;'>学生</th>
+                <th style='width:90px;'>学号</th>
+                <th style='width:80px;'>校区</th>
                 <th style='width:60px;'>年级</th>
-                <th style='width:180px;'>课程</th>
-                <th style='width:110px;' class="text-right">剩余</th>
-                <th style='width:110px;' class="text-right">已消耗</th>
+                <th style='width:145px;'>课程顾问</th>
                 <th style='width:145px;'>班主任</th>
-                <th style='width:200px;'>操作管理</th>
+                <th style='width:145px;'>学生课时</th>
+                <th style='width:150px;'>操作管理</th>
               </tr>
             </thead>
             <tbody>
-              @if(count($datas)==0)
-                <tr class="text-center"><td colspan="10">当前没有记录</td></tr>
+              @if(count($students)==0)
+              <tr class="text-center"><td colspan="9">当前没有记录</td></tr>
               @endif
-              @foreach ($datas as $data)
+              @foreach ($students as $student)
               <tr>
                 <td>
                   <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($data['student_id'], 'student_id')}}'>
+                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($student['student_id'], 'student_id')}}'>
                     <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
                   </div>
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>
-                  <a href="/student?id={{encode($data['student_id'], 'student_id')}}">{{ $data['student_name'] }}</a>&nbsp;
-                  @if($data['student_gender']=="男")
+                  <a href="/student?id={{encode($student['student_id'], 'student_id')}}">{{ $student['student_name'] }}</a>&nbsp;
+                  @if($student['student_gender']=="男")
                     <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
                   @else
                     <img src="{{ asset(_ASSETS_.'/img/icons/female.png') }}" style="height:20px;">
                   @endif
                 </td>
-                <td>{{ $data['department_name'] }}</td>
-                <td>{{ $data['grade_name'] }}</td>
-                <td><strong>{{ $data['course_name'] }}</strong></td>
-                @if($data['hour_remain']<5)
-                  <td class="text-right"><span class="text-danger">{{ $data['hour_remain'] }} 课时</span></td>
-                @else
-                  <td class="text-right">{{ $data['hour_remain'] }} 课时</td>
-                @endif
-                <td class="text-right">{{ $data['hour_used'] }} 课时</td>
-                @if($data['class_adviser_name']=="")
+                <td>{{ $student['student_id'] }}</td>
+                <td>{{ $student['department_name'] }}</td>
+                <td>{{ $student['grade_name'] }}</td>
+                @if($student['consultant_name']=="")
                   <td><span style="color:red;">无</span></td>
                 @else
-                  <td><a href="/user?id={{encode($data['class_adviser_id'],'user_id')}}">{{ $data['class_adviser_name'] }}</a> [ {{ $data['class_adviser_position_name'] }} ]</td>
+                  <td><a href="/user?id={{encode($student['consultant_id'],'user_id')}}">{{ $student['consultant_name'] }}</a> [ {{ $student['consultant_position_name'] }} ]</td>
+                @endif
+                @if($student['class_adviser_name']=="")
+                  <td><span style="color:red;">无</span></td>
+                @else
+                  <td><a href="/user?id={{encode($student['class_adviser_id'],'user_id')}}">{{ $student['class_adviser_name'] }}</a> [ {{ $student['class_adviser_position_name'] }} ]</td>
                 @endif
                 <td>
-                  <a href="/operation/hour/edit?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-primary btn-sm">修改课时</button></a>
-                  <a href="/operation/hour/refund/create?student_id={{encode($data['student_id'], 'student_id')}}&course_id={{encode($data['course_id'], 'course_id')}}"><button type="button" class="btn btn-outline-danger btn-sm">退费</button></a>
+                  {{ $student['student_hour_num'] }} 课程
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-{{$loop->iteration}}-1">查看列表</button>
+                  <div class="modal fade" id="modal-{{$loop->iteration}}-1" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+                    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h6 class="modal-title">{{ $student['student_name'] }} {{ $student['student_id'] }}</h6>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <ul class="list-group list-group-flush list my--3">
+                            @if($student['student_hour_num']==0)
+                              <li class="list-group-item px-0">
+                                <div class="row align-items-center">
+                                  <div class="col ml--2">
+                                    <h4 class="mb-0">
+                                      <a href="#!">无</a>
+                                    </h4>
+                                  </div>
+                                </div>
+                              </li>
+                            @endif
+                            @foreach ($student['student_hours'] as $student_hour)
+                            <li class="checklist-entry list-group-item flex-column align-items-start p-3">
+                              <div class="checklist-item @if($student_hour['hour_remain']>0) checklist-item-success @else checklist-item-warning @endif ">
+                                <div class="checklist-info">
+                                  <h5 class="checklist-title mb-0">{{ $student_hour['course_name'] }}</h5>
+                                  <small>剩余:{{ $student_hour['hour_remain'] }} 课时</small>
+                                </div>
+                                <div class="custom-control">
+                                </div>
+                              </div>
+                            </li>
+                            @endforeach
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">关闭</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <a href="/self/consultant/student/contract/create?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">签约合同</button></a>
                 </td>
               </tr>
               @endforeach
@@ -146,8 +194,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-operation');
-  navbarActive('navbar-operation');
-  linkActive('operationHour');
+  linkActive('link-self');
+  navbarActive('navbar-self');
+  linkActive('selfConsultantStudent');
 </script>
 @endsection

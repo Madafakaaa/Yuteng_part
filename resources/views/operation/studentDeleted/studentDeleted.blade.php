@@ -5,7 +5,7 @@
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">公司管理</li>
+    <li class="breadcrumb-item active">运营中心</li>
     <li class="breadcrumb-item active">离校学生</li>
   </ol>
 </nav>
@@ -135,8 +135,8 @@
                   <td><a href="/user?id={{encode($row->class_adviser_id,'user_id')}}">{{ $row->class_adviser_name }}</a> ({{ $row->class_adviser_position_name }})</td>
                 @endif
                 <td>
-                  <a href='/company/student/deleted/restore?id={{encode($row->student_id, 'student_id')}}'><button type="button" class="btn btn-outline-primary btn-sm">恢复</button></a>
-                  <!-- <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/company/student/deleted/delete?id={{encode($row->student_id, 'student_id')}}', '确认彻底删除学生？')">删除</button> -->
+                  <a href='/operation/student/deleted/restore?id={{encode($row->student_id, 'student_id')}}'><button type="button" class="btn btn-outline-primary btn-sm">恢复</button></a>
+                  <!-- <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/student/deleted/delete?id={{encode($row->student_id, 'student_id')}}', '确认彻底删除学生？')">删除</button> -->
                 </td>
               </tr>
               @endforeach
@@ -152,8 +152,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-company');
-  navbarActive('navbar-company');
-  linkActive('companyStudentDeleted');
+  linkActive('link-operation');
+  navbarActive('navbar-operation');
+  linkActive('operationStudentDeleted');
 </script>
 @endsection
