@@ -39,7 +39,6 @@
                 <th style='width:100px;'>手机</th>
                 <th style='width:100px;'>微信</th>
                 <th style='width:100px;'>面试官</th>
-                <th style='width:250px;'>面试意见</th>
                 <th style='width:140px;'>操作管理</th>
               </tr>
             </thead>
@@ -57,7 +56,7 @@
                 </td>
                 <td>{{ $loop->iteration }}</td>
                 <td>
-                  {{ $candidate->candidate_name }}</a>&nbsp;
+                  <a href="/candidate?id={{encode($candidate->candidate_id, 'candidate_id')}}">{{ $candidate->candidate_name }}</a>&nbsp;
                   @if($candidate->candidate_gender=="男")
                     <img src="{{ asset(_ASSETS_.'/img/icons/male.png') }}" style="height:20px;">
                   @else
@@ -68,7 +67,6 @@
                 <td>{{ $candidate->candidate_phone }}</td>
                 <td>{{ $candidate->candidate_wechat }}</td>
                 <td><a href="/user?id={{encode($candidate->user_id,'user_id')}}">{{ $candidate->user_name }}</a> [ {{ $candidate->position_name }} ]</td>
-                <td title="{{$candidate->candidate_comment}}">{{ $candidate->candidate_comment }}</td>
                 <td>
                   <a href='/files/archive/{{$candidate->archive_path}}' target="_blank"><button type="button" class="btn btn-primary btn-sm">查看简历</button></a>
                   <a href='/humanResource/candidate/upgrade?id={{encode($candidate->candidate_id, 'candidate_id')}}'><button type="button" class="btn btn-primary btn-sm">入职</button></a>

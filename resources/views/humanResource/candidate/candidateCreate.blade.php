@@ -78,7 +78,7 @@
             <div class="row">
               <div class="col-12">
                 <div class="form-group">
-                  <label class="form-control-label">面试意见<span style="color:red">*</span></label>
+                  <label class="form-control-label">备注<span style="color:red">*</span></label>
                   <textarea class="form-control" name="input_candidate_comment" rows="3" resize="none" spellcheck="false" autocomplete='off' maxlength="140" required></textarea>
                 </div>
               </div>
@@ -91,7 +91,7 @@
                     <input id='location' class="form-control" disabled aria-describedby="button-addon">
                     <div class="input-group-append">
                       <input type="button" id="i-check" value="浏览文件" class="btn btn-outline-primary" onClick="$('#i-file').click();" style="margin:0;" id="button-addon">
-                      <input type="file" name='file' id='i-file' onChange="$('#location').val($('#i-file').val());" style="display: none">
+                      <input type="file" name='file' id='i-file' onChange="$('#location').val($('#i-file').val());" style="display: none" required accept=".pdf">
                     </div>
                   </div>
                 </div>

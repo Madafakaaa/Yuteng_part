@@ -11,16 +11,6 @@ CREATE TABLE `access` (
   PRIMARY KEY (`access_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for `user_access`
--- ----------------------------
-DROP TABLE IF EXISTS `user_access`;
-CREATE TABLE `user_access` (
-  `user_access_user` char(8) NOT NULL COMMENT '用户id',
-  `user_access_access` varchar(40) NOT NULL COMMENT '用户功能权限url',
-  PRIMARY KEY (`user_access_user`,`user_access_access`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 -- ----------------------------
 -- Records of access

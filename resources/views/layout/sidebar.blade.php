@@ -284,14 +284,6 @@
                 </a>
               </li>
               @endif
-              @if(in_array("/education/document", Session::get('user_accesses')))
-              <li class="nav-item">
-                <a class="nav-link" href="/education/document" id="educationDocument">
-                  <i class="fa fa-folder-open text-pink"></i>
-                  <span class="nav-link-text">教案中心</span>
-                </a>
-              </li>
-              @endif
             </ul>
           </div>
         </li>
@@ -338,6 +330,14 @@
               @endif
             </ul>
           </div>
+        </li>
+        @endif
+        @if(in_array("/education/document", Session::get('user_accesses')))
+        <li class="nav-item">
+          <a class="nav-link" href="/education/document" id="educationDocument">
+            <i class="fa fa-folder-open text-pink"></i>
+            <span class="nav-link-text">教案中心</span>
+          </a>
         </li>
         @endif
         <!-- <li class="nav-item">

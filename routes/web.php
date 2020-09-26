@@ -298,10 +298,24 @@ Route::get('/home', 'HomeController@home');
 
 // 用户详情
 Route::get('/user', 'UserController@user');
+    // 用户动态
+    Route::post('/user/record', 'UserController@record');
+    // 用户档案上传
+    Route::post('/user/archive', 'UserController@archive');
     // 修改用户
     Route::get('/user/edit', 'UserController@edit');
     // 更新用户
     Route::post('/user/update', 'UserController@update');
+
+
+// 面试用户详情
+Route::get('/candidate', 'CandidateController@candidate');
+    // 面试用户动态
+    Route::post('/candidate/record', 'CandidateController@record');
+    // 修改面试用户
+    Route::get('/candidate/edit', 'CandidateController@candidateEdit');
+    // 更新面试用户
+    Route::post('/candidate/update', 'CandidateController@candidateUpdate');
 
 // 学生详情
 Route::get('/student', 'StudentController@student');

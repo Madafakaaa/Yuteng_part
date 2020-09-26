@@ -126,7 +126,7 @@
                   </div>
                 </td>
                 <td>{{ $startIndex+$loop->iteration }}</td>
-                <td>{{ $row->document_name }}</td>
+                <td><a href="/files/document/{{ $row->document_path }}" target="_blank">{{ $row->document_name }}</a></td>
                 <td>{{ $row->subject_name }}</td>
                 <td>{{ $row->grade_name }}</td>
                 <td>{{ $row->document_semester }}</td>

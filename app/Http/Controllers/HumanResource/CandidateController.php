@@ -134,6 +134,12 @@ class CandidateController extends Controller
                  'candidate_comment' => $candidate_comment,
                  'candidate_createuser' => Session::get('user_id')]
             );
+            DB::table('user_record')->insert(
+                ['user_record_user' => $candidate_id,
+                 'user_record_type' => "创建面试用户",
+                 'user_record_content' => "创建面试用户，姓名：".$candidate_name."，面试岗位：".$candidate_position."。",
+                 'user_record_createuser' => Session::get('user_id')]
+            );
         }
         // 捕获异常
         catch(Exception $e){
@@ -186,6 +192,10 @@ class CandidateController extends Controller
                 // 删除用户记录
                 DB::table('candidate')
                   ->where('candidate_id', $candidate_id)
+                  ->delete();
+                // 删除用户动态
+                DB::table('user_record')
+                  ->where('user_record_iser', $candidate_id)
                   ->delete();
                 // 删除档案文件
                 $archives = DB::table('archive')
@@ -281,6 +291,15 @@ class CandidateController extends Controller
         }else{
             $user_photo="female.png";
         }
+        // 获取校区岗位名称
+        $position_name = DB::table('position')
+                            ->where('position_id', $user_position)
+                            ->first()
+                            ->position_name;
+        $department_name = DB::table('department')
+                            ->where('department_id', $user_department)
+                            ->first()
+                            ->department_name;
         // 获取当前用户ID
         $user_createuser = Session::get('user_id');
         // 插入数据库
@@ -304,6 +323,13 @@ class CandidateController extends Controller
             DB::table('candidate')
               ->where('candidate_id', $user_id)
               ->update(['candidate_status' => 0]);
+            // 添加用户动态
+            DB::table('user_record')->insert(
+                ['user_record_user' => $user_id,
+                 'user_record_type' => "面试用户入职",
+                 'user_record_content' => "面试用户入职，入职校区：".$department_name."，入职岗位：".$position_name."。",
+                 'user_record_createuser' => Session::get('user_id')]
+            );
         }
         // 捕获异常
         catch(Exception $e){

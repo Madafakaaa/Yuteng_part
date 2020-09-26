@@ -114,6 +114,20 @@ class UserController extends Controller
                                      ->where('contract_date', 'like', date('Y-m').'%')
                                      ->count();
 
+        // 获取所有用户动态
+        $user_records = DB::table('user_record')
+                          ->join('user', 'user_record.user_record_createuser', '=', 'user.user_id')
+                          ->where('user_record_user', $user_id)
+                          ->orderBy('user_record_id', 'desc')
+                          ->get();
+
+        // 获取所有用户档案
+        $archives = DB::table('archive')
+                      ->where('archive_user', $user_id)
+                      ->orderBy('archive_id', 'desc')
+                      ->get();
+
+        // 修改所需信息
         $departments = DB::table('department')->where('department_status', 1)->orderBy('department_id', 'asc')->get();
         $positions = DB::table('position')
                        ->join('section', 'position.position_section', '=', 'section.section_id')
@@ -122,6 +136,8 @@ class UserController extends Controller
                        ->orderBy('position_id', 'asc')
                        ->get();
         return view('user/user', ['user' => $user,
+                                  'user_records' => $user_records,
+                                  'archives' => $archives,
                                   'schedules' => $schedules,
                                   'attended_schedules' => $attended_schedules,
                                   'students' => $students,
@@ -130,6 +146,38 @@ class UserController extends Controller
                                   'dashboard' => $dashboard,
                                   'departments' => $departments,
                                   'positions' => $positions]);
+    }
+
+    public function record(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $user_record_user = $request->input('user_id');
+        $user_record_type = "用户动态";
+        $user_record_content = $request->input('user_record_content');
+        // 更新数据库
+        try{
+            // 添加用户动态
+            DB::table('user_record')->insert(
+                ['user_record_user' => $user_record_user,
+                 'user_record_type' => $user_record_type,
+                 'user_record_content' => $user_record_content,
+                 'user_record_createuser' => Session::get('user_id')]
+            );
+        }
+        // 捕获异常
+        catch(Exception $e){
+            return back()->with(['notify' => true,
+                                'type' => 'danger',
+                                'title' => '动态添加失败',
+                                'message' => '动态添加失败，请重新输入信息']);
+        }
+        return redirect("/user?id=".encode($request->input('user_id'), 'user_id'))
+               ->with(['notify' => true,
+                       'type' => 'success',
+                       'title' => '动态添加成功',
+                       'message' => '动态添加成功']);
     }
 
     /**
@@ -193,6 +241,69 @@ class UserController extends Controller
                                                    'type' => 'success',
                                                    'title' => '用户修改成功',
                                                    'message' => '用户修改成功']);
+    }
+    public function archive(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取上传文件
+        $file = $request->file('file');
+        // 获取文件大小(MB)
+        $archive_file_size = $file->getClientSize()/1024/1024+0.01;
+        // 判断文件是否大于10MB
+        if($archive_file_size>10){
+            return redirect("/humanResource/archive/create")
+                   ->with(['notify' => true,
+                           'type' => 'danger',
+                           'title' => '简历文件上传失败',
+                           'message' => '文件大于10MB，错误码:401']);
+        }
+
+        // 获取文件名称
+        $archive_file_name = $file->getClientOriginalName();
+        // 获取文件扩展名
+        $archive_ext = $file->getClientOriginalExtension();
+        // 生成随机文件名
+        $archive_path = "A".date('ymdHis').rand(1000000000,9999999999).".".$archive_ext;
+
+        // 获取表单输入
+        $archive_user = $request->input('archive_user');
+        $archive_name = $request->input('archive_name');
+
+        DB::beginTransaction();
+        // 插入数据库
+        try{
+            DB::table('archive')
+              ->insert(['archive_user' => $archive_user,
+                        'archive_name' => $archive_name,
+                        'archive_file_name' => $archive_file_name,
+                        'archive_path' => $archive_path,
+                        'archive_createuser' => Session::get('user_id')]);
+            // 添加用户动态
+            DB::table('user_record')->insert(
+                ['user_record_user' => $archive_user,
+                 'user_record_type' => "上传用户档案",
+                 'user_record_content' => "上传用户档案，档案名：".$archive_name."。",
+                 'user_record_createuser' => Session::get('user_id')]
+            );
+        }
+        // 捕获异常
+        catch(Exception $e){
+            DB::rollBack();
+            return back()->with(['notify' => true,
+                             'type' => 'danger',
+                             'title' => '用户档案添加失败',
+                             'message' => '用户档案添加失败，错误码:113']);
+        }
+        DB::commit();
+        // 上传文件
+        $file->move("files/archive", $archive_path);
+        // 返回用户列表
+        return back()->with(['notify' => true,
+                             'type' => 'success',
+                             'title' => '用户档案添加成功',
+                             'message' => '用户档案添加成功']);
     }
 
 }

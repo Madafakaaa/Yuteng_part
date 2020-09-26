@@ -557,4 +557,17 @@ CREATE TABLE `user_access` (
   PRIMARY KEY (`user_access_user`,`user_access_access`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Table structure for user_record
+-- ----------------------------
+DROP TABLE IF EXISTS `user_record`;
+CREATE TABLE `user_record`  (
+  `user_record_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户动态id',
+  `user_record_user` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id',
+  `user_record_type` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户动态类别',
+  `user_record_content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户动态内容',
+  `user_record_createuser` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建用户',
+  `user_record_createtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`user_record_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

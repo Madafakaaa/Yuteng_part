@@ -67,7 +67,7 @@ class ConsumptionController extends Controller
                      ->get();
 
         $schedules=array();
-         foreach($rows as $row){
+        foreach($rows as $row){
              $temp=array();
              $temp['department_name']=$row->department_name;
              $temp['class_id']=$row->class_id;
@@ -88,12 +88,17 @@ class ConsumptionController extends Controller
              $temp['user_id']=$row->user_id;
              $temp['user_name']=$row->user_name;
              $temp['schedule_id']=$row->schedule_id;
+             $temp['consumption_price']=0;
              // 获取上课学生
              $temp['student_num'] = 0;
              $temp['participants'] = array();
              $db_participants = DB::table('participant')
                                   ->join('student', 'participant.participant_student', '=', 'student.student_id')
                                   ->leftJoin('course', 'participant.participant_course', '=', 'course.course_id')
+                                  ->leftJoin('hour', [
+                                                       ['hour_student', 'student_id'],
+                                                       ['hour_course', 'course_id'],
+                                                     ])
                                   ->where('participant_schedule', $row->schedule_id)
                                   ->orderBy('participant_attend_status', 'asc')
                                   ->get();
@@ -106,8 +111,10 @@ class ConsumptionController extends Controller
                  $temp_participant['participant_attend_status'] = $db_participant->participant_attend_status;
                  $temp_participant['participant_amount'] = $db_participant->participant_amount;
                  $temp_participant['participant_hour'] = round($db_participant->participant_amount*$db_participant->course_time/60, 1);
+                 $temp_participant['participant_consumption_price'] = $db_participant->participant_amount*$db_participant->hour_average_price;
                  $temp['participants'][] = $temp_participant;
                  $temp['student_num']++;
+                 $temp['consumption_price']+=$temp_participant['participant_consumption_price'];
                  $dashboard['dashboard_hour_num']+=$db_participant->participant_amount;
              }
              $schedules[]=$temp;
@@ -115,7 +122,7 @@ class ConsumptionController extends Controller
              $dashboard['dashboard_attended_num']+=$temp['schedule_attended_num'];
              $dashboard['dashboard_leave_num']+=$temp['schedule_leave_num'];
              $dashboard['dashboard_leave_num']+=$temp['schedule_absence_num'];
-         }
+        }
 
         // 获取校区、学生、课程、年级信息(筛选)
         $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
@@ -183,7 +190,7 @@ class ConsumptionController extends Controller
                       ->get();
 
          $schedules=array();
-         foreach($rows as $row){
+        foreach($rows as $row){
              $temp=array();
              $temp['department_name']=$row->department_name;
              $temp['class_id']=$row->class_id;
@@ -204,12 +211,17 @@ class ConsumptionController extends Controller
              $temp['user_id']=$row->user_id;
              $temp['user_name']=$row->user_name;
              $temp['schedule_id']=$row->schedule_id;
+             $temp['consumption_price']=0;
              // 获取上课学生
              $temp['student_num'] = 0;
              $temp['participants'] = array();
              $db_participants = DB::table('participant')
                                   ->join('student', 'participant.participant_student', '=', 'student.student_id')
                                   ->leftJoin('course', 'participant.participant_course', '=', 'course.course_id')
+                                  ->leftJoin('hour', [
+                                                       ['hour_student', 'student_id'],
+                                                       ['hour_course', 'course_id'],
+                                                     ])
                                   ->where('participant_schedule', $row->schedule_id)
                                   ->orderBy('participant_attend_status', 'asc')
                                   ->get();
@@ -222,8 +234,10 @@ class ConsumptionController extends Controller
                  $temp_participant['participant_attend_status'] = $db_participant->participant_attend_status;
                  $temp_participant['participant_amount'] = $db_participant->participant_amount;
                  $temp_participant['participant_hour'] = round($db_participant->participant_amount*$db_participant->course_time/60, 1);
+                 $temp_participant['participant_consumption_price'] = $db_participant->participant_amount*$db_participant->hour_average_price;
                  $temp['participants'][] = $temp_participant;
                  $temp['student_num']++;
+                 $temp['consumption_price']+=$temp_participant['participant_consumption_price'];
                  $dashboard['dashboard_hour_num']+=$db_participant->participant_amount;
              }
              $schedules[]=$temp;
@@ -231,7 +245,7 @@ class ConsumptionController extends Controller
              $dashboard['dashboard_attended_num']+=$temp['schedule_attended_num'];
              $dashboard['dashboard_leave_num']+=$temp['schedule_leave_num'];
              $dashboard['dashboard_leave_num']+=$temp['schedule_absence_num'];
-         }
+        }
 
          // 获取校区、学生、课程、年级信息(筛选)
          $filter_users = DB::table('user')->join('department', 'user.user_department', '=', 'department.department_id')->where('user_status', 1)->whereIn('user_department', $department_access)->orderBy('user_department', 'asc')->get();

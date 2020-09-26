@@ -123,6 +123,13 @@ class ArchiveController extends Controller
                         'archive_file_name' => $archive_file_name,
                         'archive_path' => $archive_path,
                         'archive_createuser' => Session::get('user_id')]);
+            // 添加用户动态
+            DB::table('user_record')->insert(
+                ['user_record_user' => $archive_user,
+                 'user_record_type' => "上传用户档案",
+                 'user_record_content' => "上传用户档案，档案名：".$archive_name."。",
+                 'user_record_createuser' => Session::get('user_id')]
+            );
         }
         // 捕获异常
         catch(Exception $e){
@@ -193,11 +200,10 @@ class ArchiveController extends Controller
         }
         DB::commit();
         // 返回用户列表
-        return redirect("/humanResource/archive")
-                 ->with(['notify' => true,
-                         'type' => 'success',
-                         'title' => '用户档案删除成功',
-                         'message' => '用户档案删除成功']);
+        return back()->with(['notify' => true,
+                             'type' => 'success',
+                             'title' => '用户档案删除成功',
+                             'message' => '用户档案删除成功']);
     }
 
     public function archiveDownload(Request $request){

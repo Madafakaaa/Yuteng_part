@@ -60,22 +60,28 @@
       <div class="nav-wrapper">
         <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
           <li class="nav-item">
-            <a class="nav-link mb-3 active" id="schedule-tab" data-toggle="tab" href="#schedule-card" role="tab" aria-selected="true"><i class="ni ni-badge mr-2"></i>课程安排</a>
+            <a class="nav-link mb-3 active" id="schedule-tab" data-toggle="tab" href="#schedule-card" role="tab" aria-selected="true">课程安排</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mb-3" id="attended-schedule-tab" data-toggle="tab" href="#attended-schedule-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>上课记录</a>
+            <a class="nav-link mb-3" id="attended-schedule-tab" data-toggle="tab" href="#attended-schedule-card" role="tab" aria-selected="false">上课记录</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mb-3" id="student-tab" data-toggle="tab" href="#student-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>负责学生</a>
+            <a class="nav-link mb-3" id="student-tab" data-toggle="tab" href="#student-card" role="tab" aria-selected="false">负责学生</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mb-3" id="class-tab" data-toggle="tab" href="#class-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>负责班级</a>
+            <a class="nav-link mb-3" id="class-tab" data-toggle="tab" href="#class-card" role="tab" aria-selected="false">负责班级</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mb-3" id="contract-tab" data-toggle="tab" href="#contract-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>签约合同</a>
+            <a class="nav-link mb-3" id="contract-tab" data-toggle="tab" href="#contract-card" role="tab" aria-selected="false">签约合同</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mb-3" id="edit-tab" data-toggle="tab" href="#edit-card" role="tab" aria-selected="false"><i class="ni ni-archive-2 mr-2"></i>修改信息</a>
+            <a class="nav-link mb-3" id="record-tab" data-toggle="tab" href="#record-card" role="tab" aria-selected="false">员工动态</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mb-3" id="archive-tab" data-toggle="tab" href="#archive-card" role="tab" aria-selected="false">员工档案</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mb-3" id="edit-tab" data-toggle="tab" href="#edit-card" role="tab" aria-selected="false">修改信息</a>
           </li>
         </ul>
       </div>
@@ -249,6 +255,113 @@
                       <td>{{ $contract->contract_payment_method }}</td>
                       <td>{{ $contract->contract_date }}</td>
                       <td><a href="/contract?id={{encode($contract->contract_id, 'contract_id')}}" target="_blank"><button type="button" class="btn btn-primary btn-sm">查看合同</button></a></td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="record-card" role="tabpanel">
+          <div class="card">
+            <form action="/user/record" method="post" onsubmit="submitButtonDisable('submitButton1')">
+              @csrf
+              <div class="card-body p-3">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group mb-2">
+                      <textarea class="form-control" name="user_record_content" rows="2" resize="none" spellcheck="false" autocomplete='off' maxlength="255" placeholder="添加动态..." required></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-9">
+                  </div>
+                  <div class="col-3">
+                    <input type="hidden" name="user_id" value="{{$user->user_id}}">
+                    <input type="submit" id="submitButton1" class="btn btn-sm btn-warning btn-block" value="添加">
+                  </div>
+                </div>
+              </div>
+            </form>
+            <hr>
+            <div class="card-body">
+              <div class="timeline timeline-one-side" data-timeline-content="axis" data-timeline-axis-style="dashed" style="max-height:400px; overflow:auto;">
+                @foreach($user_records as $user_record)
+                  <div class="timeline-block">
+                    <span class="timeline-step badge-info">
+                      <i class="fa fa-bars"></i>
+                    </span>
+                    <div class="timeline-content">
+                      <small class="text-muted font-weight-bold">{{$user_record->user_record_createtime}} | 操作用户: {{$user_record->user_name}}</small>
+                      <h5 class="mt-3 mb-0">{{$user_record->user_record_type}}</h5>
+                      <p class="text-sm mt-1 mb-0">{{$user_record->user_record_content}}</p>
+                    </div>
+                  </div>
+                @endforeach
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="archive-card" role="tabpanel">
+          <form action="/user/archive" method="post" id="form1" name="form1" enctype="multipart/form-data" onsubmit="submitButtonDisable('submitButton2')">
+            @csrf
+            <div class="card mb-4">
+              <div class="card-body pb-0 pt-4">
+                <div class="row">
+                  <div class="col-lg-2 col-md-6 col-sm-12">
+                    <div class="form-group text-center">
+                      <label class="form-control-label">档案名称<span style="color:red">*</span></label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="form-group">
+                      <input class="form-control form-control-sm" type="text" name="archive_name" placeholder="请输入档案名称... " autocomplete='off' maxlength="30" required>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="form-group">
+                      <div class="input-group">
+                        <input id='location' class="form-control form-control-sm" disabled aria-describedby="button-addon">
+                        <div class="input-group-append">
+                          <input type="button" id="i-check" value="浏览文件" class="btn btn-outline-primary btn-sm" onClick="$('#i-file').click();" style="margin:0;" id="button-addon">
+                          <input type="file" name='file' id='i-file' onChange="$('#location').val($('#i-file').val());" style="display: none" required>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-6 col-sm-12">
+                    <input type="hidden" name="archive_user" value="{{$user->user_id}}">
+                    <input type="submit" id="submitButton2" class="btn btn-warning btn-block btn-sm" value="上传">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="card mb-4">
+            <div class="table-responsive py-4">
+              <table class="table table-flush datatable-basic">
+                <thead class="thead-light">
+                  <tr>
+                    <th style='width:50px;'>序号</th>
+                    <th style='width:320px;'>档案</th>
+                    <th style='width:120px;'>上传日期</th>
+                    <th style='width:120px;'>操作管理</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($archives as $archive)
+                    <tr>
+                      <td>{{ $loop->iteration }}</td>
+                      <td><a href="/files/archive/{{$archive->archive_path}}" target="_blank">{{ $archive->archive_name }}</a></td>
+                      <td>{{ date('Y-m-d', strtotime($archive->archive_createtime)) }}</td>
+                      <td>
+                        <a href='/humanResource/archive/download?id={{encode($archive->archive_id, 'archive_id')}}'><button type="button" class="btn btn-primary btn-sm">文件下载</button></a>
+                        <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/humanResource/archive/delete?id={{encode($archive->archive_id, 'archive_id')}}', '确认删除该档案？')">删除</button>
+                      </td>
                     </tr>
                   @endforeach
                 </tbody>

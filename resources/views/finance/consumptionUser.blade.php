@@ -154,15 +154,17 @@
                 <th style='width:40px;'>科目</th>
                 <th style='width:60px;'>班级规模</th>
                 <th style='width:60px;'>应到/实到</th>
-                <th style='width:50px;'>学生</th>
+                <th style='width:65px;'>学生</th>
                 <th style='width:50px;'>签到</th>
-                <th style='width:100px;'>扣除课时</th>
+                <th style='width:110px;'>扣除课时</th>
                 <th style='width:40px;'>数量</th>
-                <th style='width:50px;'>转化小时</th>
-                <th style='width:80px;'>日期</th>
-                <th style='width:80px;'>时间</th>
+                <th style='width:60px;' class="text-right">课时价值</th>
+                <th style='width:60px;'>转化小时</th>
+                <th style='width:85px;'>日期</th>
+                <th style='width:85px;'>时间</th>
                 <th style='width:60px;'>教师</th>
                 <th style='width:60px;'>工资小时</th>
+                <th style='width:70px;' class="text-right">合计消耗</th>
               </tr>
             </thead>
             <tbody>
@@ -201,6 +203,11 @@
                       {{ $schedule['participants'][0]['participant_amount'] }}
                     @endif
                   </td>
+                  <td class="text-right">
+                    @if($schedule['participants'][0]['participant_consumption_price']>0)
+                      {{ $schedule['participants'][0]['participant_consumption_price'] }}
+                    @endif
+                  </td>
                   <td>
                     @if($schedule['participants'][0]['participant_hour']>0)
                       {{ $schedule['participants'][0]['participant_hour'] }}
@@ -212,6 +219,11 @@
                   <td rowspan="{{ $schedule['student_num'] }}">
                     @if($schedule['schedule_attended_num']>0)
                       {{ $schedule['duration'] }}
+                    @endif
+                  </td>
+                  <td rowspan="{{ $schedule['student_num'] }}" class="text-right">
+                    @if($schedule['consumption_price']>0)
+                      {{ $schedule['consumption_price'] }}
                     @endif
                   </td>
                 </tr>
@@ -229,6 +241,11 @@
                   <td>
                     @if($schedule['participants'][$i]['participant_amount']>0)
                       {{ $schedule['participants'][$i]['participant_amount'] }}
+                    @endif
+                  </td>
+                  <td class="text-right">
+                    @if($schedule['participants'][$i]['participant_consumption_price']>0)
+                      {{ $schedule['participants'][$i]['participant_consumption_price'] }}
                     @endif
                   </td>
                   <td>
