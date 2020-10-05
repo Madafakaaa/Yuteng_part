@@ -219,7 +219,7 @@
                   <div class="col-6">
                     <div class="form-group">
                       <label class="form-control-label">名称<span style="color:red">*</span></label>
-                      <input class="form-control" type="text" name="input1" value="{{ $class->class_name }}" autocomplete='off' required maxlength="10">
+                      <input class="form-control" type="text" name="input1" value="{{ $class->class_name }}" autocomplete='off' required maxlength="20">
                     </div>
                   </div>
                 </div>

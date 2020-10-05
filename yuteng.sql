@@ -527,7 +527,7 @@ CREATE TABLE `archive`  (
   `archive_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '档案id',
   `archive_user` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '档案用户',
   `archive_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '档案名称',
-  `archive_file_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '档案文件名',
+  `archive_file_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '档案文件名',
   `archive_path` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '档案路径',
   `archive_createuser` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '档案创建用户',
   `archive_createtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '档案创建时间',

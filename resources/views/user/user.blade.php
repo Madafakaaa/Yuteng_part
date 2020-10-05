@@ -233,6 +233,7 @@
                 <thead class="thead-light">
                   <tr>
                     <th>序号</th>
+                    <th>学生</th>
                     <th>类型</th>
                     <th>合计课时</th>
                     <th>实付金额</th>
@@ -245,6 +246,7 @@
                   @foreach ($contracts as $contract)
                     <tr>
                       <td>{{ $loop->iteration }}</td>
+                      <td>{{ $contract->student_name }}</td>
                       @if($contract->contract_type==0)
                         <td><span style="color:red;">首签</span></td>
                       @else

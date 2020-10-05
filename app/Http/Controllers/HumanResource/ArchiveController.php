@@ -26,12 +26,13 @@ class ArchiveController extends Controller
         $department_access = Session::get('department_access');
 
         // 获取数据
-        $rows = DB::table('archive')
-                  ->join('user', 'archive.archive_user', '=', 'user.user_id')
+        $rows = DB::table('user')
                   ->join('department', 'user.user_department', '=', 'department.department_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
                   ->join('section', 'position.position_section', '=', 'section.section_id')
                   ->where('user_status', 1);
+
+
         // 搜索条件
         $filters = array(
                         "filter_department" => null,
@@ -41,15 +42,10 @@ class ArchiveController extends Controller
             $rows = $rows->where('department_id', '=', $request->input('filter_department'));
             $filters['filter_department']=$request->input("filter_department");
         }
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
+
         // 排序并获取数据对象
         $rows = $rows->orderBy('user_department', 'asc')
                      ->orderBy('position_level', 'asc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
                      ->get();
 
         // 获取校区、岗位、等级信息(筛选)
@@ -57,13 +53,8 @@ class ArchiveController extends Controller
 
         // 返回列表视图
         return view('humanResource/archive/archive', ['rows' => $rows,
-                                                  'currentPage' => $currentPage,
-                                                  'totalPage' => $totalPage,
-                                                  'startIndex' => $offset,
-                                                  'request' => $request,
-                                                  'totalNum' => $totalNum,
-                                                  'filters' => $filters,
-                                                  'filter_departments' => $filter_departments]);
+                                                      'filters' => $filters,
+                                                      'filter_departments' => $filter_departments]);
     }
 
     /**
@@ -230,5 +221,119 @@ class ArchiveController extends Controller
                          'title' => '档案下载失败',
                          'message' => '档案文件已删除，错误码:403']);
         }
+    }
+
+    /**
+     * 显示单个用户详细信息
+     * URL: GET /user/{id}
+     * @param  int  $user_id
+     */
+    public function archiveLesson(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $user_id = decode($request->input('id'), 'user_id');
+        // 获取用户数据信息
+        $user = DB::table('user')
+                  ->join('department', 'user.user_department', '=', 'department.department_id')
+                  ->join('position', 'user.user_position', '=', 'position.position_id')
+                  ->join('section', 'position.position_section', '=', 'section.section_id')
+                  ->where('user_id', $user_id)
+                  ->first();
+
+        // 获取所有上课记录
+        $attended_schedules = DB::table('schedule')
+                                ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
+                                ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                                ->join('position', 'user.user_position', '=', 'position.position_id')
+                                ->join('course', 'schedule.schedule_course', '=', 'course.course_id')
+                                ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
+                                ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
+                                ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                                ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                                ->where('schedule_attended', '=', 1)
+                                ->where('schedule_teacher', $user_id)
+                                ->orderBy('schedule_date', 'desc')
+                                ->orderBy('schedule_start', 'asc')
+                                ->get();
+        return view('humanResource/archive/archiveLesson', ['user' => $user, 'attended_schedules' => $attended_schedules]);
+    }
+
+    /**
+     * 显示单个用户详细信息
+     * URL: GET /user/{id}
+     * @param  int  $user_id
+     */
+    public function archiveContract(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $user_id = decode($request->input('id'), 'user_id');
+        // 获取用户数据信息
+        $user = DB::table('user')
+                  ->join('department', 'user.user_department', '=', 'department.department_id')
+                  ->join('position', 'user.user_position', '=', 'position.position_id')
+                  ->join('section', 'position.position_section', '=', 'section.section_id')
+                  ->where('user_id', $user_id)
+                  ->first();
+
+
+        // 获取签约合同
+        $contracts = DB::table('contract')
+                       ->join('department', 'contract.contract_department', '=', 'department.department_id')
+                       ->join('student', 'contract.contract_student', '=', 'student.student_id')
+                       ->where('contract_createuser', '=', $user_id)
+                       ->orderBy('contract_date', 'desc')
+                       ->get();
+        return view('humanResource/archive/archiveContract', ['user' => $user, 'contracts' => $contracts]);
+    }
+
+    public function archiveRecord(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $user_id = decode($request->input('id'), 'user_id');
+        // 获取用户数据信息
+        $user = DB::table('user')
+                  ->join('department', 'user.user_department', '=', 'department.department_id')
+                  ->join('position', 'user.user_position', '=', 'position.position_id')
+                  ->join('section', 'position.position_section', '=', 'section.section_id')
+                  ->where('user_id', $user_id)
+                  ->first();
+
+
+        // 获取签约合同
+        $user_records = DB::table('user_record')
+                          ->join('user', 'user_record.user_record_createuser', '=', 'user.user_id')
+                          ->where('user_record_user', $user_id)
+                          ->orderBy('user_record_id', 'desc')
+                          ->get();
+        return view('humanResource/archive/archiveRecord', ['user' => $user, 'user_records' => $user_records]);
+    }
+
+    public function archiveArchive(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $user_id = decode($request->input('id'), 'user_id');
+        // 获取用户数据信息
+        $user = DB::table('user')
+                  ->join('department', 'user.user_department', '=', 'department.department_id')
+                  ->join('position', 'user.user_position', '=', 'position.position_id')
+                  ->join('section', 'position.position_section', '=', 'section.section_id')
+                  ->where('user_id', $user_id)
+                  ->first();
+
+
+        // 获取签约合同
+        $archives = DB::table('archive')
+                      ->where('archive_user', $user_id)
+                      ->orderBy('archive_id', 'desc')
+                      ->get();
+        return view('humanResource/archive/archiveArchive', ['user' => $user, 'archives' => $archives]);
     }
 }

@@ -43,6 +43,8 @@ class UserController extends Controller
                        ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
                        ->where('schedule_attended', '=', 0)
                        ->where('schedule_teacher', $user_id)
+                       ->orderBy('schedule_date', 'asc')
+                       ->orderBy('schedule_start', 'asc')
                        ->get();
 
         // 获取所有上课记录
@@ -57,6 +59,8 @@ class UserController extends Controller
                                 ->leftJoin('class', 'schedule.schedule_participant', '=', 'class.class_id')
                                 ->where('schedule_attended', '=', 1)
                                 ->where('schedule_teacher', $user_id)
+                                ->orderBy('schedule_date', 'desc')
+                                ->orderBy('schedule_start', 'asc')
                                 ->get();
 
         // 获取教师所有负责学生
@@ -87,6 +91,8 @@ class UserController extends Controller
                      ->join('user', 'class.class_teacher', '=', 'user.user_id')
                      ->join('subject', 'subject.subject_id', '=', 'class.class_subject')
                      ->where('class.class_teacher', '=', $user_id)
+                     ->orderBy('class_grade', 'asc')
+                     ->orderBy('class_subject', 'asc')
                      ->get();
 
         // 获取签约合同
@@ -94,6 +100,7 @@ class UserController extends Controller
                        ->join('department', 'contract.contract_department', '=', 'department.department_id')
                        ->join('student', 'contract.contract_student', '=', 'student.student_id')
                        ->where('contract_createuser', '=', $user_id)
+                       ->orderBy('contract_date', 'desc')
                        ->get();
 
         // 获取用户统计数据
@@ -173,7 +180,7 @@ class UserController extends Controller
                                 'title' => '动态添加失败',
                                 'message' => '动态添加失败，请重新输入信息']);
         }
-        return redirect("/user?id=".encode($request->input('user_id'), 'user_id'))
+        return back()
                ->with(['notify' => true,
                        'type' => 'success',
                        'title' => '动态添加成功',

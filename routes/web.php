@@ -109,14 +109,14 @@ Route::get('/home', 'HomeController@home');
   // 用户档案
       // 查看用户档案
       Route::get('/humanResource/archive', 'HumanResource\ArchiveController@archive');
-      // 添加用户档案
-      Route::get('/humanResource/archive/create', 'HumanResource\ArchiveController@archiveCreate');
-      // 保存用户档案
-      Route::post('/humanResource/archive/store', 'HumanResource\ArchiveController@archiveStore');
-      // 下载用户档案
-      Route::get('/humanResource/archive/download', 'HumanResource\ArchiveController@archiveDownload');
-      // 删除用户档案
-      Route::get('/humanResource/archive/delete', 'HumanResource\ArchiveController@archiveDelete');
+      // 查看用户上课记录
+      Route::get('/humanResource/archive/lesson', 'HumanResource\ArchiveController@archiveLesson');
+      // 查看用户签约记录
+      Route::get('/humanResource/archive/contract', 'HumanResource\ArchiveController@archiveContract');
+      // 查看用户动态
+      Route::get('/humanResource/archive/record', 'HumanResource\ArchiveController@archiveRecord');
+      // 查看用户档案文件
+      Route::get('/humanResource/archive/archive', 'HumanResource\ArchiveController@archiveArchive');
 
 
 // 招生中心 ********************************************************************************
