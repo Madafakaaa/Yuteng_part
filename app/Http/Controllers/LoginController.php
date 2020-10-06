@@ -103,6 +103,7 @@ class LoginController extends Controller
         Session::put('user_photo', $db_user->user_photo);
         Session::put('user_department', $db_user->user_department);
         Session::put('user_department_name', $db_user->department_name);
+        Session::put('user_access_self', $db_user->user_access_self);
         Session::put('department_access', $department_access);
         Session::put('user_accesses', $user_accesses);
         Session::put('access_categories', $access_categories);

@@ -17,7 +17,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example">
       <div class="card">
-        <form action="/operation/studentSchedule/store" method="post" id="form1" name="form1">
+        <form action="/self/studentSchedule/store" method="post" id="form1" name="form1">
           @csrf
           <div class="card-header">
             <h3 class="mb-0">学生排课完成</h3>
@@ -37,41 +37,14 @@
             <hr>
             <div class="row">
               <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="/operation/student" ><button type="button" class="btn btn-outline-primary btn-block">学生管理</button></a>
+                <a href="/self/adviser/student" ><button type="button" class="btn btn-outline-primary btn-block">学生管理</button></a>
               </div>
               <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="/operation/class" ><button type="button" class="btn btn-outline-primary btn-block">班级管理</button></a>
-              </div>
-              <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="/operation/hour" ><button type="button" class="btn btn-outline-primary btn-block">学生课时</button></a>
-              </div>
-              <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="/operation/schedule" ><button type="button" class="btn btn-outline-primary btn-block">课程安排</button></a>
+                <a href="/self/schedule" ><button type="button" class="btn btn-outline-primary btn-block">课程安排</button></a>
               </div>
             </div>
           </div>
         <form>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12 card-wrapper ct-example mb-4">
-      <div class="row justify-content-center">
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">1</span>
-          </button>
-        </div>
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">2</span>
-          </button>
-        </div>
-        <div class="col-2 text-center">
-          <button type="button" class="btn btn-success btn-icon-only rounded-circle">
-            <span class="btn-inner--icon">3</span>
-          </button>
-        </div>
       </div>
     </div>
   </div>

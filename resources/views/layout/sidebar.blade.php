@@ -340,7 +340,8 @@
           </a>
         </li>
         @endif
-        <!-- <li class="nav-item">
+        <!--
+        <li class="nav-item">
           <a class="nav-link" href="#navbar-self" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-self" id="link-self">
             <i class="ni ni-circle-08 text-teal"></i>
             <span class="nav-link-text">个人中心</span>
@@ -360,7 +361,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/self/adviser/student" class="nav-link" id="selfCustomer">
+                <a href="/self/adviser/student" class="nav-link" id="selfAdviserStudent">
                   <i class="fa fa-user-graduate text-teal"></i>
                   <span class="nav-link-text">我的学生（班主任）</span>
                 </a>

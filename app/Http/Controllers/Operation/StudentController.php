@@ -38,6 +38,10 @@ class StudentController extends Controller
                   ->whereIn('student_department', $department_access)
                   ->where('student_contract_num', '>', 0)
                   ->where('student_status', 1);
+        // 数据范围权限
+        if (Session::get('user_access_self')==1) {
+            $rows = $rows->where('student_class_adviser', '=', Session::get('user_id'));
+        }
 
         // 搜索条件
         $filters = array(

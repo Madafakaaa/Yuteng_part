@@ -481,6 +481,7 @@ CREATE TABLE `user`  (
   `user_phone` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '无' COMMENT '用户手机',
   `user_wechat` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '无' COMMENT '用户微信',
   `user_photo` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '学生照片路径',
+  `user_access_self` tinyint(4) NOT NULL DEFAULT 0 COMMENT '用户数据权限范围(0：校区全部，1：个人)',
   `user_status` tinyint(4) NOT NULL DEFAULT 1 COMMENT '用户可用状态(0：删除，1：可用)',
   `user_createuser` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户创建用户',
   `user_createtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户创建时间',

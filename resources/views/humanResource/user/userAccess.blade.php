@@ -110,6 +110,33 @@
             </div>
             <hr>
             <div class="row">
+              <div class="col-2 text-right">
+                <label class="form-control-label">
+                  <span class="btn-inner--icon" data-toggle="tooltip" data-original-title="选择校区全部，用户可看到所拥有权限校区的所有数据，否则仅可以看到个人信息。<适用页面：未签约学生、学生管理、签约管理、退费管理>"><i class="fas fa-question-circle"></i></span>
+                  数据范围权限
+                </label>
+              </div>
+              <div class="col-10 px-4 mb-2">
+                <div class="form-group mb-1">
+                  <div class="row">
+                    <div class="col-4">
+                      <div class="custom-control custom-radio mb-3">
+                        <input name="user_access_self" class="custom-control-input" id="customRadio1" type="radio" value='0' @if($user->user_access_self==0) checked @endif>
+                        <label class="custom-control-label" for="customRadio1">校区全部</label>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="custom-control custom-radio mb-3">
+                        <input name="user_access_self" class="custom-control-input" id="customRadio2" type="radio" value='1' @if($user->user_access_self==1) checked @endif>
+                        <label class="custom-control-label" for="customRadio2">个人数据</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
               <div class="col-12 px-4 mb-2">
                 <div class="form-group mb-1">
                   <div class="custom-control custom-checkbox">

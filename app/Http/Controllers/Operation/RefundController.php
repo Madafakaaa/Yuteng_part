@@ -41,6 +41,10 @@ class RefundController extends Controller
                   ->leftJoin('user AS checked_user', 'refund.refund_checked_user', '=', 'checked_user.user_id')
                   ->leftJoin('position AS checked_user_position', 'checked_user.user_position', '=', 'checked_user_position.position_id')
                   ->whereIn('student_department', $department_access);
+        // 数据范围权限
+        if (Session::get('user_access_self')==1) {
+            $rows = $rows->where('refund_createuser', '=', Session::get('user_id'));
+        }
 
         // 搜索条件
         $filters = array(

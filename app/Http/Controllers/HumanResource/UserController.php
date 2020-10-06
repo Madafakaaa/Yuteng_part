@@ -220,8 +220,6 @@ class UserController extends Controller
             $department_array[$user_department->user_department_department][2]=1;
         }
 
-
-
         // 获取全部页面种类及其页面
         $accesses = array();
         $db_access_categories = DB::table('access')->select('access_category')->distinct()->get();
@@ -277,6 +275,7 @@ class UserController extends Controller
         // 获取表单输入
         $departments = $request->input('departments');
         $accesses = $request->input('accesses');
+        $user_access_self = $request->input('user_access_self');
         // 更新数据库
         DB::beginTransaction();
         try{
@@ -305,6 +304,7 @@ class UserController extends Controller
                     );
                 }
             }
+            DB::table('user')->where('user_id', $user_id)->update(['user_access_self' => $user_access_self]);
         }
         // 捕获异常
         catch(Exception $e){

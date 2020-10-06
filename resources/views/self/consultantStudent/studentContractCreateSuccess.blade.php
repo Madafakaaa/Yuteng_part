@@ -6,7 +6,7 @@
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
     <li class="breadcrumb-item active">个人中心</li>
-    <li class="breadcrumb-item"><a href="/market/student">学生管理</a></li>
+    <li class="breadcrumb-item"><a href="/self/student">学生管理</a></li>
     <li class="breadcrumb-item active">购买课时</li>
   </ol>
 </nav>
@@ -34,16 +34,13 @@
           </div>
           <hr>
           <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-              <a href="/market/customer"><button type="button" class="btn btn-outline-primary btn-block">未签约学生</button></a>
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+              <a href="/self/customer"><button type="button" class="btn btn-outline-primary btn-block">我的未签约学生</button></a>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-              <a href="/market/student"><button type="button" class="btn btn-outline-primary btn-block">学生管理</button></a>
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+              <a href="/self/contract"><button type="button" class="btn btn-outline-primary btn-block">我的签约</button></a>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-              <a href="/market/contract"><button type="button" class="btn btn-outline-primary btn-block">签约管理</button></a>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
               <a href="/contract?id={{ $contract_id }}" target="_blank"><button type="button" class="btn btn-outline-primary btn-block">查看合同</button></a>
             </div>
           </div>
@@ -56,8 +53,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-market');
-  navbarActive('navbar-market');
-  linkActive('marketStudent');
+  linkActive('link-self');
+  navbarActive('navbar-self');
+  linkActive('selfConsultantStudent');
 </script>
 @endsection

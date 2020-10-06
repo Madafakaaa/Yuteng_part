@@ -39,7 +39,10 @@ class ContractController extends Controller
                   ->join('user', 'contract.contract_createuser', '=', 'user.user_id')
                   ->join('position', 'user.user_position', '=', 'position.position_id')
                   ->whereIn('contract_department', $department_access);
-
+        // 数据范围权限
+        if (Session::get('user_access_self')==1) {
+            $rows = $rows->where('contract_createuser', '=', Session::get('user_id'));
+        }
         // 搜索条件
         $filters = array(
                         "filter_department" => null,

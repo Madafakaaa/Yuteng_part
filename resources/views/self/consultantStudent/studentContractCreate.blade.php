@@ -1,20 +1,20 @@
 @extends('main')
 
 @section('nav')
-<h2 class="text-white d-inline-block mb-0">购买课时</h2>
+<h2 class="text-white d-inline-block mb-0">签约合同</h2>
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">招生中心</li>
-    <li class="breadcrumb-item"><a href="/market/student">学生管理</a></li>
-    <li class="breadcrumb-item active">购买课时</li>
+    <li class="breadcrumb-item active">个人中心</li>
+    <li class="breadcrumb-item"><a href="/self/student">我的学生（课程顾问）</a></li>
+    <li class="breadcrumb-item active">签约合同</li>
   </ol>
 </nav>
 @endsection
 
 @section('content')
 <div class="container-fluid mt-4">
-  <form action="/market/student/contract/store" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submit_button')">
+  <form action="/self/consultant/student/contract/store" method="post" id="form1" name="form1" onsubmit="submitButtonDisable('submit_button')">
     @csrf
     <div class="row">
       <div class="col-4">
@@ -510,8 +510,8 @@ function update(){
 update();
 </script>
 <script>
-  linkActive('link-market');
-  navbarActive('navbar-market');
-  linkActive('marketStudent');
+  linkActive('link-self');
+  navbarActive('navbar-self');
+  linkActive('selfConsultantStudent');
 </script>
 @endsection

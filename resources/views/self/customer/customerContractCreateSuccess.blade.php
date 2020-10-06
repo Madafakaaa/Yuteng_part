@@ -5,8 +5,8 @@
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">招生中心</li>
-    <li class="breadcrumb-item"><a href="/market/customer">未签约学生</a></li>
+    <li class="breadcrumb-item active">个人中心</li>
+    <li class="breadcrumb-item"><a href="/self/customer">我的未签约学生</a></li>
     <li class="breadcrumb-item active">签约合同</li>
   </ol>
 </nav>
@@ -34,17 +34,14 @@
           </div>
           <hr>
           <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-              <a href="/market/customer"><button type="button" class="btn btn-outline-primary btn-block">未签约学生</button></a>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+              <a href="/self/customer"><button type="button" class="btn btn-outline-primary btn-block">我的未签约学生</button></a>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-              <a href="/market/student"><button type="button" class="btn btn-outline-primary btn-block">学生管理</button></a>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+              <a href="/self/consultant/student"><button type="button" class="btn btn-outline-primary btn-block">我的学生（课程顾问）</button></a>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-              <a href="/market/contract"><button type="button" class="btn btn-outline-primary btn-block">签约管理</button></a>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-              <a href="/contract?id={{ $contract_id }}" target="_blank"><button type="button" class="btn btn-outline-primary btn-block">查看合同</button></a>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+              <a href="/self/contract"><button type="button" class="btn btn-outline-primary btn-block">我的签约管理</button></a>
             </div>
           </div>
         </div>
@@ -56,8 +53,8 @@
 
 @section('sidebar_status')
 <script>
-  linkActive('link-market');
-  navbarActive('navbar-market');
-  linkActive('marketCustomer');
+  linkActive('link-self');
+  navbarActive('navbar-self');
+  linkActive('selfCustomer');
 </script>
 @endsection

@@ -34,16 +34,13 @@
           </div>
           <hr>
           <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-              <a href="/operation/student"><button type="button" class="btn btn-outline-primary btn-block">学生管理</button></a>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <a href="/self/adviser/student"><button type="button" class="btn btn-outline-primary btn-block">我的学生（班主任）</button></a>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-              <a href="/operation/hour"><button type="button" class="btn btn-outline-primary btn-block">学生课时</button></a>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <a href="/self/contract"><button type="button" class="btn btn-outline-primary btn-block">我的签约</button></a>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-              <a href="/operation/contract"><button type="button" class="btn btn-outline-primary btn-block">签约管理</button></a>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="col-lg-4 col-md-6 col-sm-12">
               <a href="/contract?id={{ $contract_id }}" target="_blank"><button type="button" class="btn btn-outline-primary btn-block">查看合同</button></a>
             </div>
           </div>
