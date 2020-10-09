@@ -111,6 +111,10 @@ CREATE TABLE `access` (
 	INSERT INTO `access`(access_category, access_page, access_feature, access_url) 
 	VALUES ('运营中心', '学生管理', '查看', '/operation/student');
 	INSERT INTO `access`(access_category, access_page, access_feature, access_url) 
+	VALUES ('运营中心', '学生管理', '升年级', '/operation/student/grade');
+	INSERT INTO `access`(access_category, access_page, access_feature, access_url) 
+	VALUES ('运营中心', '学生管理', '转校区', '/operation/student/department');
+	INSERT INTO `access`(access_category, access_page, access_feature, access_url) 
 	VALUES ('运营中心', '学生管理', '签约', '/operation/student/contract/create');
 	INSERT INTO `access`(access_category, access_page, access_feature, access_url) 
 	VALUES ('运营中心', '学生管理', '排课', '/operation/student/schedule/create');

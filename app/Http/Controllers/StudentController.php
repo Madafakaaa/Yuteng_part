@@ -25,11 +25,6 @@ class StudentController extends Controller
            return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         $student_id = decode($request->input('id'), 'student_id');
-        if($request->filled('selected')) {
-            $selected = $request->input('selected');
-        }else{
-            $selected = "schedule";
-        }
         // 获取学生信息
         $student = DB::table('student')
                      ->join('department', 'student.student_department', '=', 'department.department_id')
@@ -182,8 +177,7 @@ class StudentController extends Controller
                     ->orderBy('user_position', 'desc')
                     ->get();
 
-        return view('student/student', ['selected' => $selected,
-                                       'student' => $student,
+        return view('student/student', ['student' => $student,
                                        'same_grade_classes' => $same_grade_classes,
                                        'diff_grade_classes' => $diff_grade_classes,
                                        'classes' => $classes,
@@ -426,7 +420,6 @@ class StudentController extends Controller
         // 捕获异常
         catch(Exception $e){
             DB::rollBack();
-            return $e;
             return redirect("/student?id=".encode($student_id, 'student_id'))
                    ->with(['notify' => true,
                            'type' => 'danger',

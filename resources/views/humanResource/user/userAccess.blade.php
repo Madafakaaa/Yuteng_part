@@ -199,17 +199,5 @@
   linkActive('link-humanResource');
   navbarActive('navbar-humanResource');
   linkActive('humanResourceUser');
-
-  function checkAll(id){
-      $("."+id).each(function(){
-          $(this).prop('checked',true);
-      });
-  }
-
-  function uncheckAll(id){
-      $("."+id).each(function(){
-          $(this).prop('checked',false);
-      });
-  }
 </script>
 @endsection

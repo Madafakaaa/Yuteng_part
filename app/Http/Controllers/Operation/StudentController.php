@@ -890,4 +890,222 @@ class StudentController extends Controller
     public function studentContractSuccess(Request $request){
         return view('operation/student/studentContractCreateSuccess', ['student_id' => $request->input('student_id'), 'contract_id' => $request->input('contract_id')]);
     }
+
+    public function studentGrade(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/operation/student/grade", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
+        // 获取用户校区权限
+        $department_access = Session::get('department_access');
+        // 获取数据
+        $rows = DB::table('student')
+                  ->join('department', 'student.student_department', '=', 'department.department_id')
+                  ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
+                  ->whereIn('student_department', $department_access)
+                  ->where('student_contract_num', '>', 0)
+                  ->where('student_status', 1);
+
+        // 数据范围权限
+        if (Session::get('user_access_self')==1) {
+            $rows = $rows->where('student_class_adviser', '=', Session::get('user_id'));
+        }
+
+        // 搜索条件
+        $filters = array(
+                        "filter_department" => null,
+                        "filter_grade" => null,
+                    );
+
+        // 客户校区
+        if ($request->filled('filter_department')) {
+            $rows = $rows->where('student_department', '=', $request->input("filter_department"));
+            $filters['filter_department']=$request->input("filter_department");
+        }
+        // 客户年级
+        if ($request->filled('filter_grade')) {
+            $rows = $rows->where('student_grade', '=', $request->input('filter_grade'));
+            $filters['filter_grade']=$request->input("filter_grade");
+        }
+
+        // 排序并获取数据对象
+        $rows = $rows->orderBy('student_department', 'asc')
+                     ->orderBy('student_grade', 'asc')
+                     ->get();
+
+        // 转为数组并获取学生课时信息
+        $students = array();
+        foreach($rows as $row){
+            $temp = array();
+            $temp['student_id']=$row->student_id;
+            $temp['student_name']=$row->student_name;
+            $temp['student_gender']=$row->student_gender;
+            $temp['student_guardian']=$row->student_guardian;
+            $temp['department_name']=$row->department_name;
+            $temp['grade_name']=$row->grade_name;
+            $students[] = $temp;
+        }
+
+        // 获取校区、年级信息(筛选)
+        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
+        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
+        // 返回列表视图
+        return view('operation/student/studentGrade', ['students' => $students,
+                                                        'filters' => $filters,
+                                                        'filter_departments' => $filter_departments,
+                                                        'filter_grades' => $filter_grades]);
+    }
+
+    public function studentGradeStore(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 获取student_id
+        $request_ids=$request->input('student_id');
+        $student_ids = array();
+        if(is_array($request_ids)){
+            foreach ($request_ids as $request_id) {
+                $student_ids[]=decode($request_id, 'student_id');
+            }
+        }else{
+            $student_ids[]=decode($request_ids, 'student_id');
+        }
+        $upgrade_type=intval($request->input('upgrade_type'));
+        // 更新数据
+        try{
+            if($upgrade_type==1){ // 升一年级
+                foreach ($student_ids as $student_id){
+                    if(DB::table('student')->where('student_id', $student_id)->first()->student_grade<12){
+                        DB::table('student')
+                          ->where('student_id', $student_id)
+                          ->increment('student_grade');
+                    }
+                }
+            }else{  // 降一年级
+                foreach ($student_ids as $student_id){
+                    if(DB::table('student')->where('student_id', $student_id)->first()->student_grade>1){
+                        DB::table('student')
+                          ->where('student_id', $student_id)
+                          ->decrement('student_grade');
+                    }
+                }
+            }
+        }
+        // 捕获异常
+        catch(Exception $e){
+            return back()->with(['notify' => true,
+                                 'type' => 'danger',
+                                 'title' => '升降年级失败',
+                                 'message' => '升降年级失败，错误码:116']);
+        }
+        // 返回用户列表
+        return redirect("/operation/student")
+                 ->with(['notify' => true,
+                         'type' => 'success',
+                         'title' => '升降年级成功',
+                         'message' => '升降年级成功']);
+
+
+    }
+
+    public function studentDepartment(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/operation/student/department", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
+        $student_id = decode($request->input('id'), 'student_id');
+        // 获取学生信息
+        $student = DB::table('student')
+                     ->join('department', 'student.student_department', '=', 'department.department_id')
+                     ->join('grade', 'student.student_grade', '=', 'grade.grade_id')
+                     ->where('student_id', $student_id)
+                     ->first();
+        // 获取可转校区
+        $departments = DB::table('department')
+                                ->where('department_status', 1)
+                                ->where('department_id', '!=', $student->student_department)
+                                ->orderBy('department_id', 'asc')
+                                ->get();
+        return view('operation/student/studentDepartment', ['student' => $student,
+                                                            'departments' => $departments]);
+    }
+
+    public function studentUser(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $student_id = $request->input('student_id');
+        $student_department = $request->input('student_department');
+        // 获取学生信息
+        $student = DB::table('student')
+                     ->where('student_id', $student_id)
+                     ->first();
+        // 获取校区信息
+        $department = DB::table('department')
+                         ->where('department_id', $student_department)
+                         ->first();
+        // 获取负责人信息
+        $users = DB::table('user')
+                    ->join('position', 'user.user_position', '=', 'position.position_id')
+                    ->where('user_department', $student_department)
+                    ->where('user_status', 1)
+                    ->orderBy('user_position', 'desc')
+                    ->get();
+
+        return view('operation/student/studentUser', ['student' => $student,
+                                                      'department' => $department,
+                                                      'users' => $users]);
+    }
+
+    public function studentDepartmentStore(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        $student_id = $request->input('student_id');
+        $student_department = $request->input('student_department');
+        $student_consultant = $request->input('student_consultant');
+        $student_class_adviser = $request->input('student_class_adviser');
+        // 更新数据
+        try{
+            // 班级人数减少1
+            DB::table('member')
+              ->join('class', 'member.member_class', '=', 'class.class_id')
+              ->where('member_student', $student_id)
+              ->decrement('class_current_num');
+            // 退出班级
+            DB::table('member')
+              ->where('member_student', $student_id)
+              ->delete();
+            // 更新学生数据
+            DB::table('student')
+              ->where('student_id', $student_id)
+              ->update(['student_department' => $student_department,
+                        'student_consultant' => $student_consultant,
+                        'student_class_adviser' => $student_class_adviser]);
+        }
+        // 捕获异常
+        catch(Exception $e){
+            return back()->with(['notify' => true,
+                                 'type' => 'danger',
+                                 'title' => '转校区失败',
+                                 'message' => '转校区失败，错误码:116']);
+        }
+
+        return redirect("/operation/student")
+               ->with(['notify' => true,
+                       'type' => 'success',
+                       'title' => '转校区成功',
+                       'message' => '转校区成功']);
+    }
 }

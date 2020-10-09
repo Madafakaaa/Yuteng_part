@@ -166,6 +166,13 @@ Route::get('/home', 'HomeController@home');
         Route::get('/operation/student/contract/create', 'Operation\StudentController@studentContractCreate');
         Route::post('/operation/student/contract/store', 'Operation\StudentController@studentContractStore');
         Route::get('/operation/student/contract/success', 'Operation\StudentController@studentContractSuccess');
+        // 年级升降
+        Route::get('/operation/student/grade', 'Operation\StudentController@studentGrade');
+        Route::post('/operation/student/grade/store', 'Operation\StudentController@studentGradeStore');
+        // 转校区
+        Route::get('/operation/student/department', 'Operation\StudentController@studentDepartment');
+        Route::get('/operation/student/user', 'Operation\StudentController@studentUser');
+        Route::post('/operation/student/department/store', 'Operation\StudentController@studentDepartmentStore');
     // 学生课时
         // 查看学生课时
         Route::get('/operation/hour', 'Operation\HourController@hour');

@@ -96,19 +96,19 @@
                 </a>
               </li>
               @endif
-              @if(in_array("/humanResource/user/deleted", Session::get('user_accesses')))
-              <li class="nav-item">
-                <a href="/humanResource/user/deleted" class="nav-link" id="humanResourceUserDeleted">
-                  <i class="fa fa-user-slash text-grey"></i>
-                  <span class="nav-link-text">离职用户</span>
-                </a>
-              </li>
-              @endif
               @if(in_array("/humanResource/archive", Session::get('user_accesses')))
               <li class="nav-item">
                 <a href="/humanResource/archive" class="nav-link" id="humanResourceArchive">
                   <i class="fa fa-folder-open text-grey"></i>
                   <span class="nav-link-text">用户档案</span>
+                </a>
+              </li>
+              @endif
+              @if(in_array("/humanResource/user/deleted", Session::get('user_accesses')))
+              <li class="nav-item">
+                <a href="/humanResource/user/deleted" class="nav-link" id="humanResourceUserDeleted">
+                  <i class="fa fa-user-slash text-red"></i>
+                  <span class="nav-link-text">离职用户</span>
                 </a>
               </li>
               @endif
@@ -227,7 +227,7 @@
               @if(in_array("/operation/student/deleted", Session::get('user_accesses')))
               <li class="nav-item">
                 <a href="/operation/student/deleted" class="nav-link" id="operationStudentDeleted">
-                  <i class="fa fa-user-slash text-green"></i>
+                  <i class="fa fa-user-slash text-red"></i>
                   <span class="nav-link-text">离校学生</span>
                 </a>
               </li>

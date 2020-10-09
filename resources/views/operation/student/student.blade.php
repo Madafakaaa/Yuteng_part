@@ -5,7 +5,7 @@
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">招生中心</li>
+    <li class="breadcrumb-item active">运营中心</li>
     <li class="breadcrumb-item active">学生管理</li>
   </ol>
 </nav>
@@ -15,9 +15,13 @@
 <div class="container-fluid mt-3">
   <div class="row mb-3">
     <div class="col-auto">
-      <a href="?@foreach($filters as $key => $value) @if($key!='filter_class_adviser') {{$key}}={{$value}}& @endif @endforeach&filter_class_adviser={{Session::get('user_id')}}" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="添加客户">
+      <a href="?@foreach($filters as $key => $value) @if($key!='filter_class_adviser') {{$key}}={{$value}}& @endif @endforeach&filter_class_adviser={{Session::get('user_id')}}" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="我的学生">
         <span class="btn-inner--icon"><i class="fas fa-user-circle"></i></span>
         <span class="btn-inner--text">我的学生</span>
+      </a>
+      <a href="/operation/student/grade" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="年级升降">
+        <span class="btn-inner--icon"><i class="fas fa-arrows-alt-v"></i></span>
+        <span class="btn-inner--text">年级升降</span>
       </a>
       <a href="?">
         <button class="btn btn-sm btn-outline-primary btn-round btn-icon">
@@ -190,6 +194,7 @@
                 <td>
                   <a href="/operation/student/contract/create?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">签约合同</button></a>
                   <a href="/operation/student/schedule/create?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-warning btn-sm">一对一排课</button></a>
+                  <a href="/operation/student/department?id={{encode($student['student_id'], 'student_id')}}"><button type="button" class="btn btn-outline-primary btn-sm">转校区</button></a>
                   <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/operation/student/delete?id={{encode($student['student_id'], 'student_id')}}', '确认删除学生？')">删除</button>
                 </td>
               </tr>

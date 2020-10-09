@@ -334,3 +334,15 @@ function table_export(tableId, fileName) {
     });
   }
 }
+
+function checkAll(id){
+  $("."+id).each(function(){
+    $(this).prop('checked',true);
+  });
+}
+
+function uncheckAll(id){
+  $("."+id).each(function(){
+    $(this).prop('checked',false);
+  });
+}
