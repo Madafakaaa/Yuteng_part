@@ -137,6 +137,36 @@
             </div>
             <hr>
             <div class="row">
+              <div class="col-2 text-right">
+                <label class="form-control-label">主页功能</label>
+              </div>
+              <div class="col-8 px-4 mb-2">
+                <div class="form-group mb-1">
+                  <div class="custom-control custom-checkbox">
+                    <div class="row">
+                      @foreach($dashboard_accesses as $dashboard_access)
+                        <div class="col-6 pl-2 pr-2 mb-2">
+                          <input type="checkbox" class="custom-control-input dashboard" id="dashboard_{{ $loop->iteration }}" name="dashboards[]" value="{{ $dashboard_access->dashboard_access_name }}" @if(in_array($dashboard_access->dashboard_access_name, $user_dashboards)) checked @endif>
+                          <label class="custom-control-label" for="dashboard_{{ $loop->iteration }}">{{ $dashboard_access->dashboard_access_name }}</label>
+                        </div>
+                      @endforeach
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-2 px-4 mb-2">
+                <div class="row">
+                  <div class="col-12 mb-2">
+                    <button type="button" class="btn btn-primary btn-block btn-sm" style="white-space:nowrap; overflow:hidden;" onclick="checkAll('dashboard');">全选</button>
+                  </div>
+                  <div class="col-12 mb-2">
+                    <button type="button" class="btn btn-outline-primary btn-block btn-sm" style="white-space:nowrap; overflow:hidden;" onclick="uncheckAll('dashboard');">全不选</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
               <div class="col-12 px-4 mb-2">
                 <div class="form-group mb-1">
                   <div class="custom-control custom-checkbox">

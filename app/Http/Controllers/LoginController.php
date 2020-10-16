@@ -92,6 +92,16 @@ class LoginController extends Controller
         foreach($db_access_categories AS $db_access_category){
             $access_categories[] = $db_access_category->access_category;
         }
+
+
+        // 获取用户校区主页权限
+        $user_dashboards = array();
+        $db_user_dashboards = DB::table('user_dashboard')
+                                    ->where('user_dashboard_user', $request_user_id)
+                                    ->get();
+        foreach($db_user_dashboards AS $db_user_dashboard){
+            $user_dashboards[] = $db_user_dashboard->user_dashboard_dashboard;
+        }
         // 注册信息到Session中
         Session::put('login', true);
         Session::put('user_id', $db_user->user_id);
@@ -107,6 +117,7 @@ class LoginController extends Controller
         Session::put('department_access', $department_access);
         Session::put('user_accesses', $user_accesses);
         Session::put('access_categories', $access_categories);
+        Session::put('user_dashboards', $user_dashboards);
         // 返回主界面视图
         return redirect('/home')->with(['notify' => true,
                                         'type' => 'success',

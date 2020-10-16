@@ -49,6 +49,8 @@ class HourController extends Controller
                         "filter_student" => null,
                         "filter_consultant" => null,
                         "filter_class_adviser" => null,
+                        "filter_hour_min" => null,
+                        "filter_hour_max" => null,
                     );
 
         // 客户校区
@@ -71,17 +73,18 @@ class HourController extends Controller
             $rows = $rows->where('student_class_adviser', '=', $request->input('filter_class_adviser'));
             $filters['filter_class_adviser']=$request->input("filter_class_adviser");
         }
-
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
+        // 课时数范围
+        if ($request->filled('filter_hour_min')) {
+            $rows = $rows->where('hour_remain', '>=', $request->input('filter_hour_min'));
+            $filters['filter_hour_min']=$request->input("filter_hour_min");
+        }
+        if ($request->filled('filter_hour_max')) {
+            $rows = $rows->where('hour_remain', '<=', $request->input('filter_hour_max'));
+            $filters['filter_hour_max']=$request->input("filter_hour_max");
+        }
         // 排序并获取数据对象
         $rows = $rows->orderBy('student_department', 'asc')
-                     ->orderBy('student_follow_level', 'desc')
                      ->orderBy('student_grade', 'desc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
                      ->get();
 
         $datas = array();
@@ -123,12 +126,8 @@ class HourController extends Controller
                              ->get();
         // 返回列表视图
         return view('operation/hour/hour', ['datas' => $datas,
-                                            'currentPage' => $currentPage,
-                                            'totalPage' => $totalPage,
-                                            'startIndex' => $offset,
                                             'request' => $request,
                                             'filters' => $filters,
-                                            'totalNum' => $totalNum,
                                             'filter_departments' => $filter_departments,
                                             'filter_grades' => $filter_grades,
                                             'filter_students' => $filter_students,

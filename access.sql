@@ -219,3 +219,21 @@ VALUES ('详情资料', '班级详情', '查看', '/class');
 INSERT INTO `access`(access_category, access_page, access_feature, access_url) 
 VALUES ('详情资料', '用户详情', '查看', '/user');
 
+-- ----------------------------
+-- Table structure for `dashboard_access`
+-- ----------------------------
+DROP TABLE IF EXISTS `dashboard_access`;
+CREATE TABLE `dashboard_access` (
+  `dashboard_access_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主页功能模块id',
+  `dashboard_access_name` varchar(40) UNIQUE NOT NULL COMMENT '主页功能权限名',
+  PRIMARY KEY (`dashboard_access_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of dashboard_access
+-- ----------------------------
+-- 业绩排名 --
+INSERT INTO `dashboard_access`(dashboard_access_name) VALUES ('业绩排名');
+-- 课时提醒 --
+INSERT INTO `dashboard_access`(dashboard_access_name) VALUES ('课时提醒');
+

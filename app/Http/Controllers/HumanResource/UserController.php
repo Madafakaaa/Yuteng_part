@@ -251,8 +251,21 @@ class UserController extends Controller
             $user_accesses[] = $db_user_access->user_access_access;
         }
 
+        // 获取主页权限
+        $dashboard_accesses = DB::table('dashboard_access')->get();
+        // 获取用户主页权限
+        $db_user_dashboards = DB::table('user_dashboard')
+                                ->where('user_dashboard_user', $user_id)
+                                ->get();
+        $user_dashboards = array();
+        foreach($db_user_dashboards AS $db_user_dashboard){
+            $user_dashboards[] = $db_user_dashboard->user_dashboard_dashboard;
+        }
+
         return view('humanResource/user/userAccess', ['user' => $user,
                                                       'department_array' => $department_array,
+                                                      'dashboard_accesses' => $dashboard_accesses,
+                                                      'user_dashboards' => $user_dashboards,
                                                       'accesses' => $accesses,
                                                       'user_accesses' => $user_accesses]);
     }
@@ -276,6 +289,7 @@ class UserController extends Controller
         $departments = $request->input('departments');
         $accesses = $request->input('accesses');
         $user_access_self = $request->input('user_access_self');
+        $dashboards = $request->input('dashboards');
         // 更新数据库
         DB::beginTransaction();
         try{
@@ -286,6 +300,19 @@ class UserController extends Controller
             DB::table('user_access')
               ->where('user_access_user', $user_id)
               ->delete();
+            DB::table('user_dashboard')
+              ->where('user_dashboard_user', $user_id)
+              ->delete();
+
+            if($dashboards!=NULL){
+                // 添加主页权限
+                foreach($dashboards as $dashboard){
+                    DB::table('user_dashboard')->insert(
+                        ['user_dashboard_user' => $user_id,
+                         'user_dashboard_dashboard' => $dashboard]
+                    );
+                }
+            }
             if($departments!=NULL){
                 // 添加校区权限
                 foreach($departments as $department){

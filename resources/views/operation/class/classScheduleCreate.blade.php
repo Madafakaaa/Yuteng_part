@@ -236,9 +236,27 @@
                 <div class="form-group">
                   <select class="form-control form-control-sm" name="input_course" data-toggle="select" required>
                     <option value=''>请选择课程...</option>
-                    @foreach ($courses as $course)
-                      <option value="{{ $course->course_id }}">{{ $course->course_name }}</option>
-                    @endforeach
+                      @if(count($same_grade_courses)>0)
+                        <optgroup label="{{$class->grade_name}}课程">
+                          @foreach ($same_grade_courses as $course)
+                            <option value="{{ $course->course_id }}">{{ $course->course_name }}</option>
+                          @endforeach
+                        </optgroup>
+                      @endif
+                      @if(count($all_grade_courses)>0)
+                        <optgroup label="全年级课程">
+                          @foreach ($all_grade_courses as $course)
+                            <option value="{{ $course->course_id }}">{{ $course->course_name }}</option>
+                          @endforeach
+                        </optgroup>
+                      @endif
+                      @if(count($other_grade_courses)>0)
+                        <optgroup label="其他年级课程">
+                          @foreach ($other_grade_courses as $course)
+                            <option value="{{ $course->course_id }}">{{ $course->course_name }} [ {{ $course->grade_name }} ]</option>
+                          @endforeach
+                        </optgroup>
+                      @endif
                   </select>
                 </div>
               </div>

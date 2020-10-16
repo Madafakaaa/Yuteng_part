@@ -74,15 +74,20 @@
                   @endforeach
                 </select>
               </div>
+              <div class="col-3">
+                <input type="number" class="form-control form-control-sm" @if($request->filled('filter_hour_min')) value="{{$request->input('filter_hour_min')}}" @endif name="filter_hour_min" placeholder="课时数大于等于..." min="0"  onChange="form_submit('filterForm')">
+              </div>
+              <div class="col-3">
+                <input type="number" class="form-control form-control-sm" @if($request->filled('filter_hour_max')) value="{{$request->input('filter_hour_max')}}" @endif name="filter_hour_max" placeholder="课时数小于等于..." min="0"  onChange="form_submit('filterForm')">
+              </div>
             </div>
           </form>
         </div>
-        <div class="table-responsive freeze-table-5">
-          <table class="table align-items-center table-hover table-bordered text-left">
+        <hr>
+        <div class="table-responsive pb-4">
+          <table class="table table-flush datatable-basic">
             <thead class="thead-light">
               <tr>
-                <th style='width:40px;'></th>
-                <th style='width:60px;'>序号</th>
                 <th style='width:120px;'>学生</th>
                 <th style='width:90px;'>校区</th>
                 <th style='width:60px;'>年级</th>
@@ -94,18 +99,8 @@
               </tr>
             </thead>
             <tbody>
-              @if(count($datas)==0)
-                <tr class="text-center"><td colspan="10">当前没有记录</td></tr>
-              @endif
               @foreach ($datas as $data)
               <tr>
-                <td>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($data['student_id'], 'student_id')}}'>
-                    <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
-                  </div>
-                </td>
-                <td>{{ $startIndex+$loop->iteration }}</td>
                 <td>
                   <a href="/student?id={{encode($data['student_id'], 'student_id')}}">{{ $data['student_name'] }}</a>&nbsp;
                   @if($data['student_gender']=="男")
@@ -138,7 +133,6 @@
           </table>
         </div>
       </div>
-      {{ pageLink($currentPage, $totalPage, $request, $totalNum) }}
     </div>
   </div>
 </div>

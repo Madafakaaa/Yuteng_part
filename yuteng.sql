@@ -69,7 +69,7 @@ CREATE TABLE `contract`  (
   `contract_total_hour` decimal(10, 1) UNSIGNED NOT NULL COMMENT '合计课时总数',
   `contract_original_price` decimal(10, 2) NOT NULL COMMENT '购课合同原金额',
   `contract_discount_price` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '共计优惠',
-  `contract_total_price` decimal(10, 2) NOT NULL COMMENT '购课合同实付金额',
+  `contract_total_price` decimal(10, 2) NOT NULL COMMENT '购课合同应付金额',
   `contract_date` date NOT NULL COMMENT '购课合同日期',
   `contract_payment_method` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '购课付款方式',
   `contract_remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '购课合同备注',
@@ -571,4 +571,25 @@ CREATE TABLE `user_record`  (
   `user_record_createtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`user_record_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for `user_dashboard`
+-- ----------------------------
+DROP TABLE IF EXISTS `user_dashboard`;
+CREATE TABLE `user_dashboard` (
+  `user_dashboard_user` char(8) NOT NULL COMMENT '用户id',
+  `user_dashboard_dashboard` varchar(40) NOT NULL COMMENT '用户主页功能权限名',
+  PRIMARY KEY (`user_dashboard_user`,`user_dashboard_dashboard`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for `dashboard_access`
+-- ----------------------------
+DROP TABLE IF EXISTS `dashboard_access`;
+CREATE TABLE `dashboard_access` (
+  `dashboard_access_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主页功能模块id',
+  `dashboard_access_name` varchar(40) UNIQUE NOT NULL COMMENT '主页功能权限名',
+  PRIMARY KEY (`dashboard_access_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 

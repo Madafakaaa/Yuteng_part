@@ -389,13 +389,30 @@ class ClassController extends Controller
         // 获取科目
         $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
         // 获取课程
-        $courses = DB::table('course')->where('course_grade', $class->class_grade)->where('course_status', 1)->orderBy('course_id', 'asc')->get();
+        $same_grade_courses = DB::table('course')
+                                ->where('course_grade', $class->class_grade)
+                                ->where('course_status', 1)
+                                ->orderBy('course_id', 'asc')
+                                ->get();
+        $all_grade_courses = DB::table('course')
+                                ->where('course_grade', 0)
+                                ->where('course_status', 1)
+                                ->orderBy('course_id', 'asc')
+                                ->get();
+        $other_grade_courses = DB::table('course')
+                                 ->join('grade', 'course.course_grade', '=', 'grade.grade_id')
+                                 ->whereNotIn('course_grade', [0, $class->class_grade])
+                                 ->where('course_status', 1)
+                                 ->orderBy('course_grade', 'asc')
+                                 ->get();
         // 获取年级、科目、用户信息
         return view('operation/class/classScheduleCreate', ['class' => $class,
                                                             'teachers' => $teachers,
                                                             'classrooms' => $classrooms,
                                                             'subjects' => $subjects,
-                                                            'courses' => $courses]);
+                                                            'same_grade_courses' => $same_grade_courses,
+                                                            'all_grade_courses' => $all_grade_courses,
+                                                            'other_grade_courses' => $other_grade_courses]);
     }
 
     /**

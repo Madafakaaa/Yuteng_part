@@ -1077,6 +1077,7 @@ class StudentController extends Controller
         $student_consultant = $request->input('student_consultant');
         $student_class_adviser = $request->input('student_class_adviser');
         // 更新数据
+        DB::beginTransaction();
         try{
             // 班级人数减少1
             DB::table('member')
@@ -1096,12 +1097,14 @@ class StudentController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
+            DB::rollBack();
+            return $e;
             return back()->with(['notify' => true,
                                  'type' => 'danger',
                                  'title' => '转校区失败',
                                  'message' => '转校区失败，错误码:116']);
         }
-
+        DB::commit();
         return redirect("/operation/student")
                ->with(['notify' => true,
                        'type' => 'success',

@@ -264,7 +264,7 @@
                   <select class="form-control form-control-sm" name="input_course" data-toggle="select" required>
                     <option value=''>请选择课程...</option>
                     @foreach ($courses as $course)
-                      <option value="{{ $course->course_id }}">{{ $course->course_name }} (剩余：{{ $course->hour_remain }}课时)</option>
+                      <option value="{{ $course->course_id }}">{{ $course->course_name }} [ 剩余：{{ $course->hour_remain }}课时 ]</option>
                     @endforeach
                   </select>
                 </div>

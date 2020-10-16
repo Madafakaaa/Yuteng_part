@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Operarion;
+namespace App\Http\Controllers\Operation;
 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
