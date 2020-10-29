@@ -29,15 +29,50 @@ class CandidateController extends Controller
         if(!in_array("/humanResource/candidate", Session::get('user_accesses'))){
            return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
+        // 搜索条件
+        $filters = array("filter_date" => null);
         // 获取数据
-        $candidates = DB::table('candidate')
-                       ->join('user', 'candidate.candidate_interviewer', '=', 'user.user_id')
-                       ->join('position', 'user.user_position', '=', 'position.position_id')
-                       ->join('archive', 'candidate.candidate_resume', '=', 'archive.archive_id')
-                       ->where('candidate_status', 1)
-                       ->get();
+        $db_candidates = DB::table('candidate')
+                           ->join('user', 'candidate.candidate_interviewer', '=', 'user.user_id')
+                           ->join('position', 'user.user_position', '=', 'position.position_id')
+                           ->join('archive', 'candidate.candidate_resume', '=', 'archive.archive_id');
+
+        // 数据范围权限
+        if (Session::get('user_access_self')==1) {
+            $db_candidates = $db_candidates->where('candidate_createuser', '=', Session::get('user_id'));
+        }
+        // 上课日期
+        if ($request->filled('filter_date')) {
+            $db_candidates = $db_candidates->where('candidate_createtime', 'like', $request->input('filter_date')."%");
+            $filters['filter_date']=$request->input("filter_date");
+        }
+        $db_candidates = $db_candidates->where('candidate_status', 1)->get();
+        // 转为数组
+        $candidates = array();
+        foreach($db_candidates as $db_candidate){
+            $temp = array();
+            $temp['candidate_id'] = $db_candidate->candidate_id;
+            $temp['candidate_name'] = $db_candidate->candidate_name;
+            $temp['candidate_gender'] = $db_candidate->candidate_gender;
+            $temp['candidate_position'] = $db_candidate->candidate_position;
+            $temp['candidate_phone'] = $db_candidate->candidate_phone;
+            $temp['candidate_wechat'] = $db_candidate->candidate_wechat;
+            $temp['user_id'] = $db_candidate->user_id;
+            $temp['user_name'] = $db_candidate->user_name;
+            $temp['position_name'] = $db_candidate->position_name;
+            $temp['archive_path'] = $db_candidate->archive_path;
+            $temp['candidate_create_time'] = date('Y-m-d', strtotime($db_candidate->candidate_createtime));
+            $temp_create_user = DB::table('user')
+                                  ->join('position', 'user.user_position', '=', 'position.position_id')
+                                  ->where('user_id', $db_candidate->candidate_createuser)
+                                  ->first();
+            $temp['create_user_id'] = $temp_create_user->user_id;
+            $temp['create_user_name'] = $temp_create_user->user_name;
+            $temp['create_user_position_name'] = $temp_create_user->position_name;
+            $candidates[] = $temp;
+        }
         // 返回列表视图
-        return view('humanResource/candidate/candidate', ['candidates' => $candidates]);
+        return view('humanResource/candidate/candidate', ['filters' => $filters, 'candidates' => $candidates]);
     }
 
     /**
