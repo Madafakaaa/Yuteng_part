@@ -5,7 +5,6 @@
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
-    <li class="breadcrumb-item active">教学中心</li>
     <li class="breadcrumb-item active">教案中心</li>
   </ol>
 </nav>
@@ -17,24 +16,26 @@
     <div class="col-6">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-dark bg-primary">
-          <li class="breadcrumb-item active" aria-current="page">全部</li>
+          <li class="breadcrumb-item"><a href="/education/document">全部</a></li>
+          <li class="breadcrumb-item" aria-current="page"><a href="/education/document/subject?subject_id={{$subject->subject_id}}">{{$subject->subject_name}}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{$grade->grade_name}}</li>
         </ol>
       </nav>
     </div>
     <div class="col-6 text-right">
-      <a href="/education/document/create"><button type="button" class="btn btn-primary btn-sm">添加教案</button></a>
+      <a href="/education/document/create?subject_id={{$subject->subject_id}}&grade_id={{$grade->grade_id}}"><button type="button" class="btn btn-primary btn-sm">添加教案</button></a>
     </div>
   </div>
   <div class="row">
-    @foreach($subjects as $subject)
+    @foreach($semesters as $semester)
       <div class="col-lg-2 col-md-3 col-sm-4">
-        <a href="/education/document/subject?subject_id={{$subject->subject_id}}">
+        <a href="/education/document/subject/grade/semester?subject_id={{$subject->subject_id}}&grade_id={{$grade->grade_id}}&semester={{$semester}}">
           <div class="card">
             <div class="card-body">
               <img src="/assets/img/icons/folder.png" class="img-center img-fluid" style="width: 120px;">
               <div class="pt-4 text-center">
                 <h5 class="h3 title">
-                  <span class="d-block mb-1">{{$subject->subject_name}}</span>
+                  <span class="d-block mb-1">{{$semester}}</span>
                 </h5>
               </div>
             </div>

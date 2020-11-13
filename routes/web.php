@@ -247,8 +247,14 @@ Route::get('/home', 'HomeController@home');
         // 周表
         Route::get('/education/calendar/day', 'Education\CalendarController@calendarDay');
     // 教案中心
-        // 查看教案中心
+        // 教案中心-选科目
         Route::get('/education/document', 'Education\DocumentController@document');
+        // 教案中心-选年级
+        Route::get('/education/document/subject', 'Education\DocumentController@documentSubject');
+        // 教案中心-选学期
+        Route::get('/education/document/subject/grade', 'Education\DocumentController@documentSubjectGrade');
+        // 教案中心-选教案
+        Route::get('/education/document/subject/grade/semester', 'Education\DocumentController@documentSubjectGradeSemester');
         // 上传教案
         Route::get('/education/document/create', 'Education\DocumentController@documentCreate');
         Route::post('/education/document/store', 'Education\DocumentController@documentStore');

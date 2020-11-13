@@ -10,15 +10,6 @@ use Exception;
 class DocumentController extends Controller
 {
 
-    /**
-     * 教案中心视图
-     * URL: GET /education/document
-     * @param  Request  $request
-     * @param  $request->input('page'): 页数
-     * @param  $request->input('filter1'): 用户姓名
-     * @param  $request->input('filter2'): 用户校区
-     * @param  $request->input('filter3'): 档案名称
-     */
     public function document(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
@@ -28,93 +19,111 @@ class DocumentController extends Controller
         if(!in_array("/education/document", Session::get('user_accesses'))){
            return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
+        // 获取科目信息
+        $subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
+        // 返回列表视图
+        return view('education/document/document', ['subjects' => $subjects]);
+    }
 
-        // 获取用户校区权限
-        $department_access = Session::get('department_access');
-
-        // 获取数据document
-        $rows = DB::table('document')
-                  ->join('department', 'document.document_department', '=', 'department.department_id')
-                  ->join('subject', 'document.document_subject', '=', 'subject.subject_id')
-                  ->join('grade', 'document.document_grade', '=', 'grade.grade_id')
-                  ->join('user', 'document.document_createuser', '=', 'user.user_id')
-                  ->join('position', 'user.user_position', '=', 'position.position_id');
-
-        // 搜索条件
-        $filters = array(
-                        "filter_department" => null,
-                        "filter_grade" => null,
-                        "filter_name" => null,
-                        "filter_subject" => null,
-                        "filter_semester" => null,
-                    );
-
-        // 教案校区
-        if ($request->filled('filter_department')) {
-            $rows = $rows->where('document_department', '=', $request->input("filter_department"));
-            $filters['filter_department']=$request->input("filter_department");
+    public function documentSubject(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
         }
-        // 教案年级
-        if ($request->filled('filter_grade')) {
-            $rows = $rows->where('document_grade', '=', $request->input('filter_grade'));
-            $filters['filter_grade']=$request->input("filter_grade");
+        // 检测用户权限
+        if(!in_array("/education/document", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
         // 教案科目
-        if ($request->filled('filter_subject')) {
-            $rows = $rows->where('document_subject', '=', $request->input('filter_subject'));
-            $filters['filter_subject']=$request->input("filter_subject");
+        if ($request->filled('subject_id')) {
+            $subject_id = $request->input("subject_id");
+        }else{
+            return redirect("/education/document");
+        }
+        $subject = DB::table('subject')->where('subject_id', $subject_id)->first();
+        // 获取年级信息
+        $grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
+        // 返回列表视图
+        return view('education/document/documentSubject', ['subject' => $subject, 'grades' => $grades]);
+    }
+
+    public function documentSubjectGrade(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/education/document", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
+        // 教案科目
+        if ($request->filled('subject_id')) {
+            $subject_id = $request->input("subject_id");
+        }else{
+            return redirect("/education/document");
+        }
+        // 教案年级
+        if ($request->filled('grade_id')) {
+            $grade_id = $request->input("grade_id");
+        }else{
+            return redirect("/education/document");
+        }
+        $subject = DB::table('subject')->where('subject_id', $subject_id)->first();
+        $grade = DB::table('grade')->where('grade_id', $grade_id)->first();
+        // 学期
+        $semesters = array("第一学期", "第二学期", "寒假班", "暑假班", "资料库");
+        // 返回列表视图
+        return view('education/document/documentSubjectGrade', ['subject' => $subject, 'grade' => $grade, 'semesters' => $semesters]);
+    }
+
+
+    public function documentSubjectGradeSemester(Request $request){
+        // 检查登录状态
+        if(!Session::has('login')){
+            return loginExpired(); // 未登录，返回登陆视图
+        }
+        // 检测用户权限
+        if(!in_array("/education/document", Session::get('user_accesses'))){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+        }
+        // 教案科目
+        if ($request->filled('subject_id')) {
+            $subject_id = $request->input("subject_id");
+        }else{
+            return redirect("/education/document");
+        }
+        // 教案年级
+        if ($request->filled('grade_id')) {
+            $grade_id = $request->input("grade_id");
+        }else{
+            return redirect("/education/document");
         }
         // 教案学期
-        if ($request->filled('filter_semester')) {
-            $rows = $rows->where('document_semester', '=', $request->input('filter_semester'));
-            $filters['filter_semester']=$request->input("filter_semester");
+        if ($request->filled('semester')) {
+            $semester = $request->input("semester");
+        }else{
+            return redirect("/education/document");
         }
-        // 判断是否有搜索条件
-        $filter_status = 0;
-        // 教案名称
-        if ($request->filled('filter_name')) {
-            $rows = $rows->where('document_name', 'like', '%'.$request->input('filter_name').'%');
-            $filters['filter_name']=$request->input("filter_name");
-            $filter_status = 1;
-        }
-
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
-
-        // 排序并获取数据对象
-        $rows = $rows->orderBy('document_grade', 'asc')
-                     ->orderBy('document_subject', 'asc')
-                     ->orderBy('document_department', 'asc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
-                     ->get();
-
-        // 获取校区信息(筛选)
-        $filter_departments = DB::table('department')->where('department_status', 1)->whereIn('department_id', $department_access)->orderBy('department_id', 'asc')->get();
-        $filter_grades = DB::table('grade')->where('grade_status', 1)->orderBy('grade_id', 'asc')->get();
-        $filter_subjects = DB::table('subject')->where('subject_status', 1)->orderBy('subject_id', 'asc')->get();
-
+        $subject = DB::table('subject')->where('subject_id', $subject_id)->first();
+        $grade = DB::table('grade')->where('grade_id', $grade_id)->first();
+        // 获取documents
+        $documents = DB::table('document')
+                       ->join('subject', 'document.document_subject', '=', 'subject.subject_id')
+                       ->join('grade', 'document.document_grade', '=', 'grade.grade_id')
+                       ->where('document_subject', '=', $subject_id)
+                       ->where('document_grade', '=', $grade_id)
+                       ->where('document_semester', '=', $semester)
+                       ->get();
         // 返回列表视图
-        return view('education/document/document', ['rows' => $rows,
-                                                    'currentPage' => $currentPage,
-                                                    'totalPage' => $totalPage,
-                                                    'startIndex' => $offset,
-                                                    'request' => $request,
-                                                    'filters' => $filters,
-                                                    'totalNum' => $totalNum,
-                                                    'filter_status' => $filter_status,
-                                                    'filter_departments' => $filter_departments,
-                                                    'filter_subjects' => $filter_subjects,
-                                                    'filter_grades' => $filter_grades]);
+        return view('education/document/documentSubjectGradeSemester', ['subject' => $subject, 'grade' => $grade, 'semester' => $semester, 'documents' => $documents]);
     }
+
 
     /**
      * 教案上传视图
      * URL: GET /education/document/create
      */
-    public function documentCreate(){
+    public function documentCreate(Request $request){
         // 检查登录状态
         if(!Session::has('login')){
             return loginExpired(); // 未登录，返回登陆视图
@@ -123,10 +132,29 @@ class DocumentController extends Controller
         if(!in_array("/education/document/create", Session::get('user_accesses'))){
            return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
         }
+        $subject_id = 0;
+        $grade_id = 0;
+        $semester = "";
+        // 教案科目
+        if ($request->filled('subject_id')) {
+            $subject_id = $request->input("subject_id");
+        }
+        // 教案年级
+        if ($request->filled('grade_id')) {
+            $grade_id = $request->input("grade_id");
+        }
+        // 教案学期
+        if ($request->filled('semester')) {
+            $semester = $request->input("semester");
+        }
         // 获取年级、科目信息
         $grades = DB::table('grade')->orderBy('grade_id', 'asc')->get();
         $subjects = DB::table('subject')->orderBy('subject_id', 'asc')->get();
-        return view('education/document/documentCreate', ['grades' => $grades, 'subjects' => $subjects]);
+        return view('education/document/documentCreate', ['subject_id' => $subject_id,
+                                                          'grade_id' => $grade_id,
+                                                          'semester' => $semester,
+                                                          'grades' => $grades,
+                                                          'subjects' => $subjects]);
     }
 
     /**
@@ -163,10 +191,10 @@ class DocumentController extends Controller
         // 生成随机文件名
         $document_path = "D".date('ymdHis').rand(1000000000,9999999999).".".$document_ext;
         // 获取表单输入
-        $document_name = $request->input('input1');
-        $document_subject = $request->input('input2');
-        $document_grade = $request->input('input3');
-        $document_semester = $request->input('input4');
+        $document_name = $file->getClientOriginalName();
+        $document_subject = $request->input('document_subject');
+        $document_grade = $request->input('document_grade');
+        $document_semester = $request->input('document_semester');
         // 插入数据库
         try{
             DB::table('document')->insert(

@@ -20,6 +20,9 @@
   <link rel="stylesheet" href="{{ asset(_ASSETS_.'/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset(_ASSETS_.'/vendor/select2/dist/css/select2.min.css') }}">
   <link rel="stylesheet" href="{{ asset(_ASSETS_.'/vendor/sweetalert2/dist/sweetalert2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset(_ASSETS_.'/dropzone/dist/min/basic.min.css') }}">
+  <link rel="stylesheet" href="{{ asset(_ASSETS_.'/dropzone/dist/min/dropzone.min.css') }}">
+  <link rel="stylesheet" href="{{ asset(_ASSETS_.'/dropzone/dist/min/dropzone-amd-module.min.js') }}">
 
   <link rel="stylesheet" type="text/css" href="{{ asset(_ASSETS_.'/vendor/toastuicalendar/tui-calendar.css') }}" />
   <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />

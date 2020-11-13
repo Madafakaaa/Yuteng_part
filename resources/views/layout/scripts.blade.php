@@ -22,6 +22,7 @@
 <script src="{{ asset(_ASSETS_.'/vendor/sweetalert2/dist/sweetalert2.min.js') }}"></script>
 <script src="{{ asset(_ASSETS_.'/vendor/freeze-table/freeze-table.min.js') }}"></script>
 <script src="{{ asset(_ASSETS_.'/vendor/jquery-table2excel-master/dist/jquery.table2excel.min.js') }}"></script>
+<script src="{{ asset(_ASSETS_.'/vendor/dropzone/dist/min/dropzone.min.js') }}"></script>
 
 <script src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.js"></script>
 <script src="https://uicdn.toast.com/tui.dom/v3.0.0/tui-dom.js"></script>
