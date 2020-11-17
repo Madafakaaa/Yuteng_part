@@ -543,26 +543,49 @@ class ClassController extends Controller
                 $teacher_schedules[] = array($teacher->user_name, $teacher_schedule_temp->class_name, $teacher_schedule_temp->schedule_date, $teacher_schedule_temp->schedule_start, $teacher_schedule_temp->schedule_end, $teacher_schedule_temp->schedule_attended);
             }
             // 查询学生冲突课程
-            foreach($members as $member){
-                $student_schedules_temp = DB::table('schedule')
-                                            ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
-                                            ->join('member', 'member.member_class', '=', 'schedule.schedule_participant')
-                                            ->where('member_student', $member->student_id)
-                                            ->where('schedule_date', $schedule_date)
-                                            ->where('schedule_start', '>=', $schedule_start)
-                                            ->where('schedule_start', '<', $schedule_end);
-                $student_schedules_temp = DB::table('schedule')
-                                            ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
-                                            ->join('member', 'member.member_class', '=', 'schedule.schedule_participant')
-                                            ->where('member_student', $member->student_id)
-                                            ->where('schedule_date', $schedule_date)
-                                            ->where('schedule_end', '>', $schedule_start)
-                                            ->where('schedule_end', '<=', $schedule_end)
-                                            ->union($student_schedules_temp)
-                                            ->get();
-                foreach($student_schedules_temp as $student_schedule_temp){
-                    $student_schedules[] = array($member->student_name, $student_schedule_temp->class_name, $student_schedule_temp->schedule_date, $student_schedule_temp->schedule_start, $student_schedule_temp->schedule_end, $student_schedule_temp->schedule_attended);
-                }
+            // 未上课课程
+            $student_schedules_temp = DB::table('schedule')
+                                        ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                                        ->join('member', 'member.member_class', '=', 'schedule.schedule_participant')
+                                        ->where('member_student', $student->student_id)
+                                        ->where('schedule_date', $schedule_date)
+                                        ->where('schedule_start', '>=', $schedule_start)
+                                        ->where('schedule_start', '<', $schedule_end)
+                                        ->where('schedule_attended', 0);
+            $student_schedules_temp = DB::table('schedule')
+                                        ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                                        ->join('member', 'member.member_class', '=', 'schedule.schedule_participant')
+                                        ->where('member_student', $student->student_id)
+                                        ->where('schedule_date', $schedule_date)
+                                        ->where('schedule_end', '>', $schedule_start)
+                                        ->where('schedule_end', '<=', $schedule_end)
+                                        ->where('schedule_attended', 0)
+                                        ->union($student_schedules_temp)
+                                        ->get();
+            foreach($student_schedules_temp as $student_schedule_temp){
+                $student_schedules[] = array($student->student_name, $student_schedule_temp->class_name, $student_schedule_temp->schedule_date, $student_schedule_temp->schedule_start, $student_schedule_temp->schedule_end, $student_schedule_temp->schedule_attended);
+            }
+            // 已上课课程
+            $attended_schedules_temp = DB::table('schedule')
+                                        ->join('participant', 'schedule.schedule_id', '=', 'participant.participant_schedule')
+                                        ->where('participant_student', $student->student_id)
+                                        ->where('schedule_date', $schedule_date)
+                                        ->where('schedule_start', '>=', $schedule_start)
+                                        ->where('schedule_start', '<', $schedule_end)
+                                        ->where('schedule_attended', 1)
+                                        ->where('participant_attend_status', 1);
+            $attended_schedules_temp = DB::table('schedule')
+                                        ->join('participant', 'schedule.schedule_id', '=', 'participant.participant_schedule')
+                                        ->where('participant_student', $student->student_id)
+                                        ->where('schedule_date', $schedule_date)
+                                        ->where('schedule_start', '>=', $schedule_start)
+                                        ->where('schedule_start', '<', $schedule_end)
+                                        ->where('schedule_attended', 1)
+                                        ->where('participant_attend_status', 1)
+                                        ->union($attended_schedules_temp)
+                                        ->get();
+            foreach($attended_schedules_temp as $attended_schedule_temp){
+                $student_schedules[] = array($student->student_name, $attended_schedule_temp->class_name, $attended_schedule_temp->schedule_date, $attended_schedule_temp->schedule_start, $attended_schedule_temp->schedule_end, $attended_schedule_temp->schedule_attended);
             }
         }
 

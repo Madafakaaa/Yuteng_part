@@ -94,6 +94,7 @@ class ConsumptionController extends Controller
              $temp['participants'] = array();
              $db_participants = DB::table('participant')
                                   ->join('student', 'participant.participant_student', '=', 'student.student_id')
+                                  ->leftJoin('user', 'user.user_id', '=', 'student.student_class_adviser')
                                   ->leftJoin('course', 'participant.participant_course', '=', 'course.course_id')
                                   ->leftJoin('hour', [
                                                        ['hour_student', 'student_id'],
@@ -106,6 +107,7 @@ class ConsumptionController extends Controller
                  $temp_participant = array();
                  $temp_participant['student_name'] = $db_participant->student_name;
                  $temp_participant['student_id'] = $db_participant->student_id;
+                 $temp_participant['user_name'] = $db_participant->user_name;
                  $temp_participant['course_name'] = $db_participant->course_name;
                  $temp_participant['course_type'] = $db_participant->course_type;
                  $temp_participant['participant_attend_status'] = $db_participant->participant_attend_status;
@@ -217,6 +219,7 @@ class ConsumptionController extends Controller
              $temp['participants'] = array();
              $db_participants = DB::table('participant')
                                   ->join('student', 'participant.participant_student', '=', 'student.student_id')
+                                  ->leftJoin('user', 'user.user_id', '=', 'student.student_class_adviser')
                                   ->leftJoin('course', 'participant.participant_course', '=', 'course.course_id')
                                   ->leftJoin('hour', [
                                                        ['hour_student', 'student_id'],
@@ -229,6 +232,7 @@ class ConsumptionController extends Controller
                  $temp_participant = array();
                  $temp_participant['student_name'] = $db_participant->student_name;
                  $temp_participant['student_id'] = $db_participant->student_id;
+                 $temp_participant['user_name'] = $db_participant->user_name;
                  $temp_participant['course_name'] = $db_participant->course_name;
                  $temp_participant['course_type'] = $db_participant->course_type;
                  $temp_participant['participant_attend_status'] = $db_participant->participant_attend_status;

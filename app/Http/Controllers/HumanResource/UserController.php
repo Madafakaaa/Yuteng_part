@@ -51,16 +51,10 @@ class UserController extends Controller
             $filters['filter_department']=$request->input("filter_department");
         }
 
-        // 保存数据总数
-        $totalNum = $rows->count();
-        // 计算分页信息
-        list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 20);
 
         // 排序并获取数据对象
         $rows = $rows->orderBy('user_department', 'asc')
                      ->orderBy('position_level', 'asc')
-                     ->offset($offset)
-                     ->limit($rowPerPage)
                      ->get();
 
         // 获取校区、岗位、等级信息(筛选)
@@ -68,13 +62,9 @@ class UserController extends Controller
 
         // 返回列表视图
         return view('humanResource/user/user', ['rows' => $rows,
-                                      'currentPage' => $currentPage,
-                                      'totalPage' => $totalPage,
-                                      'startIndex' => $offset,
-                                      'request' => $request,
-                                      'totalNum' => $totalNum,
-                                      'filters' => $filters,
-                                      'filter_departments' => $filter_departments]);
+                                                'request' => $request,
+                                                'filters' => $filters,
+                                                'filter_departments' => $filter_departments]);
     }
 
     /**

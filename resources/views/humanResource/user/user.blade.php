@@ -19,10 +19,10 @@
         <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
         <span class="btn-inner--text">添加用户</span>
       </a>
-      <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/humanResource/user/delete', '确认批量离职所选用户？')">
+      <!-- <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/humanResource/user/delete', '确认批量离职所选用户？')">
         <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
         <span class="btn-inner--text">批量离职</span>
-      </button>
+      </button> -->
     </div>
   </div>
   <div class="row justify-content-center">
@@ -41,19 +41,19 @@
             </div>
           </div>
         </div>
-        <div class="table-responsive freeze-table-4">
-          <table class="table align-items-center table-hover table-bordered text-left">
+        <hr>
+        <div class="table-responsive py-4">
+          <table class="table table-flush datatable-basic">
             <thead class="thead-light">
               <tr>
-                <th style='width:40px;'></th>
-                <th style='width:70px;'>序号</th>
+                <!-- <th style='width:40px;'></th> -->
                 <th style='width:90px;'>姓名</th>
                 <th style='width:100px;'>账号</th>
                 <th style='width:100px;'>校区</th>
                 <th style='width:90px;'>部门</th>
                 <th style='width:90px;'>岗位</th>
                 <th style='width:70px;'>等级</th>
-                <th style='width:90px;'>跨校区教学</th>
+                <th style='width:60px;'>跨校区教学</th>
                 <th style='width:120px;'>手机</th>
                 <th style='width:200px;'>操作管理</th>
               </tr>
@@ -64,13 +64,14 @@
               @endif
               @foreach ($rows as $row)
               <tr>
+                <!--
                 <td>
                   <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="checkbox_{{ $loop->iteration }}" name="id" value='{{encode($row->user_id, 'user_id')}}'>
                     <label class="custom-control-label" for="checkbox_{{ $loop->iteration }}"></label>
                   </div>
                 </td>
-                <td>{{ $startIndex+$loop->iteration }}</td>
+                -->
                 <td>
                   <a href="/user?id={{encode($row->user_id,'user_id')}}">{{ $row->user_name }}</a>&nbsp;
                   @if($row->user_gender=="男")
@@ -101,7 +102,6 @@
           </table>
         </div>
       </div>
-      {{ pageLink($currentPage, $totalPage, $request, $totalNum) }}
     </div>
   </div>
 </div>
