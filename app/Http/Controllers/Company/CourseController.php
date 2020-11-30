@@ -34,7 +34,7 @@ class CourseController extends Controller
                     );
         // 获取数据
         $rows = DB::table('course')
-                  ->join('course_type', 'course.course_type', '=', 'course_type.course_type_name')
+                  ->leftJoin('course_type', 'course.course_type', '=', 'course_type.course_type_name')
                   ->leftJoin('department', 'course.course_department', '=', 'department.department_id')
                   ->leftJoin('grade', 'course.course_grade', '=', 'grade.grade_id')
                   ->leftJoin('subject', 'course.course_subject', '=', 'subject.subject_id')

@@ -1,0 +1,6 @@
+CREATE INDEX index_schedule_date ON Schedule (schedule_date);
+CREATE INDEX index_schedule_start ON Schedule (schedule_start);
+CREATE INDEX index_schedule_end ON Schedule (schedule_end);
+
+CREATE INDEX index_member_class ON Member (member_class);
+CREATE INDEX index_member_student ON Member (member_student);

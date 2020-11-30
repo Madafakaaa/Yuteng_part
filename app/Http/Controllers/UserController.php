@@ -91,6 +91,7 @@ class UserController extends Controller
                      ->join('user', 'class.class_teacher', '=', 'user.user_id')
                      ->join('subject', 'subject.subject_id', '=', 'class.class_subject')
                      ->where('class.class_teacher', '=', $user_id)
+                     ->where('class.class_status', '=', 1)
                      ->orderBy('class_grade', 'asc')
                      ->orderBy('class_subject', 'asc')
                      ->get();

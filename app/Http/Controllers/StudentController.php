@@ -78,6 +78,7 @@ class StudentController extends Controller
                      ->join('user', 'class.class_teacher', '=', 'user.user_id')
                      ->join('subject', 'subject.subject_id', '=', 'class.class_subject')
                      ->where('member.member_student', '=', $student_id)
+                     ->where('class.class_status', '=', 1)
                      ->get();
 
         // 班级id和学生id数组

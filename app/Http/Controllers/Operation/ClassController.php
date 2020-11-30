@@ -539,8 +539,8 @@ class ClassController extends Controller
                                         ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
                                         ->where('schedule_teacher', $schedule_teacher)
                                         ->where('schedule_date', $schedule_date)
-                                        ->where('schedule_start', '>=', $schedule_start)
-                                        ->where('schedule_start', '<=', $schedule_end)
+                                        ->where('schedule_start', '>', $schedule_start)
+                                        ->where('schedule_end', '<', $schedule_end)
                                         ->get();
             foreach($teacher_schedules_temp as $teacher_schedule_temp){
                 $teacher_schedules[] = array($teacher->user_name, $teacher_schedule_temp->class_name, $teacher_schedule_temp->schedule_date, $teacher_schedule_temp->schedule_start, $teacher_schedule_temp->schedule_end, $teacher_schedule_temp->schedule_attended);
@@ -549,8 +549,20 @@ class ClassController extends Controller
                                         ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
                                         ->where('schedule_teacher', $schedule_teacher)
                                         ->where('schedule_date', $schedule_date)
-                                        ->where('schedule_end', '>=', $schedule_start)
+                                        ->where('schedule_start', '>=', $schedule_start)
+                                        ->where('schedule_start', '<', $schedule_end)
+                                        ->where('schedule_end', '>', $schedule_end)
+                                        ->get();
+            foreach($teacher_schedules_temp as $teacher_schedule_temp){
+                $teacher_schedules[] = array($teacher->user_name, $teacher_schedule_temp->class_name, $teacher_schedule_temp->schedule_date, $teacher_schedule_temp->schedule_start, $teacher_schedule_temp->schedule_end, $teacher_schedule_temp->schedule_attended);
+            }
+            $teacher_schedules_temp = DB::table('schedule')
+                                        ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                                        ->where('schedule_teacher', $schedule_teacher)
+                                        ->where('schedule_date', $schedule_date)
+                                        ->where('schedule_end', '>', $schedule_start)
                                         ->where('schedule_end', '<=', $schedule_end)
+                                        ->where('schedule_start', '<', $schedule_start)
                                         ->get();
             foreach($teacher_schedules_temp as $teacher_schedule_temp){
                 $teacher_schedules[] = array($teacher->user_name, $teacher_schedule_temp->class_name, $teacher_schedule_temp->schedule_date, $teacher_schedule_temp->schedule_start, $teacher_schedule_temp->schedule_end, $teacher_schedule_temp->schedule_attended);
@@ -575,8 +587,8 @@ class ClassController extends Controller
                                             ->join('member', 'member.member_class', '=', 'class.class_id')
                                             ->where('member_student', $student->student_id)
                                             ->where('schedule_date', $schedule_date)
-                                            ->where('schedule_start', '>=', $schedule_start)
-                                            ->where('schedule_start', '<=', $schedule_end)
+                                            ->where('schedule_start', '>', $schedule_start)
+                                            ->where('schedule_end', '<', $schedule_end)
                                             ->where('schedule_attended', 0)
                                             ->get();
                 foreach($student_schedules_temp as $student_schedule_temp){
@@ -587,8 +599,22 @@ class ClassController extends Controller
                                             ->join('member', 'member.member_class', '=', 'class.class_id')
                                             ->where('member_student', $student->student_id)
                                             ->where('schedule_date', $schedule_date)
-                                            ->where('schedule_end', '>=', $schedule_start)
+                                            ->where('schedule_start', '>=', $schedule_start)
+                                            ->where('schedule_start', '<', $schedule_end)
+                                            ->where('schedule_end', '>', $schedule_end)
+                                            ->where('schedule_attended', 0)
+                                            ->get();
+                foreach($student_schedules_temp as $student_schedule_temp){
+                    $student_schedules[] = array($student->student_name, $student_schedule_temp->class_name, $student_schedule_temp->schedule_date, $student_schedule_temp->schedule_start, $student_schedule_temp->schedule_end, $student_schedule_temp->schedule_attended);
+                }
+                $student_schedules_temp = DB::table('schedule')
+                                            ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                                            ->join('member', 'member.member_class', '=', 'class.class_id')
+                                            ->where('member_student', $student->student_id)
+                                            ->where('schedule_date', $schedule_date)
+                                            ->where('schedule_end', '>', $schedule_start)
                                             ->where('schedule_end', '<=', $schedule_end)
+                                            ->where('schedule_start', '<', $schedule_start)
                                             ->where('schedule_attended', 0)
                                             ->get();
                 foreach($student_schedules_temp as $student_schedule_temp){
@@ -596,6 +622,7 @@ class ClassController extends Controller
                 }
                 // 已上课课程
                 $attended_schedules_temp = DB::table('schedule')
+                                            ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
                                             ->join('participant', 'schedule.schedule_id', '=', 'participant.participant_schedule')
                                             ->where('participant_student', $student->student_id)
                                             ->where('schedule_date', $schedule_date)
@@ -607,22 +634,38 @@ class ClassController extends Controller
                     $student_schedules[] = array($student->student_name, $attended_schedule_temp->class_name, $attended_schedule_temp->schedule_date, $attended_schedule_temp->schedule_start, $attended_schedule_temp->schedule_end, $attended_schedule_temp->schedule_attended);
                 }
                 $attended_schedules_temp = DB::table('schedule')
+                                            ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
                                             ->join('participant', 'schedule.schedule_id', '=', 'participant.participant_schedule')
                                             ->where('participant_student', $student->student_id)
                                             ->where('schedule_date', $schedule_date)
-                                            ->where('schedule_start', '>=', $schedule_start)
-                                            ->where('schedule_start', '<', $schedule_end)
+                                            ->where('schedule_start', '>', $schedule_start)
+                                            ->where('schedule_end', '<', $schedule_end)
                                             ->where('participant_attend_status', 1)
                                             ->get();
                 foreach($attended_schedules_temp as $attended_schedule_temp){
                     $student_schedules[] = array($student->student_name, $attended_schedule_temp->class_name, $attended_schedule_temp->schedule_date, $attended_schedule_temp->schedule_start, $attended_schedule_temp->schedule_end, $attended_schedule_temp->schedule_attended);
                 }
                 $attended_schedules_temp = DB::table('schedule')
+                                            ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
                                             ->join('participant', 'schedule.schedule_id', '=', 'participant.participant_schedule')
                                             ->where('participant_student', $student->student_id)
                                             ->where('schedule_date', $schedule_date)
                                             ->where('schedule_start', '>=', $schedule_start)
                                             ->where('schedule_start', '<', $schedule_end)
+                                            ->where('schedule_end', '>', $schedule_end)
+                                            ->where('participant_attend_status', 1)
+                                            ->get();
+                foreach($attended_schedules_temp as $attended_schedule_temp){
+                    $student_schedules[] = array($student->student_name, $attended_schedule_temp->class_name, $attended_schedule_temp->schedule_date, $attended_schedule_temp->schedule_start, $attended_schedule_temp->schedule_end, $attended_schedule_temp->schedule_attended);
+                }
+                $attended_schedules_temp = DB::table('schedule')
+                                            ->join('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                                            ->join('participant', 'schedule.schedule_id', '=', 'participant.participant_schedule')
+                                            ->where('participant_student', $student->student_id)
+                                            ->where('schedule_date', $schedule_date)
+                                            ->where('schedule_end', '>', $schedule_start)
+                                            ->where('schedule_end', '<=', $schedule_end)
+                                            ->where('schedule_start', '<', $schedule_start)
                                             ->where('participant_attend_status', 1)
                                             ->get();
                 foreach($attended_schedules_temp as $attended_schedule_temp){
