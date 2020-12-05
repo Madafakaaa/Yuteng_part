@@ -2,5 +2,10 @@ CREATE INDEX index_schedule_date ON Schedule (schedule_date);
 CREATE INDEX index_schedule_start ON Schedule (schedule_start);
 CREATE INDEX index_schedule_end ON Schedule (schedule_end);
 
+CREATE INDEX index_schedule_department ON Schedule (schedule_department);
+CREATE INDEX index_schedule_subject ON Schedule (schedule_subject);
+CREATE INDEX index_schedule_teacher ON Schedule (schedule_teacher);
+CREATE INDEX index_schedule_participant ON Schedule (schedule_participant);
+
 CREATE INDEX index_member_class ON Member (member_class);
 CREATE INDEX index_member_student ON Member (member_student);

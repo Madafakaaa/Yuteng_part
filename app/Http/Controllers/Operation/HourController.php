@@ -83,8 +83,7 @@ class HourController extends Controller
             $filters['filter_hour_max']=$request->input("filter_hour_max");
         }
         // 排序并获取数据对象
-        $rows = $rows->orderBy('student_department', 'asc')
-                     ->orderBy('student_grade', 'desc')
+        $rows = $rows->orderBy('student_id', 'asc')
                      ->get();
 
         $datas = array();

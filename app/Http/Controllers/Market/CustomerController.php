@@ -86,8 +86,7 @@ class CustomerController extends Controller
                               'consultant_position.position_name AS consultant_position_name',
                               'class_adviser.user_name AS class_adviser_name',
                               'class_adviser_position.position_name AS class_adviser_position_name')
-                     ->orderBy('student_department', 'asc')
-                     ->orderBy('student_grade', 'desc')
+                     ->orderBy('student_id', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();

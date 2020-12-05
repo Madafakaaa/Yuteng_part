@@ -91,8 +91,7 @@ class StudentController extends Controller
                               'class_adviser.user_id AS class_adviser_id',
                               'class_adviser.user_name AS class_adviser_name',
                               'class_adviser_position.position_name AS class_adviser_position_name')
-                     ->orderBy('student_department', 'asc')
-                     ->orderBy('student_grade', 'desc')
+                     ->orderBy('student_id', 'asc')
                      ->offset($offset)
                      ->limit($rowPerPage)
                      ->get();

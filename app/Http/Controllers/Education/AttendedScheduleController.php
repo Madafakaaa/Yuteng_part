@@ -77,7 +77,7 @@ class AttendedScheduleController extends Controller
         }
         // 负责教师
         if ($request->filled('filter_teacher')) {
-            $db_schedules = $db_schedules->where('class_teacher', '=', $request->input('filter_teacher'));
+            $db_schedules = $db_schedules->where('schedule_teacher', '=', $request->input('filter_teacher'));
             $filters['filter_teacher']=$request->input("filter_teacher");
         }
         // 上课日期

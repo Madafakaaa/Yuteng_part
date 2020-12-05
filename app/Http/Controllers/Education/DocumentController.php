@@ -211,6 +211,7 @@ class DocumentController extends Controller
         }
         // 捕获异常
         catch(Exception $e){
+          return $e;
             return redirect("/education/document/create")
                    ->with(['notify' => true,
                            'type' => 'danger',
