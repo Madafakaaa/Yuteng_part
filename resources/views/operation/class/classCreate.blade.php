@@ -83,7 +83,12 @@
               <div class="col-6">
                 <div class="form-group">
                   <label class="form-control-label">最大人数<span style="color:red">*</span></label>
-                  <input class="form-control" name="input6" type="number" value="2" autocomplete='off' min='1' required>
+                  <select class="form-control" name="input6" data-toggle="select" required>
+                    <option value="1" selected>1人</option>
+                    <option value="3">3人</option>
+                    <option value="6">6人</option>
+                    <option value="15">15人</option>
+                  </select>
                 </div>
               </div>
             </div>
