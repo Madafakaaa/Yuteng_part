@@ -47,12 +47,6 @@ class ConsumptionController extends Controller
                   ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
                   ->where('schedule_attended', 1)
                   ->whereIn('schedule_department', $department_access);
-        // 校区
-        if ($request->filled('filter_department')) {
-            $rows = $rows->where('schedule_department', '=', $request->input("filter_department"));
-            $filters['filter_department']=$request->input("filter_department");
-             $dashboard['dashboard_department_name'] = DB::table('department')->where('department_id', $request->input("filter_department"))->first()->department_name;
-        }
         // 期限
         if ($request->filled('filter_date_start')) {
             $filters['filter_date_start']=$request->input("filter_date_start");
@@ -62,10 +56,15 @@ class ConsumptionController extends Controller
         }
         $rows = $rows->where('schedule_date', '>=', $filters['filter_date_start']);
         $rows = $rows->where('schedule_date', '<=', $filters['filter_date_end']);
+        // 校区
+        if ($request->filled('filter_department')) {
+            $rows = $rows->where('schedule_department', '=', $request->input("filter_department"));
+            $filters['filter_department']=$request->input("filter_department");
+            $dashboard['dashboard_department_name'] = DB::table('department')->where('department_id', $request->input("filter_department"))->first()->department_name;
+        }
         // 排序并获取数据对象
         $rows = $rows->orderBy('schedule_date', 'desc')
                      ->get();
-
         $schedules=array();
         foreach($rows as $row){
              $temp=array();
@@ -101,7 +100,6 @@ class ConsumptionController extends Controller
                                                        ['hour_course', 'course_id'],
                                                      ])
                                   ->where('participant_schedule', $row->schedule_id)
-                                  ->orderBy('participant_attend_status', 'asc')
                                   ->get();
              foreach($db_participants as $db_participant){
                  $temp_participant = array();

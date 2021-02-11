@@ -43,6 +43,10 @@ class AttendedScheduleController extends Controller
                           ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
                           ->whereIn('schedule_department', $department_access)
                           ->where('schedule_attended', '=', 1);
+        // 数据范围权限
+        if (Session::get('user_access_self')==1) {
+            $db_schedules = $db_schedules->where('schedule_attended_user', '=', Session::get('user_id'));
+        }
 
         // 搜索条件
         $filters = array(

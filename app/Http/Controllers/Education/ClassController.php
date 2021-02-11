@@ -38,6 +38,10 @@ class ClassController extends Controller
                   ->whereIn('class_department', $department_access)
                   ->where('class_status', 1);
 
+        // 数据范围权限
+        if (Session::get('user_access_self')==1) {
+            $rows = $rows->where('class_teacher', '=', Session::get('user_id'));
+        }
         // 搜索条件
         $filters = array(
                         "filter_department" => null,

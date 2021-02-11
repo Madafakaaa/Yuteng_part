@@ -281,6 +281,9 @@ class DocumentController extends Controller
         $document_id = decode($request->input('id'), 'document_id');
         // 获取数据路径
         $document = DB::table('document')->where('document_id', $document_id)->first();
+        if($document->document_createuser!=Session::get('user_id')&&$document->document_createuser!="yuto2018"){
+           return back()->with(['notify' => true,'type' => 'danger','title' => '无权删除本教案']);
+        }
         $document_path = "files/document/".$document->document_path;
         // 删除数据
         DB::table('document')->where('document_id', $document_id)->delete();

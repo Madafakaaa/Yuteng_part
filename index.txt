@@ -9,3 +9,7 @@ CREATE INDEX index_schedule_participant ON Schedule (schedule_participant);
 
 CREATE INDEX index_member_class ON Member (member_class);
 CREATE INDEX index_member_student ON Member (member_student);
+
+
+CREATE INDEX index_participant_schedule ON Participant (participant_schedule);
+CREATE INDEX index_participant_student ON Participant (participant_student);

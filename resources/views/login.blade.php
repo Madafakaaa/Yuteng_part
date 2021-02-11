@@ -63,6 +63,7 @@
             <div class="col-lg-6">
               <div class="copyright text-center text-lg-left text-muted">
                 <small>&copy; 2019 上海育藤教育</small>
+                <small>沪ICP备2020025448号-1</small>
               </div>
             </div>
           </div>

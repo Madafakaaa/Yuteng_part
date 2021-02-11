@@ -114,6 +114,11 @@ class CalendarController extends Controller
                            ->where('schedule_attended', '=', 0)
                            ->where('schedule_date', '>=', $first_day)
                            ->where('schedule_date', '<=', $last_day);
+
+            // 数据范围权限
+            if (Session::get('user_access_self')==1) {
+                $schedules = $schedules->where('schedule_teacher', '=', Session::get('user_id'));
+            }
             // 班级校区
             if ($request->filled('filter_department')) {
                 $schedules = $schedules->where('schedule_department', '=', $request->input("filter_department"));
@@ -168,6 +173,10 @@ class CalendarController extends Controller
                                     ->where('schedule_date', '>=', $first_day)
                                     ->where('schedule_date', '<=', $last_day);
 
+            // 数据范围权限
+            if (Session::get('user_access_self')==1) {
+                $attended_schedules = $attended_schedules->where('schedule_teacher', '=', Session::get('user_id'));
+            }
             // 班级校区
             if ($request->filled('filter_department')) {
                 $attended_schedules = $attended_schedules->where('schedule_department', '=', $request->input("filter_department"));
@@ -319,6 +328,10 @@ class CalendarController extends Controller
                            ->whereIn('schedule_department', $department_ids)
                            ->where('schedule_attended', '=', 0)
                            ->where('schedule_date', '=', $date);
+            // 数据范围权限
+            if (Session::get('user_access_self')==1) {
+                $schedules = $schedules->where('schedule_teacher', '=', Session::get('user_id'));
+            }
             // 班级校区
             if ($request->filled('filter_department')) {
                 $schedules = $schedules->where('schedule_department', '=', $request->input("filter_department"));
@@ -370,6 +383,10 @@ class CalendarController extends Controller
                                     ->whereIn('schedule_department', $department_ids)
                                     ->where('schedule_attended', '=', 1)
                                     ->where('schedule_date', '=', $date);
+            // 数据范围权限
+            if (Session::get('user_access_self')==1) {
+                $attended_schedules = $attended_schedules->where('schedule_teacher', '=', Session::get('user_id'));
+            }
 
             // 班级校区
             if ($request->filled('filter_department')) {

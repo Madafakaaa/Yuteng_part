@@ -46,6 +46,7 @@
                   <td>{{ $document->document_name }}</td>
                   <td>
                     <a href="/education/document/download?id={{encode($document->document_id, 'document_id')}}"><button type="button" class="btn btn-primary btn-sm">下载教案</button></a>
+                    <button type="button" class="btn btn-outline-danger btn-sm delete-button" id='delete_button_{{$loop->iteration}}' onclick="deleteConfirm('delete_button_{{$loop->iteration}}', '/education/document/delete?id={{encode($document->document_id, 'document_id')}}', '确认删除教案？')">删除</button>
                   </td>
                 </tr>
               @endforeach

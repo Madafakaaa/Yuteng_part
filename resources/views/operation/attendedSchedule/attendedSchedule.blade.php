@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('nav')
-<h2 class="text-white d-inline-block mb-0">上课记录</h2>
+<h2 class="text-white d-inline-block mb-0">上课记录 @if (Session::get('user_access_self')==1) （个人点名） @endif</h2>
 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
   <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
     <li class="breadcrumb-item"><a href="/home"><i class="fas fa-home"></i></a></li>
