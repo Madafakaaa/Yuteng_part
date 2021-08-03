@@ -163,5 +163,4 @@ class StudentController extends Controller
                                                   'filter_students' => $filter_students,
                                                   'filter_users' => $filter_users]);
     }
-
 }

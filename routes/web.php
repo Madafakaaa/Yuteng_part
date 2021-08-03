@@ -176,6 +176,7 @@ Route::get('/home', 'HomeController@home');
     // 学生课时
         // 查看学生课时
         Route::get('/operation/hour', 'Operation\HourController@hour');
+        Route::get('/operation/hour/export', 'Operation\HourController@hourExport');
         // 学生退费
         Route::get('/operation/hour/refund/create', 'Operation\HourController@refundCreate');
         Route::post('/operation/hour/refund/store', 'Operation\HourController@refundStore');

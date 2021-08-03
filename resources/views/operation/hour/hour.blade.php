@@ -19,6 +19,10 @@
         <span class="btn-inner--icon"><i class="fas fa-user-circle"></i></span>
         <span class="btn-inner--text">我的学生</span>
       </a>
+      <a href="/operation/hour/export?@foreach($filters as $key => $value) {{$key}}={{$value}}& @endforeach" target="_blank" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="导出名单">
+        <span class="btn-inner--icon"><i class="fas fa-file-export"></i></span>
+        <span class="btn-inner--text">导出名单</span>
+      </a>
       <a href="?">
         <button class="btn btn-sm btn-outline-primary btn-round btn-icon">
           <span class="btn-inner--icon"><i class="fas fa-redo"></i></span>
