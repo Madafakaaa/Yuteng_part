@@ -173,6 +173,120 @@ class AttendedScheduleController extends Controller
                                                                    'filter_users' => $filter_users]);
     }
 
+
+        public function attendedScheduleExport(Request $request){
+            // 检查登录状态
+            if(!Session::has('login')){
+                return loginExpired(); // 未登录，返回登陆视图
+            }
+            // 检测用户权限
+            if(!in_array("/operation/attendedSchedule", Session::get('user_accesses'))){
+               return back()->with(['notify' => true,'type' => 'danger','title' => '您的账户没有访问权限']);
+            }
+            // 获取用户校区权限
+            $department_access = Session::get('department_access');
+
+            // 获取数据
+            $db_schedules = DB::table('schedule')
+                              ->join('department', 'schedule.schedule_department', '=', 'department.department_id')
+                              ->Join('class', 'schedule.schedule_participant', '=', 'class.class_id')
+                              ->join('user', 'schedule.schedule_teacher', '=', 'user.user_id')
+                              ->join('position', 'user.user_position', '=', 'position.position_id')
+                              ->join('subject', 'schedule.schedule_subject', '=', 'subject.subject_id')
+                              ->join('grade', 'schedule.schedule_grade', '=', 'grade.grade_id')
+                              ->join('classroom', 'schedule.schedule_classroom', '=', 'classroom.classroom_id')
+                              ->whereIn('schedule_department', $department_access)
+                              ->where('schedule_attended', '=', 1);
+            // 数据范围权限
+            if (Session::get('user_access_self')==1) {
+                $db_schedules = $db_schedules->where('schedule_attended_user', '=', Session::get('user_id'));
+            }
+
+            // 搜索条件
+            $filters = array(
+                            "filter_department" => null,
+                            "filter_grade" => null,
+                            "filter_class" => null,
+                            "filter_subject" => null,
+                            "filter_teacher" => null,
+                            "filter_date" => null,
+                        );
+
+            // 班级校区
+            if ($request->filled('filter_department')) {
+                $db_schedules = $db_schedules->where('class_department', '=', $request->input("filter_department"));
+                $filters['filter_department']=$request->input("filter_department");
+            }
+            // 班级年级
+            if ($request->filled('filter_grade')) {
+                $db_schedules = $db_schedules->where('class_grade', '=', $request->input('filter_grade'));
+                $filters['filter_grade']=$request->input("filter_grade");
+            }
+            // 班级科目
+            if ($request->filled('filter_subject')) {
+                $db_schedules = $db_schedules->where('class_subject', '=', $request->input('filter_subject'));
+                $filters['filter_subject']=$request->input("filter_subject");
+            }
+            // 班级
+            if ($request->filled('filter_class')) {
+                $db_schedules = $db_schedules->where('class_id', '=', $request->input('filter_class'));
+                $filters['filter_class']=$request->input("filter_class");
+            }
+            // 负责教师
+            if ($request->filled('filter_teacher')) {
+                $db_schedules = $db_schedules->where('schedule_teacher', '=', $request->input('filter_teacher'));
+                $filters['filter_teacher']=$request->input("filter_teacher");
+            }
+            // 上课日期
+            if ($request->filled('filter_date')) {
+                $db_schedules = $db_schedules->where('schedule_date', '=', $request->input('filter_date'));
+                $filters['filter_date']=$request->input("filter_date");
+            }
+
+            // 保存数据总数
+            $totalNum = $db_schedules->count();
+            // 计算分页信息
+            list ($offset, $rowPerPage, $currentPage, $totalPage) = pagination($totalNum, $request, 1000);
+
+            // 排序并获取数据对象
+            $db_schedules = $db_schedules->orderBy('schedule_date', 'desc')
+                                         ->orderBy('schedule_start', 'desc')
+                                         ->orderBy('schedule_time', 'desc')
+                                         ->offset($offset)
+                                         ->limit($rowPerPage)
+                                         ->get();
+
+            $schedules = array();
+            foreach($db_schedules as $db_schedule){
+                $temp = array();
+                $temp['schedule_id']=$db_schedule->schedule_id;
+                $temp['class_id']=$db_schedule->class_id;
+                $temp['class_name']=$db_schedule->class_name;
+                $temp['department_name']=$db_schedule->department_name;
+                $temp['schedule_date']=$db_schedule->schedule_date;
+                $temp['schedule_start']=$db_schedule->schedule_start;
+                $temp['schedule_end']=$db_schedule->schedule_end;
+                $temp['user_id']=$db_schedule->user_id;
+                $temp['user_name']=$db_schedule->user_name;
+                $temp['position_name']=$db_schedule->position_name;
+                $temp['subject_name']=$db_schedule->subject_name;
+                $temp['grade_name']=$db_schedule->grade_name;
+                $temp['classroom_name']=$db_schedule->classroom_name;
+                $temp['schedule_attended_num']=$db_schedule->schedule_attended_num;
+                $temp['schedule_student_num']=$db_schedule->schedule_attended_num+$db_schedule->schedule_leave_num+$db_schedule->schedule_absence_num;
+                $schedules[] = $temp;
+            }
+
+            // 返回列表视图
+            return view('operation/attendedSchedule/attendedScheduleExport', ['schedules' => $schedules,
+                                                                       'currentPage' => $currentPage,
+                                                                       'totalPage' => $totalPage,
+                                                                       'startIndex' => $offset,
+                                                                       'request' => $request,
+                                                                       'filters' => $filters,
+                                                                       'totalNum' => $totalNum]);
+        }
+
     public function attendedScheduleDelete(Request $request){
         // 检查登录状态
         if(!Session::has('login')){

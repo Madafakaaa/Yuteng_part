@@ -21,6 +21,10 @@
           <span class="btn-inner--text">重置搜索</span>
         </button>
       </a>
+      <a href="/operation/attendedSchedule/export?@foreach($filters as $key => $value) {{$key}}={{$value}}& @endforeach" target="_blank" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip" data-original-title="导出名单">
+        <span class="btn-inner--icon"><i class="fas fa-file-export"></i></span>
+        <span class="btn-inner--text">导出名单</span>
+      </a>
       <button class="btn btn-sm btn-outline-danger btn-round btn-icon" data-toggle="tooltip" data-original-title="批量删除" onclick="batchDeleteConfirm('/operation/attendedSchedule/delete', '确认批量删除所选上课记录？')">
         <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
         <span class="btn-inner--text">批量删除</span>

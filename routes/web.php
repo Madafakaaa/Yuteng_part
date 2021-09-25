@@ -209,6 +209,7 @@ Route::get('/home', 'HomeController@home');
         Route::get('/operation/attendedSchedule', 'Operation\AttendedScheduleController@attendedSchedule');
         // 上课记录删除
         Route::get('/operation/attendedSchedule/delete', 'Operation\AttendedScheduleController@attendedScheduleDelete');
+        Route::get('/operation/attendedSchedule/export', 'Operation\AttendedScheduleController@attendedScheduleExport');
     // 课程表
         // 周表
         Route::get('/operation/calendar/week', 'Operation\CalendarController@calendarWeek');
